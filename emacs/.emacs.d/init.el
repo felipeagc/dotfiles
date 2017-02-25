@@ -169,6 +169,9 @@
   "ep" 'flycheck-previous-error
   "cl" 'evilnc-comment-or-uncomment-lines))
 
+(use-package evil-org
+  :after evil-leader)
+
 
 ;;
 ;; Which-key
@@ -459,7 +462,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (scss-mode pug-mode web-mode tide helm-themes powerline projectile evil-magit magit elisp-format haskell-mode clang-format js2-mode cargo flycheck-pos-tip flycheck-rust flycheck company-lua company-anaconda racer company evil-smartparens smartparens helm which-key evil-leader evil doom-themes evil-nerd-commenter eyebrowse nlinum use-package))))
+    (evil-org-mode scss-mode pug-mode web-mode tide helm-themes powerline projectile evil-magit magit elisp-format haskell-mode clang-format js2-mode cargo flycheck-pos-tip flycheck-rust flycheck company-lua company-anaconda racer company evil-smartparens smartparens helm which-key evil-leader evil doom-themes evil-nerd-commenter eyebrowse nlinum use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

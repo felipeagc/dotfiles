@@ -124,4 +124,4 @@ super + {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
 
 Print
-	maim -s /tmp/screenshot.png; imgurbash2 /tmp/screenshot.png
+	maim -s -k /tmp/screenshot.png
