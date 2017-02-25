@@ -1,5 +1,5 @@
 * Dotfiles
-** [[http://i.imgur.com/QmRCrBp.png]]
+[[http://i.imgur.com/QmRCrBp.png]]
 
 ** Software used
 
