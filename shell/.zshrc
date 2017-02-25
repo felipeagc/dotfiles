@@ -1,6 +1,8 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+export LANG=en_US.UTF-8
+
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh
 
@@ -39,6 +41,8 @@ extract () {
 
 alias ga="git add $1"
 alias gc="git commit -m $1"
+alias gp="git push $1 $2"
+alias gs="git status"
 
 . $HOME/.profile
 
