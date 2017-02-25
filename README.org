@@ -2,15 +2,15 @@
 ** [[http://i.imgur.com/QmRCrBp.png]]
 
 ** Software used
-*** bspwm
-*** sxhkd
-*** polybar
-*** emacs
-*** neovim
-*** rofi
-*** zsh
-*** oh-my-zsh
-*** termite
-*** compton 
-*** maim
-*** imgur.sh
+*** - bspwm
+*** - sxhkd
+*** - polybar
+*** - emacs
+*** - neovim
+*** - rofi
+*** - zsh
+*** - oh-my-zsh
+*** - termite
+*** - compton 
+*** - maim
+*** - imgur.sh
