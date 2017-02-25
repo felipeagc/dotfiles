@@ -1,0 +1,7 @@
+/emacs/.emacs.d/anaconda-mode/**
+/emacs/.emacs.d/auto-save/**
+/emacs/.emacs.d/auto-save-list/**
+/emacs/.emacs.d/elpa/**
+/emacs/.emacs.d/backups/**
+/emacs/.emacs.d/recentf
+/nvim/.config/nvim/.netrwhist
