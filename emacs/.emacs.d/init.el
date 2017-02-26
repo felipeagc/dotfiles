@@ -5,6 +5,33 @@
 ;;; Code:
 
 ;;
+;; Security
+;;
+
+;;  (if (fboundp 'gnutls-available-p)
+;;      (fmakunbound 'gnutls-available-p))
+
+(require 'cl)
+(setq tls-checktrust t)
+
+(setq python (executable-find "python"))
+
+(let ((trustfile
+       (replace-regexp-in-string
+        "\\\\" "/"
+        (replace-regexp-in-string
+         "\n" ""
+         (shell-command-to-string (concat python " -m certifi"))))))
+  (setq tls-program
+        (list
+         (format "gnutls-cli%s --x509cafile %s -p %%p %%h"
+                 (if (eq window-system 'w32) ".exe" "") trustfile)))
+  (setq gnutls-verify-error t)
+  (setq gnutls-trustfiles (list trustfile)))
+
+
+
+;;
 ;; Package management
 ;;
 
@@ -86,15 +113,25 @@
 
 (use-package doom-themes
   :after nlinum
-  :config
-  (require 'doom-nlinum)
-  (setq doom-enable-bold nil    ; if nil, bolding are universally disabled
-    doom-enable-italic nil  ; if nil, italics are universally disabled
-    ;; doom-one specific settings
-    doom-one-brighter-modeline nil
-    doom-one-brighter-comments nil)
+  :init
+  (setq doom-enable-bold t    ; if nil, bolding are universally disabled
+    doom-enable-italic t  ; if nil, italics are universally disabled
 
+    ;; doom-one specific settings
+    doom-one-brighter-modeline t
+    doom-one-brighter-comments nil)
+  :config
+  ;; brighter source buffers (that represent files)
+  (add-hook 'find-file-hook 'doom-buffer-mode-maybe)
+  ;; if you use auto-revert-mode
+  (add-hook 'after-revert-hook 'doom-buffer-mode-maybe)
+  ;; you can brighten other buffers (unconditionally) with:
+  (add-hook 'ediff-prepare-buffer-hook 'doom-buffer-mode)
+
+  ;; brighter minibuffer when active
   (add-hook 'minibuffer-setup-hook 'doom-brighten-minibuffer)
+
+  (require 'doom-nlinum)
 
   (load-theme 'doom-one t))
 
@@ -141,6 +178,26 @@
       (evil-leader-mode))
   :config
   (global-evil-leader-mode)
+
+  ; Overload shifts so that they don't lose the selection
+  (define-key evil-visual-state-map (kbd ">") 'djoyner/evil-shift-right-visual)
+  (define-key evil-visual-state-map (kbd "<") 'djoyner/evil-shift-left-visual)
+  (define-key evil-visual-state-map [tab] 'djoyner/evil-shift-right-visual)
+  (define-key evil-visual-state-map [S-tab] 'djoyner/evil-shift-left-visual)
+
+  (defun djoyner/evil-shift-left-visual ()
+    (interactive)
+    (evil-shift-left (region-beginning) (region-end))
+    (evil-normal-state)
+    (evil-visual-restore))
+
+  (defun djoyner/evil-shift-right-visual ()
+    (interactive)
+    (evil-shift-right (region-beginning) (region-end))
+    (evil-normal-state)
+    (evil-visual-restore))
+
+
   (evil-leader/set-leader "<SPC>")
   (evil-leader/set-key
   "1" 'eyebrowse-switch-to-window-config-1
@@ -168,9 +225,6 @@
   "en" 'flycheck-next-error
   "ep" 'flycheck-previous-error
   "cl" 'evilnc-comment-or-uncomment-lines))
-
-(use-package evil-org
-  :after evil-leader)
 
 
 ;;
@@ -303,9 +357,9 @@
   :config
   (evil-leader/set-key-for-mode 'lua-mode
       "mr" (lambda ()
-    (interactive)
-    (let ((app-root (locate-dominating-file (buffer-file-name) "main.lua")))
-    (shell-command (format "love %s &" app-root))))))
+              (interactive)
+              (let ((app-root (locate-dominating-file (buffer-file-name) "main.lua")))
+              (shell-command (format "love %s &" app-root))))))
 
 
 ;;
@@ -359,7 +413,11 @@
   ;; formats the buffer before saving
   (add-hook 'before-save-hook 'tide-format-before-save)
 
-  (add-hook 'typescript-mode-hook #'setup-tide-mode))
+  (add-hook 'typescript-mode-hook #'setup-tide-mode)
+
+  (evil-leader/set-key-for-mode 'typescript-mode
+    "mf" 'tide-format
+    "mg" 'tide-goto-reference))
 
 
 ;;
@@ -381,6 +439,13 @@
 ;;
 
 (use-package scss-mode)
+
+
+;;
+;; Shaders
+;;
+
+(use-package glsl-mode)
 
 
 ;;
@@ -411,7 +476,16 @@
 ;; Modeline
 ;;
 
-(use-package powerline
+
+(use-package f)
+
+(use-package s)
+
+
+(use-package powerline)
+
+(use-package all-the-icons
+  :after powerline
   :config
   (load-file "~/.emacs.d/modeline.el"))
 
@@ -462,7 +536,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (evil-org-mode scss-mode pug-mode web-mode tide helm-themes powerline projectile evil-magit magit elisp-format haskell-mode clang-format js2-mode cargo flycheck-pos-tip flycheck-rust flycheck company-lua company-anaconda racer company evil-smartparens smartparens helm which-key evil-leader evil doom-themes evil-nerd-commenter eyebrowse nlinum use-package))))
+    (glsl-mode scss-mode pug-mode web-mode tide helm-themes powerline projectile evil-magit magit elisp-format haskell-mode clang-format js2-mode cargo flycheck-pos-tip flycheck-rust flycheck company-lua company-anaconda racer company evil-smartparens smartparens helm which-key evil-leader evil doom-themes evil-nerd-commenter eyebrowse nlinum use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -1,3 +1,37 @@
+(defmacro add-hook! (hook &rest func-or-forms)
+  "A convenience macro for `add-hook'.
+HOOK can be one hook or a list of hooks. If the hook(s) are not quoted, -hook is
+appended to them automatically. If they are quoted, they are used verbatim.
+FUNC-OR-FORMS can be a quoted symbol, a list of quoted symbols, or forms. Forms will be
+wrapped in a lambda. A list of symbols will expand into a series of add-hook calls.
+Examples:
+    (add-hook! 'some-mode-hook 'enable-something)
+    (add-hook! some-mode '(enable-something and-another))
+    (add-hook! '(one-mode-hook second-mode-hook) 'enable-something)
+    (add-hook! (one-mode second-mode) 'enable-something)
+    (add-hook! (one-mode second-mode) (setq v 5) (setq a 2))"
+  (declare (indent defun) (debug t))
+  (unless func-or-forms
+    (error "add-hook!: FUNC-OR-FORMS is empty"))
+  (let* ((val (car func-or-forms))
+         (quoted (eq (car-safe hook) 'quote))
+         (hook (if quoted (cadr hook) hook))
+         (funcs (if (eq (car-safe val) 'quote)
+                    (if (cdr-safe (cadr val))
+                        (cadr val)
+                      (list (cadr val)))
+                  (list func-or-forms)))
+         (forms '()))
+    (mapc
+     (lambda (f)
+       (let ((func (cond ((symbolp f) `(quote ,f))
+                         (t `(lambda (&rest _) ,@func-or-forms)))))
+         (mapc
+          (lambda (h)
+            (push `(add-hook ',(if quoted h (intern (format "%s-hook" h))) ,func) forms))
+          (-list hook)))) funcs)
+`(progn ,@forms)))
+
 
 (defvar mode-line-height 30
   "How tall the mode-line should be. This is only respected in GUI emacs.")
@@ -5,6 +39,7 @@
 ;; Load powerline only when uncompiled, in order to generate the xpm bitmaps for
 ;; the mode-line. This is the tall blue bar on the left of the mode-line.
 ;; NOTE Compile this file for a faster startup!
+(eval-when-compile (require 'powerline))
 ;; FIXME Don't hardcode colors in
 (defvar mode-line-bar          (eval-when-compile (pl/percent-xpm mode-line-height 100 0 100 0 3 "#00B3EF" nil)))
 (defvar mode-line-eldoc-bar    (eval-when-compile (pl/percent-xpm mode-line-height 100 0 100 0 3 "#B3EF00" nil)))
@@ -81,20 +116,20 @@ e.g. (doom-fix-unicode \"DejaVu Sans\" ?⚠ ?★ ?λ)"
                                   s))
         (run-hook-with-args 'doom-ml-env-version-hook doom-ml--env-version)))))
 
-;; (defmacro def-version-cmd! (modes command)
-;;   "Define a COMMAND for MODE that will set `doom-ml--env-command' when that mode is
-;; activated, which should return the version number of the current environment. It is used
-;; by `doom-ml|env-update' to display a version number in the modeline. For instance:
+(defmacro def-version-cmd! (modes command)
+  "Define a COMMAND for MODE that will set `doom-ml--env-command' when that mode is
+activated, which should return the version number of the current environment. It is used
+by `doom-ml|env-update' to display a version number in the modeline. For instance:
 
-;;   (def-version-cmd! ruby-mode \"ruby --version | cut -d' ' -f2\")
+  (def-version-cmd! ruby-mode \"ruby --version | cut -d' ' -f2\")
 
-;; This will display the ruby version in the modeline in ruby-mode buffers. It is cached the
-;; first time."
-;;   (add-hook! (focus-in find-file) 'doom-ml|env-update)
-;;   `(add-hook! ,modes (setq doom-ml--env-command ,command)))
+This will display the ruby version in the modeline in ruby-mode buffers. It is cached the
+first time."
+  (add-hook! (focus-in find-file) 'doom-ml|env-update)
+  `(add-hook! ,modes (setq doom-ml--env-command ,command)))
 
-;; (def-version-cmd! python-mode "python --version 2>&1 | cut -d' ' -f2")
-;; (def-version-cmd! ruby-mode "ruby --version | cut -d' ' -f2")
+(def-version-cmd! python-mode "python --version 2>&1 | cut -d' ' -f2")
+(def-version-cmd! ruby-mode "ruby --version | cut -d' ' -f2")
 
 
 ;;
@@ -318,22 +353,6 @@ to be enabled."
             ((= end pend) ":Bot")
             (t (format ":%d%%%%" (/ end 0.01 pend)))))))
 
-;; (defun doom-erc (args)
-;;  (let ((spec (format-spec-make
-;;                  ?a (erc-format-away-status)
-;;                  ?l (erc-format-lag-time)
-;;                  ?m (erc-format-channel-modes)
-;;                  ?n (or (erc-current-nick) "")
-;;                  ?N (erc-format-network)
-;;                  ?o (or (erc-controls-strip erc-channel-topic) "")
-;;                  ?p (erc-port-to-string erc-session-port)
-;;                  ?s (erc-format-target-and/or-server)
-;;                  ?S (erc-format-target-and/or-network)
-;;                  ?t (erc-format-target)
-                 ;; )))
-;;    (format-spec erc-mode-line-format spec)))
-;; (format "%d" erc-modified-channels-object)
-;; (erc-modified-channels-display)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun doom-mode-line (&optional id)
@@ -351,9 +370,9 @@ to be enabled."
                       (*buffer-name)
                       " "
                       (*buffer-state)
-                      ,(if (eq id 'scratch) '(*buffer-pwd))
-                      ))
-           (rhs (list (*vc)
+                      ,(if (eq id 'scratch) '(*buffer-pwd))))
+           (rhs (list (*buffer-encoding-abbrev)
+                      (*vc)
                       "  " (*major-mode) "  "
                       (propertize
                        (concat "(%l,%c) " (*buffer-position))
