@@ -1,5 +1,6 @@
 ;; TODO:
 ;; Projectile
+;; Git gutter
 
 
 ;;; Code:
@@ -114,7 +115,7 @@
 (use-package doom-themes
   :after nlinum
   :init
-  (setq doom-enable-bold t    ; if nil, bolding are universally disabled
+  (setq doom-enable-bold nil    ; if nil, bolding are universally disabled
     doom-enable-italic t  ; if nil, italics are universally disabled
 
     ;; doom-one specific settings
@@ -122,14 +123,14 @@
     doom-one-brighter-comments nil)
   :config
   ;; brighter source buffers (that represent files)
-  (add-hook 'find-file-hook 'doom-buffer-mode-maybe)
+  ;; (add-hook 'find-file-hook 'doom-buffer-mode-maybe)
   ;; if you use auto-revert-mode
-  (add-hook 'after-revert-hook 'doom-buffer-mode-maybe)
+  ;; (add-hook 'after-revert-hook 'doom-buffer-mode-maybe)
   ;; you can brighten other buffers (unconditionally) with:
-  (add-hook 'ediff-prepare-buffer-hook 'doom-buffer-mode)
+  ;; (add-hook 'ediff-prepare-buffer-hook 'doom-buffer-mode)
 
   ;; brighter minibuffer when active
-  (add-hook 'minibuffer-setup-hook 'doom-brighten-minibuffer)
+  ;; (add-hook 'minibuffer-setup-hook 'doom-brighten-minibuffer)
 
   (require 'doom-nlinum)
 

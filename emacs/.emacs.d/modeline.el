@@ -371,8 +371,7 @@ to be enabled."
                       " "
                       (*buffer-state)
                       ,(if (eq id 'scratch) '(*buffer-pwd))))
-           (rhs (list (*buffer-encoding-abbrev)
-                      (*vc)
+           (rhs (list (*vc)
                       "  " (*major-mode) "  "
                       (propertize
                        (concat "(%l,%c) " (*buffer-position))
