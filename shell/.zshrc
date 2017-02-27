@@ -40,6 +40,7 @@ extract () {
 }
 
 alias ga="git add $1"
+alias gr="git rm $1"
 alias gc="git commit -m $1"
 alias gp="git push $1 $2"
 alias gs="git status"

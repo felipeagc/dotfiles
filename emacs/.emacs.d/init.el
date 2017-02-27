@@ -1,6 +1,9 @@
 ;; TODO:
 ;; Projectile
 ;; Git gutter
+;; Code folding
+;; Show trailing spaces (and erase them on save)
+;; Toggle flycheck for buffer
 
 
 ;;; Code:
@@ -51,6 +54,61 @@
 
 
 ;;
+;; Macros
+;;
+
+(defmacro def-popup! (&rest params)
+`(push ',params shackle-rules))
+
+(defmacro after! (feature &rest forms)
+  "A smart wrapper around `with-eval-after-load', that supresses warnings
+during compilation."
+  (declare (indent defun) (debug t))
+  `(,(if (or (not (boundp 'byte-compile-current-file))
+             (not byte-compile-current-file)
+             (if (symbolp feature)
+                 (require feature nil :no-error)
+               (load feature :no-message :no-error)))
+         'progn
+       (message "after: cannot find %s" feature)
+       'with-no-warnings)
+(with-eval-after-load ',feature ,@forms)))
+
+(defmacro add-hook! (hook &rest func-or-forms)
+  "A convenience macro for `add-hook'.
+HOOK can be one hook or a list of hooks. If the hook(s) are not quoted, -hook is
+appended to them automatically. If they are quoted, they are used verbatim.
+FUNC-OR-FORMS can be a quoted symbol, a list of quoted symbols, or forms. Forms will be
+wrapped in a lambda. A list of symbols will expand into a series of add-hook calls.
+Examples:
+    (add-hook! 'some-mode-hook 'enable-something)
+    (add-hook! some-mode '(enable-something and-another))
+    (add-hook! '(one-mode-hook second-mode-hook) 'enable-something)
+    (add-hook! (one-mode second-mode) 'enable-something)
+    (add-hook! (one-mode second-mode) (setq v 5) (setq a 2))"
+  (declare (indent defun) (debug t))
+  (unless func-or-forms
+    (error "add-hook!: FUNC-OR-FORMS is empty"))
+  (let* ((val (car func-or-forms))
+         (quoted (eq (car-safe hook) 'quote))
+         (hook (if quoted (cadr hook) hook))
+         (funcs (if (eq (car-safe val) 'quote)
+                    (if (cdr-safe (cadr val))
+                        (cadr val)
+                      (list (cadr val)))
+                  (list func-or-forms)))
+         (forms '()))
+    (mapc
+     (lambda (f)
+       (let ((func (cond ((symbolp f) `(quote ,f))
+                         (t `(lambda (&rest _) ,@func-or-forms)))))
+         (mapc
+          (lambda (h)
+            (push `(add-hook ',(if quoted h (intern (format "%s-hook" h))) ,func) forms))
+          (-list hook)))) funcs)
+`(progn ,@forms)))
+
+;;
 ;; General
 ;;
 
@@ -70,7 +128,7 @@
   (tool-bar-mode 0)                              ; Disable the tool bar
   (tooltip-mode 0))                              ; Disable the tooltips
 
-(fringe-mode 0)
+(setq-default fringes-outside-margins t)
 
 
 ;; Stop emacs from making a mess
@@ -181,18 +239,18 @@
   (global-evil-leader-mode)
 
   ; Overload shifts so that they don't lose the selection
-  (define-key evil-visual-state-map (kbd ">") 'djoyner/evil-shift-right-visual)
-  (define-key evil-visual-state-map (kbd "<") 'djoyner/evil-shift-left-visual)
-  (define-key evil-visual-state-map [tab] 'djoyner/evil-shift-right-visual)
-  (define-key evil-visual-state-map [S-tab] 'djoyner/evil-shift-left-visual)
+  (define-key evil-visual-state-map (kbd ">") 'felipe/evil-shift-right-visual)
+  (define-key evil-visual-state-map (kbd "<") 'felipe/evil-shift-left-visual)
+  (define-key evil-visual-state-map [tab] 'felipe/evil-shift-right-visual)
+  (define-key evil-visual-state-map [S-tab] 'felipe/evil-shift-left-visual)
 
-  (defun djoyner/evil-shift-left-visual ()
+  (defun felipe/evil-shift-left-visual ()
     (interactive)
     (evil-shift-left (region-beginning) (region-end))
     (evil-normal-state)
     (evil-visual-restore))
 
-  (defun djoyner/evil-shift-right-visual ()
+  (defun felipe/evil-shift-right-visual ()
     (interactive)
     (evil-shift-right (region-beginning) (region-end))
     (evil-normal-state)
@@ -201,31 +259,31 @@
 
   (evil-leader/set-leader "<SPC>")
   (evil-leader/set-key
-  "1" 'eyebrowse-switch-to-window-config-1
-  "2" 'eyebrowse-switch-to-window-config-2
-  "3" 'eyebrowse-switch-to-window-config-3
-  "4" 'eyebrowse-switch-to-window-config-4
-  "5" 'eyebrowse-switch-to-window-config-5
-  "6" 'eyebrowse-switch-to-window-config-6
-  "7" 'eyebrowse-switch-to-window-config-7
-  "8" 'eyebrowse-switch-to-window-config-8
-  "9" 'eyebrowse-switch-to-window-config-9
-  "zz" 'text-scale-adjust
-  "zi" 'text-scale-increase
-  "zo" 'text-scale-decrease
-  "ff" 'helm-find-files
-  "fed" 'f-edit-config
-  "fer" 'f-reload-config
-  "bb" 'helm-buffers-list
-  "bd" 'kill-this-buffer
-  "bn" 'next-buffer
-  "bp" 'previous-buffer
-  "w/" 'split-window-right
-  "w-" 'split-window-below
-  "wd" 'delete-window
-  "en" 'flycheck-next-error
-  "ep" 'flycheck-previous-error
-  "cl" 'evilnc-comment-or-uncomment-lines))
+    "1" 'eyebrowse-switch-to-window-config-1
+    "2" 'eyebrowse-switch-to-window-config-2
+    "3" 'eyebrowse-switch-to-window-config-3
+    "4" 'eyebrowse-switch-to-window-config-4
+    "5" 'eyebrowse-switch-to-window-config-5
+    "6" 'eyebrowse-switch-to-window-config-6
+    "7" 'eyebrowse-switch-to-window-config-7
+    "8" 'eyebrowse-switch-to-window-config-8
+    "9" 'eyebrowse-switch-to-window-config-9
+    "zz" 'text-scale-adjust
+    "zi" 'text-scale-increase
+    "zo" 'text-scale-decrease
+    "ff" 'helm-find-files
+    "fed" 'f-edit-config
+    "fer" 'f-reload-config
+    "bb" 'helm-buffers-list
+    "bd" 'kill-this-buffer
+    "bn" 'next-buffer
+    "bp" 'previous-buffer
+    "w/" 'split-window-right
+    "w-" 'split-window-below
+    "wd" 'delete-window
+    "en" 'flycheck-next-error
+    "ep" 'flycheck-previous-error
+    "cl" 'evilnc-comment-or-uncomment-lines))
 
 
 ;;
@@ -450,20 +508,64 @@
 
 
 ;;
-;; Magit
+;; Git
 ;;
+
+(use-package gitconfig-mode
+  :mode ("/\\.?git/?config$" "/\\.gitmodules$")
+  :init (add-hook 'gitconfig-mode-hook 'flyspell-mode))
+
+(use-package gitignore-mode
+  :mode ("/\\.gitignore$"
+         "/\\.git/info/exclude$"
+         "/git/ignore$"))
+
+(use-package git-gutter
+  :commands (git-gutter-mode)
+  :init
+  (add-hook! (text-mode prog-mode conf-mode) 'git-gutter-mode)
+  :config
+
+  (use-package git-gutter-fringe
+    :config
+    (def-popup! "^\\*git-gutter.+\\*$" :align below :size 15 :noselect t :regexp t)
+
+    ;; NOTE If you want the git gutter to be on the outside of the margins (rather
+    ;; than inside), `fringes-outside-margins' should be non-nil.
+
+    ;; colored fringe "bars"
+    (define-fringe-bitmap 'git-gutter-fr:added
+      [224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224]
+      nil nil 'center)
+    (define-fringe-bitmap 'git-gutter-fr:modified
+      [224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224]
+      nil nil 'center)
+    (define-fringe-bitmap 'git-gutter-fr:deleted
+      [0 0 0 0 0 0 0 0 0 0 0 0 0 128 192 224 240 248]
+      nil nil 'center)
+
+    ;; Refreshing git-gutter
+    (advice-add 'evil-force-normal-state :after 'git-gutter)
+    (add-hook 'focus-in-hook 'git-gutter:update-all-windows)))
+
 
 (use-package magit
   :after evil-leader
+  :commands (magit-status)
   :config
   (use-package evil-magit)
+
   (evil-leader/set-key
     "gg" 'magit-status
     "gs" 'magit-stage
     "gu" 'magit-unstage
     "gr" 'magit-unstage-all
     "gp" 'magit-push
-    "gc" 'magit-commit))
+    "gc" 'magit-commit)
+
+  (def-popup! "^\\*magit.+" :align below :regexp t)
+  ;; Prevent magit + evil-snipe conflicts
+  (add-hook 'magit-mode-hook 'turn-off-evil-snipe-override-mode))
 
 
 ;;
@@ -537,7 +639,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (glsl-mode scss-mode pug-mode web-mode tide helm-themes powerline projectile evil-magit magit elisp-format haskell-mode clang-format js2-mode cargo flycheck-pos-tip flycheck-rust flycheck company-lua company-anaconda racer company evil-smartparens smartparens helm which-key evil-leader evil doom-themes evil-nerd-commenter eyebrowse nlinum use-package))))
+    (git-gutter-fringe glsl-mode scss-mode pug-mode web-mode tide helm-themes powerline projectile evil-magit magit elisp-format haskell-mode clang-format js2-mode cargo flycheck-pos-tip flycheck-rust flycheck company-lua company-anaconda racer company evil-smartparens smartparens helm which-key evil-leader evil doom-themes evil-nerd-commenter eyebrowse nlinum use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
