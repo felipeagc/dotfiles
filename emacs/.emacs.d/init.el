@@ -57,9 +57,6 @@
 ;; Macros
 ;;
 
-
-
-
 (defmacro def-popup! (&rest params)
 `(push ',params shackle-rules))
 
