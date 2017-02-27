@@ -11,7 +11,8 @@
 - rofi
 - zsh
 - oh-my-zsh
+- fzf
 - termite
 - compton 
 - maim
-- imgur.sh
+- imgurbash2
