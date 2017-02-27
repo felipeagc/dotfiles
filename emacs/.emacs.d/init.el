@@ -366,6 +366,8 @@ Examples:
 ;;
 
 (use-package flycheck
+  :init
+  (setq flycheck-highlighting-mode nil)
   :config
   (global-flycheck-mode)
   (use-package flycheck-rust
