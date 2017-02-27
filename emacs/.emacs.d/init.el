@@ -138,7 +138,6 @@ Examples:
       `(("." . ,(expand-file-name
                  (concat user-emacs-directory "backups")))))
 
-;; Test
 (use-package nlinum
   :config
   (global-nlinum-mode 1)
