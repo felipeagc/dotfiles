@@ -35,6 +35,7 @@ bspc rule -a love state=floating
 ~/.scripts/detect_csgo.sh &
 feh --bg-scale ~/Pictures/wallpaper2.jpg
 compton -b
+dunst &
 mpd
 polybar top &
 # qutebrowser --backend=webengine &

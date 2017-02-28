@@ -1,6 +1,5 @@
 ;; TODO:
 ;; Projectile
-;; Git gutter
 ;; Code folding
 ;; Show trailing spaces (and erase them on save)
 ;; Toggle flycheck for buffer
@@ -158,6 +157,18 @@ Examples:
   (setq shackle-rules '(("\\`\\*helm.*?\\*\\'" :regexp t :align t :size 0.4)))
   (setq shackle-default-rule '(:same t)))
 
+(use-package exec-path-from-shell
+  :config
+  (exec-path-from-shell-initialize))
+
+(use-package goto-chg
+  :after evil-leader
+  :config
+  (evil-leader/set-key
+    "k" 'goto-last-change
+    "j" 'goto-last-change-reverse))
+
+
 
 ;;
 ;; Font
@@ -304,6 +315,8 @@ Examples:
     "<SPC> m" "Major Mode"
     "<SPC> g" "Git"
     "<SPC> f" "Files"
+    "<SPC> j" "Goto last change reverse"
+    "<SPC> k" "Goto last change"
     "<SPC> 1" "Workspace 1"
     "<SPC> 2" "Workspace 2"
     "<SPC> 3" "Workspace 3"
@@ -346,7 +359,11 @@ Examples:
   (setq company-tooltip-align-annotations t)
   :config
   (global-company-mode)
-
+  (use-package company-go
+    :config
+    (add-hook 'go-mode-hook (lambda ()
+                              (set (make-local-variable 'company-backends) '(company-go))
+                              (company-mode))))
   (use-package racer
     :after rust-mode
     :config
@@ -370,6 +387,7 @@ Examples:
   (setq flycheck-highlighting-mode nil)
   :config
   (global-flycheck-mode)
+  (use-package golint)
   (use-package flycheck-rust
     :after rust-mode
     :config
@@ -510,6 +528,24 @@ Examples:
 
 
 ;;
+;; Go
+;;
+
+(use-package go-mode
+  :config
+  (evil-leader/set-key-for-mode 'go-mode
+    "mf" 'gofmt
+    "mi" 'go-import-add))
+  
+
+(use-package go-eldoc
+  :after go-mode
+  :config
+  (add-hook 'go-mode-hook 'go-eldoc-setup))
+
+
+
+;;
 ;; Git
 ;;
 
@@ -634,17 +670,17 @@ Examples:
 
 
 ;;; init.el ends here
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (git-gutter-fringe glsl-mode scss-mode pug-mode web-mode tide helm-themes powerline projectile evil-magit magit elisp-format haskell-mode clang-format js2-mode cargo flycheck-pos-tip flycheck-rust flycheck company-lua company-anaconda racer company evil-smartparens smartparens helm which-key evil-leader evil doom-themes evil-nerd-commenter eyebrowse nlinum use-package))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+;; (custom-set-variables
+;;  ;; custom-set-variables was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(package-selected-packages
+;;    (quote
+;;     (go-eldoc git-gutter-fringe glsl-mode scss-mode pug-mode web-mode tide helm-themes powerline projectile evil-magit magit elisp-format haskell-mode clang-format js2-mode cargo flycheck-pos-tip flycheck-rust flycheck company-lua company-anaconda racer company evil-smartparens smartparens helm which-key evil-leader evil doom-themes evil-nerd-commenter eyebrowse nlinum use-package))))
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  )
