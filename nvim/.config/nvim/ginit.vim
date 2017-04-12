@@ -1,2 +1,3 @@
-Guifont Hack:h12
+Guifont Ubuntu Mono:h14
 set background=dark
+

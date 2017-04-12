@@ -32,17 +32,16 @@ border-bottom-color = #3b444a
 spacing = 1
 padding-left = 2
 padding-right = 2
-module-margin-left = 1
+module-margin-left = 2
 module-margin-right = 2
 
 font-0 = SourceSansPro:size=8;1
-font-1 = unifont:size=6:heavy:fontformat=truetype;1
+font-1 = unifont:size=6:heavy:fontformat=truetype;2
 font-2 = WunconSiji:pixelsize=10;1
-font-3 = fontawesome:size=10;1
 
 modules-left = mpd
 modules-center = bspwm
-modules-right = gamemode memory cpu wlan date powermenu
+modules-right = volume gamemode memory cpu wlan date powermenu
 
 tray-position = right
 tray-padding = 2
@@ -50,27 +49,6 @@ tray-padding = 2
 tray-background = #1c2023
 
 wm-restack = bspwm
-
-
-[module/xwindow]
-type = internal/xwindow
-label = %title%
-label-maxlen = 30
-
-
-[module/filesystem]
-type = internal/fs
-interval = 25
-
-mount-0 = /
-mount-1 = /home
-mount-2 = /storage
-
-label-mounted = %mountpoint%: %percentage_free%
-
-label-unmounted = %mountpoint%: not mounted
-label-unmounted-foreground = #ccc
-
 
 
 [module/bspwm]
@@ -98,9 +76,9 @@ label-empty-padding = 2
 [module/mpd]
 type = internal/mpd
 
-format-online = <icon-prev><toggle><icon-next>  <icon-repeat> <icon-random>
+format-online = <icon-prev><toggle><icon-next>  <bar-progress>  <icon-repeat> <icon-random>  <label-song>
 
-label-song-maxlen = 25
+label-song-maxlen = 40
 label-song-ellipsis = true
 
 icon-prev = 
@@ -116,24 +94,14 @@ icon-repeat = 
 
 toggle-on-foreground = #e60053
 toggle-off-foreground = #66
+;
+; Only applies if <bar-progress> is used
+bar-progress-width = 20
+bar-progress-indicator = |
+bar-progress-fill = ─
+bar-progress-empty = ─
 
 
-[module/backlight]
-type = internal/xbacklight
-
-format = <label> <bar>
-label = BL
-
-bar-width = 10
-bar-indicator = │
-bar-indicator-foreground = #ff
-bar-indicator-font = 2
-bar-fill = ─
-bar-fill-font = 2
-bar-fill-foreground = #9f78e1
-bar-empty = ─
-bar-empty-font = 2
-bar-empty-foreground = #55
 
 
 [module/cpu]
@@ -184,12 +152,13 @@ type = internal/volume
 
 format-volume = <label-volume> <bar-volume>
 
-label-volume = VOL
-label-volume-font = 3
+label-volume = 
+label-volume-font = 1
 label-volume-foreground = ${root.foreground}
 
-label-muted =  sound muted
-label-muted-foreground = #55
+label-muted =  MUTED
+label-muted-font = 2
+label-muted-foreground = #555
 
 bar-volume-width = 10
 bar-volume-foreground-0 = #c7ccd1
@@ -210,49 +179,8 @@ bar-volume-empty-font = 2
 bar-volume-empty-foreground = #55
 
 
-[module/battery]
-type = internal/battery
-battery = @BATTERY@
-adapter = @ADAPTER@
-full-at = 98
-
-format-charging = <animation-charging> <label-charging>
-format-charging-underline = #ffb52a
-format-discharging = <ramp-capacity> <label-discharging>
-format-discharging-underline = ${self.format-charging-underline}
-format-full = %{F#55}%{F#ff}  <label-full>
-format-full-underline = ${self.format-charging-underline}
-
-ramp-capacity-0 = 
-ramp-capacity-1 = 
-ramp-capacity-2 = 
-ramp-capacity-foreground = #55
-
-animation-charging-0 = 
-animation-charging-1 = 
-animation-charging-2 = 
-animation-charging-foreground = #55
-animation-charging-framerate = 750
 
 
-[module/temperature]
-type = internal/temperature
-thermal-zone = 0
-warn-temperature = 60
-
-format = <ramp> <label>
-format-underline = #f50a4d
-format-warn = <ramp> <label-warn>
-format-warn-underline = ${self.format-underline}
-
-label = %temperature%
-label-warn = %temperature%
-label-warn-foreground = #e60053
-
-ramp-0 = 
-ramp-1 = 
-ramp-2 = 
-ramp-foreground = #55
 
 
 [module/powermenu]

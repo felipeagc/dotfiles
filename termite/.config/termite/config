@@ -1,6 +1,6 @@
 [options]
 cursor_blink = off
-font         = Hack 11
+font         = Ubuntu Mono 14
 
 [colors]
 

@@ -32,6 +32,7 @@ extract () {
             *.Z) uncompress $1;;
             *.7z) 7za x $1;;
             *.rar) unrar $1;;
+            *.zip) unzip $1;;
             *) echo "'$1' cannot be extracted via >extract<" ;;
         esac
     else
@@ -46,5 +47,8 @@ alias gc="git commit -m $1"
 alias gp="git push $1 $2"
 alias gs="git status"
 
-. $HOME/.profile
+alias song="mpc searchplay title $1"
 
+alias update="pacaur -Syu && flatpak update --user"
+
+. $HOME/.profile

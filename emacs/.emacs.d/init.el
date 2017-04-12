@@ -14,23 +14,23 @@
 ;;  (if (fboundp 'gnutls-available-p)
 ;;      (fmakunbound 'gnutls-available-p))
 
-(require 'cl)
-(setq tls-checktrust t)
+;; (require 'cl)
+;; (setq tls-checktrust t)
 
-(setq python (executable-find "python"))
+;; (setq python (executable-find "python"))
 
-(let ((trustfile
-       (replace-regexp-in-string
-        "\\\\" "/"
-        (replace-regexp-in-string
-         "\n" ""
-         (shell-command-to-string (concat python " -m certifi"))))))
-  (setq tls-program
-        (list
-         (format "gnutls-cli%s --x509cafile %s -p %%p %%h"
-                 (if (eq window-system 'w32) ".exe" "") trustfile)))
-  (setq gnutls-verify-error t)
-  (setq gnutls-trustfiles (list trustfile)))
+;; (let ((trustfile
+;;        (replace-regexp-in-string
+;;         "\\\\" "/"
+;;         (replace-regexp-in-string
+;;          "\n" ""
+;;          (shell-command-to-string (concat python " -m certifi"))))))
+;;   (setq tls-program
+;;         (list
+;;          (format "gnutls-cli%s --x509cafile %s -p %%p %%h"
+;;                  (if (eq window-system 'w32) ".exe" "") trustfile)))
+;;   (setq gnutls-verify-error t)
+;;   (setq gnutls-trustfiles (list trustfile)))
 
 
 
@@ -118,7 +118,11 @@ Examples:
 
 (setq-default indent-tabs-mode nil)
 
+(setq show-paren-delay 0)
+(show-paren-mode t)
 (setq show-paren-style 'parenthesis)
+
+(add-hook 'prog-mode-hook #'hs-minor-mode)
 
 (when window-system
   (menu-bar-mode 0)                              ; Disable the menu bar
@@ -149,7 +153,10 @@ Examples:
   :config
   (eyebrowse-mode t))
 
-(use-package evil-nerd-commenter)
+(use-package evil-vimish-fold
+  :after evil
+  :config
+  (evil-vimish-fold-mode 1))
 
 (use-package shackle
   :init
@@ -200,10 +207,10 @@ Examples:
 
   ;; brighter minibuffer when active
   ;; (add-hook 'minibuffer-setup-hook 'doom-brighten-minibuffer)
+  (load-theme 'doom-one t)
+  (require 'doom-nlinum))
 
-  (require 'doom-nlinum)
 
-  (load-theme 'doom-one t))
 
 
 ;;
@@ -279,10 +286,12 @@ Examples:
     "7" 'eyebrowse-switch-to-window-config-7
     "8" 'eyebrowse-switch-to-window-config-8
     "9" 'eyebrowse-switch-to-window-config-9
+    "tt" 'helm-themes
     "zz" 'text-scale-adjust
     "zi" 'text-scale-increase
     "zo" 'text-scale-decrease
     "ff" 'helm-find-files
+    "fb" 'hs-toggle-hiding
     "fed" 'f-edit-config
     "fer" 'f-reload-config
     "bb" 'helm-buffers-list
@@ -296,6 +305,9 @@ Examples:
     "ep" 'flycheck-previous-error
     "cl" 'evilnc-comment-or-uncomment-lines))
 
+(use-package evil-nerd-commenter
+  :after evil-leader)
+
 
 ;;
 ;; Which-key
@@ -307,16 +319,34 @@ Examples:
   :config
   (which-key-mode)
   (which-key-add-key-based-replacements
+    "<SPC> t" "Theme"
+    "<SPC> tt" "Switch theme"
     "<SPC> b" "Buffer"
+    "<SPC> bb" "Find buffer"
+    "<SPC> bn" "Next buffer"
+    "<SPC> bp" "Previous buffer"
+    "<SPC> bd" "Close buffer"
     "<SPC> z" "Zoom"
+    "<SPC> zi" "Zoom in"
+    "<SPC> zo" "Zoom out"
     "<SPC> w" "Window"
+    "<SPC> w/" "Split vertically"
+    "<SPC> w-" "Split horizontally"
     "<SPC> e" "Error"
+    "<SPC> en" "Next error"
+    "<SPC> ep" "Previous error"
     "<SPC> c" "Comment"
+    "<SPC> cl" "Toggle comment"
     "<SPC> m" "Major Mode"
     "<SPC> g" "Git"
-    "<SPC> f" "Files"
+    "<SPC> f" "Files/folding"
+    "<SPC> ff" "Find file"
+    "<SPC> fb" "Toggle fold"
     "<SPC> j" "Goto last change reverse"
     "<SPC> k" "Goto last change"
+    "<SPC> p" "Projectile"
+    "<SPC> pp" "Switch project"
+    "<SPC> pf" "Find file"
     "<SPC> 1" "Workspace 1"
     "<SPC> 2" "Workspace 2"
     "<SPC> 3" "Workspace 3"
@@ -364,15 +394,19 @@ Examples:
     (add-hook 'go-mode-hook (lambda ()
                               (set (make-local-variable 'company-backends) '(company-go))
                               (company-mode))))
+
+  ;; (use-package lsp-mode
+  ;;   :after flycheck
+  ;;   :config
+  ;;   (global-lsp-mode t))
+
   (use-package racer
     :after rust-mode
     :config
     (add-hook 'rust-mode-hook #'racer-mode)
     (add-hook 'racer-mode-hook #'eldoc-mode)
     (add-hook 'racer-mode-hook #'company-mode))
-  (use-package company-anaconda
-    :config
-    (add-to-list 'company-backends 'company-anaconda))
+
   (use-package company-lua
     :config
     (add-to-list 'company-backends 'company-lua)))
@@ -384,14 +418,14 @@ Examples:
 
 (use-package flycheck
   :init
-  (setq flycheck-highlighting-mode nil)
+  (setq flycheck-highlighting-mode 'symbols)
   :config
   (global-flycheck-mode)
-  (use-package golint)
   (use-package flycheck-rust
     :after rust-mode
     :config
-    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
+    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+  (use-package golint))
 
 (use-package flycheck-pos-tip
   :config
@@ -422,9 +456,10 @@ Examples:
 ;; Python
 ;;
 
-(use-package anaconda-mode
+(use-package elpy
   :config
-  (add-hook 'python-mode-hook 'anaconda-eldoc-mode))
+  (elpy-enable)
+  (setq elpy-modules (delete 'elpy-module-highlight-indentation elpy-modules)))
 
 
 ;;
@@ -433,6 +468,8 @@ Examples:
 
 (use-package lua-mode
   :after evil-leader
+  :init
+  (setq lua-indent-level 2)
   :config
   (evil-leader/set-key-for-mode 'lua-mode
       "mr" (lambda ()
@@ -456,19 +493,38 @@ Examples:
 ;; C/C++
 ;;
 
-(use-package clang-format
+(use-package irony
   :after evil-leader
   :config
-  (evil-leader/set-key-for-mode 'c++-mode
-    "mf" 'clang-format-buffer
-    "ms" 'ff-find-other-file))
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+  (use-package company-irony
+    :after company
+    :config
+    (eval-after-load 'company
+      '(add-to-list 'company-backends 'company-irony)))
+  (use-package irony-eldoc)
+  (use-package clang-format))
 
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+
+(evil-leader/set-key-for-mode 'c++-mode
+  "mf" 'clang-format-buffer
+  "ms" 'ff-find-other-file)
+
+(add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++14")))
 
 ;;
 ;; Haskell
 ;;
 
-(use-package haskell-mode)
+(use-package haskell-mode
+  :config
+  (use-package company-ghc
+    :after company
+    :config
+    (add-to-list 'company-backends 'company-ghc)))
 
 
 ;;
@@ -544,6 +600,19 @@ Examples:
   (add-hook 'go-mode-hook 'go-eldoc-setup))
 
 
+;;
+;; Nim
+;;
+
+(use-package nim-mode
+  :config
+  (setq nim-nimsuggest-path "~/Programs/nim/bin/nimsuggest")
+  ;; Currently nimsuggest doesn't support nimscript files, so only nim-mode...
+  (add-hook 'nim-mode-hook 'nimsuggest-mode)
+  ;; if you installed company-mode (optional)
+  (add-hook 'nim-mode-hook 'company-mode)
+  (add-hook 'nimscript-mode-hook 'company-mode))
+
 
 ;;
 ;; Git
@@ -591,7 +660,8 @@ Examples:
   :after evil-leader
   :commands (magit-status)
   :config
-  (use-package evil-magit)
+  (use-package evil-magit
+    :after evil)
 
   (evil-leader/set-key
     "gg" 'magit-status
@@ -612,6 +682,13 @@ Examples:
 
 (use-package projectile)
 
+(use-package helm-projectile
+  :after projectile
+  :config
+  (evil-leader/set-key
+    "pp" 'helm-projectile-switch-project
+    "pf" 'helm-projectile-find-file))
+
 
 ;;
 ;; Modeline
@@ -622,14 +699,25 @@ Examples:
 
 (use-package s)
 
-
 (use-package powerline)
 
 (use-package all-the-icons
-  :after powerline
-  :config
-  (load-file "~/.emacs.d/modeline.el"))
+  :after powerline)
 
+(load-file "~/.emacs.d/modeline.el")
+
+
+;;
+;; Yasnippet
+;;
+
+(use-package yasnippet
+  :init
+  (setq yas-snippet-dirs
+        '("~/.emacs.d/yasnippet-snippets"
+          "~/.emacs.d/snippets"))
+  :config
+  (yas-global-mode 1))
 
 ;;
 ;; Indentation
@@ -668,19 +756,25 @@ Examples:
     (setq c-basic-offset 2)
     (setq evil-shift-width 2))))
 
+(add-hook 'lua-mode
+  (function (lambda ()
+    (setq tab-width 2)
+    (setq evil-shift-width 2))))
 
-;;; init.el ends here
-;; (custom-set-variables
-;;  ;; custom-set-variables was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(package-selected-packages
-;;    (quote
-;;     (go-eldoc git-gutter-fringe glsl-mode scss-mode pug-mode web-mode tide helm-themes powerline projectile evil-magit magit elisp-format haskell-mode clang-format js2-mode cargo flycheck-pos-tip flycheck-rust flycheck company-lua company-anaconda racer company evil-smartparens smartparens helm which-key evil-leader evil doom-themes evil-nerd-commenter eyebrowse nlinum use-package))))
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("227e2c160b0df776257e1411de60a9a181f890cfdf9c1f45535fc83c9b34406b" "34c6da8c18dcbe10d34e3cf0ceab80ed016552cb40cee1b906a42fd53342aba3" default)))
+ '(package-selected-packages
+   (quote
+    (evil-magit powerline helm-projectile projectile git-gutter-fringe magit git-gutter gitignore-mode gitconfig-mode nim-mode go-eldoc glsl-mode scss-mode pug-mode web-mode tide elisp-format company-ghc haskell-mode clang-format irony-eldoc flycheck-irony company-irony irony js2-mode elpy cargo flycheck-pos-tip golint flycheck-rust flycheck company-lua racer company-go company helm-themes helm which-key evil-nerd-commenter evil-leader doom-themes exec-path-from-shell shackle evil-vimish-fold eyebrowse nlinum use-package))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

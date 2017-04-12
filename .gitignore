@@ -4,4 +4,6 @@
 /emacs/.emacs.d/elpa/**
 /emacs/.emacs.d/backups/**
 /emacs/.emacs.d/recentf
+/emacs/.emacs.d/irony/
+/emacs/.emacs.d/yasnippet-snippets/
 /nvim/.config/nvim/.netrwhist

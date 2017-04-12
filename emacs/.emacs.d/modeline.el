@@ -1,4 +1,4 @@
-(defvar mode-line-height 30
+(defvar mode-line-height 36
   "How tall the mode-line should be. This is only respected in GUI emacs.")
 
 ;; Load powerline only when uncompiled, in order to generate the xpm bitmaps for
