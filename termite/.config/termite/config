@@ -1,13 +1,14 @@
 [options]
 cursor_blink = off
-font         = Ubuntu Mono 14
+font         = Ubuntu Mono 13
 
 [colors]
 
 # special
 foreground      = #abb2bf
 foreground_bold = #abb2bf
-background      = #1b1d21
+# background      = #1b1d21
+background		= #282c34
 
 # black
 color0  = #282c34

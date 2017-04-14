@@ -4,18 +4,22 @@
 export LANG=en_US.UTF-8
 
 # Path to your oh-my-zsh installation.
-export ZSH=~/.oh-my-zsh
+#export ZSH=~/.oh-my-zsh
+
+source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
-ZSH_THEME="spaceship"
+#ZSH_THEME="spaceship"
 
-# Use case-sensitive completion.
-CASE_SENSITIVE="false"
+ #Use case-sensitive completion.
+#CASE_SENSITIVE="false"
 
-plugins=(git)
+#plugins=(git)
 
-source $ZSH/oh-my-zsh.sh
+#source $ZSH/oh-my-zsh.sh
+
+unsetopt CORRECT
 
 extract () {
     if [ -f $1 ] ; then
