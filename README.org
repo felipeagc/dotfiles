@@ -2,8 +2,15 @@
 [[http://i.imgur.com/oz0Dp4x.png]]
 
 ** Installation
+Clone the repo with the following command:
 #+BEGIN_SRC
 git clone https://github.com/felipeagc/dotfiles.git --recursive
+#+END_SRC
+
+Then use stow to create a link to the files. For example:
+#+BEGIN_SRC
+cd dotfiles
+stow bspwm compton dunst # and so on
 #+END_SRC
 
 ** Software used
