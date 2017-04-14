@@ -1,0 +1,19 @@
+zstyle ':prezto:load' pmodule \
+  'environment' \
+  'terminal' \
+  'editor' \
+  'history' \
+  'directory' \
+  'spectrum' \
+  'utility' \
+  'completion' \
+  'prompt' \
+  'utility' \
+  'history-substring-search' \
+  'git'
+
+zstyle ':prezto:module:utility:ls' color 'yes'
+zstyle ':prezto:module:utility:diff' color 'yes'
+zstyle ':prezto:module:utility:wdiff' color 'yes'
+zstyle ':prezto:module:utility:make' color 'yes'
+zstyle ':prezto:module:prompt' theme 'felipe'

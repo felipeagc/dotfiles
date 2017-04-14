@@ -52,7 +52,7 @@ if dein#load_state('~/.local/share/dein')
 	"call dein#add('Shougo/vimproc.vim', {'build' : 'make'})
 	call dein#add('Shougo/neosnippet.vim')
 	call dein#add('Shougo/neosnippet-snippets')
-	call dein#add('scrooloose/nerdcommenter')
+	call dein#add('tpope/vim-commentary')
 	call dein#add('jiangmiao/auto-pairs')
 	call dein#add('hecal3/vim-leader-guide')
 	call dein#add('derekwyatt/vim-fswitch')
@@ -174,8 +174,6 @@ let loaded_matchparen = 1
 let g:racer_cmd = '~/.cargo/bin/racer'
 let g:racer_experimental_completer = 1
 
-let g:NERDCreateDefaultMappings = 0
-
 let g:ale_lint_on_save = 1
 let g:ale_lint_on_text_changed = 0
 let g:ale_statusline_format = ['⨉ %d', '⚠ %d', 'ok']
@@ -283,12 +281,6 @@ nmap <silent> <leader>en <Plug>(ale_next_wrap)
 let g:lmap.e.n = ['', 'Next']
 nmap <silent> <leader>ep <Plug>(ale_previous_wrap)
 let g:lmap.e.p = ['', 'Previous']
-
-let g:lmap.c = { 'name' : 'Comment' }
-
-nmap <silent> <leader>cl <Plug>NERDCommenterToggle('n', 'Toggle')<CR>
-vmap <silent> <leader>cl <Plug>NERDCommenterToggle gv<CR>
-let g:lmap.c.l = ['', 'Toggle']
 
 let g:lmap.m = { 'name' : 'Mode' }
 
