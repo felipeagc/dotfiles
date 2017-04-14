@@ -26,6 +26,9 @@ if dein#load_state('~/.local/share/dein')
 	" Git
 	call dein#add('tpope/vim-fugitive')
 
+	" Org mode
+	call dein#add('jceb/vim-orgmode')
+
 	" Languages
 	call dein#add('rust-lang/rust.vim')
 	call dein#add('racer-rust/vim-racer')
