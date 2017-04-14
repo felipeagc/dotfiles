@@ -1,5 +1,10 @@
 * Dotfiles
-[[http://i.imgur.com/QmRCrBp.png]]
+[[http://i.imgur.com/oz0Dp4x.png]]
+
+** Installation
+#+BEGIN_SRC
+git clone https://github.com/felipeagc/dotfiles.git --recursive
+#+END_SRC
 
 ** Software used
 
@@ -10,9 +15,10 @@
 - neovim
 - rofi
 - zsh
-- oh-my-zsh
+- prezto
 - fzf
 - termite
 - compton 
 - maim
 - imgurbash2
+- dunst
