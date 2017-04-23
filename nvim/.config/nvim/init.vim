@@ -14,41 +14,60 @@ if dein#load_state('~/.local/share/dein')
 	call dein#add('~/.local/share/dein/repos/github.com/Shougo/dein.vim')
 
 	" Completion
-	call dein#add('Shougo/deoplete.nvim')
+	call dein#add('Shougo/deoplete.nvim', { 'build': ':UpdateRemotePlugins' })
 	call dein#add('Shougo/echodoc.vim')
+	call dein#add('ervandew/supertab')
 
 	" Linting
 	call dein#add('w0rp/ale')
 
 	" Fuzzy finders
-	call dein#add('ctrlpvim/ctrlp.vim')
-	
+	call dein#add('junegunn/fzf', { 'build': './install --all'})
+	call dein#add('junegunn/fzf.vim')
+
 	" Git
 	call dein#add('tpope/vim-fugitive')
+	call dein#add('mhinz/vim-signify')
+	call dein#add('jreybert/vimagit')
+
+	" Tags
+	call dein#add('ludovicchabant/vim-gutentags')
 
 	" Org mode
 	call dein#add('jceb/vim-orgmode')
 
-	" Languages
+	" Rust
 	call dein#add('rust-lang/rust.vim')
-	call dein#add('racer-rust/vim-racer')
-	call dein#add('rhysd/rust-doc.vim')
+	" call dein#add('racer-rust/vim-racer')
+	" call dein#add('rhysd/rust-doc.vim')
 
+	" Crystal
 	call dein#add('rhysd/vim-crystal')
 
+	" HTML
 	call dein#add('mattn/emmet-vim')
 
+	" Javascript
 	call dein#add('carlitux/deoplete-ternjs')
 
+	" Typescript
 	call dein#add('mhartington/nvim-typescript')
 
+	" C/C++
 	call dein#add('rhysd/vim-clang-format')
 	call dein#add('zchee/deoplete-clang')
 
+	" QML
+	call dein#add('peterhoeg/vim-qml')
+
+	" Haskell
 	call dein#add('neovimhaskell/haskell-vim')
 	call dein#add('itchyny/vim-haskell-indent')
 	call dein#add('eagletmt/neco-ghc')
 	"call dein#add('eagletmt/ghcmod-vim')
+
+	" Go
+	call dein#add('zchee/deoplete-go')
 
 	" Utilities
 	call dein#add('tpope/vim-surround')
@@ -73,6 +92,8 @@ if dein#load_state('~/.local/share/dein')
 	call dein#add('metakirby5/codi.vim')
 	call dein#add('junegunn/goyo.vim')
 	call dein#add('sheerun/vim-polyglot')
+	call dein#add('wellle/targets.vim')
+	" call dein#add('autozimu/LanguageClient-neovim', { 'build': ':UpdateRemotePlugins' })
 
 	" Required:
 	call dein#end()
@@ -92,12 +113,8 @@ endif
 
 if (empty($TMUX))
 	if (has("nvim"))
-		"For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
 		let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 	endif
-	"For Neovim > 0.1.5 and Vim > patch 7.4.1799 < https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162 >
-	"Based on Vim patch 7.4.1770 (`guicolors` option) < https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd >
-	" < https://github.com/neovim/neovim/wiki/Following-HEAD#20160511 >
 	if (has("termguicolors"))
 		set termguicolors
 	endif
@@ -111,7 +128,7 @@ end
 let g:lightline = {
 	\ 'colorscheme': 'onedark',
 	\ 'active': {
-	\   'left': [ 
+	\   'left': [
 	\		[ 'mode', 'paste' ],
 	\		[ 'ale' ],
 	\		[ 'fugitive', 'filename' ]
@@ -168,11 +185,28 @@ let g:deoplete#auto_complete_start_length = 1
 let g:deoplete#sources#clang#libclang_path = '/usr/lib/libclang.so'
 let g:deoplete#sources#clang#clang_header = '/usr/lib/clang'
 let g:auto_complete_start_length = 1
+let g:deoplete#sources#clang#flags = [
+      \ "-fPIC",
+      \ "-isystem", "/usr/include/qt",
+      \ "-isystem", "/usr/include/qt/QtWebEngine",
+      \ "-isystem", "/usr/include/qt/QtWebEngineCore",
+      \ "-isystem", "/usr/include/qt/QtQuick",
+      \ "-isystem", "/usr/include/qt/QtGui",
+      \ "-isystem", "/usr/include/qt/QtWebChannel",
+      \ "-isystem", "/usr/include/qt/QtQml",
+      \ "-isystem", "/usr/include/qt/QtNetwork",
+      \ "-isystem", "/usr/include/qt/QtPositioning",
+      \ "-isystem", "/usr/include/qt/QtCore",
+      \ "-isystem", "/usr/include/libdrm",
+      \ "-isystem", "/usr/include/qt/QtCore",
+      \ "-I", "/usr/lib/qt/mkspecs/linux-g++",
+      \ ]
+
+let g:gutentags_cache_dir = '~/.local/share/gutentags'
 
 let g:echodoc_enable_at_startup=1
 
 let loaded_matchparen = 1
-
 
 let g:racer_cmd = '~/.cargo/bin/racer'
 let g:racer_experimental_completer = 1
@@ -183,16 +217,33 @@ let g:ale_statusline_format = ['⨉ %d', '⚠ %d', 'ok']
 let g:ale_sign_error = '⨉'
 let g:ale_sign_warning = '⚠'
 let g:ale_sign_column_always = 1
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 0
+let g:ale_open_list = 0
+let g:ale_cpp_clang_options = "-std=c++14 -Wall -fPIC -isystem /usr/include/qt -isystem /usr/include/qt/QtWebEngine -isystem /usr/include/qt/QtWebEngineCore -isystem /usr/include/qt/QtQuick -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtWebChannel -isystem /usr/include/qt/QtQml -isystem /usr/include/qt/QtNetwork -isystem /usr/include/qt/QtPositioning -isystem /usr/include/qt/QtCore -I. -isystem /usr/include/libdrm -I/usr/lib/qt/mkspecs/linux-g++"
 let g:ale_linters = {
 			\ 'cpp': ['clang'],
 			\ 'lua': [],
 			\ 'haskell': ['hdevtools'],
-			\ 'typescript': ['typecheck']
+			\ 'typescript': ['typecheck'],
+			\ 'rust': []
 			\}
-let g:ale_cpp_clang_options = '-std=c++14 -Wall -Ilib/gl3w/include'
 
-let g:haskellmode_completion_ghc = 0
-autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+" let g:haskellmode_completion_ghc = 0
+" autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+let g:necoghc_enable_detailed_browse = 1
+
+let g:SuperTabDefaultCompletionType = "<c-n>"
+let g:SuperTabCrMapping = 0
+
+let g:go_list_type = ""
+
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['rls']
+    \ }
+let g:LanguageClient_autoStart = 1
+
+let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 
 set number
 set clipboard=unnamedplus
@@ -207,6 +258,10 @@ set hidden
 set noshowmode
 set undofile
 set undodir=~/.vim/undodir
+set wrap
+set linebreak
+" note trailing space at end of next line
+set showbreak=>\ \ \
 
 " Use ctrl-[hjkl] to select the active split!
 nmap <silent> <c-k> :wincmd k<CR>
@@ -214,16 +269,35 @@ nmap <silent> <c-j> :wincmd j<CR>
 nmap <silent> <c-h> :wincmd h<CR>
 nmap <silent> <c-l> :wincmd l<CR>
 
+" Beginnings and ends of lines
+nnoremap H ^
+nnoremap L $
+
 " Continuous indentation shift
 vnoremap < <gv
 vnoremap > >gv
 
+" Language server bindings
+nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+
 " Fix filetype indentations
+autocmd Filetype crystal setlocal expandtab|setlocal shiftwidth=2|setlocal softtabstop=2
 autocmd Filetype haskell setlocal expandtab|setlocal shiftwidth=2|setlocal softtabstop=2
 autocmd Filetype cabal setlocal expandtab|setlocal shiftwidth=2|setlocal softtabstop=2
 autocmd Filetype lua setlocal expandtab|setlocal shiftwidth=2|setlocal softtabstop=2
 autocmd Filetype javascript setlocal expandtab|setlocal shiftwidth=2|setlocal softtabstop=2
 autocmd Filetype typescript setlocal expandtab|setlocal shiftwidth=2|setlocal softtabstop=2
+
+" Remove trailing whitespace on save
+function! <SID>StripTrailingWhitespaces()
+    let l = line(".")
+    let c = col(".")
+    %s/\s\+$//e
+    call cursor(l, c)
+endfun
+autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
 
 nnoremap cn *``cgn
 
@@ -237,15 +311,15 @@ let g:all_key_map = {}
 
 let g:lmap = {}
 
-let g:lmap.f = { 'name' : 'File' }
-let g:lmap.f.e = { 'name' : 'Edit' }
+let g:lmap.f = { 'name' : 'Find' }
+let g:lmap.f.e = { 'name' : 'Config' }
 
-nmap <silent> <leader>ff :CtrlP<CR>
-let g:lmap.f.f = ['', 'Find']
+nmap <silent> <leader>ff :Files<CR>
+let g:lmap.f.f = ['', 'File']
+nmap <silent> <leader>ft :Tags<CR>
+let g:lmap.f.t = ['', 'Tags']
 nmap <silent> <leader>fed :e $MYVIMRC<CR>
-let g:lmap.f.e.d = ['', 'Config']
-nmap <silent> <leader>feg :e ~/.config/nvim/ginit.vim<CR>
-let g:lmap.f.e.g = ['', 'Graphical config']
+let g:lmap.f.e.d = ['', 'Edit']
 nmap <silent> <leader>fer :so $MYVIMRC<CR>
 let g:lmap.f.e.r = ['', 'Reload config']
 
@@ -255,7 +329,7 @@ nmap <silent> <leader>bn :bnext<CR>
 let g:lmap.b.n = ['', 'Next']
 nmap <silent> <leader>bp :bprevious<CR>
 let g:lmap.b.p = ['', 'Previous']
-nmap <silent> <leader>bb :CtrlPBuffer<CR>
+nmap <silent> <leader>bb :Buffers<CR>
 let g:lmap.b.b = ['', 'Find']
 nmap <silent> <leader>bd :bdelete<CR>
 let g:lmap.b.d = ['', 'Delete']

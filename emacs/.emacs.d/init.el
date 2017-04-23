@@ -8,33 +8,6 @@
 ;;; Code:
 
 ;;
-;; Security
-;;
-
-;;  (if (fboundp 'gnutls-available-p)
-;;      (fmakunbound 'gnutls-available-p))
-
-;; (require 'cl)
-;; (setq tls-checktrust t)
-
-;; (setq python (executable-find "python"))
-
-;; (let ((trustfile
-;;        (replace-regexp-in-string
-;;         "\\\\" "/"
-;;         (replace-regexp-in-string
-;;          "\n" ""
-;;          (shell-command-to-string (concat python " -m certifi"))))))
-;;   (setq tls-program
-;;         (list
-;;          (format "gnutls-cli%s --x509cafile %s -p %%p %%h"
-;;                  (if (eq window-system 'w32) ".exe" "") trustfile)))
-;;   (setq gnutls-verify-error t)
-;;   (setq gnutls-trustfiles (list trustfile)))
-
-
-
-;;
 ;; Package management
 ;;
 
@@ -419,6 +392,8 @@ Examples:
 (use-package flycheck
   :init
   (setq flycheck-highlighting-mode 'symbols)
+  (with-eval-after-load 'flycheck
+    (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
   :config
   (global-flycheck-mode)
   (use-package flycheck-rust
@@ -519,12 +494,9 @@ Examples:
 ;; Haskell
 ;;
 
-(use-package haskell-mode
+(use-package intero
   :config
-  (use-package company-ghc
-    :after company
-    :config
-    (add-to-list 'company-backends 'company-ghc)))
+  (add-hook 'haskell-mode-hook 'intero-mode))
 
 
 ;;
@@ -771,7 +743,7 @@ Examples:
     ("227e2c160b0df776257e1411de60a9a181f890cfdf9c1f45535fc83c9b34406b" "34c6da8c18dcbe10d34e3cf0ceab80ed016552cb40cee1b906a42fd53342aba3" default)))
  '(package-selected-packages
    (quote
-    (evil-magit powerline helm-projectile projectile git-gutter-fringe magit git-gutter gitignore-mode gitconfig-mode nim-mode go-eldoc glsl-mode scss-mode pug-mode web-mode tide elisp-format company-ghc haskell-mode clang-format irony-eldoc flycheck-irony company-irony irony js2-mode elpy cargo flycheck-pos-tip golint flycheck-rust flycheck company-lua racer company-go company helm-themes helm which-key evil-nerd-commenter evil-leader doom-themes exec-path-from-shell shackle evil-vimish-fold eyebrowse nlinum use-package))))
+    (intero evil-magit powerline helm-projectile projectile git-gutter-fringe magit git-gutter gitignore-mode gitconfig-mode nim-mode go-eldoc glsl-mode scss-mode pug-mode web-mode tide elisp-format company-ghc haskell-mode clang-format irony-eldoc flycheck-irony company-irony irony js2-mode elpy cargo flycheck-pos-tip golint flycheck-rust flycheck company-lua racer company-go company helm-themes helm which-key evil-nerd-commenter evil-leader doom-themes exec-path-from-shell shackle evil-vimish-fold eyebrowse nlinum use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

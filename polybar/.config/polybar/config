@@ -42,7 +42,7 @@ font-3 = FontAwesome:pixelsize=10;1
 
 modules-left = mpd
 modules-center = bspwm
-modules-right = volume pkg gamemode memory cpu wlan date powermenu
+modules-right = pkg volume gamemode memory cpu wlan date powermenu
 
 tray-position = right
 tray-padding = 2
@@ -205,7 +205,7 @@ click-left = sh ~/.scripts/gamemode.sh
 
 [module/pkg]
 type = custom/script
-interval = 1200
+interval = 300
 format = <label>
 format-underline = #dc322f
 label = "%output:0:30%"

@@ -3,21 +3,7 @@
 
 export LANG=en_US.UTF-8
 
-# Path to your oh-my-zsh installation.
-#export ZSH=~/.oh-my-zsh
-
 source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
-
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-#ZSH_THEME="spaceship"
-
- #Use case-sensitive completion.
-#CASE_SENSITIVE="false"
-
-#plugins=(git)
-
-#source $ZSH/oh-my-zsh.sh
 
 unsetopt CORRECT
 
@@ -54,5 +40,3 @@ alias gs="git status"
 alias song="mpc searchplay title $1"
 
 alias update="pacaur -Syu && flatpak update --user"
-
-. $HOME/.profile
