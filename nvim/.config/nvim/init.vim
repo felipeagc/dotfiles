@@ -93,7 +93,7 @@ if dein#load_state('~/.local/share/dein')
 	call dein#add('junegunn/goyo.vim')
 	call dein#add('sheerun/vim-polyglot')
 	call dein#add('wellle/targets.vim')
-	" call dein#add('autozimu/LanguageClient-neovim', { 'build': ':UpdateRemotePlugins' })
+	call dein#add('autozimu/LanguageClient-neovim', { 'build': ':UpdateRemotePlugins' })
 
 	" Required:
 	call dein#end()
