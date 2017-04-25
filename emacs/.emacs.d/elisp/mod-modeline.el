@@ -1,3 +1,13 @@
+;; Dependencies
+(use-package f)
+
+(use-package s)
+
+(use-package powerline)
+
+(use-package all-the-icons
+  :after powerline)
+
 (defvar mode-line-height 36
   "How tall the mode-line should be. This is only respected in GUI emacs.")
 
