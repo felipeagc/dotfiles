@@ -40,3 +40,5 @@ alias gs="git status"
 alias song="mpc searchplay title $1"
 
 alias update="pacaur -Syu && flatpak update --user"
+
+source ~/.zprofile
