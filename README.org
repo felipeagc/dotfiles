@@ -1,5 +1,5 @@
 * Dotfiles
-[[http://i.imgur.com/oz0Dp4x.png]]
+[[http://i.imgur.com/4hvGi4y.png]]
 
 ** Installation
 Clone the repo with the following command:
@@ -29,3 +29,4 @@ stow bspwm compton dunst # and so on
 - maim
 - imgurbash2
 - dunst
+- ag
