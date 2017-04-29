@@ -18,6 +18,7 @@
   (setq use-package-always-ensure t)
   #+END_SRC
 * Macros
+  These macros are taken from hlissner's emacs config (the modeline needs them).
   #+BEGIN_SRC emacs-lisp
   (defmacro def-popup! (&rest params)
   `(push ',params shackle-rules))
@@ -71,39 +72,62 @@
   `(progn ,@forms)))
   #+END_SRC
 
+* Custom definitions
+** Properties
+   #+BEGIN_SRC emacs-lisp
+     (setq felipe/leader-key "<SPC>")
+   #+END_SRC
+** Keybinding
+   #+BEGIN_SRC emacs-lisp
+    (defun felipe/name-bind (keycombo name)
+      (interactive)
+      (which-key-add-key-based-replacements (concat felipe/leader-key keycombo) name))
+
+    (defun felipe/bind (keycombo command name)
+      (interactive)
+      (evil-leader/set-key keycombo command)
+      (felipe/name-bind keycombo name))
+
+    (defun felipe/name-bind-mode (keycombo name mode)
+      (which-key-add-major-mode-key-based-replacements mode (concat felipe/leader-key keycombo) name))
+
+    (defun felipe/bind-mode (keycombo command name mode)
+      (evil-leader/set-key-for-mode mode keycombo command)
+      (felipe/name-bind-mode keycombo name mode))
+   #+END_SRC
+** Configuration
+   #+BEGIN_SRC emacs-lisp
+     (defun felipe/edit-config()
+       (interactive)
+       (find-file "~/.emacs.d/config.org"))
+
+     (defun felipe/reload-config()
+       (interactive)
+       (load-file "~/.emacs.d/init.el")
+       (evil-leader-mode))
+   #+END_SRC
+** Evil
+   These are used to modify evil's indent shift behavior
+   #+BEGIN_SRC emacs-lisp
+     (defun felipe/evil-shift-left-visual ()
+       (interactive)
+       (evil-shift-left (region-beginning) (region-end))
+       (evil-normal-state)
+       (evil-visual-restore))
+
+     (defun felipe/evil-shift-right-visual ()
+       (interactive)
+       (evil-shift-right (region-beginning) (region-end))
+       (evil-normal-state)
+       (evil-visual-restore))
+   #+END_SRC
 * UI
   #+BEGIN_SRC emacs-lisp
   (use-package which-key
     :init
     (setq which-key-idle-delay 0.3)
     :config
-    (which-key-mode)
-    (which-key-add-key-based-replacements
-      "<SPC> T" "Theme/toggles"
-      "<SPC> Tt" "Switch theme"
-      "<SPC> Tn" "Toggle line numbers"
-      "<SPC> b" "Buffer"
-      "<SPC> bb" "Find buffer"
-      "<SPC> bn" "Next buffer"
-      "<SPC> bp" "Previous buffer"
-      "<SPC> bd" "Close buffer"
-      "<SPC> z" "Zoom"
-      "<SPC> zi" "Zoom in"
-      "<SPC> zo" "Zoom out"
-      "<SPC> w" "Window"
-      "<SPC> w/" "Split vertically"
-      "<SPC> w-" "Split horizontally"
-      "<SPC> e" "Error"
-      "<SPC> en" "Next error"
-      "<SPC> ep" "Previous error"
-      "<SPC> m" "Major Mode"
-      "<SPC> g" "Git"
-      "<SPC> f" "Files/folding"
-      "<SPC> ff" "Find file"
-      "<SPC> fb" "Toggle fold"
-      "<SPC> p" "Projectile"
-      "<SPC> pp" "Switch project"
-      "<SPC> pf" "Find file"))
+    (which-key-mode))
 
   (use-package helm
     :init
@@ -140,6 +164,7 @@
   (set-frame-font "Hack 11")
   #+END_SRC
 * Modeline
+  This is hlissner's modeline.
   #+BEGIN_SRC emacs-lisp
   ;; Dependencies
   (use-package f)
@@ -600,15 +625,6 @@
     (global-set-key [escape] 'evil-exit-emacs-state)
 
     (use-package evil-leader
-      :init
-      (defun f-edit-config()
-        (interactive)
-        (find-file "~/.emacs.d/init.el"))
-
-      (defun f-reload-config()
-        (interactive)
-        (load-file "~/.emacs.d/init.el")
-        (evil-leader-mode))
       :config
       (global-evil-leader-mode)
 
@@ -618,54 +634,18 @@
       (define-key evil-visual-state-map [tab] 'felipe/evil-shift-right-visual)
       (define-key evil-visual-state-map [S-tab] 'felipe/evil-shift-left-visual)
 
-      (defun felipe/evil-shift-left-visual ()
-        (interactive)
-        (evil-shift-left (region-beginning) (region-end))
-        (evil-normal-state)
-        (evil-visual-restore))
-
-      (defun felipe/evil-shift-right-visual ()
-        (interactive)
-        (evil-shift-right (region-beginning) (region-end))
-        (evil-normal-state)
-        (evil-visual-restore))
-
-      (evil-leader/set-leader "<SPC>")
-      (evil-leader/set-key
-        "Tt" 'helm-themes
-        "Tn" 'nlinum-mode
-        "zz" 'text-scale-adjust
-        "zi" 'text-scale-increase
-        "zo" 'text-scale-decrease
-        "ff" 'helm-find-files
-        "fb" 'hs-toggle-hiding
-        "fed" 'f-edit-config
-        "fer" 'f-reload-config
-        "bb" 'helm-buffers-list
-        "bd" 'kill-this-buffer
-        "bn" 'next-buffer
-        "bp" 'previous-buffer
-        "w/" 'split-window-right
-        "w-" 'split-window-below
-        "wd" 'delete-window
-        "en" 'flycheck-next-error
-        "ep" 'flycheck-previous-error))
+      (evil-leader/set-leader felipe/leader-key))
 
     (use-package evil-commentary))
   #+END_SRC
-
+  
 * Projectile
   #+BEGIN_SRC emacs-lisp
   (use-package projectile)
 
   (use-package helm-projectile
-    :after projectile
-    :config
-    (evil-leader/set-key
-      "pp" 'helm-projectile-switch-project
-      "pf" 'helm-projectile-find-file))
+    :after projectile)
   #+END_SRC
-
 * Snippets
   #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
@@ -676,7 +656,6 @@
     :config
     (yas-global-mode 1))
   #+END_SRC
-
 * Flycheck
   #+BEGIN_SRC emacs-lisp
   (use-package flycheck
@@ -690,7 +669,6 @@
       :config
       (flycheck-pos-tip-mode)))
   #+END_SRC
-
 * Company
   #+BEGIN_SRC emacs-lisp
   (use-package company
@@ -699,8 +677,9 @@
     :config
     (global-company-mode))
   #+END_SRC
-
+* TODO Git
 * LSP
+  Language Server Protocol
   #+BEGIN_SRC emacs-lisp
   (use-package lsp-mode
     :config
@@ -708,7 +687,6 @@
     (with-eval-after-load 'lsp-mode
         (require 'lsp-flycheck)))
   #+END_SRC
-
 * Languages
 ** Org
    #+BEGIN_SRC emacs-lisp
@@ -722,33 +700,28 @@
    #+END_SRC
 ** Rust
    #+BEGIN_SRC emacs-lisp
-    (use-package rust-mode
-      :after evil-leader
-      :config
+     (use-package rust-mode
+       :after evil-leader
+       :config
 
-      (use-package racer
-        :after company
-        :config
-        (add-hook 'rust-mode-hook #'racer-mode)
-        (add-hook 'racer-mode-hook #'eldoc-mode)
-        (add-hook 'racer-mode-hook #'company-mode))
+       (use-package racer
+         :after company
+         :config
+         (add-hook 'rust-mode-hook #'racer-mode)
+         (add-hook 'racer-mode-hook #'eldoc-mode)
+         (add-hook 'racer-mode-hook #'company-mode))
 
-      (use-package flycheck-rust
-        :after flycheck
-        :config
-        (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+       (use-package flycheck-rust
+         :after flycheck
+         :config
+         (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
-      (evil-leader/set-key-for-mode 'rust-mode
-        "mb" 'cargo-process-build
-        "mr" 'cargo-process-run
-        "mf" 'rust-format-buffer)
+       (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common))
 
-      (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common))
-
-    (use-package cargo
-      :after rust-mode
-      :config
-      (add-hook 'rust-mode-hook 'cargo-minor-mode))
+     (use-package cargo
+       :after rust-mode
+       :config
+       (add-hook 'rust-mode-hook 'cargo-minor-mode))
    #+END_SRC
 ** Python
    #+BEGIN_SRC emacs-lisp
@@ -767,12 +740,7 @@
       (use-package company-lua
         :after company
         :config
-        (add-to-list 'company-backends 'company-lua))
-      (evil-leader/set-key-for-mode 'lua-mode
-          "mr" (lambda ()
-                  (interactive)
-                  (let ((app-root (locate-dominating-file (buffer-file-name) "main.lua")))
-                  (shell-command (format "love %s &" app-root))))))
+        (add-to-list 'company-backends 'company-lua)))
    #+END_SRC
 ** Javascript
    #+BEGIN_SRC emacs-lisp
@@ -800,10 +768,6 @@
 
     (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
-    (evil-leader/set-key-for-mode 'c++-mode
-      "mf" 'clang-format-buffer
-      "ms" 'ff-find-other-file)
-
     (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++14")))
    #+END_SRC
 ** Haskell
@@ -828,11 +792,7 @@
       ;; formats the buffer before saving
       (add-hook 'before-save-hook 'tide-format-before-save)
 
-      (add-hook 'typescript-mode-hook #'setup-tide-mode)
-
-      (evil-leader/set-key-for-mode 'typescript-mode
-        "mf" 'tide-format
-        "mg" 'tide-goto-reference))
+      (add-hook 'typescript-mode-hook #'setup-tide-mode))
    #+END_SRC
 ** Web languages (markup, etc)
    #+BEGIN_SRC emacs-lisp
@@ -848,9 +808,6 @@
    #+BEGIN_SRC emacs-lisp
     (use-package go-mode
       :config
-      (evil-leader/set-key-for-mode 'go-mode
-        "mf" 'gofmt
-        "mi" 'go-import-add)
       (use-package golint
         :after flycheck)
       (use-package company-go
@@ -862,6 +819,11 @@
         :config
         (add-hook 'go-mode-hook 'go-eldoc-setup)))
    #+END_SRC
+* Writing
+  Provides a distraction free writing mode.
+  #+BEGIN_SRC emacs-lisp
+    (use-package olivetti)
+  #+END_SRC
 * Indentation
   #+BEGIN_SRC emacs-lisp
   (add-hook 'rust-mode-hook
@@ -902,4 +864,74 @@
       (setq tab-width 2)
       (setq evil-shift-width 2))))
   #+END_SRC
-  
+* Keybinding
+** Core bindings
+   #+BEGIN_SRC emacs-lisp
+    (felipe/name-bind "T" "Theme/toggles")
+    (felipe/bind "Tt" 'helm-themes "Themes")
+    (felipe/bind "Tn" 'nlinum-mode "Toggle line numbers")
+
+    (felipe/name-bind "z" "Zoom")
+    (felipe/bind "zz" 'text-scale-adjust "Adjust zoom")
+    (felipe/bind "zi" 'text-scale-increase "Zoom in")
+    (felipe/bind "zo" 'text-scale-decrease "Zoom out")
+
+    (felipe/name-bind "f" "Files")
+    (felipe/bind "ff" 'helm-find-files "Find file")
+    (felipe/bind "fb" 'hs-toggle-hiding "Toggle fold")
+    (felipe/name-bind "fe" "Edit")
+    (felipe/bind "fed" 'felipe/edit-config "Edit config")
+    (felipe/bind "fer" 'felipe/reload-config "Reload config")
+
+    (felipe/name-bind "b" "Buffer")
+    (felipe/bind "bb" 'helm-buffers-list "Find buffer")
+    (felipe/bind "bd" 'kill-this-buffer "Delete buffer")
+    (felipe/bind "bn" 'next-buffer "Next buffer")
+    (felipe/bind "bp" 'previous-buffer "Previous buffer")
+
+    (felipe/name-bind "w" "Window")
+    (felipe/bind "w/" 'split-window-right "Split right")
+    (felipe/bind "w-" 'split-window-below "Split below")
+    (felipe/bind "wd" 'delete-window "Delete window")
+
+    (felipe/name-bind "e" "Error")
+    (felipe/bind "en" 'flycheck-next-error "Next error")
+    (felipe/bind "en" 'flycheck-previous-error "Previous error")
+
+    (felipe/name-bind "p" "Projectile")
+    (felipe/bind "pp" 'helm-projectile-switch-project "Switch project")
+    (felipe/bind "pf" 'helm-projectile-find-file "Find file")
+
+    (felipe/name-bind "m" "Major mode")
+
+    (felipe/name-bind "g" "Git")
+   #+END_SRC
+** Rust
+   #+BEGIN_SRC emacs-lisp
+     (felipe/bind-mode "mb" 'cargo-process-build "Cargo build" 'rust-mode)
+     (felipe/bind-mode "mr" 'cargo-process-run "Cargo run" 'rust-mode)
+     (felipe/bind-mode "mf" 'rust-format-buffer "Format" 'rust-mode)
+   #+END_SRC
+** Lua
+   #+BEGIN_SRC emacs-lisp
+     (felipe/bind-mode "mr" '(lambda ()
+                    (interactive)
+                    (let ((app-root (locate-dominating-file (buffer-file-name) "main.lua")))
+                      (shell-command (format "love %s &" app-root))))
+                       "Run love game" 'lua-mode)
+   #+END_SRC
+** C/C++
+   #+BEGIN_SRC emacs-lisp
+     (felipe/bind-mode "mf" 'clang-format-buffer "Format" 'c++-mode)
+     (felipe/bind-mode "ms" 'ff-find-other-file "Switch file" 'c++-mode)
+   #+END_SRC
+** Typescript
+   #+BEGIN_SRC emacs-lisp
+     (felipe/bind-mode "mf" 'tide-format "Format" 'typescript-mode)
+     (felipe/bind-mode "mg" 'tide-goto-reference "Go to reference" 'typescript-mode)
+   #+END_SRC
+** Go
+   #+BEGIN_SRC emacs-lisp
+     (felipe/bind-mode "mf" 'gofmt "Format" 'go-mode)
+     (felipe/bind-mode "mi" 'go-import-add "Add imports" 'go-mode)
+   #+END_SRC
