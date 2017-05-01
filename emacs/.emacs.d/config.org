@@ -633,35 +633,35 @@
       (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
       (global-set-key [escape] 'evil-exit-emacs-state))
   #+END_SRC
-*** Evil leader
-    #+BEGIN_SRC emacs-lisp
-      (use-package evil-leader
-        :after evil
-        :config
-        (global-evil-leader-mode)
+** Evil leader
+   #+BEGIN_SRC emacs-lisp
+     (use-package evil-leader
+       :after evil
+       :config
+       (global-evil-leader-mode)
 
-        ; Overload shifts so that they don't lose the selection
-        (define-key evil-visual-state-map (kbd ">") 'felipe/evil-shift-right-visual)
-        (define-key evil-visual-state-map (kbd "<") 'felipe/evil-shift-left-visual)
-        (define-key evil-visual-state-map [tab] 'felipe/evil-shift-right-visual)
-        (define-key evil-visual-state-map [S-tab] 'felipe/evil-shift-left-visual)
+       ; Overload shifts so that they don't lose the selection
+       (define-key evil-visual-state-map (kbd ">") 'felipe/evil-shift-right-visual)
+       (define-key evil-visual-state-map (kbd "<") 'felipe/evil-shift-left-visual)
+       (define-key evil-visual-state-map [tab] 'felipe/evil-shift-right-visual)
+       (define-key evil-visual-state-map [S-tab] 'felipe/evil-shift-left-visual)
 
-        (evil-leader/set-leader felipe/leader-key)) 
-    #+END_SRC
-*** Evil commentary
-    #+BEGIN_SRC emacs-lisp
-      (use-package evil-commentary
-        :after evil
-        :config
-        (evil-commentary-mode))
-    #+END_SRC
-*** Evil surround
-    #+BEGIN_SRC emacs-lisp
-      (use-package evil-surround
-        :after evil
-        :config
-        (global-evil-surround-mode 1))
-    #+END_SRC
+       (evil-leader/set-leader felipe/leader-key)) 
+   #+END_SRC
+** Evil commentary
+   #+BEGIN_SRC emacs-lisp
+     (use-package evil-commentary
+       :after evil
+       :config
+       (evil-commentary-mode))
+   #+END_SRC
+** Evil surround
+   #+BEGIN_SRC emacs-lisp
+     (use-package evil-surround
+       :after evil
+       :config
+       (global-evil-surround-mode 1))
+   #+END_SRC
 * Projectile
   #+BEGIN_SRC emacs-lisp
   (use-package projectile)
@@ -939,6 +939,8 @@
      (felipe/bind "gg" 'magit-status "status")
      (felipe/bind "gc" 'magit-commit "commit")
      (felipe/bind "gp" 'magit-push "push")
+     (felipe/bind "gs" 'magit-stage "stage")
+     (felipe/bind "gU" 'magit-unstage "unstage")
    #+END_SRC
 ** Rust
    #+BEGIN_SRC emacs-lisp
