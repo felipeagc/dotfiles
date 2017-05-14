@@ -28,7 +28,6 @@ if dein#load_state('~/.local/share/dein')
 	" Git
 	call dein#add('tpope/vim-fugitive')
 	call dein#add('mhinz/vim-signify')
-	call dein#add('jreybert/vimagit')
 
 	" Tags
 	call dein#add('ludovicchabant/vim-gutentags')
@@ -93,7 +92,7 @@ if dein#load_state('~/.local/share/dein')
 	call dein#add('junegunn/goyo.vim')
 	call dein#add('sheerun/vim-polyglot')
 	call dein#add('wellle/targets.vim')
-	call dein#add('autozimu/LanguageClient-neovim', { 'build': ':UpdateRemotePlugins' })
+	" call dein#add('autozimu/LanguageClient-neovim', { 'build': ':UpdateRemotePlugins' })
 
 	" Required:
 	call dein#end()
@@ -186,21 +185,8 @@ let g:deoplete#sources#clang#libclang_path = '/usr/lib/libclang.so'
 let g:deoplete#sources#clang#clang_header = '/usr/lib/clang'
 let g:auto_complete_start_length = 1
 let g:deoplete#sources#clang#flags = [
-      \ "-fPIC",
-      \ "-isystem", "/usr/include/qt",
-      \ "-isystem", "/usr/include/qt/QtWebEngine",
-      \ "-isystem", "/usr/include/qt/QtWebEngineCore",
-      \ "-isystem", "/usr/include/qt/QtQuick",
-      \ "-isystem", "/usr/include/qt/QtGui",
-      \ "-isystem", "/usr/include/qt/QtWebChannel",
-      \ "-isystem", "/usr/include/qt/QtQml",
-      \ "-isystem", "/usr/include/qt/QtNetwork",
-      \ "-isystem", "/usr/include/qt/QtPositioning",
-      \ "-isystem", "/usr/include/qt/QtCore",
-      \ "-isystem", "/usr/include/libdrm",
-      \ "-isystem", "/usr/include/qt/QtCore",
-      \ "-I", "/usr/lib/qt/mkspecs/linux-g++",
-      \ ]
+	\ "-Isubprojects/glad/include"
+	\ ]
 
 let g:gutentags_cache_dir = '~/.local/share/gutentags'
 
@@ -220,7 +206,7 @@ let g:ale_sign_column_always = 1
 let g:ale_set_loclist = 0
 let g:ale_set_quickfix = 0
 let g:ale_open_list = 0
-let g:ale_cpp_clang_options = "-std=c++14 -Wall -fPIC -isystem /usr/include/qt -isystem /usr/include/qt/QtWebEngine -isystem /usr/include/qt/QtWebEngineCore -isystem /usr/include/qt/QtQuick -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtWebChannel -isystem /usr/include/qt/QtQml -isystem /usr/include/qt/QtNetwork -isystem /usr/include/qt/QtPositioning -isystem /usr/include/qt/QtCore -I. -isystem /usr/include/libdrm -I/usr/lib/qt/mkspecs/linux-g++"
+let g:ale_cpp_clang_options = "-std=c++14 -Isubprojects/glad/include"
 let g:ale_linters = {
 			\ 'cpp': ['clang'],
 			\ 'lua': [],
@@ -245,6 +231,8 @@ let g:LanguageClient_autoStart = 1
 
 let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 
+set mouse=a
+set noshowcmd
 set number
 set clipboard=unnamedplus
 set completeopt-=preview
@@ -269,6 +257,7 @@ nmap <silent> <c-j> :wincmd j<CR>
 nmap <silent> <c-h> :wincmd h<CR>
 nmap <silent> <c-l> :wincmd l<CR>
 
+
 " Beginnings and ends of lines
 nnoremap H ^
 nnoremap L $
@@ -278,9 +267,9 @@ vnoremap < <gv
 vnoremap > >gv
 
 " Language server bindings
-nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+" nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+" nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+" nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
 
 " Fix filetype indentations
 autocmd Filetype crystal setlocal expandtab|setlocal shiftwidth=2|setlocal softtabstop=2

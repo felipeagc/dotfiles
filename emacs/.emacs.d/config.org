@@ -111,7 +111,7 @@
         (set-frame-font "Hack 11")
         (tool-bar-mode -1)
 
-        (menu-bar-mode 0)
+        (menu-bar-mode -1)
         (blink-cursor-mode 0)
         (scroll-bar-mode 0)
         (tooltip-mode 0))
@@ -139,6 +139,7 @@
        (setq helm-split-window-in-side-p t)
        :config
        (helm-mode 1)
+       (helm-autoresize-mode 1)
        (define-key helm-find-files-map "\t" 'helm-execute-persistent-action))
 
      (use-package helm-themes
@@ -148,7 +149,8 @@
    #+BEGIN_SRC emacs-lisp
      (use-package which-key
        :init
-       (setq which-key-idle-delay 0.3)
+       (setq which-key-idle-delay 0.2)
+       (setq which-key-add-column-padding 1)
        :config
        (which-key-mode))
    #+END_SRC
@@ -545,62 +547,73 @@
   (setq-default mode-line-format (doom-mode-line))
   #+END_SRC
 * Misc
-  #+BEGIN_SRC emacs-lisp
-  (setq mouse-wheel-scroll-amount '(2 ((shift) . 2))) ;; one line at a time
-  (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
-  (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
-  (setq scroll-step 1) ;; keyboard scroll one line at a time
+** Dumb jump
+   #+BEGIN_SRC emacs-lisp
+     (use-package dumb-jump
+       :config
+       (setq dumb-jump-selector 'helm)) 
+   #+END_SRC
+** Zooming
+   #+BEGIN_SRC emacs-lisp
+     (use-package default-text-scale)
+   #+END_SRC
+** Other stuff
+   #+BEGIN_SRC emacs-lisp
+     (setq mouse-wheel-scroll-amount '(2 ((shift) . 2))) ;; one line at a time
+     (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+     (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+     (setq scroll-step 1) ;; keyboard scroll one line at a time
 
-  (setq-default indent-tabs-mode nil)
+     (setq-default indent-tabs-mode nil)
 
-  (setq show-paren-delay 0)
-  (show-paren-mode t)
-  (setq show-paren-style 'parenthesis)
+     (setq show-paren-delay 0)
+     (show-paren-mode t)
+     (setq show-paren-style 'parenthesis)
 
-  (add-hook 'prog-mode-hook #'hs-minor-mode)
+     (add-hook 'prog-mode-hook #'hs-minor-mode)
 
-    (setq-default fringes-outside-margins t)
+       (setq-default fringes-outside-margins t)
 
 
-  ;; Stop emacs from making a mess
-  (setq auto-save-file-name-transforms
-            `((".*" ,(concat user-emacs-directory "auto-save/") t))) 
-  (setq backup-directory-alist
-        `(("." . ,(expand-file-name
-                  (concat user-emacs-directory "backups")))))
+     ;; Stop emacs from making a mess
+     (setq auto-save-file-name-transforms
+               `((".*" ,(concat user-emacs-directory "auto-save/") t))) 
+     (setq backup-directory-alist
+           `(("." . ,(expand-file-name
+                     (concat user-emacs-directory "backups")))))
 
-  (use-package nlinum
-    :config
-    (global-nlinum-mode 1)
-    (defun nlinum-mode-margin-hook ()
-      (when nlinum-mode
-        (setq-local nlinum-format "%d ")))
-    (add-hook 'nlinum-mode-hook #'nlinum-mode-margin-hook))
+     (use-package nlinum
+       :config
+       (global-nlinum-mode 1)
+       (defun nlinum-mode-margin-hook ()
+         (when nlinum-mode
+           (setq-local nlinum-format "%d ")))
+       (add-hook 'nlinum-mode-hook #'nlinum-mode-margin-hook))
 
-  (use-package eyebrowse
-    :config
-    (eyebrowse-mode t))
+     (use-package eyebrowse
+       :config
+       (eyebrowse-mode t))
 
-  (use-package evil-vimish-fold
-    :after evil
-    :config
-    (evil-vimish-fold-mode 1))
+     (use-package evil-vimish-fold
+       :after evil
+       :config
+       (evil-vimish-fold-mode 1))
 
-  (use-package shackle
-    :init
-    (setq helm-display-function 'pop-to-buffer) ; make helm play nice
-    (setq shackle-rules '(("\\`\\*helm.*?\\*\\'" :regexp t :align t :size 0.4)))
-    (setq shackle-default-rule '(:same t)))
+     (use-package shackle
+       :init
+       (setq helm-display-function 'pop-to-buffer) ; make helm play nice
+       (setq shackle-rules '(("\\`\\*helm.*?\\*\\'" :regexp t :align t :size 0.4)))
+       (setq shackle-default-rule '(:same t)))
 
-  (use-package exec-path-from-shell
-    :config
-    (exec-path-from-shell-initialize))
+     (use-package exec-path-from-shell
+       :config
+       (exec-path-from-shell-initialize))
 
-  ;;
-  ;; Electric pairs
-  ;;
-  (electric-pair-mode)
-  #+END_SRC
+     ;;
+     ;; Electric pairs
+     ;;
+     (electric-pair-mode)
+   #+END_SRC
 * Evil
   #+BEGIN_SRC emacs-lisp
     (use-package evil
@@ -706,25 +719,23 @@
     (use-package evil-magit
       :after magit)
   #+END_SRC
-* LSP
-  Language Server Protocol
-  #+BEGIN_SRC emacs-lisp
-  (use-package lsp-mode
-    :config
-    (global-lsp-mode t)
-    (with-eval-after-load 'lsp-mode
-        (require 'lsp-flycheck)))
-  #+END_SRC
 * Languages
 ** Org
    #+BEGIN_SRC emacs-lisp
-   (use-package org-bullets
-     :init
-     (add-hook 'org-mode-hook (lambda ()
-                               (nlinum-mode 0)
-                               (org-bullets-mode 1))))
-   (setq org-src-fontify-natively t)
-   (setq org-log-done 'time)
+     (use-package org
+       :config
+       (setq org-src-fontify-natively t)
+       (setq org-log-done 'time))
+
+     (use-package org-bullets
+       :after org
+       :init
+       (add-hook 'org-mode-hook (lambda ()
+                                 (nlinum-mode 0)
+                                 (org-bullets-mode 1))))
+
+     (use-package evil-org
+       :after org)
    #+END_SRC
 ** Rust
    #+BEGIN_SRC emacs-lisp
@@ -832,6 +843,8 @@
    #+BEGIN_SRC emacs-lisp
     (use-package glsl-mode
       :config
+      (add-to-list 'auto-mode-alist '("\\.vsh\\'" . glsl-mode))
+      (add-to-list 'auto-mode-alist '("\\.fsh\\'" . glsl-mode))
       (add-to-list 'auto-mode-alist '("\\.glslf\\'" . glsl-mode))
       (add-to-list 'auto-mode-alist '("\\.glslv\\'" . glsl-mode)))
    #+END_SRC
@@ -934,6 +947,9 @@
      (felipe/bind "pf" 'helm-projectile-find-file "find file")
 
      (felipe/name-bind "m" "major mode")
+     (felipe/name-bind "mg" "go")
+     (felipe/bind "mgg" 'dumb-jump-go "goto def")
+     (felipe/bind "mgG" 'dumb-jump-go-other-window "goto def in other window")
 
      (felipe/name-bind "g" "git")
      (felipe/bind "gg" 'magit-status "status")
@@ -941,6 +957,11 @@
      (felipe/bind "gp" 'magit-push "push")
      (felipe/bind "gs" 'magit-stage "stage")
      (felipe/bind "gU" 'magit-unstage "unstage")
+   #+END_SRC
+** Make helm evil-friendly
+   #+BEGIN_SRC emacs-lisp
+     (define-key helm-map (kbd "C-j") 'helm-next-line)
+     (define-key helm-map (kbd "C-k") 'helm-previous-line)
    #+END_SRC
 ** Rust
    #+BEGIN_SRC emacs-lisp

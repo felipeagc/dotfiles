@@ -5,3 +5,11 @@ rofi.color-active: #282c34, #268bd2, #282c34, #268bd2, #ffffff
 rofi.color-urgent: #282c34, #dc322f, #282c34, #dc322f, #ffffff
 rofi.font: Source Sans Pro 16
 rofi.bw: 48
+
+Xft.dpi: 96
+Xft.antialias: true
+Xft.hinting: true
+Xft.rgba: rgb
+Xft.autohint: false
+Xft.hintstyle: hintslight
+Xft.lcdfilter: lcddefault

@@ -30,6 +30,8 @@ extract () {
     fi
 }
 
+alias open="xdg-open"
+
 alias ga="git add $1"
 alias gaa="git add \$(git ls-files -m | fzf -m)"
 alias gr="git rm $1"
@@ -42,3 +44,5 @@ alias song="mpc searchplay title $1"
 alias update="pacaur -Syu && flatpak update --user"
 
 source ~/.zprofile
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
