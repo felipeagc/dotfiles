@@ -2,7 +2,6 @@ export LANG=en_US.UTF-8
 
 export ZSH=$HOME/.oh-my-zsh
 
-SPACESHIP_PROMPT_SYMBOL="➜"
 ZSH_THEME="spaceship"
 
 plugins=(git pass sudo)
