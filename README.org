@@ -3,18 +3,23 @@
 
 ** Installation
 Clone the repo with the following command:
-#+BEGIN_SRC
-git clone https://github.com/felipeagc/dotfiles.git --recursive
+#+BEGIN_SRC shell
+git clone https://github.com/felipeagc/dotfiles.git
 #+END_SRC
 
-Then use stow to create a link to the files. For example:
-#+BEGIN_SRC
+To copy the configs to their proper places, use stow:
+#+BEGIN_SRC shell
 cd dotfiles
-stow bspwm compton dunst # and so on
+stow bspwm # install the bspwm configuration, for example
 #+END_SRC
 
-** Software used
+However, if you use Arch Linux and want to install the programs, fonts and
+themes required as well, you can use the setup.sh script.
+#+BEGIN_SRC shell
+./setup.sh
+#+END_SRC
 
+** Some of the software used
 - bspwm
 - sxhkd
 - polybar
@@ -22,11 +27,5 @@ stow bspwm compton dunst # and so on
 - neovim
 - rofi
 - zsh
-- prezto
-- fzf
 - termite
-- compton 
-- maim
-- imgurbash2
-- dunst
-- ag
+- compton

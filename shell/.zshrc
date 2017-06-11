@@ -1,34 +1,15 @@
-# If not running interactively, don't do anything
-[[ $- != *i* ]] && return
-
 export LANG=en_US.UTF-8
 
-source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+export ZSH=$HOME/.oh-my-zsh
+
+SPACESHIP_PROMPT_SYMBOL="➜"
+ZSH_THEME="spaceship"
+
+plugins=(git pass sudo)
+
+source $ZSH/oh-my-zsh.sh
 
 unsetopt CORRECT
-
-extract () {
-    if [ -f $1 ] ; then
-        case $1 in
-            *.tar.bz2) tar xvjf $1;;
-            *.tar.gz) tar xvzf $1;;
-            *.bz2) bunzip2 $1;;
-            *.rar) unrar x $1;;
-            *.gz) gunzip $1;;
-            *.tar) tar xvf $1;;
-            *.tbz2) tar xvjf $1;;
-            *.tgz) tar xvzf $1;;
-            *.zip) unzip $1;;
-            *.Z) uncompress $1;;
-            *.7z) 7za x $1;;
-            *.rar) unrar $1;;
-            *.zip) unzip $1;;
-            *) echo "'$1' cannot be extracted via >extract<" ;;
-        esac
-    else
-        echo "'$1' is not a valid file"
-    fi
-}
 
 alias open="xdg-open"
 
@@ -42,7 +23,7 @@ alias gs="git status"
 alias song="mpc searchplay title $1"
 
 alias update="pacaur -Syu && flatpak update --user"
+alias fp="flatpak"
 
 source ~/.zprofile
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

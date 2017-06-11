@@ -107,9 +107,15 @@ super + ctrl + space
 super + ctrl + shift + space
 	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
 
+
+
 #
 # move/resize
 #
+
+# equalize/balance split ratios
+super + shift + {e,b}
+	bspc node @/ -{E,B}
 
 # expand a window by moving one of its side outward
 super + alt + {h,j,k,l}
@@ -134,3 +140,7 @@ super + button{4,5}
 
 super + BackSpace
 	bspc config -d focused window_gap 48
+
+super + e
+	id=$(cat /tmp/scratchid);\
+	bspc node $id --flag hidden;bspc node -f $id

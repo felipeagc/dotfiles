@@ -22,7 +22,7 @@ if dein#load_state('~/.local/share/dein')
 	call dein#add('w0rp/ale')
 
 	" Fuzzy finders
-	call dein#add('junegunn/fzf', { 'build': './install --all'})
+	call dein#add('junegunn/fzf', { 'build': './install --bin'})
 	call dein#add('junegunn/fzf.vim')
 
 	" Git
@@ -212,7 +212,6 @@ let g:ale_linters = {
 			\ 'lua': [],
 			\ 'haskell': ['hdevtools'],
 			\ 'typescript': ['typecheck'],
-			\ 'rust': []
 			\}
 
 " let g:haskellmode_completion_ghc = 0

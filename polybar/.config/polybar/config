@@ -1,6 +1,3 @@
-[global/wm]
-margin-bottom = ${bar/top.height}
-
 [bar/top]
 ; Colors
 black = #14161a
@@ -46,8 +43,10 @@ wm-restack = bspwm
 scroll-up = bspwm-desknext
 scroll-down = bspwm-deskprev
 
+
 [module/title]
 type = internal/xwindow
+label-maxlen = 50
 
 
 [module/bspwm]

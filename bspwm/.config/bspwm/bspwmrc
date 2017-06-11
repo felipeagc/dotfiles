@@ -5,8 +5,8 @@ sxhkd &
 bspc monitor HDMI-0 -d 1 2 3 4 5 6 7 8 9 10
 # bspc monitor DVI-D-0 -d 9 10
 
-bspc config border_width         		1
-bspc config window_gap           		48
+bspc config border_width         		3
+bspc config window_gap           		32
 bspc config -m HDMI-0 top_padding 		36
 
 bspc config normal_border_color 		"#14161a"
@@ -24,24 +24,23 @@ bspc rule -a qutebrowser desktop='^1'
 bspc rule -a emacs desktop='^3' state=tiled
 bspc rule -a Emacs desktop='^3' state=tiled
 bspc rule -a Steam desktop='^4' state=tiled
-bspc rule -a Steam.exe desktop='^4' state=floating
+bspc rule -a Steam.exe desktop='^4' state=tiled
 bspc rule -a corebird desktop='^5'
 bspc rule -a Corebird desktop='^5'
-bspc rule -a riot desktop='^5'
-bspc rule -a Riot desktop='^5'
-bspc rule -a TelegramDesktop desktop='^5'
-bspc rule -a whatsie desktop='^5'
-bspc rule -a Whatsie desktop='^5'
 bspc rule -a discord desktop='^6'
 bspc rule -a csgo_linux64 desktop='^10'
 bspc rule -a love state=floating
+
+bspc rule -a scratchpad sticky=on state=floating hidden=on locked=on
+termite --class scratchpad -e ~/.scripts/scratchpad.sh &
 
 ~/.scripts/detect_csgo.sh &
 feh --bg-scale ~/images/blue_wallpaper.jpg
 polybar top &
 compton -b
 firefox &
-whatsie &
 corebird &
 steam-native &
+emacs &
 mpd
+
