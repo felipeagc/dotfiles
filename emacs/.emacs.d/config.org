@@ -77,6 +77,8 @@
 ** Theme
   #+BEGIN_SRC emacs-lisp
     (use-package kaolin-theme
+      :init
+      (setq kaolin-wave t)
       :config
       (load-theme 'kaolin t))
 
@@ -85,13 +87,15 @@
 ** Setup
    Set the font, hide toolbars, etc.
    #+BEGIN_SRC emacs-lisp
-     (set-frame-font "Ubuntu Mono Bold 13")
+     (set-frame-font "Ubuntu Mono 13")
 
      (tool-bar-mode -1)
      (menu-bar-mode -1)
      (blink-cursor-mode 0)
      (scroll-bar-mode 0)
      (tooltip-mode 0)
+     
+     (global-hl-line-mode 1)
    #+END_SRC
 ** Modeline
    #+BEGIN_SRC emacs-lisp
@@ -159,18 +163,33 @@
      (set-face-attribute 'window-divider-first-pixel nil :foreground "#353535")
      (set-face-attribute 'window-divider-last-pixel nil :foreground "#353535")
    #+END_SRC
-** Helm
+** Ivy
    #+BEGIN_SRC emacs-lisp
-     (use-package helm
-       :init
-       (setq helm-split-window-in-side-p t)
+     (use-package ivy
+       :diminish (ivy-mode . "")
        :config
-       (helm-mode 1)
-       (helm-autoresize-mode 1)
-       (define-key helm-find-files-map "\t" 'helm-execute-persistent-action))
+       (ivy-mode 1)
+       ;; add ‘recentf-mode’ and bookmarks to ‘ivy-switch-buffer’.
+       (setq ivy-use-virtual-buffers t)
+       ;; number of result lines to display
+       (setq ivy-height 10)
+       ;; does not count candidates
+       (setq ivy-count-format "")
+       ;; no regexp by default
+       (setq ivy-initial-inputs-alist nil)
+       ;; configure regexp engine.
+       (setq ivy-re-builders-alist
+             ;; allow input not in order
+             '((t   . ivy--regex-ignore-order))))
 
-     (use-package helm-themes
-       :after helm)
+     (use-package counsel
+       :after ivy
+       :config
+       (use-package counsel-projectile
+           :after projectile)
+
+       (use-package counsel-gtags))
+
    #+END_SRC
 ** Which-key
    #+BEGIN_SRC emacs-lisp
@@ -181,16 +200,38 @@
        :config
        (which-key-mode))
    #+END_SRC
+** Dashboard
+   #+BEGIN_SRC emacs-lisp
+     (use-package dashboard
+       :init
+       (setq dashboard-items '((recents  . 5)
+                               (projects . 5)))
+       (setq dashboard-startup-banner 'logo)
+       (setq dashboard-banner-logo-title "Welcome to Emacs!")
+       :config
+       (add-hook 'dashboard-mode-hook (lambda ()
+                                        (nlinum-mode 0)))
+       (dashboard-setup-startup-hook))
+
+   #+END_SRC
 * Misc
 ** Dumb jump
    #+BEGIN_SRC emacs-lisp
-     (use-package dumb-jump
-       :config
-       (setq dumb-jump-selector 'helm)) 
+     (use-package dumb-jump) 
    #+END_SRC
 ** Zooming
    #+BEGIN_SRC emacs-lisp
      (use-package default-text-scale)
+   #+END_SRC
+** Highlight TODO and FIXME
+   #+BEGIN_SRC emacs-lisp
+     (use-package fic-mode
+       :config
+       (add-hook 'prog-mode-hook 'fic-mode))
+   #+END_SRC
+** Find other file (header/source)
+   #+BEGIN_SRC emacs-lisp
+     (use-package cff)
    #+END_SRC
 ** Other stuff
    #+BEGIN_SRC emacs-lisp
@@ -218,6 +259,8 @@
                      (concat user-emacs-directory "backups")))))
 
      (use-package nlinum
+       :init
+       (setq nlinum-highlight-current-line t)
        :config
        (global-nlinum-mode 1)
        (defun nlinum-mode-margin-hook ()
@@ -236,8 +279,6 @@
 
      (use-package shackle
        :init
-       (setq helm-display-function 'pop-to-buffer) ; make helm play nice
-       (setq shackle-rules '(("\\`\\*helm.*?\\*\\'" :regexp t :align t :size 0.4)))
        (setq shackle-default-rule '(:same t)))
 
      (use-package exec-path-from-shell
@@ -312,10 +353,7 @@
    #+END_SRC
 * Projectile
   #+BEGIN_SRC emacs-lisp
-  (use-package projectile)
-
-  (use-package helm-projectile
-    :after projectile)
+    (use-package projectile)
   #+END_SRC
 * Snippets
   #+BEGIN_SRC emacs-lisp
@@ -332,12 +370,10 @@
     (use-package flycheck
       :init
       (setq flycheck-highlighting-mode 'symbols)
-      (setq flycheck-indication-mode 'right-fringe)
+      (setq flycheck-indication-mode 'left-fringe)
       (with-eval-after-load 'flycheck
         (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
       :config
-      (define-fringe-bitmap 'flycheck-fringe-bitmap-double-arrow
-        [0 0 0 0 0 4 12 28 60 124 252 124 60 28 12 4 0 0 0 0])
       (global-flycheck-mode)
       (use-package flycheck-pos-tip
         :config
@@ -453,6 +489,26 @@
    #+END_SRC
 ** C/C++
    #+BEGIN_SRC emacs-lisp
+     ;; (use-package rtags
+     ;;   :init
+     ;;   (setq rtags-autostart-diagnostics t)
+     ;;   (setq rtags-completions-enabled t)
+     ;;   :config
+     ;;   (use-package company-rtags
+     ;;     :config
+     ;;     (push 'company-rtags company-backends))
+     ;;   (use-package flycheck-rtags
+     ;;     :config
+     ;;     (defun my-flycheck-rtags-setup ()
+     ;;       (flycheck-select-checker 'rtags)
+     ;;       (setq-local flycheck-highlighting-mode nil) ;; RTags creates more accurate overlays.
+     ;;       (setq-local flycheck-check-syntax-automatically nil))
+     ;;     (add-hook 'c-mode-hook #'my-flycheck-rtags-setup)
+     ;;     (add-hook 'c++-mode-hook #'my-flycheck-rtags-setup))
+     ;;   (use-package ivy-rtags
+     ;;     :init
+     ;;     (setq rtags-display-result-backend 'ivy)))
+
      (use-package irony
        :after evil-leader
        :config
@@ -460,7 +516,7 @@
        (add-hook 'c-mode-hook 'irony-mode)
        (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
-       (setq-default irony-cdb-compilation-databases '(irony-cdb-clang-complete))
+       ;; (setq-default irony-cdb-compilation-databases '(irony-cdb-clang-complete))
        (setq irony-additional-clang-options '("-std=c++14"))
 
        (use-package flycheck-irony
@@ -552,49 +608,60 @@
   #+END_SRC
 * Indentation
   #+BEGIN_SRC emacs-lisp
-  (add-hook 'rust-mode-hook
-    (function (lambda ()
-      (setq tab-width 4)
-      (setq evil-shift-width 4))))
+    (add-hook 'rust-mode-hook
+      (function (lambda ()
+        (setq tab-width 4)
+        (setq evil-shift-width 4))))
 
-  (add-hook 'python-mode-hook
-    (function (lambda ()
-      (setq tab-width 4)
-      (setq evil-shift-width 4))))
+    (add-hook 'go-mode-hook
+      (function (lambda ()
+        (setq tab-width 8)
+        (setq evil-shift-width 8))))
 
-  (add-hook 'emacs-lisp-mode-hook
-    (function (lambda ()
-      (setq tab-width 2)
-      (setq evil-shift-width 2))))
+    (add-hook 'python-mode-hook
+      (function (lambda ()
+        (setq tab-width 4)
+        (setq evil-shift-width 4))))
 
-  (add-hook 'js2-mode-hook
-    (function (lambda ()
-      (setq js2-basic-offset 2)
-      (setq js-indent-level 2)
-      (setq evil-shift-width 2))))
+    (add-hook 'emacs-lisp-mode-hook
+      (function (lambda ()
+        (setq tab-width 2)
+        (setq evil-shift-width 2))))
 
-  (add-hook 'js-mode-hook
-    (function (lambda ()
-      (setq js2-basic-offset 2)
-      (setq js-indent-level 2)
-      (setq evil-shift-width 2))))
+    (add-hook 'js2-mode-hook
+      (function (lambda ()
+        (setq js2-basic-offset 2)
+        (setq js-indent-level 2)
+        (setq evil-shift-width 2))))
 
-  (add-hook 'c++-mode
-    (function (lambda ()
-      (setq tab-width 2)
-      (setq c-basic-offset 2)
-      (setq evil-shift-width 2))))
+    (add-hook 'js-mode-hook
+      (function (lambda ()
+        (setq js2-basic-offset 2)
+        (setq js-indent-level 2)
+        (setq evil-shift-width 2))))
 
-  (add-hook 'lua-mode
-    (function (lambda ()
-      (setq tab-width 2)
-      (setq evil-shift-width 2))))
+    (add-hook 'c++-mode
+      (function (lambda ()
+        (setq tab-width 2)
+        (setq c-basic-offset 2)
+        (setq evil-shift-width 2))))
+
+    (add-hook 'lua-mode
+      (function (lambda ()
+        (setq tab-width 2)
+        (setq evil-shift-width 2))))
   #+END_SRC
 * Keybinds
+** Map ESC to cancel (C-g)
+   #+BEGIN_SRC emacs-lisp
+     (define-key isearch-mode-map [escape] 'isearch-abort)   ;; isearch
+     (define-key isearch-mode-map "\e" 'isearch-abort)   ;; \e seems to work better for terminals
+     (global-set-key [escape] 'keyboard-escape-quit)         ;; everywhere else
+   #+END_SRC
 ** Core bindings
    #+BEGIN_SRC emacs-lisp
      (felipe/name-bind "T" "theme/toggles")
-     (felipe/bind "Tt" 'helm-themes "themes")
+     (felipe/bind "Tt" 'counsel-load-theme "themes")
      (felipe/bind "Tn" 'nlinum-mode "toggle line numbers")
 
      (felipe/name-bind "z" "zoom")
@@ -603,7 +670,7 @@
      (felipe/bind "zo" 'text-scale-decrease "zoom out")
 
      (felipe/name-bind "f" "files")
-     (felipe/bind "ff" 'helm-find-files "find file")
+     (felipe/bind "ff" 'counsel-find-file "find file")
      (felipe/bind "fb" 'hs-toggle-hiding "toggle fold")
      (felipe/name-bind "fe" "edit")
      (felipe/bind "fed" 'felipe/edit-config "edit config")
@@ -611,7 +678,7 @@
      (felipe/bind "fer" 'felipe/reload-config "reload config")
 
      (felipe/name-bind "b" "buffer")
-     (felipe/bind "bb" 'helm-buffers-list "find buffer")
+     (felipe/bind "bb" 'ivy-switch-buffer "find buffer")
      (felipe/bind "bd" 'kill-this-buffer "delete buffer")
      (felipe/bind "bn" 'next-buffer "next buffer")
      (felipe/bind "bp" 'previous-buffer "previous buffer")
@@ -626,8 +693,8 @@
      (felipe/bind "ep" 'flycheck-previous-error "previous error")
 
      (felipe/name-bind "p" "projectile")
-     (felipe/bind "pp" 'helm-projectile-switch-project "switch project")
-     (felipe/bind "pf" 'helm-projectile-find-file "find file")
+     (felipe/bind "pp" 'counsel-projectile-switch-project "switch project")
+     (felipe/bind "pf" 'counsel-projectile "find file")
 
      (felipe/name-bind "m" "major mode")
      (felipe/name-bind "mg" "go")
@@ -641,10 +708,17 @@
      (felipe/bind "gs" 'magit-stage "stage")
      (felipe/bind "gU" 'magit-unstage "unstage")
    #+END_SRC
-** Make helm evil-friendly
+** Org mode
    #+BEGIN_SRC emacs-lisp
-     (define-key helm-map (kbd "C-j") 'helm-next-line)
-     (define-key helm-map (kbd "C-k") 'helm-previous-line)
+     (felipe/name-bind-mode "mi" "Insert" 'org-mode)
+     (felipe/bind-mode "mih" 'org-insert-heading-respect-content "Heading" 'org-mode)
+     (felipe/bind-mode "mis" 'org-insert-subheading "Subheading" 'org-mode)
+     (felipe/bind-mode "mii" 'org-insert-item "Item" 'org-mode)
+     (felipe/bind-mode "mil" 'org-insert-link "Link" 'org-mode)
+
+     (felipe/bind-mode "mm" 'org-ctrl-c-ctrl-c "C-c C-c" 'org-mode)
+     
+     (felipe/bind-mode "mt" 'org-todo "Todo" 'org-mode)
    #+END_SRC
 ** Rust
    #+BEGIN_SRC emacs-lisp
@@ -663,7 +737,7 @@
 ** C/C++
    #+BEGIN_SRC emacs-lisp
      (felipe/bind-mode "mf" 'clang-format-buffer "Format" 'c++-mode)
-     (felipe/bind-mode "ms" 'ff-find-other-file "Switch file" 'c++-mode)
+     (felipe/bind-mode "ms" 'cff-find-other-file "Switch file" 'c++-mode)
    #+END_SRC
 ** Typescript
    #+BEGIN_SRC emacs-lisp
@@ -677,5 +751,6 @@
    #+END_SRC
 * Startup
   #+BEGIN_SRC emacs-lisp
-    (find-file "~/todo.org")
+    ;; (find-file "~/todo.org")
   #+END_SRC
+  

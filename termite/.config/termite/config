@@ -5,10 +5,10 @@ font         = Ubuntu Mono 13
 [colors]
 
 # special
-foreground      = #abb2bf
-foreground_bold = #abb2bf
+foreground      = #c8c8d0
+foreground_bold = #c8c8d0
 # background      = #1b1d21
-background		= #282c34
+background		= #1a1a1a
 
 # black
 color0  = #282c34

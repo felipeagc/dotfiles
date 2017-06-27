@@ -1,3 +1,5 @@
 config.el
 snippets
 session.*
+"config.org[*Org Src config.org[ emacs-lisp ]*]"
+projectile-bookmarks.eld

@@ -1,6 +1,6 @@
 [bar/top]
 ; Colors
-black = #14161a
+black = #1a1a1a
 white = #abb2bf
 red = #be5046
 blue = #3c909b
@@ -31,7 +31,7 @@ font-3 = FontAwesome:pixelsize=7;1
 
 modules-left = title
 modules-center = bspwm
-modules-right = pkg mpd volume date powermenu
+modules-right = switch_aspect pkg mpd volume date powermenu
 
 tray-position = right
 tray-padding = 2
@@ -55,9 +55,9 @@ ws-icon-default = x
 
 enable-click = true
 label-focused= %index%
-label-focused-background = #282c34
+label-focused-background = #282828
 label-focused-padding = 3
-label-focused-overline = #31353f
+label-focused-overline = #333333
 
 label-occupied = %index%
 label-occupied-padding = 3
@@ -180,11 +180,11 @@ menu-3-0-exec = systemctl poweroff
 menu-3-1 = cancel
 menu-3-1-exec = menu-open-0
 
-[module/gamemode]
+[module/switch_aspect]
 type = custom/text
 
-content = 
-click-left = sh ~/.scripts/gamemode.sh
+content = 
+click-left = sh ~/.scripts/switch_aspect.sh
 
 ; vim:ft=dosini
 
@@ -192,7 +192,7 @@ click-left = sh ~/.scripts/gamemode.sh
 type = custom/script
 interval = 300
 format = <label>
-format-underline = ${bar/top.red}
+format-overline = ${bar/top.red}
 label = "%output:0:30%"
 exec = ~/.config/polybar/pkg.sh
 exec-if = "ping -q -w 2 -c 1 176.34.135.167 > /dev/null"

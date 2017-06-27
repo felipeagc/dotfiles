@@ -144,3 +144,6 @@ super + BackSpace
 super + e
 	id=$(cat /tmp/scratchid);\
 	bspc node $id --flag hidden;bspc node -f $id
+
+super + r
+	termite -e ranger

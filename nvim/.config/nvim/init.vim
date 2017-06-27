@@ -68,6 +68,9 @@ if dein#load_state('~/.local/share/dein')
 	" Go
 	call dein#add('zchee/deoplete-go')
 
+	" Meson
+	call dein#add('stfl/meson.vim')
+
 	" Utilities
 	call dein#add('tpope/vim-surround')
 	"call dein#add('Shougo/vimproc.vim', {'build' : 'make'})
@@ -289,6 +292,11 @@ autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
 
 nnoremap cn *``cgn
 
+
+" Remap exit terminal to ESC
+tnoremap <Esc> <C-\><C-n>
+
+
 "
 " Leader bindings:
 "
@@ -353,6 +361,8 @@ let g:lmap.m.s = ['', 'Switch']
 autocmd FileType cpp map <buffer> <leader>ms :FSHere<CR>
 let g:lmap.m.f = ['', 'Format']
 autocmd FileType cpp map <buffer> <leader>mf :ClangFormat<CR>
+let g:lmap.m.r = ['', 'Run']
+autocmd FileType lua map <buffer> <leader>mr :!love . &<CR>
 
 let g:lmap.m.t = { 'name' : 'Type' }
 let g:lmap.m.t.t = ['', 'Show']
