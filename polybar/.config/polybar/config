@@ -6,7 +6,7 @@ red = #be5046
 blue = #3c909b
 
 ;monitor = ${env:MONITOR:HDMI-1}
-override-redirect = true
+;override-redirect = true
 width = 100%
 height = 36
 offset-x = 0
@@ -30,7 +30,8 @@ font-2 = Wuncon Siji:antialias=false;pixelsize=11;1
 font-3 = FontAwesome:pixelsize=7;1
 
 modules-left = title
-modules-center = bspwm
+modules-center = i3
+;modules-center = bspwm
 modules-right = switch_aspect pkg mpd volume date powermenu
 
 tray-position = right
@@ -38,10 +39,13 @@ tray-padding = 2
 ;tray-transparent = true
 tray-background = ${bar/top.background}
 
-wm-restack = bspwm
+scroll-up = i3wm-wsnext
+scroll-down = i3wm-wsprev
+;scroll-up = bspwm-desknext
+;scroll-down = bspwm-deskprev
 
-scroll-up = bspwm-desknext
-scroll-down = bspwm-deskprev
+;wm-restack = bspwm
+wm-restack = i3wm
 
 
 [module/title]
@@ -69,6 +73,30 @@ label-urgent-padding = 3
 label-empty = %index%
 label-empty-foreground = #55
 label-empty-padding = 3
+reverse-scroll = false
+
+[module/i3]
+type = internal/i3
+ws-icon-default = x
+
+format = <label-state>
+
+enable-click = true
+label-focused= %index%
+label-focused-background = #282828
+label-focused-padding = 3
+label-focused-overline = #333333
+
+label-unfocused = %index%
+label-unfocused-padding = 3
+
+label-urgent = %index%
+label-urgent-background = #bd2c40
+label-urgent-padding = 3
+
+label-visible = %index%
+label-visible-foreground = #55
+label-visible-padding = 3
 reverse-scroll = false
 
 [module/mpd]
@@ -155,7 +183,7 @@ label-open = 
 label-open-foreground = ${bar/top.red}
 label-close = cancel
 label-close-foreground = ${bar/top.red}
-label-separator = |
+label-separator = " | "
 label-separator-foreground = #55
 
 menu-0-0 = logout
@@ -168,7 +196,8 @@ menu-0-2-exec = menu-open-3
 menu-1-0 = cancel
 menu-1-0-exec = menu-open-0
 menu-1-1 = logout
-menu-1-1-exec = bspc quit
+menu-1-1-exec = i3-msg exit
+;menu-1-1-exec = bspc quit
 
 menu-2-0 = cancel
 menu-2-0-exec = menu-open-0
@@ -196,3 +225,4 @@ format-overline = ${bar/top.red}
 label = "%output:0:30%"
 exec = ~/.config/polybar/pkg.sh
 exec-if = "ping -q -w 2 -c 1 176.34.135.167 > /dev/null"
+

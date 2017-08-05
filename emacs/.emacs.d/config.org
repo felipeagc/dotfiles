@@ -17,6 +17,13 @@
 
   (setq use-package-always-ensure t)
   #+END_SRC
+* Start server
+  Starts the emacs server so we can use =emacsclient= to open files in the running instance.
+  #+BEGIN_SRC emacs-lisp
+    (require 'server)
+    (unless (server-running-p)
+      (server-start)) 
+  #+END_SRC
 * Custom definitions
 ** Properties
    #+BEGIN_SRC emacs-lisp
@@ -81,6 +88,18 @@
       (setq kaolin-wave t)
       :config
       (load-theme 'kaolin t))
+
+    ;; (use-package ujelly-theme
+    ;;   :config
+    ;;   (load-theme 'ujelly t))
+
+    ;; (use-package oceanic-theme
+    ;;   :config
+    ;;   (load-theme 'oceanic))
+
+    ;; (use-package doom-themes
+    ;;   :config
+    ;;   (load-theme 'doom-one t))
 
     (set-face-attribute 'fringe nil :background nil)
   #+END_SRC
@@ -210,7 +229,8 @@
        (setq dashboard-banner-logo-title "Welcome to Emacs!")
        :config
        (add-hook 'dashboard-mode-hook (lambda ()
-                                        (nlinum-mode 0)))
+                                        ;; (nlinum-mode 0)
+                                        ))
        (dashboard-setup-startup-hook))
 
    #+END_SRC
@@ -258,15 +278,15 @@
            `(("." . ,(expand-file-name
                      (concat user-emacs-directory "backups")))))
 
-     (use-package nlinum
-       :init
-       (setq nlinum-highlight-current-line t)
-       :config
-       (global-nlinum-mode 1)
-       (defun nlinum-mode-margin-hook ()
-         (when nlinum-mode
-           (setq-local nlinum-format "%d ")))
-       (add-hook 'nlinum-mode-hook #'nlinum-mode-margin-hook))
+     ;; (use-package nlinum
+     ;;   :init
+     ;;   (setq nlinum-highlight-current-line t)
+     ;;   :config
+     ;;   (global-nlinum-mode 1)
+     ;;   (defun nlinum-mode-margin-hook ()
+     ;;     (when nlinum-mode
+     ;;       (setq-local nlinum-format "%d ")))
+     ;;   (add-hook 'nlinum-mode-hook #'nlinum-mode-margin-hook))
 
      (use-package eyebrowse
        :config
@@ -413,7 +433,19 @@
               "XXX....."
               "XXXX....")))
   #+END_SRC
+* Docker
+  #+BEGIN_SRC emacs-lisp
+    (use-package docker)
+  #+END_SRC
 * Languages
+** LSP
+   Language server protocol
+   #+BEGIN_SRC emacs-lisp
+     ;; (use-package lsp-mode
+     ;;   :config
+     ;;   (require 'lsp-flycheck)
+     ;;   (add-hook 'prog-major-mode #'lsp-mode))
+   #+END_SRC
 ** Org
    #+BEGIN_SRC emacs-lisp
      (use-package org
@@ -425,7 +457,7 @@
        :after org
        :init
        (add-hook 'org-mode-hook (lambda ()
-                                 (nlinum-mode 0)
+                                 ;; (nlinum-mode 0)
                                  (org-bullets-mode 1))))
 
      (use-package evil-org
@@ -438,7 +470,7 @@
 ** Rust
    #+BEGIN_SRC emacs-lisp
      (use-package rust-mode
-       :after evil-leader
+       :after lsp-mode
        :config
 
        (use-package racer
@@ -453,7 +485,10 @@
          :config
          (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
-       (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common))
+       (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
+
+       ;; (use-package lsp-rust)
+       )
 
      (use-package cargo
        :after rust-mode
@@ -462,10 +497,18 @@
    #+END_SRC
 ** Python
    #+BEGIN_SRC emacs-lisp
-    (use-package elpy
-      :config
-      (elpy-enable)
-      (setq elpy-modules (delete 'elpy-module-highlight-indentation elpy-modules)))
+     (use-package elpy
+       :config
+       (elpy-enable)
+       (when (require 'flycheck nil t)
+         (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+         (add-hook 'elpy-mode-hook 'flycheck-mode))
+       (setq elpy-modules (delete 'elpy-module-highlight-indentation elpy-modules)))
+
+     ;; (use-package anaconda-mode
+     ;;   :config
+     ;;   (add-hook 'python-mode-hook 'anaconda-mode)
+     ;;   (add-hook 'python-mode-hook 'anaconda-eldoc-mode))
    #+END_SRC
 ** Lua
    #+BEGIN_SRC emacs-lisp
@@ -577,18 +620,18 @@
    #+END_SRC
 ** Go
    #+BEGIN_SRC emacs-lisp
-    (use-package go-mode
-      :config
-      (use-package golint
-        :after flycheck)
-      (use-package company-go
-        :config
-        (add-hook 'go-mode-hook (lambda ()
-                                  (set (make-local-variable 'company-backends) '(company-go))
-                                  (company-mode))))
-      (use-package go-eldoc
-        :config
-        (add-hook 'go-mode-hook 'go-eldoc-setup)))
+     (use-package go-mode
+       :config
+       (setq gofmt-command "goimports")
+       (add-hook 'before-save-hook 'gofmt-before-save)
+       (use-package company-go
+         :config
+         (add-hook 'go-mode-hook (lambda ()
+                                   (set (make-local-variable 'company-backends) '(company-go))
+                                   (company-mode))))
+       (use-package go-eldoc
+         :config
+         (add-hook 'go-mode-hook 'go-eldoc-setup)))
    #+END_SRC
 ** Nim
    #+BEGIN_SRC emacs-lisp
@@ -600,6 +643,10 @@
        (add-hook 'nim-mode-hook 'nimsuggest-mode)
        (add-hook 'nim-mode-hook 'company-mode)
        (add-hook 'nimscript-mode-hook 'company-mode))
+   #+END_SRC
+** Dockerfile
+   #+BEGIN_SRC emacs-lisp
+     (use-package dockerfile-mode)
    #+END_SRC
 * Writing
   Provides a distraction free writing mode.
@@ -627,6 +674,11 @@
       (function (lambda ()
         (setq tab-width 2)
         (setq evil-shift-width 2))))
+
+    (add-hook 'typescript-mode-hook
+      (function (lambda ()
+        (setq tab-width 4)
+        (setq evil-shift-width 4))))
 
     (add-hook 'js2-mode-hook
       (function (lambda ()
@@ -662,7 +714,7 @@
    #+BEGIN_SRC emacs-lisp
      (felipe/name-bind "T" "theme/toggles")
      (felipe/bind "Tt" 'counsel-load-theme "themes")
-     (felipe/bind "Tn" 'nlinum-mode "toggle line numbers")
+     ;; (felipe/bind "Tn" 'nlinum-mode "toggle line numbers")
 
      (felipe/name-bind "z" "zoom")
      (felipe/bind "zz" 'text-scale-adjust "adjust zoom")
@@ -697,6 +749,7 @@
      (felipe/bind "pf" 'counsel-projectile "find file")
 
      (felipe/name-bind "m" "major mode")
+     (felipe/name-bind "mr" "run/refactor")
      (felipe/name-bind "mg" "go")
      (felipe/bind "mgg" 'dumb-jump-go "goto def")
      (felipe/bind "mgG" 'dumb-jump-go-other-window "goto def in other window")
@@ -710,44 +763,52 @@
    #+END_SRC
 ** Org mode
    #+BEGIN_SRC emacs-lisp
-     (felipe/name-bind-mode "mi" "Insert" 'org-mode)
-     (felipe/bind-mode "mih" 'org-insert-heading-respect-content "Heading" 'org-mode)
-     (felipe/bind-mode "mis" 'org-insert-subheading "Subheading" 'org-mode)
-     (felipe/bind-mode "mii" 'org-insert-item "Item" 'org-mode)
-     (felipe/bind-mode "mil" 'org-insert-link "Link" 'org-mode)
+     (felipe/name-bind-mode "mi" "insert" 'org-mode)
+     (felipe/bind-mode "mih" 'org-insert-heading-respect-content "heading" 'org-mode)
+     (felipe/bind-mode "mis" 'org-insert-subheading "subheading" 'org-mode)
+     (felipe/bind-mode "mii" 'org-insert-item "item" 'org-mode)
+     (felipe/bind-mode "mil" 'org-insert-link "link" 'org-mode)
 
      (felipe/bind-mode "mm" 'org-ctrl-c-ctrl-c "C-c C-c" 'org-mode)
      
-     (felipe/bind-mode "mt" 'org-todo "Todo" 'org-mode)
+     (felipe/bind-mode "mt" 'org-todo "todo" 'org-mode)
    #+END_SRC
 ** Rust
    #+BEGIN_SRC emacs-lisp
-     (felipe/bind-mode "mb" 'cargo-process-build "Cargo build" 'rust-mode)
-     (felipe/bind-mode "mr" 'cargo-process-run "Cargo run" 'rust-mode)
-     (felipe/bind-mode "mf" 'rust-format-buffer "Format" 'rust-mode)
+     (felipe/bind-mode "mb" 'cargo-process-build "cargo build" 'rust-mode)
+     (felipe/bind-mode "mr" 'cargo-process-run "cargo run" 'rust-mode)
+     (felipe/bind-mode "mf" 'rust-format-buffer "format" 'rust-mode)
    #+END_SRC
 ** Lua
    #+BEGIN_SRC emacs-lisp
-     (felipe/bind-mode "mr" '(lambda ()
+     (felipe/bind-mode "mrr" '(lambda ()
                     (interactive)
                     (let ((app-root (locate-dominating-file (buffer-file-name) "main.lua")))
                       (shell-command (format "love %s &" app-root))))
-                       "Run love game" 'lua-mode)
+                       "run love game" 'lua-mode)
    #+END_SRC
 ** C/C++
    #+BEGIN_SRC emacs-lisp
-     (felipe/bind-mode "mf" 'clang-format-buffer "Format" 'c++-mode)
-     (felipe/bind-mode "ms" 'cff-find-other-file "Switch file" 'c++-mode)
+     (felipe/bind-mode "mf" 'clang-format-buffer "format" 'c++-mode)
+     (felipe/bind-mode "ms" 'cff-find-other-file "switch file" 'c++-mode)
    #+END_SRC
 ** Typescript
    #+BEGIN_SRC emacs-lisp
-     (felipe/bind-mode "mf" 'tide-format "Format" 'typescript-mode)
-     (felipe/bind-mode "mgg" 'tide-goto-reference "Go to reference" 'typescript-mode)
+     (felipe/bind-mode "mf" 'tide-format "format" 'typescript-mode)
+     (felipe/bind-mode "mgg" 'tide-goto-reference "go to reference" 'typescript-mode)
+     (felipe/bind-mode "mrs" 'tide-rename-symbol "rename Symbol" 'typescript-mode)
    #+END_SRC
 ** Go
    #+BEGIN_SRC emacs-lisp
-     (felipe/bind-mode "mf" 'gofmt "Format" 'go-mode)
-     (felipe/bind-mode "mi" 'go-import-add "Add imports" 'go-mode)
+     (felipe/bind-mode "mf" 'gofmt "format" 'go-mode)
+     (felipe/bind-mode "mi" 'go-import-add "add imports" 'go-mode)
+   #+END_SRC
+** Python
+   #+BEGIN_SRC emacs-lisp
+     (felipe/bind-mode "mf" 'elpy-format-code "format" 'python-mode)
+     (felipe/bind-mode "mi" 'elpy-importmagic-fixup "fix imports" 'python-mode)
+     (felipe/bind-mode "md" 'elpy-doc "show documentation" 'python-mode)
+     (felipe/bind-mode "mgd" 'elpy-goto-definition "go to definition" 'python-mode)
    #+END_SRC
 * Startup
   #+BEGIN_SRC emacs-lisp

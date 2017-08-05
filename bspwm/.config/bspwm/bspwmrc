@@ -32,11 +32,11 @@ bspc rule -a csgo_linux64 desktop='^10'
 bspc rule -a love state=floating
 
 bspc rule -a scratchpad sticky=on state=floating hidden=on locked=on
-termite --class scratchpad -e ~/.scripts/scratchpad.sh &
+termite --class scratchpad -e ~/.scripts/scratchpad_terminal.sh &
 
 ~/.scripts/detect_csgo.sh &
 feh --bg-tile ~/images/black_linen_v2.png
-polybar top &
+~/.scripts/polybar_wrapper.sh &
 compton -b
 firefox &
 corebird &

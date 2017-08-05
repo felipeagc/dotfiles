@@ -1,6 +1,6 @@
 [options]
 cursor_blink = off
-font         = Ubuntu Mono 13
+font         = monospace 13
 
 [colors]
 
