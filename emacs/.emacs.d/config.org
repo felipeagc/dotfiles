@@ -81,32 +81,10 @@
        (evil-visual-restore))
    #+END_SRC
 * UI
-** Theme
-  #+BEGIN_SRC emacs-lisp
-    (use-package kaolin-theme
-      :init
-      (setq kaolin-wave t)
-      :config
-      (load-theme 'kaolin t))
-
-    ;; (use-package ujelly-theme
-    ;;   :config
-    ;;   (load-theme 'ujelly t))
-
-    ;; (use-package oceanic-theme
-    ;;   :config
-    ;;   (load-theme 'oceanic))
-
-    ;; (use-package doom-themes
-    ;;   :config
-    ;;   (load-theme 'doom-one t))
-
-    (set-face-attribute 'fringe nil :background nil)
-  #+END_SRC
 ** Setup
    Set the font, hide toolbars, etc.
    #+BEGIN_SRC emacs-lisp
-     (set-frame-font "Ubuntu Mono 13")
+     (set-frame-font "Hack 13")
 
      (tool-bar-mode -1)
      (menu-bar-mode -1)
@@ -116,9 +94,38 @@
      
      (global-hl-line-mode 1)
    #+END_SRC
+** Theme
+  #+BEGIN_SRC emacs-lisp
+    (use-package kaolin-theme
+      :init
+      (setq kaolin-wave t)
+      :config
+      (load-theme 'kaolin t))
+
+    ;; (use-package oceanic-theme
+    ;;   :config
+    ;;   (load-theme 'oceanic))
+
+    ;; (use-package doom-themes
+    ;;   :config
+    ;;   (load-theme 'doom-one t)
+    ;;   (use-package solaire-mode
+    ;;     :config
+    ;;     ;; brighten buffers (that represent real files)
+    ;;     (add-hook 'after-change-major-mode-hook #'turn-on-solaire-mode)
+
+    ;;     ;; To enable solaire-mode unconditionally for certain modes:
+    ;;     (add-hook 'ediff-prepare-buffer-hook #'solaire-mode)))
+
+    ;; (use-package base16-theme
+    ;;   :config
+    ;;   (load-theme 'base16-onedark))
+
+    (set-face-attribute 'fringe nil :background nil)
+  #+END_SRC
 ** Modeline
    #+BEGIN_SRC emacs-lisp
-      (use-package all-the-icons
+     (use-package all-the-icons
         :demand
         :init
         (progn (defun -custom-modeline-github-vc ()
@@ -377,13 +384,13 @@
   #+END_SRC
 * Snippets
   #+BEGIN_SRC emacs-lisp
-  (use-package yasnippet
-    :init
-    (setq yas-snippet-dirs
-          '("~/.emacs.d/yasnippet-snippets"
-            "~/.emacs.d/snippets"))
-    :config
-    (yas-global-mode 1))
+    (use-package yasnippet
+      :init
+      (setq yas-snippet-dirs
+            '("~/.emacs.d/yasnippet-snippets"
+              "~/.emacs.d/snippets"))
+      :config
+      (yas-global-mode 1))
   #+END_SRC
 * Flycheck
   #+BEGIN_SRC emacs-lisp
@@ -401,37 +408,37 @@
   #+END_SRC
 * Company
   #+BEGIN_SRC emacs-lisp
-  (use-package company
-    :init
-    (setq company-tooltip-align-annotations t)
-    :config
-    (global-company-mode))
+    (use-package company
+      :init
+      (setq company-tooltip-align-annotations t)
+      :config
+      (global-company-mode))
   #+END_SRC
 * Git
   #+BEGIN_SRC emacs-lisp
-        (use-package magit)
+    (use-package magit)
 
-        (use-package evil-magit
-          :after magit)
+    (use-package evil-magit
+      :after magit)
 
-        (use-package git-gutter-fringe
-          :config
-          (global-git-gutter-mode +1)
-          (when (display-graphic-p)
-            ;; because git-gutter is in the left fringe
-            ;; subtle diff indicators in the fringe
-            ;; places the git gutter outside the margins.
-            (setq-default fringes-outside-margins t)
-            ;; thin fringe bitmaps
-            (fringe-helper-define 'git-gutter-fr:added '(center repeated)
-              "XXX.....")
-            (fringe-helper-define 'git-gutter-fr:modified '(center repeated)
-              "XXX.....")
-            (fringe-helper-define 'git-gutter-fr:deleted 'bottom
-              "X......."
-              "XX......"
-              "XXX....."
-              "XXXX....")))
+    (use-package git-gutter-fringe
+      :config
+      (global-git-gutter-mode +1)
+      (when (display-graphic-p)
+        ;; because git-gutter is in the left fringe
+        ;; subtle diff indicators in the fringe
+        ;; places the git gutter outside the margins.
+        (setq-default fringes-outside-margins t)
+        ;; thin fringe bitmaps
+        (fringe-helper-define 'git-gutter-fr:added '(center repeated)
+          "XXX.....")
+        (fringe-helper-define 'git-gutter-fr:modified '(center repeated)
+          "XXX.....")
+        (fringe-helper-define 'git-gutter-fr:deleted 'bottom
+          "X......."
+          "XX......"
+          "XXX....."
+          "XXXX....")))
   #+END_SRC
 * Docker
   #+BEGIN_SRC emacs-lisp
