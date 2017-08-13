@@ -1,16 +1,16 @@
 # --- special colors ---
 
 [Background]
-Color=26,26,26
+Color=40,40,40
 
 [BackgroundIntense]
-Color=26,26,26
+Color=40,40,40
 
 [Foreground]
-Color=200,200,208
+Color=253,244,193
 
 [ForegroundIntense]
-Color=200,200,208
+Color=253,244,193
 Bold=true
 
 # --- standard colors ---

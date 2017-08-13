@@ -52,18 +52,30 @@
 ** Functions
    #+BEGIN_SRC emacs-lisp
      (defun felipe/edit-todo()
+       "Go to the todo file"
        (interactive)
        (find-file "~/todo.org"))
-       
+
      (defun felipe/edit-config()
+       "Edit the configuration file"
        (interactive)
        (find-file "~/.emacs.d/config.org"))
 
      (defun felipe/reload-config()
+       "Reload the configuration file."
        (interactive)
        (load-file "~/.emacs.d/init.el")
        (evil-leader-mode)
        (felipe/edit-config))
+
+     (defun set-internal-border (n)
+       "Set or reset the internal border width N of the selected frame."
+       (interactive (list (string-to-number (read-from-minibuffer "Border width: "))))
+       (let ((w (or n 0)))
+         (set-frame-parameter
+          (selected-frame)
+          'internal-border-width
+          w)))
    #+END_SRC
 ** Evil
    These are used to modify evil's indent shift behavior
@@ -84,23 +96,33 @@
 ** Setup
    Set the font, hide toolbars, etc.
    #+BEGIN_SRC emacs-lisp
-     (set-frame-font "Hack 13")
+     (set-frame-font "Hack 12")
 
      (tool-bar-mode -1)
      (menu-bar-mode -1)
      (blink-cursor-mode 0)
      (scroll-bar-mode 0)
      (tooltip-mode 0)
-     
+
      (global-hl-line-mode 1)
    #+END_SRC
 ** Theme
   #+BEGIN_SRC emacs-lisp
-    (use-package kaolin-theme
-      :init
-      (setq kaolin-wave t)
+    ;; (use-package kaolin-theme
+    ;;   :init
+    ;;   (setq kaolin-wave t)
+    ;;   :config
+    ;;   (load-theme 'kaolin t))
+
+    (use-package darktooth-theme
       :config
-      (load-theme 'kaolin t))
+      (load-theme 'darktooth t)
+      (darktooth-modeline-two))
+
+    ;; (use-package creamsody-theme
+    ;;   :config
+    ;;   (load-theme 'creamsody t)
+    ;;   (creamsody-modeline-two))
 
     ;; (use-package oceanic-theme
     ;;   :config
@@ -121,7 +143,6 @@
     ;;   :config
     ;;   (load-theme 'base16-onedark))
 
-    (set-face-attribute 'fringe nil :background nil)
   #+END_SRC
 ** Modeline
    #+BEGIN_SRC emacs-lisp
@@ -168,26 +189,26 @@
                               mode-line-position
                               mode-line-my-vc))))
 
-     (set-face-attribute 'mode-line nil
-                         :background "#282828"
-                         :foreground "#7eb4ba"
-                         :box '(:line-width 2 :color "#353535")
-                         :overline nil
-                         :underline nil)
+     ;; (set-face-attribute 'mode-line nil
+     ;;                     :background "#282828"
+     ;;                     :foreground "#7eb4ba"
+     ;;                     :box '(:line-width 2 :color "#353535")
+     ;;                     :overline nil
+     ;;                     :underline nil)
 
-     (set-face-attribute 'mode-line-inactive nil
-                         :background "#353535"
-                         :foreground "#7eb4ba"
-                         :box '(:line-width 2 :color "#353535")
-                         :overline nil
-                         :underline nil)
+     ;; (set-face-attribute 'mode-line-inactive nil
+     ;;                     :background "#353535"
+     ;;                     :foreground "#7eb4ba"
+     ;;                     :box '(:line-width 2 :color "#353535")
+     ;;                     :overline nil
+     ;;                     :underline nil)
 
      (window-divider-mode t)
      (setq window-divider-default-right-width 2)
 
-     (set-face-attribute 'window-divider nil :foreground "#353535")
-     (set-face-attribute 'window-divider-first-pixel nil :foreground "#353535")
-     (set-face-attribute 'window-divider-last-pixel nil :foreground "#353535")
+     (set-face-attribute 'window-divider nil :foreground "#504945")
+     (set-face-attribute 'window-divider-first-pixel nil :foreground "#504945")
+     (set-face-attribute 'window-divider-last-pixel nil :foreground "#504945")
    #+END_SRC
 ** Ivy
    #+BEGIN_SRC emacs-lisp
@@ -242,6 +263,17 @@
 
    #+END_SRC
 * Misc
+** Rainbow delimeters
+   #+BEGIN_SRC emacs-lisp
+     (use-package rainbow-delimiters
+       :config
+       (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+   #+END_SRC
+** Persistent undo history
+   #+BEGIN_SRC emacs-lisp
+     (setq undo-tree-auto-save-history t)
+     (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+   #+END_SRC
 ** Dumb jump
    #+BEGIN_SRC emacs-lisp
      (use-package dumb-jump) 
@@ -260,6 +292,22 @@
    #+BEGIN_SRC emacs-lisp
      (use-package cff)
    #+END_SRC
+** Shackle
+   #+BEGIN_SRC emacs-lisp
+     (use-package shackle
+       :init
+       (setq shackle-default-rule '(:same t)))
+   #+END_SRC
+** Eyebrowse
+   #+BEGIN_SRC emacs-lisp
+     (use-package eyebrowse
+       :config
+       (eyebrowse-mode t))
+   #+END_SRC
+** Electric pair mode
+   #+BEGIN_SRC emacs-lisp
+     (electric-pair-mode)
+   #+END_SRC
 ** Other stuff
    #+BEGIN_SRC emacs-lisp
      (setq mouse-wheel-scroll-amount '(2 ((shift) . 2))) ;; one line at a time
@@ -269,14 +317,13 @@
 
      (setq-default indent-tabs-mode nil)
 
-     (setq show-paren-delay 0)
-     (show-paren-mode t)
-     (setq show-paren-style 'parenthesis)
+     ;; (setq show-paren-delay 0)
+     ;; (show-paren-mode t)
+     ;; (setq show-paren-style 'parenthesis)
 
      (add-hook 'prog-mode-hook #'hs-minor-mode)
 
-       (setq-default fringes-outside-margins t)
-
+     (setq-default fringes-outside-margins t)
 
      ;; Stop emacs from making a mess
      (setq auto-save-file-name-transforms
@@ -295,27 +342,14 @@
      ;;       (setq-local nlinum-format "%d ")))
      ;;   (add-hook 'nlinum-mode-hook #'nlinum-mode-margin-hook))
 
-     (use-package eyebrowse
-       :config
-       (eyebrowse-mode t))
-
      (use-package evil-vimish-fold
        :after evil
        :config
        (evil-vimish-fold-mode 1))
 
-     (use-package shackle
-       :init
-       (setq shackle-default-rule '(:same t)))
-
      (use-package exec-path-from-shell
        :config
        (exec-path-from-shell-initialize))
-
-     ;;
-     ;; Electric pairs
-     ;;
-     (electric-pair-mode)
    #+END_SRC
 * Evil
   #+BEGIN_SRC emacs-lisp
