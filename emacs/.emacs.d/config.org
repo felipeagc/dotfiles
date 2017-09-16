@@ -68,6 +68,11 @@
        (evil-leader-mode)
        (felipe/edit-config))
 
+     (defun felipe/set-font-size (size)
+       "Changes the font size"
+       (interactive (list (string-to-number (read-from-minibuffer "Font size: "))))
+       (set-face-attribute 'default nil :height (* 10 size)))
+
      (defun set-internal-border (n)
        "Set or reset the internal border width N of the selected frame."
        (interactive (list (string-to-number (read-from-minibuffer "Border width: "))))
@@ -96,7 +101,7 @@
 ** Setup
    Set the font, hide toolbars, etc.
    #+BEGIN_SRC emacs-lisp
-     (set-frame-font "Hack 12")
+     (set-frame-font "Hack 11")
 
      (tool-bar-mode -1)
      (menu-bar-mode -1)
@@ -130,7 +135,11 @@
 
     ;; (use-package doom-themes
     ;;   :config
-    ;;   (load-theme 'doom-one t)
+    ;;   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+    ;;         doom-themes-enable-italic t) ; if nil, italics is universally disabled
+    ;;   (load-theme 'doom-tomorrow-night t)
+    ;;   (doom-themes-org-config)
+
     ;;   (use-package solaire-mode
     ;;     :config
     ;;     ;; brighten buffers (that represent real files)
@@ -203,12 +212,164 @@
      ;;                     :overline nil
      ;;                     :underline nil)
 
+     (set-face-attribute 'mode-line nil :font "Hack-10")
+     (set-face-attribute 'mode-line-inactive nil :font "Hack-10")
+
      (window-divider-mode t)
-     (setq window-divider-default-right-width 2)
+     (setq window-divider-default-right-width 4)
 
      (set-face-attribute 'window-divider nil :foreground "#504945")
      (set-face-attribute 'window-divider-first-pixel nil :foreground "#504945")
      (set-face-attribute 'window-divider-last-pixel nil :foreground "#504945")
+
+     ;; ---------------------------------
+     ;; ---------------------------------
+     ;; ---------------------------------
+     ;; ---------------------------------
+     ;; ---------------------------------
+     ;; ---------------------------------
+     ;; ---------------------------------
+
+     ;; (use-package all-the-icons)
+
+     ;; (use-package telephone-line
+     ;;   :after all-the-icons
+     ;;   ;; :load-path "dev/telephone-line"
+     ;;   :config
+     ;;   ;; To create custom segments
+     ;;   (use-package telephone-line-utils)
+
+     ;;   ;; TODO:
+     ;;   ;; TODO: choose separator by name
+     ;;   (setq telephone-line-height 28)
+
+     ;;   ;; Set default separators: choose either of them
+     ;;   ;; (setq telephone-line-primary-left-separator 'telephone-line-flat)
+     ;;   ;; (setq telephone-line-primary-right-separator 'telephone-line-flat)
+     ;;   ;; OR
+     ;;   (setq telephone-line-primary-left-separator 'telephone-line-identity-left)
+     ;;   (setq telephone-line-primary-right-separator 'telephone-line-identity-right)
+     ;;   ;; OR
+     ;;   ;; (setq telephone-line-primary-left-separator 'telephone-line-cubed-left)
+     ;;   ;; (setq telephone-line-primary-right-separator 'telephone-line-cubed-right)
+
+     ;;   ;; Set subseparator
+     ;;   (if window-system
+     ;;       (progn
+     ;;         (setq telephone-line-secondary-left-separator 'telephone-line-identity-hollow-left)
+     ;;         (setq telephone-line-secondary-right-separator 'telephone-line-identity-hollow-right)))
+
+     ;;   ;;;; Custom segments
+
+     ;;   ;; Example of color string segment
+     ;;   ;; (telephone-line-defsegment* my-color-segment
+     ;;   ;;   (propertize "some-string" 'face `(:foreground "green")))
+
+
+     ;;   ;; Display major mode
+     ;;   ;; TODO: Rewrite using assoc and defvar #835d83
+     ;;   (telephone-line-defsegment* my-major-mode-segment ()
+     ;;     (let ((mode (cond
+     ;;                   ((string= mode-name "Fundamental") "text")
+     ;;                   ((string= mode-name "Emacs-Lisp") "elisp")
+     ;;                   ((string= mode-name "Javascript-IDE") "js")
+     ;;                   (t (downcase mode-name)))))
+     ;;           ;; (icon (all-the-icons-icon-for-buffer)))
+     ;;       ;; (concat
+     ;;       ;;   (unless (symbolp icon) ;; This implies it's the major mode
+     ;;       ;;     (format "%s "
+     ;;       ;;             (propertize icon
+     ;;       ;;                         'face `(:height 1.0 :family ,(all-the-icons-icon-family-for-buffer))
+     ;;       ;;                         'display '(raise -0.1))))
+     ;;       (propertize mode 'face `(:foreground "#9d81ba"))))
+     ;;   ;; ;; Display name
+     ;;   ;;   (propertize mode 'face `(:foreground "#9d81ba")))))
+
+     ;;   ;; Display evil state
+     ;;   (telephone-line-defsegment my-evil-segment ()
+     ;;     (if (telephone-line-selected-window-active)
+     ;;       (let ((tag (cond
+     ;;                   ((string= evil-state "normal") ":")
+     ;;                   ((string= evil-state "insert") ">")
+     ;;                   ((string= evil-state "replace") "r")
+     ;;                   ((string= evil-state "visual") "v")
+     ;;                   ((string= evil-state "operator") "=")
+     ;;                   ((string= evil-state "motion") "m")
+     ;;                   ((string= evil-state "emacs") "Emacs")
+     ;;                   (t "-"))))
+     ;;         (concat " " tag))))
+
+     ;;   ;; Display buffer name
+     ;;   (telephone-line-defsegment my-buffer-segment ()
+     ;;     `(""
+     ;;       ,(telephone-line-raw mode-line-buffer-identification t)))
+
+
+     ;;   ;; Display current position in a buffer
+     ;;   (telephone-line-defsegment* my-position-segment ()
+     ;;     (if (telephone-line-selected-window-active)
+     ;;         (if (eq major-mode 'paradox-menu-mode)
+     ;;             (telephone-line-trim (format-mode-line mode-line-front-space))
+     ;;           '(" %3l,%2c "))))
+
+     ;;   ;; Ignore some buffers in modeline
+     ;;   (defvar modeline-ignored-modes nil
+     ;;     "List of major modes to ignore in modeline")
+
+     ;;   (setq modeline-ignored-modes '("Dashboard"
+     ;;                                  "Warnings"
+     ;;                                  "Compilation"
+     ;;                                  "EShell"
+     ;;                                  "REPL"
+     ;;                                  "Messages"))
+
+     ;;   ;; Display modified status
+     ;;   (telephone-line-defsegment my-modified-status-segment ()
+     ;;     (when (and (buffer-modified-p) (not (member mode-name modeline-ignored-modes)))
+     ;;         (propertize "+" 'face `(:foreground "#85b654"))))
+
+
+     ;;   ;; Display encoding system
+     ;;   (telephone-line-defsegment my-coding-segment ()
+     ;;     (let* ((code (symbol-name buffer-file-coding-system))
+     ;;            (eol-type (coding-system-eol-type buffer-file-coding-system))
+     ;;            (eol (cond
+     ;;                  ((eq 0 eol-type) "unix")
+     ;;                  ((eq 1 eol-type) "dos")
+     ;;                  ((eq 2 eol-type) "mac")
+     ;;                  (t ""))))
+     ;;       (concat eol " ")))
+
+     ;;   ;; Display current branch
+     ;;   ;; TODO: move raise and etc into var
+     ;;   (telephone-line-defsegment my-vc-segment ()
+     ;;     ;; #6fb593 #4a858c
+     ;;     (let ((fg-color "#6fb593")
+     ;;           (backend (vc-backend buffer-file-name)))
+     ;;       (format "%s %s"
+     ;;         (propertize (all-the-icons-octicon "git-branch")
+     ;;                     'face `(:family ,(all-the-icons-octicon-family) :height 1.0 :foreground ,fg-color)
+     ;;                     'display '(raise 0.0))
+     ;;         (propertize
+     ;;          ;; TODO: fix error in the message buffer
+     ;;          ;; wrong arrayp
+     ;;           (substring vc-mode (+ (if (eq backend 'Hg) 2 3) 2))
+     ;;           'face `(:foreground ,fg-color)))))
+
+     ;;   ;; Left edge
+     ;;   (setq telephone-line-lhs
+     ;;         '((nil    . (my-buffer-segment))
+     ;;           (nil    . (my-vc-segment))
+     ;;           (nil    . (my-modified-status-segment))))
+
+     ;;   ;; Right edge
+     ;;   (setq telephone-line-rhs
+     ;;         ;; '((nil     . ((my-vc-segment :active))))
+     ;;         '((accent  . (my-position-segment))
+     ;;           (nil     . (my-major-mode-segment))
+     ;;           (accent  . ((my-coding-segment :active)))))
+
+     ;;   (telephone-line-mode 1))
    #+END_SRC
 ** Ivy
    #+BEGIN_SRC emacs-lisp
@@ -257,7 +418,7 @@
        (setq dashboard-banner-logo-title "Welcome to Emacs!")
        :config
        (add-hook 'dashboard-mode-hook (lambda ()
-                                        ;; (nlinum-mode 0)
+                                        (nlinum-mode 0)
                                         ))
        (dashboard-setup-startup-hook))
 
@@ -332,15 +493,15 @@
            `(("." . ,(expand-file-name
                      (concat user-emacs-directory "backups")))))
 
-     ;; (use-package nlinum
-     ;;   :init
-     ;;   (setq nlinum-highlight-current-line t)
-     ;;   :config
-     ;;   (global-nlinum-mode 1)
-     ;;   (defun nlinum-mode-margin-hook ()
-     ;;     (when nlinum-mode
-     ;;       (setq-local nlinum-format "%d ")))
-     ;;   (add-hook 'nlinum-mode-hook #'nlinum-mode-margin-hook))
+     (use-package nlinum
+       :init
+       (setq nlinum-highlight-current-line t)
+       :config
+       ;; (add-hook 'prog-mode-hook #'nlinum-mode)
+       (defun nlinum-mode-margin-hook ()
+         (when nlinum-mode
+           (setq-local nlinum-format "%d ")))
+       (add-hook 'nlinum-mode-hook #'nlinum-mode-margin-hook))
 
      (use-package evil-vimish-fold
        :after evil
@@ -431,7 +592,7 @@
     (use-package flycheck
       :init
       (setq flycheck-highlighting-mode 'symbols)
-      (setq flycheck-indication-mode 'left-fringe)
+      (setq flycheck-indication-mode nil)
       (with-eval-after-load 'flycheck
         (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
       :config
@@ -455,24 +616,25 @@
     (use-package evil-magit
       :after magit)
 
-    (use-package git-gutter-fringe
-      :config
-      (global-git-gutter-mode +1)
-      (when (display-graphic-p)
-        ;; because git-gutter is in the left fringe
-        ;; subtle diff indicators in the fringe
-        ;; places the git gutter outside the margins.
-        (setq-default fringes-outside-margins t)
-        ;; thin fringe bitmaps
-        (fringe-helper-define 'git-gutter-fr:added '(center repeated)
-          "XXX.....")
-        (fringe-helper-define 'git-gutter-fr:modified '(center repeated)
-          "XXX.....")
-        (fringe-helper-define 'git-gutter-fr:deleted 'bottom
-          "X......."
-          "XX......"
-          "XXX....."
-          "XXXX....")))
+    ;; (use-package git-gutter-fringe+
+    ;;   :config
+    ;;   ;; (global-git-gutter-mode +1)
+    ;;   (git-gutter+-toggle-fringe)
+    ;;   (when (display-graphic-p)
+    ;;     ;; because git-gutter is in the left fringe
+    ;;     ;; subtle diff indicators in the fringe
+    ;;     ;; places the git gutter outside the margins.
+    ;;     (setq-default fringes-outside-margins t)
+    ;;     ;; thin fringe bitmaps
+    ;;     (fringe-helper-define 'git-gutter-fr+:added '(center repeated)
+    ;;       "XXX.....")
+    ;;     (fringe-helper-define 'git-gutter-fr+:modified '(center repeated)
+    ;;       "XXX.....")
+    ;;     (fringe-helper-define 'git-gutter-fr+:deleted 'bottom
+    ;;       "X......."
+    ;;       "XX......"
+    ;;       "XXX....."
+    ;;       "XXXX....")))
   #+END_SRC
 * Docker
   #+BEGIN_SRC emacs-lisp
@@ -484,8 +646,9 @@
    #+BEGIN_SRC emacs-lisp
      ;; (use-package lsp-mode
      ;;   :config
-     ;;   (require 'lsp-flycheck)
-     ;;   (add-hook 'prog-major-mode #'lsp-mode))
+     ;;   (with-eval-after-load 'lsp-mode
+     ;;       (require 'lsp-flycheck))
+     ;;   (add-hook 'rust-mode #'lsp-mode))
    #+END_SRC
 ** Org
    #+BEGIN_SRC emacs-lisp
@@ -511,7 +674,7 @@
 ** Rust
    #+BEGIN_SRC emacs-lisp
      (use-package rust-mode
-       :after lsp-mode
+       ;; :after lsp-mode
        :config
 
        (use-package racer
@@ -553,15 +716,14 @@
    #+END_SRC
 ** Lua
    #+BEGIN_SRC emacs-lisp
-    (use-package lua-mode
-      :after evil-leader
-      :init
-      (setq lua-indent-level 2)
-      :config
-      (use-package company-lua
-        :after company
-        :config
-        (add-to-list 'company-backends 'company-lua)))
+     (use-package lua-mode
+       :init
+       (setq lua-indent-level 2)
+       :config
+       (use-package company-lua
+         :after company
+         :config
+         (add-to-list 'company-backends 'company-lua)))
    #+END_SRC
 ** Javascript
    #+BEGIN_SRC emacs-lisp
@@ -601,7 +763,7 @@
        (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
        ;; (setq-default irony-cdb-compilation-databases '(irony-cdb-clang-complete))
-       (setq irony-additional-clang-options '("-std=c++14"))
+       ;; (setq irony-additional-clang-options '("-std=c++14"))
 
        (use-package flycheck-irony
          :after flycheck
@@ -739,6 +901,12 @@
         (setq c-basic-offset 2)
         (setq evil-shift-width 2))))
 
+    (add-hook 'c-mode
+      (function (lambda ()
+        (setq tab-width 2)
+        (setq c-basic-offset 2)
+        (setq evil-shift-width 2))))
+
     (add-hook 'lua-mode
       (function (lambda ()
         (setq tab-width 2)
@@ -755,7 +923,7 @@
    #+BEGIN_SRC emacs-lisp
      (felipe/name-bind "T" "theme/toggles")
      (felipe/bind "Tt" 'counsel-load-theme "themes")
-     ;; (felipe/bind "Tn" 'nlinum-mode "toggle line numbers")
+     (felipe/bind "Tn" 'nlinum-mode "toggle line numbers")
 
      (felipe/name-bind "z" "zoom")
      (felipe/bind "zz" 'text-scale-adjust "adjust zoom")
@@ -788,6 +956,7 @@
      (felipe/name-bind "p" "projectile")
      (felipe/bind "pp" 'counsel-projectile-switch-project "switch project")
      (felipe/bind "pf" 'counsel-projectile "find file")
+     (felipe/bind "pg" 'counsel-git-grep "git grep")
 
      (felipe/name-bind "m" "major mode")
      (felipe/name-bind "mr" "run/refactor")
@@ -832,6 +1001,9 @@
    #+BEGIN_SRC emacs-lisp
      (felipe/bind-mode "mf" 'clang-format-buffer "format" 'c++-mode)
      (felipe/bind-mode "ms" 'cff-find-other-file "switch file" 'c++-mode)
+
+     (felipe/bind-mode "mf" 'clang-format-buffer "format" 'c-mode)
+     (felipe/bind-mode "ms" 'cff-find-other-file "switch file" 'c-mode)
    #+END_SRC
 ** Typescript
    #+BEGIN_SRC emacs-lisp

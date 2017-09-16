@@ -2,117 +2,81 @@ if &compatible
 	set nocompatible
 endif
 
-" Required:
-set runtimepath+=~/.local/share/dein/repos/github.com/Shougo/dein.vim
+" Plugins
+call plug#begin('~/.local/share/nvim/plugged')
 
-" Required:
-if dein#load_state('~/.local/share/dein')
-	call dein#begin('~/.local/share/dein')
+" Completion
+Plug 'roxma/nvim-completion-manager'
+" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'Shougo/echodoc.vim'
+" Plug 'ervandew/supertab'
 
-	" Let dein manage dein
-	" Required:
-	call dein#add('~/.local/share/dein/repos/github.com/Shougo/dein.vim')
+" Fuzzy finders
+Plug 'junegunn/fzf', { 'do': './install --bin'}
+Plug 'junegunn/fzf.vim'
 
-	" Completion
-	call dein#add('Shougo/deoplete.nvim', { 'build': ':UpdateRemotePlugins' })
-	call dein#add('Shougo/echodoc.vim')
-	call dein#add('ervandew/supertab')
+" Language Server Protocol
+Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
 
-	" Linting
-	call dein#add('w0rp/ale')
+" Git
+Plug 'tpope/vim-fugitive'
 
-	" Fuzzy finders
-	call dein#add('junegunn/fzf', { 'build': './install --bin'})
-	call dein#add('junegunn/fzf.vim')
+" Tags
+Plug 'ludovicchabant/vim-gutentags'
 
-	" Git
-	call dein#add('tpope/vim-fugitive')
-	call dein#add('mhinz/vim-signify')
+" Org mode
+Plug 'jceb/vim-orgmode'
 
-	" Tags
-	call dein#add('ludovicchabant/vim-gutentags')
+" HTML
+Plug 'mattn/emmet-vim'
 
-	" Org mode
-	call dein#add('jceb/vim-orgmode')
+" Haskell
+Plug 'neovimhaskell/haskell-vim'
 
-	" Rust
-	call dein#add('rust-lang/rust.vim')
-	" call dein#add('racer-rust/vim-racer')
-	" call dein#add('rhysd/rust-doc.vim')
+" Meson
+Plug 'stfl/meson.vim'
 
-	" Crystal
-	call dein#add('rhysd/vim-crystal')
+" Utilities
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
+Plug 'jiangmiao/auto-pairs'
+Plug 'hecal3/vim-leader-guide'
+Plug 'derekwyatt/vim-fswitch'
 
-	" HTML
-	call dein#add('mattn/emmet-vim')
+" Themes
+Plug 'KeitaNakamura/neodark.vim'
 
-	" Javascript
-	call dein#add('carlitux/deoplete-ternjs')
+" Other
+Plug 'metakirby5/codi.vim'
+Plug 'junegunn/goyo.vim'
+Plug 'sheerun/vim-polyglot'
+Plug 'wellle/targets.vim'
 
-	" Typescript
-	call dein#add('mhartington/nvim-typescript')
+call plug#end()
 
-	" C/C++
-	call dein#add('rhysd/vim-clang-format')
-	call dein#add('zchee/deoplete-clang')
+" Settings
+set mouse=a
+set noshowcmd
+" set number
+set clipboard=unnamedplus
+set completeopt-=preview
+set tabstop=4
+set shiftwidth=4
+set cursorline
+set wildignore+=*.so,*.swp,*.zip,*.o,*.png,*.jpg,*/target/*,*/build/*,*/node_modules/*
+set noswapfile
+set hidden
+" set completeopt+=noselect
+set noshowmode
+set undofile
+set undodir=~/.vim/undodir
+set wrap
+set linebreak
+" note trailing space at end of next line
+set showbreak=>\ \ \
+set shortmess+=c
 
-	" QML
-	call dein#add('peterhoeg/vim-qml')
-
-	" Haskell
-	call dein#add('neovimhaskell/haskell-vim')
-	call dein#add('itchyny/vim-haskell-indent')
-	call dein#add('eagletmt/neco-ghc')
-	"call dein#add('eagletmt/ghcmod-vim')
-
-	" Go
-	call dein#add('zchee/deoplete-go')
-
-	" Meson
-	call dein#add('stfl/meson.vim')
-
-	" Utilities
-	call dein#add('tpope/vim-surround')
-	"call dein#add('Shougo/vimproc.vim', {'build' : 'make'})
-	call dein#add('Shougo/neosnippet.vim')
-	call dein#add('Shougo/neosnippet-snippets')
-	call dein#add('tpope/vim-commentary')
-	call dein#add('jiangmiao/auto-pairs')
-	call dein#add('hecal3/vim-leader-guide')
-	call dein#add('derekwyatt/vim-fswitch')
-
-	" Line
-	call dein#add('itchyny/lightline.vim')
-
-	" Themes
-	call dein#add('dikiaap/minimalist')
-	call dein#add('ajh17/Spacegray.vim')
-	call dein#add('joshdick/onedark.vim')
-
-	" Other
-	call dein#add('equalsraf/neovim-gui-shim')
-	call dein#add('metakirby5/codi.vim')
-	call dein#add('junegunn/goyo.vim')
-	call dein#add('sheerun/vim-polyglot')
-	call dein#add('wellle/targets.vim')
-	" call dein#add('autozimu/LanguageClient-neovim', { 'build': ':UpdateRemotePlugins' })
-
-	" Required:
-	call dein#end()
-	call dein#save_state()
-endif
-
-" Required:
-filetype plugin indent on
-syntax enable
-
-" If you want to install not installed plugins on startup.
-if dein#check_install()
-	call dein#install()
-endif
-
-"End dein Scripts-------------------------
-
+" True color stuff
 if (empty($TMUX))
 	if (has("nvim"))
 		let $NVIM_TUI_ENABLE_TRUE_COLOR=1
@@ -122,143 +86,35 @@ if (empty($TMUX))
 	endif
 endif
 
-if (has("autocmd") && !has("gui"))
-  let s:white = { "gui": "#ABB2BF", "cterm": "145", "cterm16" : "7" }
-  autocmd ColorScheme * call onedark#set_highlight("Normal", { "fg": s:white }) " No `bg` setting
-end
+" Color scheme settings
+let g:neodark#background = '#282828'
+colorscheme neodark
 
-let g:lightline = {
-	\ 'colorscheme': 'onedark',
-	\ 'active': {
-	\   'left': [
-	\		[ 'mode', 'paste' ],
-	\		[ 'ale' ],
-	\		[ 'fugitive', 'filename' ]
-	\	]
-	\ },
-	\ 'component_function': {
-	\	'fugitive': 'LightlineFugitive',
-	\	'readonly': 'LightlineReadonly',
-	\   'modified': 'LightlineModified',
-	\   'filename': 'LightlineFilename',
-	\   'ale': 'ALEGetStatusLine'
-	\ }
-	\ }
-
-function! LightlineModified()
-  if &filetype == "help"
-    return ""
-  elseif &modified
-    return "+"
-  elseif &modifiable
-    return ""
-  else
-    return ""
-  endif
-endfunction
-
-function! LightlineReadonly()
-  if &filetype == "help"
-    return ""
-  elseif &readonly
-    return "⭤"
-  else
-    return ""
-  endif
-endfunction
-
-function! LightlineFugitive()
-  return exists('*fugitive#head') ? fugitive#head() : ''
-endfunction
-
-function! LightlineFilename()
-  return ('' != LightlineReadonly() ? LightlineReadonly() . ' ' : '') .
-       \ ('' != expand('%:t') ? expand('%:t') : '[No Name]') .
-       \ ('' != LightlineModified() ? ' ' . LightlineModified() : '')
-endfunction
-
-colorscheme onedark
-
-let loaded_matchparen = 0
-
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_ignore_case = 1
-let g:deoplete#auto_complete_start_length = 1
-let g:deoplete#sources#clang#libclang_path = '/usr/lib/libclang.so'
-let g:deoplete#sources#clang#clang_header = '/usr/lib/clang'
-let g:auto_complete_start_length = 1
-let g:deoplete#sources#clang#flags = [
-	\ "-Isubprojects/glad/include"
-	\ ]
-
+" Gutentags cache
 let g:gutentags_cache_dir = '~/.local/share/gutentags'
 
+" Echodoc configuration
 let g:echodoc_enable_at_startup=1
 
-let loaded_matchparen = 1
+" Make FZF use ripgrep
+let $FZF_DEFAULT_COMMAND = 'rg --files --no-ignore --hidden --follow --glob "!.git/*"'
 
-let g:racer_cmd = '~/.cargo/bin/racer'
-let g:racer_experimental_completer = 1
-
-let g:ale_lint_on_save = 1
-let g:ale_lint_on_text_changed = 0
-let g:ale_statusline_format = ['⨉ %d', '⚠ %d', 'ok']
-let g:ale_sign_error = '⨉'
-let g:ale_sign_warning = '⚠'
-let g:ale_sign_column_always = 1
-let g:ale_set_loclist = 0
-let g:ale_set_quickfix = 0
-let g:ale_open_list = 0
-let g:ale_cpp_clang_options = "-std=c++14 -Isubprojects/glad/include"
-let g:ale_linters = {
-			\ 'cpp': ['clang'],
-			\ 'lua': [],
-			\ 'haskell': ['hdevtools'],
-			\ 'typescript': ['typecheck'],
-			\}
-
-" let g:haskellmode_completion_ghc = 0
-" autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
-let g:necoghc_enable_detailed_browse = 1
-
-let g:SuperTabDefaultCompletionType = "<c-n>"
-let g:SuperTabCrMapping = 0
-
-let g:go_list_type = ""
-
+" Language Client configuration
 let g:LanguageClient_serverCommands = {
-    \ 'rust': ['rls']
+    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
     \ }
+
 let g:LanguageClient_autoStart = 1
 
-let $FZF_DEFAULT_COMMAND = 'ag -g ""'
+nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
 
-set mouse=a
-set noshowcmd
-set number
-set clipboard=unnamedplus
-set completeopt-=preview
-set tabstop=4
-set shiftwidth=4
-set cursorline
-set wildignore+=*.so,*.swp,*.zip,*.o,*.png,*.jpg,*/target/*,*/build/*,*/node_modules/*
-set noswapfile
-set hidden
-"set completeopt+=noselect
-set noshowmode
-set undofile
-set undodir=~/.vim/undodir
-set wrap
-set linebreak
-" note trailing space at end of next line
-set showbreak=>\ \ \
-
-" Use ctrl-[hjkl] to select the active split!
+" Use ctrl-[hjkl] to select the active split
 nmap <silent> <c-k> :wincmd k<CR>
 nmap <silent> <c-j> :wincmd j<CR>
 nmap <silent> <c-h> :wincmd h<CR>
 nmap <silent> <c-l> :wincmd l<CR>
-
 
 " Beginnings and ends of lines
 nnoremap H ^
@@ -267,11 +123,6 @@ nnoremap L $
 " Continuous indentation shift
 vnoremap < <gv
 vnoremap > >gv
-
-" Language server bindings
-" nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
-" nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-" nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
 
 " Fix filetype indentations
 autocmd Filetype crystal setlocal expandtab|setlocal shiftwidth=2|setlocal softtabstop=2
@@ -290,16 +141,17 @@ function! <SID>StripTrailingWhitespaces()
 endfun
 autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
 
+" Replace words with cn
 nnoremap cn *``cgn
-
 
 " Remap exit terminal to ESC
 tnoremap <Esc> <C-\><C-n>
 
+" Use tab for completion manager
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-"
-" Leader bindings:
-"
+" Leader menu
 
 let mapleader = " "
 
@@ -329,46 +181,6 @@ nmap <silent> <leader>bb :Buffers<CR>
 let g:lmap.b.b = ['', 'Find']
 nmap <silent> <leader>bd :bdelete<CR>
 let g:lmap.b.d = ['', 'Delete']
-
-let g:lmap.w = { 'name' : 'Window' }
-
-nmap <silent> <leader>w/ :vsp<CR>
-let g:lmap.w['/'] = ['', 'Split vertically']
-nmap <silent> <leader>w- :sp<CR>
-let g:lmap.w['-'] = ['', 'Split horizontally']
-
-let g:lmap.t = { 'name' : 'Tab' }
-
-nmap <silent> <leader>tt :tabnew<CR>
-let g:lmap.t.t = ['', 'New tab']
-nmap <silent> <leader>tn :tabn<CR>
-let g:lmap.t.n = ['', 'Next']
-nmap <silent> <leader>tp :tabp<CR>
-let g:lmap.t.p = ['', 'Previous']
-nmap <silent> <leader>td :tabclose<CR>
-let g:lmap.t.d = ['', 'Delete']
-
-let g:lmap.e = { 'name' : 'Error' }
-
-nmap <silent> <leader>en <Plug>(ale_next_wrap)
-let g:lmap.e.n = ['', 'Next']
-nmap <silent> <leader>ep <Plug>(ale_previous_wrap)
-let g:lmap.e.p = ['', 'Previous']
-
-let g:lmap.m = { 'name' : 'Mode' }
-
-let g:lmap.m.s = ['', 'Switch']
-autocmd FileType cpp map <buffer> <leader>ms :FSHere<CR>
-let g:lmap.m.f = ['', 'Format']
-autocmd FileType cpp map <buffer> <leader>mf :ClangFormat<CR>
-let g:lmap.m.r = ['', 'Run']
-autocmd FileType lua map <buffer> <leader>mr :!love . &<CR>
-
-let g:lmap.m.t = { 'name' : 'Type' }
-let g:lmap.m.t.t = ['', 'Show']
-autocmd FileType haskell map <buffer> <leader>mtt :GhcModType<CR>
-let g:lmap.m.t.c = ['', 'Clear']
-autocmd FileType haskell map <buffer> <leader>mtc :GhcModTypeClear<CR>
 
 call leaderGuide#register_prefix_descriptions(" ", "g:lmap")
 
