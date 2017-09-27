@@ -30,7 +30,7 @@ font pango:monospace 8
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec termite
+bindsym $mod+Return exec termite 
 # bindsym $mod+Return exec konsole
 
 # take screenshot
@@ -123,11 +123,6 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
-exec termite --class=scratchpad
-for_window [class="scratchpad"] floating enable;
-for_window [class="scratchpad"] move scratchpad; [class="scratchpad"] scratchpad show; move scratchpad
-bindsym $mod+e [class="scratchpad"] scratchpad show
-
 # exec konsole -p tabtitle=scratchpad
 # for_window [title="scratchpad — Konsole"] floating enable;
 # for_window [title="scratchpad — Konsole"] move scratchpad; [title="scratchpad — Konsole"] scratchpad show; move scratchpad
@@ -144,22 +139,36 @@ assign [class="discord"] 6
 assign [class="csgo_linux64"] 10
 assign [class="dota2"] 10
 
-new_window pixel 3
+new_window pixel 1
 gaps inner 32
 smart_gaps on
 smart_borders on
 
+set_from_resource $fg foreground #f0f0f0
+set_from_resource $border_active color4 #f0f0f0
+set_from_resource $border_inactive background #f0f0f0
+set_from_resource $border_urgent color1 #f0f0f0
+set_from_resource $bg background #f0f0f0
+set_from_resource $bg2 background #f0f0f0
+
 # class                 border  backgr. text    indicator child_border
-client.focused          #7c6f64 #285577 #ffffff #2e9ef4   #7c6f64
-client.focused_inactive #333333 #5f676a #ffffff #484e50   #504945
-client.unfocused        #333333 #222222 #888888 #292d2e   #504945
-client.urgent           #2f343a #900000 #ffffff #900000   #900000
-client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
+client.focused          $bg     $bg     $fg  $bg       $border_active
+client.focused_inactive $bg     $bg     $fg  $bg       $border_inactive
+client.unfocused        $bg     $bg     $fg  $bg       $border_inactive
+client.urgent           $bg     $bg     $fg  $bg       $border_urgent
+client.placeholder      $bg     $bg     $fg  $bg       $border_active
+# client.focused          #7c6f64 #285577 #ffffff #2e9ef4   #7c6f64
+# client.focused_inactive #333333 #5f676a #ffffff #484e50   #504945
+# client.unfocused        #333333 #222222 #888888 #292d2e   #504945
+# client.urgent           #2f343a #900000 #ffffff #900000   #900000
+# client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
 
-client.background       #ffffff
+client.background       $bg
 
-exec mpd
+popup_during_fullscreen ignore
+
 exec feh --bg-center ~/images/Nightly_wallpaper.png
+exec mpd
 exec ~/.scripts/polybar_wrapper.sh
 exec compton -b
 exec steam-native
@@ -169,3 +178,10 @@ exec emacs
 exec ~/.scripts/detect_csgo.sh
 exec /usr/lib/gnome-settings-daemon/gsd-xsettings &
 # exec /usr/lib/mate-polkit/polkit-mate-authentication-agent-1 &
+
+exec termite --class=scratchpad
+for_window [class="scratchpad"] floating enable;
+for_window [class="scratchpad"] sticky enable;
+for_window [class="scratchpad"] move scratchpad; [class="scratchpad"] scratchpad show; move scratchpad
+bindsym $mod+e [class="scratchpad"] scratchpad show
+

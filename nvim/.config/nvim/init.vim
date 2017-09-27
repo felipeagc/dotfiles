@@ -45,6 +45,8 @@ Plug 'derekwyatt/vim-fswitch'
 
 " Themes
 Plug 'KeitaNakamura/neodark.vim'
+Plug 'dylanaraps/wal.vim'
+Plug 'joshdick/onedark.vim'
 
 " Other
 Plug 'metakirby5/codi.vim'
@@ -87,8 +89,8 @@ if (empty($TMUX))
 endif
 
 " Color scheme settings
-let g:neodark#background = '#282828'
-colorscheme neodark
+" let g:neodark#background = '#282828'
+colorscheme onedark
 
 " Gutentags cache
 let g:gutentags_cache_dir = '~/.local/share/gutentags'

@@ -1,6 +1,8 @@
 touch /tmp/felipe_restart_polybar
 
-polybar top & disown
+sleep 2
+
+polybar main & disown
 
 while true
 do
@@ -10,6 +12,6 @@ do
 		killall polybar
 		cp /dev/null /tmp/felipe_restart_polybar
 		sleep 2
-		polybar top & disown
+		polybar main & disown
 	fi
 done

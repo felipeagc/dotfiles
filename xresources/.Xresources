@@ -6,44 +6,61 @@ Xft.autohint: false
 Xft.hintstyle: hintslight
 Xft.lcdfilter: lcddefault
 
-URxvt.font: xft:Ubuntu Mono:size=13
-URxvt.scrollBar: false
+rofi.color-enabled: true
+rofi.color-window: #282c34, #282c34, #282c34
+rofi.color-normal: #282c34, #abb2bf, #282c34, #31353f, #ffffff
+rofi.color-active: #282c34, #61afef, #282c34, #61afef, #ffffff
+rofi.color-urgent: #282c34, #e06c75, #282c34, #e06c75, #ffffff
+rofi.font: Source Sans Pro 16
+rofi.bw: 48
 
+URxvt.font: xft:Ubuntu Mono:size=11,xft:Roboto Mono for Powerline:size=9:antialias=true:hinting=tru‌​e
+URxvt.scrollBar: false
+URxvt.letterSpace: -1
+URxvt*.transparent: false
 URxvt.internalBorder:  16
 
+URxvt.keysym.Shift-Control-V: eval:paste_clipboard
+URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard
+URxvt*iso14755: False
+
 ! special
-URxvt.foreground : #c8c8d0
-URxvt.foreground_bold : #c8c8d0
-URxvt.background : #1a1a1a
+*.foreground:   #abb2bf
+*.background:   #282c34
+*.cursorColor:  #abb2bf
+
+
+*.background1:  #353b45
+*.background2:  #3e4451
 
 ! black
-URxvt*color0  : #282c34
-URxvt*color8  : #5c6370
+*.color0:       #282c34
+*.color8:       #5c6370
 
 ! red
-URxvt*color1  : #e06c75
-URxvt*color9  : #be5046
+*.color1:       #e06c75
+*.color9:       #be5046
 
 ! green
-URxvt*color2  : #98c379
-URxvt*color10 : #7a9f60
+*.color2:       #98c379
+*.color10:      #7a9f60
 
 ! yellow
-URxvt*color3  : #e5c07b
-URxvt*color11 : #d19a66
+*.color3:       #e5c07b
+*.color11:      #d19a66
 
 ! blue
-URxvt*color4  : #61afef
-URxvt*color12 : #3b84c0
+*.color4:       #61afef
+*.color12:      #3b84c0
 
 ! magenta
-URxvt*color5  : #c678dd
-URxvt*color13 : #9a52af
+*.color5:       #c678dd
+*.color13:      #9a52af
 
 ! cyan
-URxvt*color6  : #56b6c2
-URxvt*color14 : #3c909b
+*.color6:       #56b6c2
+*.color14:      #3c909b
 
 ! white
-URxvt*color7  : #abb2bf
-URxvt*color15 : #828997
+*.color7:       #abb2bf
+*.color15:      #828997

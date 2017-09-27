@@ -1,9 +1,12 @@
-[bar/top]
+[bar/main]
 ; Colors
 black = #1a1a1a
 white = #abb2bf
 red = #be5046
 blue = #3c909b
+
+fg = ${xrdb:color7}
+bg = ${xrdb:color0}
 
 ;monitor = ${env:MONITOR:HDMI-1}
 ;override-redirect = true
@@ -12,13 +15,13 @@ height = 36
 offset-x = 0
 offset-y = 0
 
-background = ${bar/top.black}
-foreground = ${bar/top.white}
+background = ${bar/main.bg}
+foreground = ${bar/main.fg}
 
 underline-size = 4
 overline-size = 4
 
-separator = "%{F#444}  /  "
+separator = "%{F#555}  /  "
 padding-left = 5
 padding-right = 0
 module-margin-left = 3
@@ -37,43 +40,16 @@ modules-right = switch_aspect pkg mpd volume date powermenu
 tray-position = right
 tray-padding = 2
 ;tray-transparent = true
-tray-background = ${bar/top.background}
+tray-background = ${bar/main.background}
 
 scroll-up = i3wm-wsnext
 scroll-down = i3wm-wsprev
-;scroll-up = bspwm-desknext
-;scroll-down = bspwm-deskprev
-
-;wm-restack = bspwm
-wm-restack = i3wm
 
 
 [module/title]
 type = internal/xwindow
 label-maxlen = 50
 
-
-[module/bspwm]
-type = internal/bspwm
-ws-icon-default = x
-
-enable-click = true
-label-focused= %index%
-label-focused-background = #282828
-label-focused-padding = 3
-label-focused-overline = #333333
-
-label-occupied = %index%
-label-occupied-padding = 3
-
-label-urgent = %index%
-label-urgent-background = #bd2c40
-label-urgent-padding = 3
-
-label-empty = %index%
-label-empty-foreground = #55
-label-empty-padding = 3
-reverse-scroll = false
 
 [module/i3]
 type = internal/i3
@@ -83,26 +59,25 @@ format = <label-state>
 
 enable-click = true
 label-focused= %index%
-label-focused-background = #282828
+label-focused-foreground = ${bar/main.fg}
+label-focused-background = ${xrdb:background1}
 label-focused-padding = 3
-label-focused-overline = #333333
+label-focused-overline = ${xrdb:background2}
 
 label-unfocused = %index%
 label-unfocused-padding = 3
 
 label-urgent = %index%
-label-urgent-background = #bd2c40
+label-urgent-background = ${xrdb:color9}
+label-urgent-overline = ${xrdb:color1}
 label-urgent-padding = 3
 
-label-visible = %index%
-label-visible-foreground = #55
-label-visible-padding = 3
 reverse-scroll = false
 
 [module/mpd]
 type = internal/mpd
 
-format-online = %{F#abb2bf}<icon-prev>   <toggle>   <icon-next>   <bar-progress>   <icon-repeat>
+format-online = <icon-prev>   <toggle>   <icon-next>   <bar-progress>   <icon-repeat>
 
 label-song-maxlen = 40
 label-song-ellipsis = true
@@ -118,39 +93,19 @@ icon-seekf = 
 icon-random = 
 icon-repeat = 
 
-toggle-on-foreground = ${bar/top.red}
-toggle-off-foreground = ${bar/top.white}
+toggle-on-foreground = ${bar/main.red}
+toggle-off-foreground = ${bar/main.white}
 ;
 ; Only applies if <bar-progress> is used
 bar-progress-width = 16
 bar-progress-indicator = │
 bar-progress-fill = ─
 bar-progress-empty = ─
-bar-progress-fill-foreground = ${bar/top.blue}
-
-[module/wlan]
-type = internal/network
-interface = wlp4s5
-interval = 3.0
-
-format-connected = <ramp-signal> <label-connected>
-;format-connected-underline = #9f78e1
-;format-disconnected-underline = ${self.format-connected-underline}
-
-label-connected = %essid%
-label-disconnected = %ifname% disconnected
-label-disconnected-foreground = #555
-
-ramp-signal-0 = 
-ramp-signal-1 = 
-ramp-signal-2 = 
-ramp-signal-3 = 
-ramp-signal-4 = 
-ramp-signal-foreground = #666
+bar-progress-fill-foreground = ${bar/main.blue}
 
 [module/date]
 type = internal/date
-date = %{F#be5046} %{F#abb2bf} %H:%M  %d-%m-%Y
+date = %{F#be5046} %{F-} %H:%M  %d-%m-%Y
 interval = 5
 ;format-underline = #0a6cf5
 
@@ -160,7 +115,7 @@ type = internal/volume
 format-volume = <label-volume> <bar-volume>
 
 label-volume = "  "
-label-volume-foreground = ${bar/top.foreground}
+label-volume-foreground = ${bar/main.foreground}
 
 label-muted = "  MUTED"
 label-muted-foreground = #555
@@ -168,21 +123,21 @@ label-muted-foreground = #555
 bar-volume-width = 8
 bar-volume-indicator = │
 bar-volume-indicator-font = 2
-bar-volume-indicator-foreground = ${bar/top.white}
+bar-volume-indicator-foreground = ${bar/main.white}
 bar-volume-fill = ─
 bar-volume-fill-font = 2
-bar-volume-fill-foreground = ${bar/top.blue}
+bar-volume-fill-foreground = ${bar/main.blue}
 bar-volume-empty = ─
 bar-volume-empty-font = 2
-bar-volume-empty-foreground = #55
+bar-volume-empty-foreground = #555
 
 [module/powermenu]
 type = custom/menu
 
 label-open = 
-label-open-foreground = ${bar/top.red}
+label-open-foreground = ${bar/main.red}
 label-close = cancel
-label-close-foreground = ${bar/top.red}
+label-close-foreground = ${bar/main.red}
 label-separator = " | "
 label-separator-foreground = #55
 
@@ -221,8 +176,11 @@ click-left = sh ~/.scripts/switch_aspect.sh
 type = custom/script
 interval = 300
 format = <label>
-format-overline = ${bar/top.red}
+format-overline = ${bar/main.red}
 label = "%output:0:30%"
 exec = ~/.config/polybar/pkg.sh
 exec-if = "ping -q -w 2 -c 1 176.34.135.167 > /dev/null"
 
+[settings]
+format-foreground = ${bar/main.fg}
+format-background = ${bar/main.bg}

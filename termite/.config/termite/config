@@ -1,14 +1,14 @@
 [options]
 cursor_blink = off
-font         = monospace 13
+font         = Ubuntu Mono 13
 
 [colors]
 
 # special
-foreground      = #c8c8d0
-foreground_bold = #c8c8d0
-# background      = #1b1d21
-background		= #282828
+foreground      = #abb2bf
+foreground_bold = #abb2bf
+cursor          = #abb2bf
+background      = #282c34
 
 # black
 color0  = #282c34
@@ -41,6 +41,3 @@ color14 = #3c909b
 # white
 color7  = #abb2bf
 color15 = #828997
-
-vim: ft=dosini cms=#%s
-
