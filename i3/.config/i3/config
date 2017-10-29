@@ -30,7 +30,7 @@ font pango:monospace 8
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec termite 
+bindsym $mod+Return exec urxvt
 # bindsym $mod+Return exec konsole
 
 # take screenshot
@@ -43,6 +43,8 @@ bindsym $mod+space exec rofi -show drun
 bindsym $mod+shift+space exec rofi -show run
 
 bindsym $mod+p exec rofi-pass
+
+bindsym $mod+n exec nautilus -w
 
 # change focus
 bindsym $mod+h focus left
@@ -167,7 +169,7 @@ client.background       $bg
 
 popup_during_fullscreen ignore
 
-exec feh --bg-center ~/images/Nightly_wallpaper.png
+exec feh --bg-fill ~/images/Mascaloona\ -\ Dakshin\ \(21-9\)\ \(2560\ x\ 1080\).jpg
 exec mpd
 exec ~/.scripts/polybar_wrapper.sh
 exec compton -b
@@ -179,9 +181,9 @@ exec ~/.scripts/detect_csgo.sh
 exec /usr/lib/gnome-settings-daemon/gsd-xsettings &
 # exec /usr/lib/mate-polkit/polkit-mate-authentication-agent-1 &
 
-exec termite --class=scratchpad
-for_window [class="scratchpad"] floating enable;
-for_window [class="scratchpad"] sticky enable;
-for_window [class="scratchpad"] move scratchpad; [class="scratchpad"] scratchpad show; move scratchpad
-bindsym $mod+e [class="scratchpad"] scratchpad show
+exec urxvt -name urxvt_scratchpad -e tmux
+for_window [instance="urxvt_scratchpad"] floating enable;
+for_window [instance="urxvt_scratchpad"] sticky enable;
+for_window [instance="urxvt_scratchpad"] move scratchpad; [instance="urxvt_scratchpad"] scratchpad show; move scratchpad
+bindsym $mod+e [instance="urxvt_scratchpad"] scratchpad show
 

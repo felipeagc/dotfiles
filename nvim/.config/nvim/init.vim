@@ -11,6 +11,9 @@ Plug 'roxma/nvim-completion-manager'
 Plug 'Shougo/echodoc.vim'
 " Plug 'ervandew/supertab'
 
+" Error checking
+Plug 'w0rp/ale'
+
 " Fuzzy finders
 Plug 'junegunn/fzf', { 'do': './install --bin'}
 Plug 'junegunn/fzf.vim'
@@ -36,6 +39,9 @@ Plug 'neovimhaskell/haskell-vim'
 " Meson
 Plug 'stfl/meson.vim'
 
+" Rust
+Plug 'rust-lang/rust.vim'
+
 " Utilities
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
@@ -46,7 +52,7 @@ Plug 'derekwyatt/vim-fswitch'
 " Themes
 Plug 'KeitaNakamura/neodark.vim'
 Plug 'dylanaraps/wal.vim'
-Plug 'joshdick/onedark.vim'
+Plug 'rakr/vim-one'
 
 " Other
 Plug 'metakirby5/codi.vim'
@@ -78,19 +84,16 @@ set linebreak
 set showbreak=>\ \ \
 set shortmess+=c
 
-" True color stuff
-if (empty($TMUX))
-	if (has("nvim"))
-		let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-	endif
-	if (has("termguicolors"))
-		set termguicolors
-	endif
-endif
+" if (has("nvim"))
+" 	let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+" endif
+" if (has("termguicolors"))
+" 	set termguicolors
+" endif
 
 " Color scheme settings
-" let g:neodark#background = '#282828'
-colorscheme onedark
+set background=dark
+colorscheme one
 
 " Gutentags cache
 let g:gutentags_cache_dir = '~/.local/share/gutentags'
@@ -100,6 +103,12 @@ let g:echodoc_enable_at_startup=1
 
 " Make FZF use ripgrep
 let $FZF_DEFAULT_COMMAND = 'rg --files --no-ignore --hidden --follow --glob "!.git/*"'
+
+" ALE
+let g:ale_linters = {
+\   'rust': ['rls'],
+\}
+let g:ale_sign_column_always = 1
 
 " Language Client configuration
 let g:LanguageClient_serverCommands = {
@@ -183,6 +192,20 @@ nmap <silent> <leader>bb :Buffers<CR>
 let g:lmap.b.b = ['', 'Find']
 nmap <silent> <leader>bd :bdelete<CR>
 let g:lmap.b.d = ['', 'Delete']
+
+let g:lmap.e = { 'name' : 'Error' }
+
+nmap <silent> <leader>en <Plug>(ale_next_wrap)
+let g:lmap.e.n = ['', 'Next']
+nmap <silent> <leader>ep <Plug>(ale_previous_wrap)
+let g:lmap.e.p = ['', 'Previous']
+
+let g:lmap.w = { 'name' : 'Window' }
+
+nmap <silent> <leader>w/ :vsplit<CR>
+let g:lmap.w['/'] = ['', 'Split vertically']
+nmap <silent> <leader>w- :split<CR>
+let g:lmap.w['-'] = ['', 'Split horizontally']
 
 call leaderGuide#register_prefix_descriptions(" ", "g:lmap")
 

@@ -4,6 +4,7 @@ black = #1a1a1a
 white = #abb2bf
 red = #be5046
 blue = #3c909b
+green = #98c379
 
 fg = ${xrdb:color7}
 bg = ${xrdb:color0}
@@ -32,7 +33,7 @@ font-1 = unifont:fontformat=truetype:size=8:antialias=false;1
 font-2 = Wuncon Siji:antialias=false;pixelsize=11;1
 font-3 = FontAwesome:pixelsize=7;1
 
-modules-left = title
+modules-left = btc bch eth xmr
 modules-center = i3
 ;modules-center = bspwm
 modules-right = switch_aspect pkg mpd volume date powermenu
@@ -180,6 +181,34 @@ format-overline = ${bar/main.red}
 label = "%output:0:30%"
 exec = ~/.config/polybar/pkg.sh
 exec-if = "ping -q -w 2 -c 1 176.34.135.167 > /dev/null"
+
+[module/btc]
+type = custom/script
+interval = 10
+format = <label>
+tail = true
+exec = ~/.config/polybar/coin.py btc
+
+[module/bch]
+type = custom/script
+interval = 10
+format = <label>
+tail = true
+exec = ~/.config/polybar/coin.py bch
+
+[module/eth]
+type = custom/script
+interval = 10
+format = <label>
+tail = true
+exec = ~/.config/polybar/coin.py eth
+
+[module/xmr]
+type = custom/script
+interval = 10
+format = <label>
+tail = true
+exec = ~/.config/polybar/coin.py xmr
 
 [settings]
 format-foreground = ${bar/main.fg}
