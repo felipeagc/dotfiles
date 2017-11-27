@@ -1,6 +1,6 @@
 [options]
 cursor_blink = off
-font         = Roboto Mono for Powerline 11
+font         = Iosevka 10
 
 [colors]
 

@@ -14,14 +14,16 @@ rofi.color-urgent: #282c34, #e06c75, #282c34, #e06c75, #ffffff
 rofi.font: Source Sans Pro 16
 rofi.bw: 48
 
-URxvt.font: xft:Roboto\ Mono\ for\ Powerline:size=12:antialias=true:hinting=true,FontAwesome:size=12
+URxvt.font: xft:Hack:size=9
 URxvt.scrollBar: false
 URxvt*.transparent: false
-URxvt.internalBorder:  32
+URxvt.internalBorder: 0
 
 URxvt.keysym.Shift-Control-V: eval:paste_clipboard
 URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard
 URxvt*iso14755: False
+
+URxvt.letterSpace: -1
 
 xterm*utf8: 1
 

@@ -13,7 +13,7 @@ set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:monospace 8
+font pango:Fira Sans 10
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -30,6 +30,7 @@ font pango:monospace 8
 floating_modifier $mod
 
 # start a terminal
+# bindsym $mod+Return exec alacritty -e tmux
 bindsym $mod+Return exec urxvt
 # bindsym $mod+Return exec konsole
 
@@ -142,9 +143,10 @@ assign [class="csgo_linux64"] 10
 assign [class="dota2"] 10
 
 new_window pixel 1
-gaps inner 32
-smart_gaps on
-smart_borders on
+# gaps inner 8
+# smart_gaps on
+# smart_borders on
+hide_edge_borders smart
 
 set_from_resource $fg foreground #f0f0f0
 set_from_resource $border_active color4 #f0f0f0
@@ -153,12 +155,12 @@ set_from_resource $border_urgent color1 #f0f0f0
 set_from_resource $bg background #f0f0f0
 set_from_resource $bg2 background #f0f0f0
 
-# class                 border  backgr. text    indicator child_border
-client.focused          $bg     $bg     $fg  $bg       $border_active
-client.focused_inactive $bg     $bg     $fg  $bg       $border_inactive
-client.unfocused        $bg     $bg     $fg  $bg       $border_inactive
-client.urgent           $bg     $bg     $fg  $bg       $border_urgent
-client.placeholder      $bg     $bg     $fg  $bg       $border_active
+# class                 border  			background 		text    indicator child_border
+client.focused          $border_active		$border_active  $bg  	$bg       $border_active
+client.focused_inactive $border_inactive	$bg     		$fg  	$bg       $border_inactive
+client.unfocused        $border_inactive    $bg     		$fg  	$bg       $border_inactive
+client.urgent           $border_urgent 		$bg     		$fg  	$bg       $border_urgent
+client.placeholder      $border_active 		$bg     		$fg  	$bg       $border_active
 # client.focused          #7c6f64 #285577 #ffffff #2e9ef4   #7c6f64
 # client.focused_inactive #333333 #5f676a #ffffff #484e50   #504945
 # client.unfocused        #333333 #222222 #888888 #292d2e   #504945
@@ -174,16 +176,24 @@ exec mpd
 exec ~/.scripts/polybar_wrapper.sh
 exec compton -b
 exec steam-native
-exec firefox-nightly
-# exec corebird
+exec firefox
+exec corebird
 exec emacs
 exec ~/.scripts/detect_csgo.sh
 exec /usr/lib/gnome-settings-daemon/gsd-xsettings &
 # exec /usr/lib/mate-polkit/polkit-mate-authentication-agent-1 &
 
+bindsym $mod+shift+s exec urxvt -name urxvt_scratchpad -e tmux
 exec urxvt -name urxvt_scratchpad -e tmux
 for_window [instance="urxvt_scratchpad"] floating enable;
 for_window [instance="urxvt_scratchpad"] sticky enable;
 for_window [instance="urxvt_scratchpad"] move scratchpad; [instance="urxvt_scratchpad"] scratchpad show; move scratchpad
 bindsym $mod+e [instance="urxvt_scratchpad"] scratchpad show
+
+# bindsym $mod+shift+s exec alacritty -t alacritty_scratchpad -e tmux
+# exec alacritty -t alacritty_scratchpad -e tmux
+# for_window [instance="alacritty"] floating enable;
+# for_window [instance="alacritty_scratchpad"] sticky enable;
+# for_window [instance="alacritty_scratchpad"] move scratchpad; [instance="alacritty_scratchpad"] scratchpad show; move scratchpad
+# bindsym $mod+e [instance="alacritty_scratchpad"] scratchpad show
 

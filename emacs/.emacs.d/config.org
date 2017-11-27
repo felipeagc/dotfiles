@@ -51,6 +51,29 @@
    #+END_SRC
 ** Functions
    #+BEGIN_SRC emacs-lisp
+     (defun felipe/switch-to-buffer (buffer)
+       "Switches to a buffer but doesn't open a new window if it's already open in another one"
+       (let (result)
+         (progn
+           (dolist (window (window-list) result)
+             (when (equal buffer (window-buffer window))
+               (progn
+                 (select-window window)
+                 (setq result t))))
+           (when (not result) (switch-to-buffer buffer)))))
+
+     (defun felipe/open-terminal ()
+       "Finds or creates a terminal window"
+       (interactive)
+       (let (result)
+         (progn
+           (dolist (buffer (buffer-list) result)
+                   (when (equal (with-current-buffer buffer major-mode) 'term-mode)
+                     (progn
+                       (felipe/switch-to-buffer buffer)
+                       (setq result t))))
+           (when (not result) (ansi-term "/bin/zsh")))))
+
      (defun felipe/edit-todo()
        "Go to the todo file"
        (interactive)
@@ -105,9 +128,15 @@
 ** Setup
    Set the font, hide toolbars, etc.
    #+BEGIN_SRC emacs-lisp
-     (set-frame-font "Ubuntu Mono-13:spacing=50")
-     (set-face-attribute 'mode-line nil :font "Ubuntu Mono-13:spacing=50")
+     (set-frame-font "Iosevka-12")
+     (set-face-attribute 'mode-line nil :font "Iosevka-12")
+     (set-face-attribute 'variable-pitch nil :font "Fira Sans-9")
 
+     (setq-default window-divider-default-places t
+                   window-divider-default-bottom-width 0
+                   window-divider-default-right-width 1)
+
+     (set-fringe-style '(4 . 0))
 
      (tool-bar-mode -1)
      (menu-bar-mode -1)
@@ -117,50 +146,76 @@
 
      (global-hl-line-mode 1)
    #+END_SRC
+** Line numbers (Emacs 26+)
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'prog-mode-hook (lambda ()
+                                 ;; (display-line-numbers-mode)
+                                 (setq display-line-numbers-width 3)))
+     ;; (setq display-line-numbers-type 'relative)
+   #+END_SRC
+** Neotree
+   #+BEGIN_SRC emacs-lisp
+     (use-package neotree
+       :config
+       (setq projectile-switch-project-action 'neotree-projectile-action
+             neo-mode-line-type 'none
+             neo-banner-message nil
+             neo-theme 'nerd
+             neo-keymap-style 'concise
+             neo-window-width 30
+             neo-hidden-regexp-list
+             '(;; vcs folders
+               "^\\.\\(git\\|hg\\|svn\\)$"
+               ;; compiled files
+               "\\.\\(pyc\\|o\\|elc\\|lock\\|css.map\\)$"
+               ;; generated files, caches or local pkgs
+               "^\\(node_modules\\|__pycache__\\|vendor\\|.\\(project\\|cask\\|yardoc\\|sass-cache\\)\\)$"
+               ;; org-mode folders
+               "^\\.\\(sync\\|export\\|attach\\)$"
+               "~$"
+               "^#.*#$")))
+   #+END_SRC
 ** Theme
   #+BEGIN_SRC emacs-lisp
-    ;; (use-package kaolin-theme
-    ;;   :init
-    ;;   (setq kaolin-wave t)
-    ;;   :config
-    ;;   (load-theme 'kaolin t))
+        ;; (use-package kaolin-theme
+        ;;   :init
+        ;;   (setq kaolin-wave t)
+        ;;   :config
+        ;;   (load-theme 'kaolin t))
 
-    ;; (use-package darktooth-theme
-    ;;   :config
-    ;;   (load-theme 'darktooth t)
-    ;;   (darktooth-modeline-two))
+        ;; (use-package darktooth-theme
+        ;;   :config
+        ;;   (load-theme 'darktooth t)
+        ;;   (darktooth-modeline-two))
 
-    ;; (use-package xresources-theme)
+        ;; (use-package xresources-theme)
 
-    ;; (use-package creamsody-theme
-    ;;   :config
-    ;;   (load-theme 'creamsody t)
-    ;;   (creamsody-modeline-two))
+        ;; (use-package creamsody-theme
+        ;;   :config
+        ;;   (load-theme 'creamsody t)
+        ;;   (creamsody-modeline-two))
 
-    ;; (use-package oceanic-theme
-    ;;   :config
-    ;;   (load-theme 'oceanic))
+        ;; (use-package oceanic-theme
+        ;;   :config
+        ;;   (load-theme 'oceanic))
 
-    (use-package doom-themes
-      :config
-      (setq doom-themes-enable-bold nil    ; if nil, bold is universally disabled
-            doom-themes-enable-italic t) ; if nil, italics is universally disabled
-      (load-theme 'doom-one t)
-      (doom-themes-org-config))
+        (use-package doom-themes
+          :config
+          (setq doom-themes-enable-bold nil    ; if nil, bold is universally disabled
+                doom-themes-enable-italic t) ; if nil, italics is universally disabled
+          (load-theme 'doom-one t)
+          ;; (doom-themes-org-config)
+          (doom-themes-neotree-config)
+          (setq doom-neotree-enable-variable-pitch t
+                doom-neotree-file-icons 'simple
+                doom-neotree-line-spacing 2
+                ;; doom-neotree-project-size 1.2
+            )
+          )
 
-
-
-    ;;   (use-package solaire-mode
-    ;;     :config
-    ;;     ;; brighten buffers (that represent real files)
-    ;;     (add-hook 'after-change-major-mode-hook #'turn-on-solaire-mode)
-
-    ;;     ;; To enable solaire-mode unconditionally for certain modes:
-    ;;     (add-hook 'ediff-prepare-buffer-hook #'solaire-mode)))
-
-    ;; (use-package base16-theme
-    ;;   :config
-    ;;   (load-theme 'base16-onedark))
+        ;; (use-package base16-theme
+        ;;   :config
+        ;;   (load-theme 'base16-onedark))
 
   #+END_SRC
 ** Modeline
@@ -925,6 +980,25 @@
      (add-hook 'image-mode-hook   #'+doom-modeline|set-media-modeline)
      (add-hook 'circe-mode-hook #'+doom-modeline|set-special-modeline)
    #+END_SRC
+** Solaire-mode
+   #+BEGIN_SRC emacs-lisp
+     (use-package solaire-mode
+       :config
+       ;; brighten buffers (that represent real files)
+       (add-hook 'after-change-major-mode-hook #'turn-on-solaire-mode)
+       ;; To enable solaire-mode unconditionally for certain modes:
+       (add-hook 'ediff-prepare-buffer-hook #'solaire-mode)
+       (add-hook 'magit-mode-hook #'solaire-mode)
+       (add-hook 'dashboard-mode-hook #'solaire-mode)
+       (add-hook 'org-src-mode-hook #'solaire-mode)
+       (add-hook 'term-mode-hook #'solaire-mode)
+       ;; ...if you use auto-revert-mode:
+       (add-hook 'after-revert-hook #'turn-on-solaire-mode)
+       ;; highlight the minibuffer when it is activated:
+       (add-hook 'minibuffer-setup-hook #'solaire-mode-in-minibuffer)
+
+       (solaire-mode-swap-bg))
+   #+END_SRC
 ** Ivy
    #+BEGIN_SRC emacs-lisp
      (use-package ivy
@@ -986,6 +1060,12 @@
          (exec-path-from-shell-initialize)
          (exec-path-from-shell-copy-env "GOPATH")))
    #+END_SRC
+** Smooth scrolling
+   #+BEGIN_SRC emacs-lisp
+     (use-package smooth-scrolling
+       :config
+       (smooth-scrolling-mode 1))
+   #+END_SRC
 ** Rainbow delimeters
    #+BEGIN_SRC emacs-lisp
      (use-package rainbow-delimiters
@@ -1003,7 +1083,7 @@
    #+END_SRC
 ** Zooming
    #+BEGIN_SRC emacs-lisp
-     (use-package default-text-scale)
+     (use-package zoom-frm)
    #+END_SRC
 ** Find other file (header/source)
    #+BEGIN_SRC emacs-lisp
@@ -1084,9 +1164,14 @@
       (evil-mode 1)
 
       (define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
-        (define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
-        (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
-        (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
+      (define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
+      (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
+      (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
+
+      (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
+      (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
+      (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
+      (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
 
       (defun minibuffer-keyboard-quit ()
         "Abort recursive edit.
@@ -1157,6 +1242,7 @@
       (global-flycheck-mode)
       (use-package flycheck-pos-tip
         :config
+        (setq flycheck-pos-tip-timeout 60)
         (flycheck-pos-tip-mode)))
   #+END_SRC
 * Company
@@ -1164,6 +1250,9 @@
     (use-package company
       :init
       (setq company-tooltip-align-annotations t)
+      (setq company-tooltip-limit 20)
+      (setq company-echo-delay 0)
+      (setq company-idle-delay .3)
       :config
       (global-company-mode))
   #+END_SRC
@@ -1201,9 +1290,14 @@
 ** LSP
    Language server protocol
    #+BEGIN_SRC emacs-lisp
-     ;; (use-package lsp-mode
-     ;;   :config
-     ;;   (require 'lsp-flycheck))
+     (use-package lsp-mode
+       :config
+       (require 'lsp-flycheck)
+       ;; (use-package company-lsp
+       ;;   :after company
+       ;;   :config
+       ;;   (push 'company-lsp company-backends))
+       )
    #+END_SRC
 ** Org
    #+BEGIN_SRC emacs-lisp
@@ -1229,7 +1323,7 @@
 ** Rust
    #+BEGIN_SRC emacs-lisp
      (use-package rust-mode
-       ;; :after lsp-mode
+       :after lsp-mode
        :config
 
        (use-package racer
@@ -1239,20 +1333,30 @@
          (add-hook 'racer-mode-hook #'eldoc-mode)
          (add-hook 'racer-mode-hook #'company-mode))
 
-       (use-package flycheck-rust
-         :after flycheck
-         :config
-         (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+       ;; (use-package flycheck-rust
+       ;;   :after flycheck
+       ;;   :config
+       ;;   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
        ;; (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
 
-       ;; (use-package lsp-rust
-       ;;   :after lsp-mode
-       ;;   :init
-       ;;   (add-hook 'rust-mode-hook #'lsp-rust-enable)
-       ;;   (add-hook 'rust-mode-hook #'flycheck-mode)
-       ;;   ;; (add-hook 'rust-mode-hook 'lsp-mode)
-       ;;   (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls")))
+       (use-package lsp-rust
+         :after lsp-mode
+         :init
+         (add-hook 'rust-mode-hook #'lsp-rust-enable)
+         (add-hook 'rust-mode-hook #'flycheck-mode)
+         ;; (add-hook 'rust-mode-hook 'lsp-mode)
+         (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
+
+         :config
+         (defconst lsp-rust--handlers
+           '(("rustDocument/diagnosticsBegin" . (lambda (_w _p)))
+             ("rustDocument/diagnosticsEnd" .
+             (lambda (w _p)
+               (when (< (cl-decf (gethash w lsp-rust--diag-counters 0)) 0))))
+             ("rustDocument/beginBuild" .
+             (lambda (w _p)
+               (cl-incf (gethash w lsp-rust--diag-counters 0)))))))
      )
 
      ;; (use-package cargo
@@ -1288,7 +1392,10 @@
    #+END_SRC
 ** Web languages (markup, etc)
    #+BEGIN_SRC emacs-lisp
-     (use-package web-mode)
+     (use-package web-mode
+       :config
+       (setq web-mode-enable-auto-quoting nil))
+
      (use-package emmet-mode
        :config
        (add-hook 'emmet-mode-hook
@@ -1298,8 +1405,11 @@
                  (define-key emmet-mode-keymap (kbd "<C-return>") nil)
                  ;; define new TAB key mapping instead.
                  (define-key emmet-mode-keymap (kbd "<tab>")        'emmet-expand-line))))
+
      (use-package pug-mode)
+
      (use-package sass-mode)
+
      (use-package vue-mode
        :config
        (add-hook 'vue-mode-hook 'emmet-mode))
@@ -1326,6 +1436,8 @@
          (lambda ()
            (when (string-equal "tsx" (file-name-extension buffer-file-name))
              (setup-tide-mode))))
+
+       (flycheck-add-mode 'typescript-tslint 'web-mode)
 
        ;; formats the buffer before saving
        (add-hook 'before-save-hook 'tide-format-before-save)
@@ -1357,8 +1469,13 @@
      (use-package irony
        :after evil-leader
        :config
-       (add-hook 'c++-mode-hook 'irony-mode)
-       (add-hook 'c-mode-hook 'irony-mode)
+       (defun my-irony-mode-on ()
+         ;; avoid enabling irony-mode in modes that inherits c-mode, e.g: php-mode
+         (when (member major-mode irony-supported-major-modes)
+           (irony-mode 1)))
+
+       (add-hook 'c++-mode-hook 'my-irony-mode-on)
+       (add-hook 'c-mode-hook 'my-irony-mode-on)
        (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
        ;; (setq-default irony-cdb-compilation-databases '(irony-cdb-clang-complete))
@@ -1442,6 +1559,16 @@
          :config
          (add-to-list 'company-backends 'company-qml)))
    #+END_SRC
+** Solidity
+   #+BEGIN_SRC emacs-lisp
+     (use-package solidity-mode
+       :init
+       (setq solidity-solc-path "/usr/bin/solc")
+       :config
+       (add-hook 'solidity-mode-hook (lambda ()
+                                       (set (make-local-variable 'indent-line-function) 'c-indent-line)
+                                       (set (make-local-variable 'indent-region-function) 'c-indent-line))))
+   #+END_SRC
 * Writing
   Provides a distraction free writing mode.
   #+BEGIN_SRC emacs-lisp
@@ -1456,8 +1583,8 @@
 
     (add-hook 'go-mode-hook
       (function (lambda ()
-        (setq tab-width 8)
-        (setq evil-shift-width 8))))
+        (setq tab-width 4)
+        (setq evil-shift-width 4))))
 
     (add-hook 'python-mode-hook
       (function (lambda ()
@@ -1508,6 +1635,15 @@
         (setq tab-width 2)
         (setq evil-shift-width 2))))
 
+    (add-hook 'web-mode-hook
+      (function (lambda ()
+        (setq tab-width 4)
+        (setq evil-shift-width 4))))
+
+    (add-hook 'solidity-mode-hook
+      (function (lambda ()
+        (setq tab-width 2)
+        (setq evil-shift-width 2))))
   #+END_SRC
 * Keybinds
 ** Map ESC to cancel (C-g)
@@ -1518,14 +1654,16 @@
    #+END_SRC
 ** Core bindings
    #+BEGIN_SRC emacs-lisp
-     (felipe/name-bind "T" "theme/toggles")
-     (felipe/bind "Tt" 'counsel-load-theme "themes")
-     (felipe/bind "Tn" 'nlinum-mode "toggle line numbers")
+     (felipe/name-bind "t" "theme/toggles")
+     (felipe/bind "tt" 'counsel-load-theme "themes")
+     (felipe/bind "tl" 'nlinum-mode "toggle line numbers")
+     (felipe/bind "tn" 'neotree-toggle "toggle neotree")
+     (felipe/bind "te" 'felipe/open-terminal "terminal emulator")
 
      (felipe/name-bind "z" "zoom")
-     (felipe/bind "zz" 'text-scale-adjust "adjust zoom")
-     (felipe/bind "zi" 'text-scale-increase "zoom in")
-     (felipe/bind "zo" 'text-scale-decrease "zoom out")
+     (felipe/bind "zu" 'zoom-frm-unzoom "adjust zoom")
+     (felipe/bind "zi" 'zoom-in "zoom in")
+     (felipe/bind "zo" 'zoom-out "zoom out")
 
      (felipe/name-bind "f" "files")
      (felipe/bind "ff" 'counsel-find-file "find file")
@@ -1545,10 +1683,14 @@
      (felipe/bind "w/" 'split-window-right "split right")
      (felipe/bind "w-" 'split-window-below "split below")
      (felipe/bind "wd" 'delete-window "delete window")
+     (felipe/bind "wb" 'balance-windows "balance windows")
 
      (felipe/name-bind "e" "error")
      (felipe/bind "en" 'flycheck-next-error "next error")
      (felipe/bind "ep" 'flycheck-previous-error "previous error")
+
+     (felipe/name-bind "r" "refactor")
+     (felipe/bind "rs" 'replace-string "replace string")
 
      (felipe/name-bind "p" "projectile")
      (felipe/bind "pp" 'counsel-projectile-switch-project "switch project")
@@ -1568,6 +1710,11 @@
      (felipe/bind "gs" 'magit-stage "stage")
      (felipe/bind "gU" 'magit-unstage "unstage")
    #+END_SRC
+** Neotree
+   #+BEGIN_SRC emacs-lisp
+     (felipe/bind-mode "fn" 'neotree-create-node "new file/folder" 'neotree-mode)
+     (felipe/bind-mode "fd" 'neotree-delete-node "delete file/folder" 'neotree-mode)
+   #+END_SRC
 ** Org mode
    #+BEGIN_SRC emacs-lisp
      (felipe/name-bind-mode "mi" "insert" 'org-mode)
@@ -1584,7 +1731,7 @@
    #+BEGIN_SRC emacs-lisp
      (felipe/bind-mode "mb" 'cargo-process-build "cargo build" 'rust-mode)
      (felipe/bind-mode "mr" 'cargo-process-run "cargo run" 'rust-mode)
-     (felipe/bind-mode "mf" 'rust-format-buffer "format" 'rust-mode)
+     (felipe/bind-mode "mF" 'rust-format-buffer "format" 'rust-mode)
    #+END_SRC
 ** Lua
    #+BEGIN_SRC emacs-lisp
@@ -1596,26 +1743,35 @@
    #+END_SRC
 ** C/C++
    #+BEGIN_SRC emacs-lisp
-     (felipe/bind-mode "mf" 'clang-format-buffer "format" 'c++-mode)
+     (felipe/bind-mode "mF" 'clang-format-buffer "format" 'c++-mode)
      (felipe/bind-mode "ms" 'cff-find-other-file "switch file" 'c++-mode)
 
-     (felipe/bind-mode "mf" 'clang-format-buffer "format" 'c-mode)
+     (felipe/bind-mode "mF" 'clang-format-buffer "format" 'c-mode)
      (felipe/bind-mode "ms" 'cff-find-other-file "switch file" 'c-mode)
    #+END_SRC
 ** Typescript
    #+BEGIN_SRC emacs-lisp
-     (felipe/bind-mode "mf" 'tide-format "format" 'typescript-mode)
+     (felipe/bind-mode "mf" 'tide-fix "fix" 'typescript-mode)
+     (felipe/bind-mode "mF" 'tide-format "format" 'typescript-mode)
      (felipe/bind-mode "mgg" 'tide-goto-reference "go to reference" 'typescript-mode)
-     (felipe/bind-mode "mrs" 'tide-rename-symbol "rename Symbol" 'typescript-mode)
+     (felipe/bind-mode "mrs" 'tide-rename-symbol "rename symbol" 'typescript-mode)
+   #+END_SRC
+** Web
+   #+BEGIN_SRC emacs-lisp
+     (felipe/bind-mode "mf" 'tide-fix "fix" 'web-mode)
+     (felipe/bind-mode "mF" 'tide-format "format" 'web-mode)
+     (felipe/bind-mode "mgg" 'tide-goto-reference "go to reference" 'web-mode)
+     (felipe/bind-mode "mrs" 'tide-rename-symbol "rename symbol" 'web-mode)
    #+END_SRC
 ** Go
    #+BEGIN_SRC emacs-lisp
-     (felipe/bind-mode "mf" 'gofmt "format" 'go-mode)
+     (felipe/bind-mode "mF" 'gofmt "format" 'go-mode)
      (felipe/bind-mode "mi" 'go-import-add "add imports" 'go-mode)
+     (felipe/bind-mode "md" 'godoc-at-point "godoc" 'go-mode)
    #+END_SRC
 ** Python
    #+BEGIN_SRC emacs-lisp
-     (felipe/bind-mode "mf" 'elpy-format-code "format" 'python-mode)
+     (felipe/bind-mode "mF" 'elpy-format-code "format" 'python-mode)
      (felipe/bind-mode "mi" 'elpy-importmagic-fixup "fix imports" 'python-mode)
      (felipe/bind-mode "md" 'elpy-doc "show documentation" 'python-mode)
      (felipe/bind-mode "mgd" 'elpy-goto-definition "go to definition" 'python-mode)

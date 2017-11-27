@@ -2,7 +2,7 @@ export LANG=en_US.UTF-8
 
 export ZSH=$HOME/.oh-my-zsh
 
-ZSH_THEME="spaceship"
+ZSH_THEME="norm"
 
 SPACESHIP_DOCKER_SHOW=false
 
@@ -48,7 +48,7 @@ alias fp="flatpak"
 
 alias ec="emacsclient -n"
 
-source ~/.zprofile
+source ~/.profile
 
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
         source /etc/profile.d/vte.sh
