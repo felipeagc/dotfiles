@@ -5,17 +5,20 @@
   #+END_SRC
 * Setup package management
   #+BEGIN_SRC emacs-lisp
-  (when (>= emacs-major-version 24)
-    (setq-default
-    load-prefer-newer t
-    package-enable-at-startup nil)
-    (package-initialize)
-    (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-    (unless (package-installed-p 'use-package)
-      (package-refresh-contents)
-      (package-install 'use-package)))
+    (setq-default load-prefer-newer t)
+    (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                              ("org" . "http://orgmode.org/elpa/")
+                              ("melpa" . "http://melpa.org/packages/")
+                              ("melpa-stable" . "http://stable.melpa.org/packages/"))
+          package-archive-priorities '(("melpa-stable" . 1)))
 
-  (setq use-package-always-ensure t)
+    (package-initialize)
+    (when (not package-archive-contents)
+      (package-refresh-contents)
+      (package-install 'use-package))
+    (require 'use-package)
+
+    (setq use-package-always-ensure t)
   #+END_SRC
 * Start server
   Starts the emacs server so we can use =emacsclient= to open files in the running instance.
@@ -120,16 +123,119 @@
        (evil-normal-state)
        (evil-visual-restore))
    #+END_SRC
-* Projectile
-  #+BEGIN_SRC emacs-lisp
-    (use-package projectile)
-  #+END_SRC
+* Misc
+** Disable auto-save
+   #+BEGIN_SRC emacs-lisp
+     (setq auto-save-default nil)
+   #+END_SRC
+** Fix environment variables
+   #+BEGIN_SRC emacs-lisp
+     (use-package exec-path-from-shell
+       :config
+       (when (memq window-system '(mac ns x))
+         (exec-path-from-shell-initialize)
+         (exec-path-from-shell-copy-env "GOPATH")))
+   #+END_SRC
+** Smooth scrolling
+   #+BEGIN_SRC emacs-lisp
+     (use-package smooth-scrolling
+       :config
+       (smooth-scrolling-mode 1))
+   #+END_SRC
+** Rainbow delimeters
+   #+BEGIN_SRC emacs-lisp
+     (use-package rainbow-delimiters
+       :config
+       (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+   #+END_SRC
+** Persistent undo history
+   #+BEGIN_SRC emacs-lisp
+     (setq undo-tree-auto-save-history t)
+     (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+   #+END_SRC
+** Dumb jump
+   #+BEGIN_SRC emacs-lisp
+     (use-package dumb-jump)
+   #+END_SRC
+** Zooming
+   #+BEGIN_SRC emacs-lisp
+     (use-package zoom-frm)
+   #+END_SRC
+** Find other file (header/source)
+   #+BEGIN_SRC emacs-lisp
+     (use-package cff)
+   #+END_SRC
+** Shackle
+   #+BEGIN_SRC emacs-lisp
+     (use-package shackle
+       :init
+       (setq shackle-default-rule '(:same t)))
+   #+END_SRC
+** Eyebrowse
+   #+BEGIN_SRC emacs-lisp
+     (use-package eyebrowse
+       :config
+       (eyebrowse-mode t))
+   #+END_SRC
+** Electric pair mode
+   #+BEGIN_SRC emacs-lisp
+     (electric-pair-mode)
+   #+END_SRC
+** Rainbow-mode
+   #+BEGIN_SRC emacs-lisp
+     (use-package rainbow-mode
+       :config
+       (add-hook 'prog-mode-hook (lambda () (rainbow-mode 1))))
+   #+END_SRC
+** Other stuff
+   #+BEGIN_SRC emacs-lisp
+     (setq mouse-wheel-scroll-amount '(2 ((shift) . 2))) ;; one line at a time
+     (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+     (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+     (setq scroll-step 1) ;; keyboard scroll one line at a time
+
+     (setq-default indent-tabs-mode nil)
+
+     ;; (setq show-paren-delay 0)
+     ;; (show-paren-mode t)
+     ;; (setq show-paren-style 'parenthesis)
+
+     (add-hook 'prog-mode-hook #'hs-minor-mode)
+
+     (setq-default fringes-outside-margins t)
+
+     ;; Stop emacs from making a mess
+     (setq auto-save-file-name-transforms
+               `((".*" ,(concat user-emacs-directory "auto-save/") t)))
+     (setq backup-directory-alist
+           `(("." . ,(expand-file-name
+                     (concat user-emacs-directory "backups")))))
+
+     (use-package nlinum
+       :init
+       (setq nlinum-highlight-current-line t)
+       :config
+       ;; (add-hook 'prog-mode-hook #'nlinum-mode)
+       (defun nlinum-mode-margin-hook ()
+         (when nlinum-mode
+           (setq-local nlinum-format "%d ")))
+       (add-hook 'nlinum-mode-hook #'nlinum-mode-margin-hook))
+
+     (use-package evil-vimish-fold
+       :after evil
+       :config
+       (evil-vimish-fold-mode 1))
+
+     (use-package exec-path-from-shell
+       :config
+       (exec-path-from-shell-initialize))
+   #+END_SRC
 * UI
 ** Setup
    Set the font, hide toolbars, etc.
    #+BEGIN_SRC emacs-lisp
-     (set-frame-font "Iosevka-12")
-     (set-face-attribute 'mode-line nil :font "Iosevka-12")
+     (set-frame-font "Iosevka-11")
+     (set-face-attribute 'mode-line nil :font "Iosevka-11")
      (set-face-attribute 'variable-pitch nil :font "Fira Sans-9")
 
      (setq-default window-divider-default-places t
@@ -157,12 +263,12 @@
    #+BEGIN_SRC emacs-lisp
      (use-package neotree
        :config
-       (setq projectile-switch-project-action 'neotree-projectile-action
-             neo-mode-line-type 'none
+       (setq neo-mode-line-type 'none
              neo-banner-message nil
              neo-theme 'nerd
              neo-keymap-style 'concise
              neo-window-width 30
+             neo-autorefresh t
              neo-hidden-regexp-list
              '(;; vcs folders
                "^\\.\\(git\\|hg\\|svn\\)$"
@@ -173,49 +279,50 @@
                ;; org-mode folders
                "^\\.\\(sync\\|export\\|attach\\)$"
                "~$"
-               "^#.*#$")))
+               "^#.*#$"
+               "^\.#.*$")))
    #+END_SRC
 ** Theme
   #+BEGIN_SRC emacs-lisp
-        ;; (use-package kaolin-theme
-        ;;   :init
-        ;;   (setq kaolin-wave t)
-        ;;   :config
-        ;;   (load-theme 'kaolin t))
+    ;; (use-package kaolin-theme
+    ;;   :init
+    ;;   (setq kaolin-wave t)
+    ;;   :config
+    ;;   (load-theme 'kaolin t))
 
-        ;; (use-package darktooth-theme
-        ;;   :config
-        ;;   (load-theme 'darktooth t)
-        ;;   (darktooth-modeline-two))
+    ;; (use-package darktooth-theme
+    ;;   :config
+    ;;   (load-theme 'darktooth t)
+    ;;   (darktooth-modeline-two))
 
-        ;; (use-package xresources-theme)
+    ;; (use-package xresources-theme)
 
-        ;; (use-package creamsody-theme
-        ;;   :config
-        ;;   (load-theme 'creamsody t)
-        ;;   (creamsody-modeline-two))
+    ;; (use-package creamsody-theme
+    ;;   :config
+    ;;   (load-theme 'creamsody t)
+    ;;   (creamsody-modeline-two))
 
-        ;; (use-package oceanic-theme
-        ;;   :config
-        ;;   (load-theme 'oceanic))
+    ;; (use-package oceanic-theme
+    ;;   :config
+    ;;   (load-theme 'oceanic))
 
-        (use-package doom-themes
-          :config
-          (setq doom-themes-enable-bold nil    ; if nil, bold is universally disabled
-                doom-themes-enable-italic t) ; if nil, italics is universally disabled
-          (load-theme 'doom-one t)
-          ;; (doom-themes-org-config)
-          (doom-themes-neotree-config)
-          (setq doom-neotree-enable-variable-pitch t
-                doom-neotree-file-icons 'simple
-                doom-neotree-line-spacing 2
-                ;; doom-neotree-project-size 1.2
-            )
-          )
+    (use-package doom-themes
+      :config
+      (setq doom-themes-enable-bold nil    ; if nil, bold is universally disabled
+            doom-themes-enable-italic t) ; if nil, italics is universally disabled
+      (load-theme 'doom-tomorrow-night t)
+      ;; (doom-themes-org-config)
+      (doom-themes-neotree-config)
+      (setq doom-neotree-enable-variable-pitch t
+            doom-neotree-file-icons 'simple
+            doom-neotree-line-spacing 2
+            ;; doom-neotree-project-size 1.2
+        )
+      )
 
-        ;; (use-package base16-theme
-        ;;   :config
-        ;;   (load-theme 'base16-onedark))
+    ;; (use-package base16-theme
+    ;;   :config
+    ;;   (load-theme 'base16-onedark))
 
   #+END_SRC
 ** Modeline
@@ -1038,121 +1145,18 @@
    #+END_SRC
 ** Dashboard
    #+BEGIN_SRC emacs-lisp
-     (use-package dashboard
-       :init
-       (setq dashboard-items '((recents  . 5)
-                               (projects . 5)))
-       (setq dashboard-startup-banner 'logo)
-       (setq dashboard-banner-logo-title "Welcome to Emacs!")
-       :config
-       (add-hook 'dashboard-mode-hook (lambda ()
-                                        (nlinum-mode 0)
-                                        ))
-       (dashboard-setup-startup-hook))
+     ;; (use-package dashboard
+     ;;   :init
+     ;;   (setq dashboard-items '((recents  . 5)
+     ;;                           (projects . 5)))
+     ;;   (setq dashboard-startup-banner 'logo)
+     ;;   (setq dashboard-banner-logo-title "Welcome to Emacs!")
+     ;;   :config
+     ;;   (add-hook 'dashboard-mode-hook (lambda ()
+     ;;                                    (nlinum-mode 0)
+     ;;                                    ))
+     ;;   (dashboard-setup-startup-hook))
 
-   #+END_SRC
-* Misc
-** Fix environment variables
-   #+BEGIN_SRC emacs-lisp
-     (use-package exec-path-from-shell
-       :config
-       (when (memq window-system '(mac ns x))
-         (exec-path-from-shell-initialize)
-         (exec-path-from-shell-copy-env "GOPATH")))
-   #+END_SRC
-** Smooth scrolling
-   #+BEGIN_SRC emacs-lisp
-     (use-package smooth-scrolling
-       :config
-       (smooth-scrolling-mode 1))
-   #+END_SRC
-** Rainbow delimeters
-   #+BEGIN_SRC emacs-lisp
-     (use-package rainbow-delimiters
-       :config
-       (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
-   #+END_SRC
-** Persistent undo history
-   #+BEGIN_SRC emacs-lisp
-     (setq undo-tree-auto-save-history t)
-     (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
-   #+END_SRC
-** Dumb jump
-   #+BEGIN_SRC emacs-lisp
-     (use-package dumb-jump)
-   #+END_SRC
-** Zooming
-   #+BEGIN_SRC emacs-lisp
-     (use-package zoom-frm)
-   #+END_SRC
-** Find other file (header/source)
-   #+BEGIN_SRC emacs-lisp
-     (use-package cff)
-   #+END_SRC
-** Shackle
-   #+BEGIN_SRC emacs-lisp
-     (use-package shackle
-       :init
-       (setq shackle-default-rule '(:same t)))
-   #+END_SRC
-** Eyebrowse
-   #+BEGIN_SRC emacs-lisp
-     (use-package eyebrowse
-       :config
-       (eyebrowse-mode t))
-   #+END_SRC
-** Electric pair mode
-   #+BEGIN_SRC emacs-lisp
-     (electric-pair-mode)
-   #+END_SRC
-** Rainbow-mode
-   #+BEGIN_SRC emacs-lisp
-     (use-package rainbow-mode
-       :config
-       (add-hook 'prog-mode-hook (lambda () (rainbow-mode 1))))
-   #+END_SRC
-** Other stuff
-   #+BEGIN_SRC emacs-lisp
-     (setq mouse-wheel-scroll-amount '(2 ((shift) . 2))) ;; one line at a time
-     (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
-     (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
-     (setq scroll-step 1) ;; keyboard scroll one line at a time
-
-     (setq-default indent-tabs-mode nil)
-
-     ;; (setq show-paren-delay 0)
-     ;; (show-paren-mode t)
-     ;; (setq show-paren-style 'parenthesis)
-
-     (add-hook 'prog-mode-hook #'hs-minor-mode)
-
-     (setq-default fringes-outside-margins t)
-
-     ;; Stop emacs from making a mess
-     (setq auto-save-file-name-transforms
-               `((".*" ,(concat user-emacs-directory "auto-save/") t)))
-     (setq backup-directory-alist
-           `(("." . ,(expand-file-name
-                     (concat user-emacs-directory "backups")))))
-
-     (use-package nlinum
-       :init
-       (setq nlinum-highlight-current-line t)
-       :config
-       ;; (add-hook 'prog-mode-hook #'nlinum-mode)
-       (defun nlinum-mode-margin-hook ()
-         (when nlinum-mode
-           (setq-local nlinum-format "%d ")))
-       (add-hook 'nlinum-mode-hook #'nlinum-mode-margin-hook))
-
-     (use-package evil-vimish-fold
-       :after evil
-       :config
-       (evil-vimish-fold-mode 1))
-
-     (use-package exec-path-from-shell
-       :config
-       (exec-path-from-shell-initialize))
    #+END_SRC
 * Evil
   #+BEGIN_SRC emacs-lisp
@@ -1172,6 +1176,8 @@
       (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
       (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
       (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
+
+      (evil-ex-define-cmd "q[uit]" 'evil-window-delete)
 
       (defun minibuffer-keyboard-quit ()
         "Abort recursive edit.
@@ -1257,30 +1263,42 @@
       (global-company-mode))
   #+END_SRC
 * Git
-  #+BEGIN_SRC emacs-lisp
+** Magit
+   #+BEGIN_SRC emacs-lisp
     (use-package magit)
-
+   #+END_SRC
+** Evil-magit
+   #+BEGIN_SRC emacs-lisp
     (use-package evil-magit
       :after magit)
-
-    (use-package git-gutter-fringe
-      :config
-      (global-git-gutter-mode +1)
-      (when (display-graphic-p)
-        ;; because git-gutter is in the left fringe
-        ;; subtle diff indicators in the fringe
-        ;; places the git gutter outside the margins.
-        (setq-default fringes-outside-margins t)
-        ;; thin fringe bitmaps
-        (fringe-helper-define 'git-gutter-fr:added '(center repeated)
-          "XXX.....")
-        (fringe-helper-define 'git-gutter-fr:modified '(center repeated)
-          "XXX.....")
-        (fringe-helper-define 'git-gutter-fr:deleted 'bottom
-          "X......."
-          "XX......"
-          "XXX....."
-          "XXXX....")))
+   #+END_SRC
+** Git gutter fringe
+   #+BEGIN_SRC emacs-lisp
+     (use-package git-gutter-fringe
+       :config
+       (global-git-gutter-mode +1)
+       (when (display-graphic-p)
+         ;; because git-gutter is in the left fringe
+         ;; subtle diff indicators in the fringe
+         ;; places the git gutter outside the margins.
+         (setq-default fringes-outside-margins t)
+         ;; thin fringe bitmaps
+         (fringe-helper-define 'git-gutter-fr:added '(center repeated)
+           "XXX.....")
+         (fringe-helper-define 'git-gutter-fr:modified '(center repeated)
+           "XXX.....")
+         (fringe-helper-define 'git-gutter-fr:deleted 'bottom
+           "X......."
+           "XX......"
+           "XXX....."
+           "XXXX....")))
+   #+END_SRC
+* Projectile
+  #+BEGIN_SRC emacs-lisp
+    (use-package projectile
+      :after neotree
+      :init
+      (setq projectile-after-switch-project-hook #'neotree-projectile-action))
   #+END_SRC
 * Docker
   #+BEGIN_SRC emacs-lisp
@@ -1293,10 +1311,12 @@
      (use-package lsp-mode
        :config
        (require 'lsp-flycheck)
-       ;; (use-package company-lsp
-       ;;   :after company
-       ;;   :config
-       ;;   (push 'company-lsp company-backends))
+       (use-package company-lsp
+         :after company
+         :init
+         (setq company-lsp-async 1)
+         :config
+         (push 'company-lsp company-backends))
        )
    #+END_SRC
 ** Org
@@ -1338,25 +1358,23 @@
        ;;   :config
        ;;   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
-       ;; (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
+       (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
 
        (use-package lsp-rust
-         :after lsp-mode
          :init
+         (setq lsp-rust-rls-command '("rustup" "run" "stable" "rls"))
+         :config
          (add-hook 'rust-mode-hook #'lsp-rust-enable)
          (add-hook 'rust-mode-hook #'flycheck-mode)
-         ;; (add-hook 'rust-mode-hook 'lsp-mode)
-         (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
-
-         :config
-         (defconst lsp-rust--handlers
-           '(("rustDocument/diagnosticsBegin" . (lambda (_w _p)))
-             ("rustDocument/diagnosticsEnd" .
-             (lambda (w _p)
-               (when (< (cl-decf (gethash w lsp-rust--diag-counters 0)) 0))))
-             ("rustDocument/beginBuild" .
-             (lambda (w _p)
-               (cl-incf (gethash w lsp-rust--diag-counters 0)))))))
+         ;; (defconst lsp-rust--handlers
+         ;;   '(("rustDocument/diagnosticsBegin" . (lambda (_w _p)))
+         ;;     ("rustDocument/diagnosticsEnd" .
+         ;;     (lambda (w _p)
+         ;;       (when (< (cl-decf (gethash w lsp-rust--diag-counters 0)) 0))))
+         ;;     ("rustDocument/beginBuild" .
+         ;;     (lambda (w _p)
+         ;;       (cl-incf (gethash w lsp-rust--diag-counters 0))))))
+         )
      )
 
      ;; (use-package cargo
@@ -1396,34 +1414,13 @@
        :config
        (setq web-mode-enable-auto-quoting nil))
 
-     (use-package emmet-mode
-       :config
-       (add-hook 'emmet-mode-hook
-               (lambda ()
-                 ;; clearing old C-j and C-return key mapping.
-                 (define-key emmet-mode-keymap (kbd "C-j")        nil)
-                 (define-key emmet-mode-keymap (kbd "<C-return>") nil)
-                 ;; define new TAB key mapping instead.
-                 (define-key emmet-mode-keymap (kbd "<tab>")        'emmet-expand-line))))
-
      (use-package pug-mode)
-
      (use-package sass-mode)
+   #+END_SRC
+** Javascript/Typescript
+   #+BEGIN_SRC emacs-lisp
+     (use-package js2-mode)
 
-     (use-package vue-mode
-       :config
-       (add-hook 'vue-mode-hook 'emmet-mode))
-   #+END_SRC
-** Javascript
-   #+BEGIN_SRC emacs-lisp
-    (use-package js2-mode
-      :init
-      (setq js2-highlight-level 3)
-      :config
-      (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
-   #+END_SRC
-** Typescript
-   #+BEGIN_SRC emacs-lisp
      (use-package tide
        :after company
        :config
@@ -1442,7 +1439,28 @@
        ;; formats the buffer before saving
        (add-hook 'before-save-hook 'tide-format-before-save)
 
-       (add-hook 'typescript-mode-hook #'setup-tide-mode))
+       (add-hook 'typescript-mode-hook #'setup-tide-mode)
+
+       (add-hook 'js2-mode-hook #'setup-tide-mode)
+       ;; configure javascript-tide checker to run after your default javascript checker
+       (flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append)
+
+       (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+       (add-hook 'web-mode-hook
+                 (lambda ()
+                   (when (string-equal "jsx" (file-name-extension buffer-file-name))
+                     (setup-tide-mode))))
+       ;; configure jsx-tide checker to run after your default jsx checker
+       (flycheck-add-mode 'javascript-eslint 'web-mode)
+       (flycheck-add-next-checker 'javascript-eslint 'jsx-tide 'append))
+   #+END_SRC
+** Vue
+   #+BEGIN_SRC emacs-lisp
+     (use-package vue-mode)
+     (use-package lsp-vue
+       :after vue-mode
+       :config
+       (add-hook 'vue-mode-hook #'lsp-vue-mmm-enable))
    #+END_SRC
 ** C/C++
    #+BEGIN_SRC emacs-lisp
@@ -1569,6 +1587,38 @@
                                        (set (make-local-variable 'indent-line-function) 'c-indent-line)
                                        (set (make-local-variable 'indent-region-function) 'c-indent-line))))
    #+END_SRC
+** Elixir
+   #+BEGIN_SRC emacs-lisp
+     (use-package alchemist) 
+   #+END_SRC
+** Pony
+   #+BEGIN_SRC emacs-lisp
+     (use-package ponylang-mode)
+   #+END_SRC
+** Scala
+   #+BEGIN_SRC emacs-lisp
+     (use-package scala-mode)
+
+     (use-package sbt-mode)
+
+     (use-package ensime
+       :ensure t
+       :pin melpa-stable
+       :init
+       (setq ensime-eldoc-hints 'all
+             ensime-sem-high-enabled-p nil
+             ensime-implicit-gutter-icons nil
+             ensime-startup-notification nil)
+       :config
+       (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
+       (add-hook 'scala-mode-hook (lambda ()
+                                    (setq company-minimum-prefix-length 0
+                                          company-dabbrev-ignore-case nil
+                                          company-dabbrev-code-ignore-case nil
+                                          company-dabbrev-downcase nil
+                                          company-idle-delay 0))))
+
+   #+END_SRC
 * Writing
   Provides a distraction free writing mode.
   #+BEGIN_SRC emacs-lisp
@@ -1577,73 +1627,78 @@
 * Indentation
   #+BEGIN_SRC emacs-lisp
     (add-hook 'rust-mode-hook
-      (function (lambda ()
+      (lambda ()
         (setq tab-width 4)
-        (setq evil-shift-width 4))))
+        (setq evil-shift-width 4)))
 
     (add-hook 'go-mode-hook
-      (function (lambda ()
+      (lambda ()
         (setq tab-width 4)
-        (setq evil-shift-width 4))))
+        (setq evil-shift-width 4)))
 
     (add-hook 'python-mode-hook
-      (function (lambda ()
+      (lambda ()
         (setq tab-width 4)
-        (setq evil-shift-width 4))))
+        (setq evil-shift-width 4)))
 
     (add-hook 'emacs-lisp-mode-hook
-      (function (lambda ()
+      (lambda ()
         (setq tab-width 2)
-        (setq evil-shift-width 2))))
+        (setq evil-shift-width 2)))
 
     (add-hook 'typescript-mode-hook
-      (function (lambda ()
+      (lambda ()
         (setq tab-width 4)
-        (setq evil-shift-width 4))))
+        (setq evil-shift-width 4)))
 
     (add-hook 'js2-mode-hook
-      (function (lambda ()
+      (lambda ()
         (setq js2-basic-offset 2)
         (setq js-indent-level 2)
-        (setq evil-shift-width 2))))
+        (setq evil-shift-width 2)))
 
     (add-hook 'js-mode-hook
-      (function (lambda ()
+      (lambda ()
         (setq js2-basic-offset 2)
         (setq js-indent-level 2)
-        (setq evil-shift-width 2))))
+        (setq evil-shift-width 2)))
 
     (add-hook 'c++-mode
-      (function (lambda ()
+      (lambda ()
         (setq tab-width 2)
         (setq c-basic-offset 2)
-        (setq evil-shift-width 2))))
+        (setq evil-shift-width 2)))
 
     (add-hook 'c-mode
-      (function (lambda ()
+      (lambda ()
         (setq tab-width 2)
         (setq c-basic-offset 2)
-        (setq evil-shift-width 2))))
+        (setq evil-shift-width 2)))
 
     (add-hook 'lua-mode
-      (function (lambda ()
+      (lambda ()
         (setq tab-width 2)
-        (setq evil-shift-width 2))))
+        (setq evil-shift-width 2)))
 
     (add-hook 'pug-mode-hook
-      (function (lambda ()
+      (lambda ()
         (setq tab-width 2)
-        (setq evil-shift-width 2))))
+        (setq evil-shift-width 2)))
 
     (add-hook 'web-mode-hook
-      (function (lambda ()
+      (lambda ()
         (setq tab-width 4)
-        (setq evil-shift-width 4))))
+        (setq evil-shift-width 4)))
 
     (add-hook 'solidity-mode-hook
-      (function (lambda ()
+      (lambda ()
         (setq tab-width 2)
-        (setq evil-shift-width 2))))
+        (setq evil-shift-width 2)))
+
+    (add-hook 'ponylang-mode-hook
+      (lambda ()
+        (set-variable 'indent-tabs-mode nil)
+        (set-variable 'tab-width 2)))
   #+END_SRC
 * Keybinds
 ** Map ESC to cancel (C-g)
@@ -1694,6 +1749,7 @@
 
      (felipe/name-bind "p" "projectile")
      (felipe/bind "pp" 'counsel-projectile-switch-project "switch project")
+     (felipe/bind "pa" 'projectile-add-known-project "add project")
      (felipe/bind "pf" 'counsel-projectile "find file")
      (felipe/bind "pg" 'counsel-git-grep "git grep")
 
@@ -1714,6 +1770,7 @@
    #+BEGIN_SRC emacs-lisp
      (felipe/bind-mode "fn" 'neotree-create-node "new file/folder" 'neotree-mode)
      (felipe/bind-mode "fd" 'neotree-delete-node "delete file/folder" 'neotree-mode)
+     (felipe/bind-mode "fr" 'neotree-rename-node "rename file/folder" 'neotree-mode)
    #+END_SRC
 ** Org mode
    #+BEGIN_SRC emacs-lisp
@@ -1775,6 +1832,12 @@
      (felipe/bind-mode "mi" 'elpy-importmagic-fixup "fix imports" 'python-mode)
      (felipe/bind-mode "md" 'elpy-doc "show documentation" 'python-mode)
      (felipe/bind-mode "mgd" 'elpy-goto-definition "go to definition" 'python-mode)
+   #+END_SRC
+** Elixir
+   #+BEGIN_SRC emacs-lisp
+     (felipe/bind-mode "mr" 'alchemist-iex-project-run "mix repl" 'elixir-mode)
+     (felipe/bind-mode "mc" 'alchemist-mix-compile "mix compile" 'elixir-mode)
+     (felipe/bind-mode "md" 'alchemist-help-search-at-point "show documentation" 'elixir-mode)
    #+END_SRC
 * Startup
   #+BEGIN_SRC emacs-lisp

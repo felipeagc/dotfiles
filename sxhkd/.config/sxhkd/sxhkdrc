@@ -4,14 +4,11 @@
 
 # terminal emulator
 super + Return
-	termite
+	urxvtc
 
 # program launcher
-super + space
-	rofi -show drun
-
-super + shift + space
-	rofi -show run
+# super + space
+	# rofi -show drun
 
 # make sxhkd reload its configuration files:
 super + Escape
@@ -38,8 +35,8 @@ super + y
 	bspc query -N -n focused.automatic && bspc node -n last.!automatic || bspc node last.leaf -n focused
 
 # swap the current node and the biggest node
-# super + g
-#	bspc node -s biggest
+super + g
+	bspc node -s biggest
 
 #
 # state/flags
@@ -107,15 +104,9 @@ super + ctrl + space
 super + ctrl + shift + space
 	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
 
-
-
 #
 # move/resize
 #
-
-# equalize/balance split ratios
-super + shift + {e,b}
-	bspc node @/ -{E,B}
 
 # expand a window by moving one of its side outward
 super + alt + {h,j,k,l}
@@ -132,18 +123,6 @@ super + {Left,Down,Up,Right}
 Print
 	maim -s /tmp/screenshot.png; imgurbash2 /tmp/screenshot.png
 
-super + {minus, equal}
-	bspc config -d focused window_gap $((`bspc config -d focused window_gap` {+,-} 3 ))
-
-super + button{4,5}
-	bspc config -d focused window_gap $((`bspc config -d focused window_gap` {+,-} 3 ))
-
-super + BackSpace
-	bspc config -d focused window_gap 48
-
-super + e
-	id=$(cat /tmp/scratchid);\
-	bspc node $id --flag hidden;bspc node -f $id
-
-super + r
-	termite -e ranger
+#super + e
+	#id=$(cat /tmp/scratchid);\
+	#bspc node $id --flag hidden;bspc node -f $id

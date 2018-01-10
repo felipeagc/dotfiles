@@ -1,69 +1,79 @@
 Xft.dpi: 96
 Xft.antialias: true
 Xft.hinting: true
-Xft.rgba: rgb
+Xft.rgba: grayscale
 Xft.autohint: false
 Xft.hintstyle: hintslight
 Xft.lcdfilter: lcddefault
 
 rofi.color-enabled: true
-rofi.color-window: #282c34, #282c34, #282c34
+rofi.color-window: #181818, #181818, #181818
+
 rofi.color-normal: #282c34, #abb2bf, #282c34, #31353f, #ffffff
 rofi.color-active: #282c34, #61afef, #282c34, #61afef, #ffffff
 rofi.color-urgent: #282c34, #e06c75, #282c34, #e06c75, #ffffff
-rofi.font: Source Sans Pro 16
+rofi.font: Iosevka 16
 rofi.bw: 48
 
-URxvt.font: xft:Hack:size=9
-URxvt.scrollBar: false
-URxvt*.transparent: false
-URxvt.internalBorder: 0
+st.font: Iosevka Term:size=11:antialias=true:autohint=true;
+st.borderpx: 16
 
-URxvt.keysym.Shift-Control-V: eval:paste_clipboard
-URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard
+URxvt*font: xft:Iosevka Term:size=11,xft:Symbola
+URxvt*scrollBar: false
+URxvt*transparent: false
+URxvt*internalBorder: 16
+
+URxvt*keysym.Shift-Control-V: eval:paste_clipboard
+URxvt*keysym.Shift-Control-C: eval:selection_to_clipboard
 URxvt*iso14755: False
 
-URxvt.letterSpace: -1
+URxvt*perl-ext-common: default,resize-font
+
+URxvt*letterSpace: 0
 
 xterm*utf8: 1
 
-! special
-*.foreground:   #abb2bf
-*.background:   #282c34
-*.cursorColor:  #abb2bf
+#define base00 #181818
+#define base01 #282828
+#define base02 #383838
+#define base03 #585858
+#define base04 #b8b8b8
+#define base05 #d8d8d8
+#define base06 #e8e8e8
+#define base07 #f8f8f8
+#define base08 #ab4642
+#define base09 #dc9656
+#define base0A #f7ca88
+#define base0B #a1b56c
+#define base0C #86c1b9
+#define base0D #7cafc2
+#define base0E #ba8baf
+#define base0F #a16946
 
+*foreground:   		base05
+#ifdef background_opacity
+*background:		[background_opacity]base00
+*background-alt:	[background_opacity]base01
+#else
+*background:   		base00
+*background-alt:	base01
+#endif
+*cursorColor:  		base05
 
-*.background1:  #353b45
-*.background2:  #3e4451
+*color0:       		base00
+*color1:       		base08
+*color2:       		base0B
+*color3:       		base0A
+*color4:       		base0D
+*color5:       		base0E
+*color6:       		base0C
+*color7:       		base05
 
-! black
-*.color0:       #282c34
-*.color8:       #5c6370
-
-! red
-*.color1:       #e06c75
-*.color9:       #be5046
-
-! green
-*.color2:       #98c379
-*.color10:      #7a9f60
-
-! yellow
-*.color3:       #e5c07b
-*.color11:      #d19a66
-
-! blue
-*.color4:       #61afef
-*.color12:      #3b84c0
-
-! magenta
-*.color5:       #c678dd
-*.color13:      #9a52af
-
-! cyan
-*.color6:       #56b6c2
-*.color14:      #3c909b
-
-! white
-*.color7:       #abb2bf
-*.color15:      #828997
+*color8:       		base03
+*color9:       		base09
+*color10:      		base01
+*color11:      		base02
+*color12:      		base04
+*color13:      		base06
+*color14:      		base0F
+*color15: 			base07
