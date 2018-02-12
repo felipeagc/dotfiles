@@ -1,26 +1,26 @@
-[bar/main]
-; Colors
-black = #1a1a1a
-white = #abb2bf
-red = #be5046
-blue = #3c909b
-green = #98c379
+[colors]
+background = #181818
+background-alt = #282828
+;foreground = ${xrdb:color7:#222}
+foreground = #d8d8d8
+foreground-alt = #555
+primary = #b8b8b8
+secondary = #e60053
+red = #ab4642
 
-fg = ${xrdb:color7}
-bg = ${xrdb:color0}
-
+[bar/bottom]
 ;monitor = ${env:MONITOR:HDMI-1}
-;override-redirect = true
 width = 100%
 height = 36
-offset-x = 0
-offset-y = 0
+fixed-center = true
 
-background = ${bar/main.bg}
-foreground = ${bar/main.fg}
+bottom = true
 
-underline-size = 4
-overline-size = 4
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 3
+line-color = #f00
 
 separator = "%{F#555}  /  "
 padding-left = 5
@@ -28,57 +28,95 @@ padding-right = 0
 module-margin-left = 3
 module-margin-right = 3
 
-font-0 = Fira Sans:pixelsize=9;2
+font-0 = Roboto Condensed:size=10;2
 font-1 = unifont:fontformat=truetype:size=8:antialias=false;1
-font-2 = Wuncon Siji:antialias=false;pixelsize=11;1
-font-3 = FontAwesome:pixelsize=7;1
+font-2 = siji:pixelsize=10;4
+font-3 = FontAwesome:pixelsize=7;2
 
-modules-left = btc bch eth xmr coin_ratio
-modules-center = i3
-;modules-center = bspwm
-modules-right = switch_aspect pkg mpd volume date powermenu
+modules-left = btc eth bch
+modules-center = bspwm
+modules-right = mpd volume date powermenu
 
 tray-position = right
-tray-padding = 2
+tray-padding = 4
 ;tray-transparent = true
-tray-background = ${bar/main.background}
+;tray-background = #0063ff
 
-scroll-up = i3wm-wsnext
-scroll-down = i3wm-wsprev
+;wm-restack = bspwm
+;wm-restack = i3
 
+;override-redirect = true
 
-[module/title]
+scroll-up = bspwm-deskprev
+scroll-down = bspwm-desknext
+wm-restack = bspwm
+
+;scroll-up = i3wm-wsnext
+;scroll-down = i3wm-wsprev
+
+[module/xwindow]
 type = internal/xwindow
-label-maxlen = 50
+label = %title:0:30:...%
 
+[module/bspwm]
+type = internal/bspwm
+
+label-focused = %index%
+label-focused-background = ${colors.background-alt}
+label-focused-underline= ${colors.primary}
+label-focused-padding = 3
+
+label-occupied = %index%
+label-occupied-padding = 3
+
+label-urgent = %index%!
+label-urgent-background = ${colors.red}
+label-urgent-padding = 3
+
+label-empty = %index%
+label-empty-foreground = ${colors.foreground-alt}
+label-empty-padding = 3
+
+enable-scroll = false
 
 [module/i3]
 type = internal/i3
-ws-icon-default = x
+format = <label-state> <label-mode>
+index-sort = true
+wrapping-scroll = false
 
-format = <label-state>
+; Only show workspaces on the same output as the bar
+;pin-workspaces = true
 
-enable-click = true
-label-focused= %index%
-label-focused-foreground = ${bar/main.fg}
-label-focused-background = ${xrdb:background1}
-label-focused-padding = 3
-label-focused-overline = ${xrdb:background2}
+label-mode-padding = 2
+label-mode-foreground = #000
+label-mode-background = ${colors.primary}
 
+; focused = Active workspace on focused monitor
+label-focused = %index%
+label-focused-background = ${module/bspwm.label-focused-background}
+label-focused-underline = ${module/bspwm.label-focused-underline}
+label-focused-padding = ${module/bspwm.label-focused-padding}
+
+; unfocused = Inactive workspace on any monitor
 label-unfocused = %index%
-label-unfocused-padding = 3
+label-unfocused-padding = ${module/bspwm.label-occupied-padding}
 
+; visible = Active workspace on unfocused monitor
+label-visible = %index%
+label-visible-background = ${self.label-focused-background}
+label-visible-underline = ${self.label-focused-underline}
+label-visible-padding = ${self.label-focused-padding}
+
+; urgent = Workspace with urgency hint set
 label-urgent = %index%
-label-urgent-background = ${xrdb:color9}
-label-urgent-overline = ${xrdb:color1}
-label-urgent-padding = 3
-
-reverse-scroll = false
+label-urgent-background = ${module/bspwm.label-urgent-background}
+label-urgent-padding = ${module/bspwm.label-urgent-padding}
 
 [module/mpd]
 type = internal/mpd
 
-format-online = <icon-prev>   <toggle>   <icon-next>   <bar-progress>   <icon-repeat>
+format-online = <icon-prev>   <toggle>   <icon-next>   <icon-repeat>
 
 label-song-maxlen = 40
 label-song-ellipsis = true
@@ -94,19 +132,19 @@ icon-seekf = 
 icon-random = 
 icon-repeat = 
 
-toggle-on-foreground = ${bar/main.red}
-toggle-off-foreground = ${bar/main.white}
+toggle-on-foreground = ${colors.red}
+toggle-off-foreground = ${colors.foreground}
 ;
 ; Only applies if <bar-progress> is used
 bar-progress-width = 16
 bar-progress-indicator = │
 bar-progress-fill = ─
 bar-progress-empty = ─
-bar-progress-fill-foreground = ${bar/main.blue}
+bar-progress-fill-foreground = ${colors.primary}
 
 [module/date]
 type = internal/date
-date = %{F#be5046} %{F-} %H:%M  %d-%m-%Y
+date = %{F#ab4642} %{F-} %H:%M  %d-%m-%Y
 interval = 5
 ;format-underline = #0a6cf5
 
@@ -116,7 +154,7 @@ type = internal/volume
 format-volume = <label-volume> <bar-volume>
 
 label-volume = "  "
-label-volume-foreground = ${bar/main.foreground}
+label-volume-foreground = ${colors.foreground}
 
 label-muted = "  MUTED"
 label-muted-foreground = #555
@@ -124,10 +162,10 @@ label-muted-foreground = #555
 bar-volume-width = 8
 bar-volume-indicator = │
 bar-volume-indicator-font = 2
-bar-volume-indicator-foreground = ${bar/main.white}
+bar-volume-indicator-foreground = ${colors.primary}
 bar-volume-fill = ─
 bar-volume-fill-font = 2
-bar-volume-fill-foreground = ${bar/main.blue}
+bar-volume-fill-foreground = ${colors.red}
 bar-volume-empty = ─
 bar-volume-empty-font = 2
 bar-volume-empty-foreground = #555
@@ -136,9 +174,9 @@ bar-volume-empty-foreground = #555
 type = custom/menu
 
 label-open = 
-label-open-foreground = ${bar/main.red}
+label-open-foreground = ${colors.red}
 label-close = cancel
-label-close-foreground = ${bar/main.red}
+label-close-foreground = ${colors.red}
 label-separator = " | "
 label-separator-foreground = #55
 
@@ -165,58 +203,38 @@ menu-3-0-exec = systemctl poweroff
 menu-3-1 = cancel
 menu-3-1-exec = menu-open-0
 
-[module/switch_aspect]
-type = custom/text
-
-content = 
-click-left = sh ~/.scripts/switch_aspect.sh
-
-; vim:ft=dosini
-
-[module/pkg]
-type = custom/script
-interval = 300
-format = <label>
-format-overline = ${bar/main.red}
-label = "%output:0:30%"
-exec = ~/.config/polybar/pkg.sh
-exec-if = "ping -q -w 2 -c 1 176.34.135.167 > /dev/null"
-
 [module/btc]
 type = custom/script
 interval = 20
 format = <label>
 tail = true
-exec = ~/.config/polybar/coin.py btc
+exec = ~/.config/polybar/coin.py btc usd
 
 [module/bch]
 type = custom/script
 interval = 20
 format = <label>
 tail = true
-exec = ~/.config/polybar/coin.py bch
+exec = ~/.config/polybar/coin.py bch usd
 
 [module/eth]
 type = custom/script
 interval = 20
 format = <label>
 tail = true
-exec = ~/.config/polybar/coin.py eth
-
-[module/xmr]
-type = custom/script
-interval = 20
-format = <label>
-tail = true
-exec = ~/.config/polybar/coin.py xmr
-
-[module/coin_ratio]
-type = custom/script
-interval = 20
-format = <label>
-tail = true
-exec = ~/.config/polybar/coin.py ratio
+exec = ~/.config/polybar/coin.py eth usd
 
 [settings]
-format-foreground = ${bar/main.fg}
-format-background = ${bar/main.bg}
+screenchange-reload = true
+;compositing-background = xor
+;compositing-background = screen
+;compositing-foreground = source
+;compositing-border = over
+format-foreground = ${colors.foreground}
+format-background = ${colors.background}
+
+[global/wm]
+margin-top = 0
+margin-bottom = 0
+
+; vim:ft=dosini
