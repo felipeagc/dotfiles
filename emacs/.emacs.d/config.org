@@ -159,7 +159,7 @@
    #+END_SRC
 ** Zooming
    #+BEGIN_SRC emacs-lisp
-     (use-package zoom-frm)
+     ;(use-package zoom-frm)
    #+END_SRC
 ** Find other file (header/source)
    #+BEGIN_SRC emacs-lisp

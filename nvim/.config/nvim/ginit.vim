@@ -1,3 +1,5 @@
-GuiFont Iosevka Term:h11
-GuiLinespace 0
+GuiFont Iosevka:h12
+if exists('g:GtkGuiLoaded')
+  call rpcnotify(1, 'Gui', 'Font', 'Iosevka 12')
+endif
 
