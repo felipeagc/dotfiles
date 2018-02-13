@@ -71,11 +71,8 @@ bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
-# split in horizontal orientation
-bindsym $mod+b split h
-
 # split in vertical orientation
-bindsym $mod+v split v
+bindsym $mod+v split toggle
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
@@ -132,10 +129,6 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcu
 # bindsym $mod+e [title="scratchpad — Konsole"] scratchpad show
 
 assign [class="Firefox"] 1
-assign [class="emacs"] 3
-assign [class="Emacs"] 3
-assign [class="Steam"] 4
-assign [class="Steam.exe"] 4
 assign [class="corebird"] 5
 assign [class="Corebird"] 5
 assign [class="discord"] 6
@@ -146,21 +139,22 @@ new_window pixel 1
 # gaps inner 8
 # smart_gaps on
 # smart_borders on
-hide_edge_borders smart
+hide_edge_borders both
 
 set_from_resource $fg foreground #f0f0f0
-set_from_resource $border_active color4 #f0f0f0
+set $border_active #282828
 set_from_resource $border_inactive background #f0f0f0
 set_from_resource $border_urgent color1 #f0f0f0
 set_from_resource $bg background #f0f0f0
 set_from_resource $bg2 background #f0f0f0
+set $indicator #585858
 
-# class                 border  			background 		text    indicator child_border
-client.focused          $border_active		$border_active  $bg  	$bg       $border_active
-client.focused_inactive $border_inactive	$bg     		$fg  	$bg       $border_inactive
-client.unfocused        $border_inactive    $bg     		$fg  	$bg       $border_inactive
-client.urgent           $border_urgent 		$bg     		$fg  	$bg       $border_urgent
-client.placeholder      $border_active 		$bg     		$fg  	$bg       $border_active
+# class                 border  		background 		text    indicator	child_border
+client.focused          $border_active		$border_active  	$bg	$indicator	$border_active
+client.focused_inactive $border_inactive	$bg     		$fg     $indicator     	$border_inactive
+client.unfocused        $border_inactive    	$bg     		$fg     $indicator     	$border_inactive
+client.urgent           $border_urgent 		$bg     		$fg     $indicator     	$border_urgent
+client.placeholder      $border_active 		$bg     		$fg     $indicator     	$border_active
 # client.focused          #7c6f64 #285577 #ffffff #2e9ef4   #7c6f64
 # client.focused_inactive #333333 #5f676a #ffffff #484e50   #504945
 # client.unfocused        #333333 #222222 #888888 #292d2e   #504945
@@ -171,16 +165,17 @@ client.background       $bg
 
 popup_during_fullscreen ignore
 
-exec feh --bg-fill ~/images/Mascaloona\ -\ Dakshin\ \(21-9\)\ \(2560\ x\ 1080\).jpg
+# exec feh --bg-fill ~/images/Mascaloona\ -\ Dakshin\ \(21-9\)\ \(2560\ x\ 1080\).jpg
 exec mpd
-exec ~/.scripts/polybar_wrapper.sh
-exec compton -b
-exec steam-native
-exec firefox
-exec corebird
-exec emacs
-exec ~/.scripts/detect_csgo.sh
-exec /usr/lib/gnome-settings-daemon/gsd-xsettings &
+exec polybar bottom
+# exec ~/.scripts/polybar_wrapper.sh
+# exec compton -b
+# exec steam-native
+# exec firefox
+# exec corebird
+# exec emacs
+# exec ~/.scripts/detect_csgo.sh
+# exec /usr/lib/gnome-settings-daemon/gsd-xsettings &
 # exec /usr/lib/mate-polkit/polkit-mate-authentication-agent-1 &
 
 bindsym $mod+shift+s exec urxvt -name urxvt_scratchpad -e tmux
@@ -189,11 +184,4 @@ for_window [instance="urxvt_scratchpad"] floating enable;
 for_window [instance="urxvt_scratchpad"] sticky enable;
 for_window [instance="urxvt_scratchpad"] move scratchpad; [instance="urxvt_scratchpad"] scratchpad show; move scratchpad
 bindsym $mod+e [instance="urxvt_scratchpad"] scratchpad show
-
-# bindsym $mod+shift+s exec alacritty -t alacritty_scratchpad -e tmux
-# exec alacritty -t alacritty_scratchpad -e tmux
-# for_window [instance="alacritty"] floating enable;
-# for_window [instance="alacritty_scratchpad"] sticky enable;
-# for_window [instance="alacritty_scratchpad"] move scratchpad; [instance="alacritty_scratchpad"] scratchpad show; move scratchpad
-# bindsym $mod+e [instance="alacritty_scratchpad"] scratchpad show
 

@@ -19,6 +19,9 @@ bottom = true
 background = ${colors.background}
 foreground = ${colors.foreground}
 
+border-top-size = 1
+border-color = ${colors.background-alt}
+
 line-size = 3
 line-color = #f00
 
@@ -31,10 +34,10 @@ module-margin-right = 3
 font-0 = Roboto Condensed:size=10;2
 font-1 = unifont:fontformat=truetype:size=8:antialias=false;1
 font-2 = siji:pixelsize=10;4
-font-3 = FontAwesome:pixelsize=7;2
+font-3 = Font Awesome:pixelsize=7;2
 
 modules-left = btc eth bch
-modules-center = bspwm
+modules-center = i3
 modules-right = mpd volume date powermenu
 
 tray-position = right
