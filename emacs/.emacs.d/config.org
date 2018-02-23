@@ -160,12 +160,6 @@
    #+END_SRC
 ** Theming
    #+BEGIN_SRC emacs-lisp
-     ;; (use-package doom-themes
-     ;;   :ensure t
-     ;;   :config
-     ;;   (load-theme 'doom-tomorrow-night t)
-     ;;   (doom-themes-org-config))
-
      (use-package kaolin-themes
        :ensure t
        :config
@@ -173,15 +167,6 @@
    #+END_SRC
 ** Modeline
    #+BEGIN_SRC emacs-lisp
-     ;; (use-package spaceline
-     ;;   :ensure t
-     ;;   :config
-     ;;   (require 'spaceline-config)
-     ;;   (spaceline-spacemacs-theme))
-
-     ;; (use-package powerline
-     ;;  )
-
      (use-package telephone-line
        :ensure t
        :config
@@ -201,14 +186,6 @@
                (evil   . (telephone-line-airline-position-segment))))
 
        (telephone-line-mode 1))
-
-     ;; (use-package airline-themes
-     ;;   :ensure t
-     ;;   :config
-     ;;  (setq airline-helm-colors 0)
-     ;;  (setq airline-cursor-colors 0)
-     ;;  (setq airline-eshell-colors 0)
-     ;;   (load-theme 'airline-dark t))
    #+END_SRC
 ** Shackle
    #+BEGIN_SRC emacs-lisp
