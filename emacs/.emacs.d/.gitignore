@@ -4,3 +4,4 @@ backups
 elpa
 irony
 config.el
+custom.el
