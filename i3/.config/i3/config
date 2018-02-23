@@ -83,6 +83,9 @@ bindsym $mod+a focus parent
 
 bindsym $mod+e exec emacsclient -c
 
+bindsym XF86MonBrightnessUp exec xbacklight -inc 10
+bindsym XF86MonBrightnessDown exec xbacklight -dec 10
+
 # switch to workspace
 bindsym $mod+1 workspace 1
 bindsym $mod+2 workspace 2
