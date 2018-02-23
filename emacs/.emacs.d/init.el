@@ -1,18 +1,24 @@
+(require 'package)
+(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                    (not (gnutls-available-p))))
+       (proto (if no-ssl "http" "https")))
+  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
+  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+  (add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+  (when (< emacs-major-version 24)
+    ;; For important compatibility libraries like cl-lib
+    (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
 (package-initialize)
 
+(when (not package-archive-contents)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(require 'use-package)
+
 (setq vc-follow-symlinks t)
+(setq custom-file "~/.emacs.d/custom.el")
+
 (org-babel-load-file "~/.emacs.d/config.org")
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (alchemist zoom-frm which-key web-mode vue-mode use-package tide solidity-mode solaire-mode smooth-scrolling shrink-path shackle sass-mode rainbow-mode rainbow-delimiters racer pug-mode org-bullets olivetti nlinum nim-mode neotree markdown-mode lsp-rust js2-mode irony-eldoc intero hasky-stack go-eldoc glsl-mode git-gutter-fringe flycheck-pos-tip flycheck-irony eyebrowse exec-path-from-shell evil-vimish-fold evil-surround evil-org evil-magit evil-leader evil-commentary evil-anzu emmet-mode elpy elisp-format dumb-jump doom-themes dockerfile-mode docker dashboard counsel-projectile counsel-gtags company-qml company-lua company-irony company-go clang-format cff))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+
+(if (file-exists-p custom-file)
+		(load custom-file))
