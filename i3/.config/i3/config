@@ -67,7 +67,7 @@ bindsym $mod+v split toggle
 bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
-bindsym $mod+s layout toggle split
+#bindsym $mod+s layout toggle split
 
 # toggle tiling / floating
 bindsym $mod+t floating toggle
@@ -80,6 +80,8 @@ bindsym $mod+a focus parent
 
 # focus the child container
 #bindsym $mod+d focus child
+
+bindsym $mod+e exec emacsclient -c
 
 # switch to workspace
 bindsym $mod+1 workspace 1
@@ -143,7 +145,7 @@ client.background       $bg
 
 popup_during_fullscreen ignore
 
-# exec feh --bg-fill ~/images/Mascaloona\ -\ Dakshin\ \(21-9\)\ \(2560\ x\ 1080\).jpg
+exec feh --bg-fill ~/images/outrun.jpg
 exec mpd
 exec polybar bottom
 exec xsetroot -cursor_name left_ptr
@@ -151,11 +153,12 @@ exec xset r rate 250 40
 exec xrdb ~/.Xresources
 exec compton -b
 exec nextcloud
+exec emacs --daemon
 
 bindsym $mod+shift+s exec urxvt -name urxvt_scratchpad -e tmux
 exec urxvt -name urxvt_scratchpad -e tmux
 for_window [instance="urxvt_scratchpad"] floating enable;
 for_window [instance="urxvt_scratchpad"] sticky enable;
 for_window [instance="urxvt_scratchpad"] move scratchpad; [instance="urxvt_scratchpad"] scratchpad show; move scratchpad
-bindsym $mod+e [instance="urxvt_scratchpad"] scratchpad show
+bindsym $mod+s [instance="urxvt_scratchpad"] scratchpad show
 
