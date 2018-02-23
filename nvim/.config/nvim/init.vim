@@ -13,6 +13,12 @@ endif
 " Plugins {{{
 call plug#begin('~/.local/share/nvim/plugged')
 
+" Language server protocol
+" Plug 'autozimu/LanguageClient-neovim', {
+"     \ 'branch': 'next',
+"     \ 'do': 'bash install.sh',
+"     \ }
+
 " Completion / linting
 Plug 'w0rp/ale'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -29,6 +35,7 @@ Plug 'zchee/deoplete-jedi', { 'for': 'python' }
 
 " C/C++
 Plug 'tweekmonster/deoplete-clang2'
+Plug 'rhysd/vim-clang-format'
 
 " Solidity
 Plug 'tomlion/vim-solidity'
@@ -57,8 +64,6 @@ Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
 Plug 'peitalin/vim-jsx-typescript', { 'for': 'typescript' }
 
 " Clojure
-Plug 'clojure-vim/async-clj-omni', { 'for': 'clojure' }
-Plug 'clojure-vim/acid.nvim', { 'do': ':UpdateRemotePlugins', 'for': 'clojure' }
 
 " GDScript
 Plug 'quabug/vim-gdscript'
@@ -215,18 +220,20 @@ let g:deoplete#keyword_patterns.clojure = '[\w!$%&*+/:<=>?@\^_~\-\.#]*'
 
 " ALE {{{
 let g:ale_linters = {
-\   'rust': ['rls'],
-\   'python': ['flake8'],
-\	'go': ['gometalinter'],
-\	'typescript': [],
-\	'elixir': [],
-\}
+  \'rust': ['rls'],
+  \'python': ['flake8'],
+  \'go': ['gometalinter'],
+  \'typescript': [],
+  \'elixir': [],
+  \'cpp': ['clangcheck'],
+  \}
 
 let g:ale_fixers = {
-\   'javascript': ['eslint']
-\}
+  \'javascript': ['eslint']
+  \}
 let g:ale_sign_column_always = 1
 let g:ale_set_highlights = 1
+let g:ale_c_build_dir = './build'
 " highlight clear ALEErrorSign
 " highlight clear ALEWarningSign
 " }}}
@@ -239,8 +246,8 @@ let g:lightline = {
 
 " Language Client configuration {{{
 let g:LanguageClient_serverCommands = {
-    \ 'rust': ['rustup', 'run', 'stable', 'rls'],
-    \ 'haskell': ['hie', '--lsp', '-d', '-l', '/home/felipe/hie.log'],
+    \ 'cpp': ['clangd'],
+    \ 'c': ['clangd'],
     \ }
 
 let g:LanguageClient_autoStart = 1
@@ -338,6 +345,8 @@ autocmd FileType elm map <buffer> K :ElmShowDocs<CR>
 " Indentation {{{
 autocmd FileType glsl setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 expandtab
+autocmd FileType cpp setlocal shiftwidth=2 tabstop=2 expandtab
+autocmd FileType haskell setlocal shiftwidth=2 tabstop=2 expandtab
 " }}}
 
 " Rust racer {{{
@@ -352,7 +361,6 @@ let g:intero_use_neomake = 0
 let g:hindent_on_save = 0
 
 autocmd Filetype haskell map  <buffer> K :InteroInfo<CR>
-autocmd FileType haskell setlocal shiftwidth=2 tabstop=2 expandtab
 " }}}
 
 " Javascript {{{
@@ -368,6 +376,13 @@ if executable('opam')
   let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
   execute "set rtp+=" . g:opamshare . "/merlin/vim"
 endif
+" }}}
+
+" C/C++ {{{
+let g:clang_format#auto_format = 1
+let g:clang_format#style_options = {
+  \ "SortIncludes": "false"
+  \}
 " }}}
 
 " Emmet {{{
