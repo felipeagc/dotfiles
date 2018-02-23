@@ -62,16 +62,16 @@
 
       ; Overload shifts so that they don't lose the selection
       (defun felipe/evil-shift-left-visual ()
-	(interactive)
-	(evil-shift-left (region-beginning) (region-end))
-	(evil-normal-state)
-	(evil-visual-restore))
+        (interactive)
+        (evil-shift-left (region-beginning) (region-end))
+        (evil-normal-state)
+        (evil-visual-restore))
 
       (defun felipe/evil-shift-right-visual ()
-	(interactive)
-	(evil-shift-right (region-beginning) (region-end))
-	(evil-normal-state)
-	(evil-visual-restore))
+        (interactive)
+        (evil-shift-right (region-beginning) (region-end))
+        (evil-normal-state)
+        (evil-visual-restore))
 
       (define-key evil-visual-state-map (kbd ">") 'felipe/evil-shift-right-visual)
       (define-key evil-visual-state-map (kbd "<") 'felipe/evil-shift-left-visual)
@@ -84,9 +84,9 @@
       then it takes a second \\[keyboard-quit] to abort the minibuffer."
       (interactive)
       (if (and delete-selection-mode transient-mark-mode mark-active)
-	(setq deactivate-mark  t)
-	(when (get-buffer "*Completions*") (delete-windows-on "*Completions*"))
-	(abort-recursive-edit)))
+        (setq deactivate-mark  t)
+        (when (get-buffer "*Completions*") (delete-windows-on "*Completions*"))
+        (abort-recursive-edit)))
 
       (define-key evil-normal-state-map [escape] 'keyboard-quit)
       (define-key evil-visual-state-map [escape] 'keyboard-quit)
@@ -99,19 +99,19 @@
   #+END_SRC
 ** Evil surround
    #+BEGIN_SRC emacs-lisp
-(use-package evil-surround
-  :ensure t
-  :after evil
-  :config
-  (global-evil-surround-mode 1))
+     (use-package evil-surround
+       :ensure t
+       :after evil
+       :config
+       (global-evil-surround-mode 1))
    #+END_SRC
 ** Evil commentary
    #+BEGIN_SRC emacs-lisp
-(use-package evil-commentary
-  :ensure t
-  :after evil
-  :config
-  (evil-commentary-mode))
+     (use-package evil-commentary
+       :ensure t
+       :after evil
+       :config
+       (evil-commentary-mode))
    #+END_SRC
 ** Evil leader
    #+BEGIN_SRC emacs-lisp
