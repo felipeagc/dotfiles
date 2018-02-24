@@ -309,7 +309,13 @@
     (use-package ox-twbs
       :ensure t)
    #+END_SRC
-** TODO Org bulltes
+** Org bulltes
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-bullets
+       :ensure t
+       :config
+       (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+   #+END_SRC
 ** TODO Org capture
 * Projectile
   #+BEGIN_SRC emacs-lisp
