@@ -30,13 +30,13 @@
      (defun felipe/switch-to-buffer (buffer)
        "Switch to a buffer but doesn't open a new window if it's already open in another one."
        (let (result)
-         (progn
-           (dolist (window (window-list) result)
-             (when (equal buffer (window-buffer window))
-               (progn
-                 (select-window window)
-                 (setq result t))))
-           (when (not result) (switch-to-buffer buffer)))))
+	 (progn
+	   (dolist (window (window-list) result)
+	     (when (equal buffer (window-buffer window))
+	       (progn
+		 (select-window window)
+		 (setq result t))))
+	   (when (not result) (switch-to-buffer buffer)))))
 
      (setq felipe/dark-theme t)
 
@@ -44,12 +44,12 @@
        "Toggle between light and dark themes."
        (interactive)
        (if felipe/dark-theme
-           (progn
-             (load-theme 'kaolin-light t)
-             (setq felipe/dark-theme nil))
-         (progn
-           (load-theme 'kaolin-dark t)
-           (setq felipe/dark-theme t))))
+	   (progn
+	     (load-theme 'kaolin-light t)
+	     (setq felipe/dark-theme nil))
+	 (progn
+	   (load-theme 'kaolin-dark t)
+	   (setq felipe/dark-theme t))))
    #+END_SRC
 * Evil
 ** Evil mode
@@ -69,16 +69,16 @@
 
       ;; Overload shifts so that they don't lose the selection
       (defun felipe/evil-shift-left-visual ()
-        (interactive)
-        (evil-shift-left (region-beginning) (region-end))
-        (evil-normal-state)
-        (evil-visual-restore))
+	(interactive)
+	(evil-shift-left (region-beginning) (region-end))
+	(evil-normal-state)
+	(evil-visual-restore))
 
       (defun felipe/evil-shift-right-visual ()
-        (interactive)
-        (evil-shift-right (region-beginning) (region-end))
-        (evil-normal-state)
-        (evil-visual-restore))
+	(interactive)
+	(evil-shift-right (region-beginning) (region-end))
+	(evil-normal-state)
+	(evil-visual-restore))
 
       (define-key evil-visual-state-map (kbd ">") 'felipe/evil-shift-right-visual)
       (define-key evil-visual-state-map (kbd "<") 'felipe/evil-shift-left-visual)
@@ -86,14 +86,14 @@
       (define-key evil-visual-state-map [S-tab] 'felipe/evil-shift-left-visual)
 
       (defun minibuffer-keyboard-quit ()
-        "Abort recursive edit.
-         In Delete Selection mode, if the mark is active, just deactivate it;
-         then it takes a second \\[keyboard-quit] to abort the minibuffer."
-        (interactive)
-        (if (and delete-selection-mode transient-mark-mode mark-active)
-            (setq deactivate-mark  t)
-          (when (get-buffer "*Completions*") (delete-windows-on "*Completions*"))
-          (abort-recursive-edit)))
+	"Abort recursive edit.
+	 In Delete Selection mode, if the mark is active, just deactivate it;
+	 then it takes a second \\[keyboard-quit] to abort the minibuffer."
+	(interactive)
+	(if (and delete-selection-mode transient-mark-mode mark-active)
+	    (setq deactivate-mark  t)
+	  (when (get-buffer "*Completions*") (delete-windows-on "*Completions*"))
+	  (abort-recursive-edit)))
 
       (define-key evil-normal-state-map [escape] 'keyboard-quit)
       (define-key evil-visual-state-map [escape] 'keyboard-quit)
@@ -140,8 +140,8 @@
       :after ivy
       :config
       (use-package counsel-projectile
-        :ensure t
-        :after projectile))
+	:ensure t
+	:after projectile))
   #+END_SRC
 * Interface
 ** Hide UI elements
@@ -157,8 +157,8 @@
    #+BEGIN_SRC emacs-lisp
      (defun felipe/disable-scroll-bars (frame)
        (modify-frame-parameters frame
-                                '((vertical-scroll-bars . nil)
-                                  (horizontal-scroll-bars . nil))))
+				'((vertical-scroll-bars . nil)
+				  (horizontal-scroll-bars . nil))))
      (add-hook 'after-make-frame-functions 'felipe/disable-scroll-bars)
    #+END_SRC
 ** Font
@@ -178,19 +178,19 @@
        :ensure t
        :config
        (setq telephone-line-primary-left-separator 'telephone-line-cubed-left
-             telephone-line-secondary-left-separator 'telephone-line-cubed-hollow-left
-             telephone-line-primary-right-separator 'telephone-line-cubed-right
-             telephone-line-secondary-right-separator 'telephone-line-cubed-hollow-right)
+	     telephone-line-secondary-left-separator 'telephone-line-cubed-hollow-left
+	     telephone-line-primary-right-separator 'telephone-line-cubed-right
+	     telephone-line-secondary-right-separator 'telephone-line-cubed-hollow-right)
        (setq telephone-line-height 28)
 
        (setq telephone-line-lhs
-             '((evil   . (telephone-line-evil-tag-segment))
-               (accent . (telephone-line-vc-segment))
-               (nil    . (telephone-line-buffer-segment))))
+	     '((evil   . (telephone-line-evil-tag-segment))
+	       (accent . (telephone-line-vc-segment))
+	       (nil    . (telephone-line-buffer-segment))))
        (setq telephone-line-rhs
-             '((nil    . (telephone-line-misc-info-segment))
-               (accent . (telephone-line-major-mode-segment))
-               (evil   . (telephone-line-airline-position-segment))))
+	     '((nil    . (telephone-line-misc-info-segment))
+	       (accent . (telephone-line-major-mode-segment))
+	       (evil   . (telephone-line-airline-position-segment))))
 
        (telephone-line-mode 1))
    #+END_SRC
@@ -229,7 +229,7 @@
    This will stop emacs from making files like =#this#= and =this~= all over the place
    #+BEGIN_SRC emacs-lisp
      (setq backup-directory-alist         '(("." . "~/.emacs.d/backups"))
-           auto-save-file-name-transforms '((".*" "~/.emacs.d/autosaves/\\1" t)))
+	   auto-save-file-name-transforms '((".*" "~/.emacs.d/autosaves/\\1" t)))
 
      (make-directory "~/.emacs.d/autosaves/" t)
    #+END_SRC
@@ -266,14 +266,14 @@
        (setq-default fringes-outside-margins t)
        ;; thin fringe bitmaps
        (fringe-helper-define 'git-gutter-fr:added '(center repeated)
-         "XXX.....")
+	 "XXX.....")
        (fringe-helper-define 'git-gutter-fr:modified '(center repeated)
-         "XXX.....")
+	 "XXX.....")
        (fringe-helper-define 'git-gutter-fr:deleted 'bottom
-         "X......."
-         "XX......"
-         "XXX....."
-         "XXXX...."))
+	 "X......."
+	 "XX......"
+	 "XXX....."
+	 "XXXX...."))
    #+END_SRC
 * Flycheck
   #+BEGIN_SRC emacs-lisp
@@ -303,10 +303,14 @@
 * Org
   #+BEGIN_SRC emacs-lisp
     (setq org-src-fontify-natively t)
-
+  #+END_SRC
+** Org TWBS
+   #+BEGIN_SRC emacs-lisp
     (use-package ox-twbs
       :ensure t)
-  #+END_SRC
+   #+END_SRC
+** TODO Org bulltes
+** TODO Org capture
 * Projectile
   #+BEGIN_SRC emacs-lisp
     (use-package projectile
@@ -330,10 +334,10 @@
        :config
        (require 'lsp-flycheck)
        (use-package company-lsp
-         :ensure t
-         :after company
-         :config
-         (push 'company-lsp company-backends)))
+	 :ensure t
+	 :after company
+	 :config
+	 (push 'company-lsp company-backends)))
    #+END_SRC
 ** Rust
    #+BEGIN_SRC emacs-lisp
@@ -361,21 +365,21 @@
        (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
        (use-package company-irony
-         :ensure t
-         :after company
-         :config
-         (add-to-list 'company-backends 'company-irony))
+	 :ensure t
+	 :after company
+	 :config
+	 (add-to-list 'company-backends 'company-irony))
 
        (use-package flycheck-irony
-         :ensure t
-         :after flycheck
-         :config
-         (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+	 :ensure t
+	 :after flycheck
+	 :config
+	 (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
 
        (use-package irony-eldoc
-         :ensure t
-         :config
-         (add-hook 'irony-mode-hook 'irony-eldoc)))
+	 :ensure t
+	 :config
+	 (add-hook 'irony-mode-hook 'irony-eldoc)))
    #+END_SRC
 ** Haskell
    #+BEGIN_SRC emacs-lisp
@@ -410,17 +414,17 @@
      (felipe/bind "ff" 'counsel-find-file "find file")
      (felipe/name-bind "fe" "edit")
      (felipe/bind "fed" '(lambda ()
-                           (interactive)
-                           (find-file "~/.emacs.d/config.org")) "emacs config")
+			   (interactive)
+			   (find-file "~/.emacs.d/config.org")) "emacs config")
      (felipe/bind "fei" '(lambda ()
-                           (interactive)
-                           (find-file "~/.config/i3/config")) "i3 config")
+			   (interactive)
+			   (find-file "~/.config/i3/config")) "i3 config")
      (felipe/bind "fec" '(lambda ()
-                           (interactive)
-                           (find-file "~/.config/compton.conf")) "compton config")
+			   (interactive)
+			   (find-file "~/.config/compton.conf")) "compton config")
      (felipe/bind "fep" '(lambda ()
-                           (interactive)
-                           (find-file "~/.config/polybar/config")) "polybar config")
+			   (interactive)
+			   (find-file "~/.config/polybar/config")) "polybar config")
 
      (felipe/name-bind "b" "buffer")
      (felipe/bind "bb" 'ivy-switch-buffer "find buffer")
@@ -428,17 +432,17 @@
      (felipe/bind "bn" 'next-buffer "next buffer")
      (felipe/bind "bp" 'previous-buffer "previous buffer")
      (felipe/bind "bs" '(lambda ()
-                          (interactive)
-                          (switch-to-buffer "*scratch*")) "scratch buffer")
+			  (interactive)
+			  (switch-to-buffer "*scratch*")) "scratch buffer")
      (felipe/bind "bcc" '(lambda ()
-                           (interactive)
-                           (mapcar (lambda (buffer)
-                                     (let ((safe-buffers (list "*scratch*" "*Messages*" "config.org"))
-                                           (name (buffer-name buffer)))
-                                       (unless (or
-                                                (string-prefix-p "*Org" name)
-                                                (member name safe-buffers))
-                                         (kill-buffer buffer)))) (buffer-list))) "clean buffers")
+			   (interactive)
+			   (mapcar (lambda (buffer)
+				     (let ((safe-buffers (list "*scratch*" "*Messages*" "config.org"))
+					   (name (buffer-name buffer)))
+				       (unless (or
+						(string-prefix-p "*Org" name)
+						(member name safe-buffers))
+					 (kill-buffer buffer)))) (buffer-list))) "clean buffers")
 
      (felipe/name-bind "w" "window")
      (felipe/bind "w/" 'split-window-right "split right")
