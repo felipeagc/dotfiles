@@ -1,3 +1,7 @@
+#+STARTUP: overview
+#+TITLE: Felipe's emacs configuration
+#+CREATOR: Felipe
+
 * My stuff
 ** Leader key
    #+BEGIN_SRC emacs-lisp
@@ -60,7 +64,10 @@
       (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
       (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
 
-      ; Overload shifts so that they don't lose the selection
+      ;; Change initial term-mode state to emacs
+      (evil-set-initial-state 'term-mode 'emacs)
+
+      ;; Overload shifts so that they don't lose the selection
       (defun felipe/evil-shift-left-visual ()
         (interactive)
         (evil-shift-left (region-beginning) (region-end))
@@ -79,14 +86,14 @@
       (define-key evil-visual-state-map [S-tab] 'felipe/evil-shift-left-visual)
 
       (defun minibuffer-keyboard-quit ()
-      "Abort recursive edit.
-      In Delete Selection mode, if the mark is active, just deactivate it;
-      then it takes a second \\[keyboard-quit] to abort the minibuffer."
-      (interactive)
-      (if (and delete-selection-mode transient-mark-mode mark-active)
-        (setq deactivate-mark  t)
-        (when (get-buffer "*Completions*") (delete-windows-on "*Completions*"))
-        (abort-recursive-edit)))
+        "Abort recursive edit.
+         In Delete Selection mode, if the mark is active, just deactivate it;
+         then it takes a second \\[keyboard-quit] to abort the minibuffer."
+        (interactive)
+        (if (and delete-selection-mode transient-mark-mode mark-active)
+            (setq deactivate-mark  t)
+          (when (get-buffer "*Completions*") (delete-windows-on "*Completions*"))
+          (abort-recursive-edit)))
 
       (define-key evil-normal-state-map [escape] 'keyboard-quit)
       (define-key evil-visual-state-map [escape] 'keyboard-quit)
@@ -226,6 +233,19 @@
 
      (make-directory "~/.emacs.d/autosaves/" t)
    #+END_SRC
+** Editorconfig
+   #+BEGIN_SRC emacs-lisp
+     (use-package editorconfig
+       :ensure t
+       :config
+       (editorconfig-mode 1))
+   #+END_SRC
+* Cool stuff
+** Hacker news
+   #+BEGIN_SRC emacs-lisp
+     (use-package hackernews
+       :ensure t)
+   #+END_SRC
 * Version control
 ** Magit
   #+BEGIN_SRC emacs-lisp
@@ -364,6 +384,10 @@
        :config
        (add-hook 'haskell-mode-hook 'intero-mode))
    #+END_SRC
+** TODO Python
+** TODO Clojure
+** TODO Elixir
+** TODO Go
 * Keyboard
 ** Make ESC actually escape stuff
    #+BEGIN_SRC emacs-lisp
