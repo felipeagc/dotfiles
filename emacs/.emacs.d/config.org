@@ -316,7 +316,14 @@
        :config
        (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
    #+END_SRC
-** TODO Org capture
+** Org capture
+   #+BEGIN_SRC emacs-lisp
+     (setq org-default-notes-file "~/nextcloud/notes.org")
+
+     (setq org-capture-templates
+           '(("t" "To-do" entry (file+headline "~/nextcloud/notes.org" "To-do")
+              "* TODO %?")))
+   #+END_SRC
 * Projectile
   #+BEGIN_SRC emacs-lisp
     (use-package projectile
@@ -420,17 +427,20 @@
      (felipe/bind "ff" 'counsel-find-file "find file")
      (felipe/name-bind "fe" "edit")
      (felipe/bind "fed" '(lambda ()
-			   (interactive)
-			   (find-file "~/.emacs.d/config.org")) "emacs config")
+                           (interactive)
+                           (find-file "~/.emacs.d/config.org")) "emacs config")
      (felipe/bind "fei" '(lambda ()
-			   (interactive)
-			   (find-file "~/.config/i3/config")) "i3 config")
+                           (interactive)
+                           (find-file "~/.config/i3/config")) "i3 config")
      (felipe/bind "fec" '(lambda ()
-			   (interactive)
-			   (find-file "~/.config/compton.conf")) "compton config")
+                           (interactive)
+                           (find-file "~/.config/compton.conf")) "compton config")
      (felipe/bind "fep" '(lambda ()
-			   (interactive)
-			   (find-file "~/.config/polybar/config")) "polybar config")
+                           (interactive)
+                           (find-file "~/.config/polybar/config")) "polybar config")
+     (felipe/bind "fen" '(lambda ()
+                           (interactive)
+                           (find-file "~/nextcloud/notes.org")) "notes")
 
      (felipe/name-bind "b" "buffer")
      (felipe/bind "bb" 'ivy-switch-buffer "find buffer")
@@ -438,17 +448,17 @@
      (felipe/bind "bn" 'next-buffer "next buffer")
      (felipe/bind "bp" 'previous-buffer "previous buffer")
      (felipe/bind "bs" '(lambda ()
-			  (interactive)
-			  (switch-to-buffer "*scratch*")) "scratch buffer")
+                          (interactive)
+                          (switch-to-buffer "*scratch*")) "scratch buffer")
      (felipe/bind "bcc" '(lambda ()
-			   (interactive)
-			   (mapcar (lambda (buffer)
-				     (let ((safe-buffers (list "*scratch*" "*Messages*" "config.org"))
-					   (name (buffer-name buffer)))
-				       (unless (or
-						(string-prefix-p "*Org" name)
-						(member name safe-buffers))
-					 (kill-buffer buffer)))) (buffer-list))) "clean buffers")
+                           (interactive)
+                           (mapcar (lambda (buffer)
+                                     (let ((safe-buffers (list "*scratch*" "*Messages*" "config.org"))
+                                           (name (buffer-name buffer)))
+                                       (unless (or
+                                                (string-prefix-p "*Org" name)
+                                                (member name safe-buffers))
+                                         (kill-buffer buffer)))) (buffer-list))) "clean buffers")
 
      (felipe/name-bind "w" "window")
      (felipe/bind "w/" 'split-window-right "split right")
@@ -481,4 +491,7 @@
      (felipe/bind "gp" 'magit-push "push")
      (felipe/bind "gs" 'magit-stage "stage")
      (felipe/bind "gU" 'magit-unstage "unstage")
+
+     (felipe/name-bind "o" "org")
+     (felipe/bind "oc" 'org-capture "capture")
    #+END_SRC
