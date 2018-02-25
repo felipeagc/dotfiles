@@ -64,9 +64,6 @@
       (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
       (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
 
-      ;; Change initial term-mode state to emacs
-      (evil-set-initial-state 'term-mode 'emacs)
-
       ;; Overload shifts so that they don't lose the selection
       (defun felipe/evil-shift-left-visual ()
 	(interactive)
@@ -140,8 +137,10 @@
       :after ivy
       :config
       (use-package counsel-projectile
-	:ensure t
-	:after projectile))
+        :ensure t
+        :after projectile
+        :config
+        (counsel-projectile-mode)))
   #+END_SRC
 * Interface
 ** Hide UI elements
@@ -240,6 +239,15 @@
        :config
        (editorconfig-mode 1))
    #+END_SRC
+** Shell-pop
+   #+BEGIN_SRC emacs-lisp
+     (use-package shell-pop
+       :ensure t
+       :init
+       (setq shell-pop-window-position "bottom"
+             shell-pop-window-size 20
+             shell-pop-shell-type '("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
+   #+END_SRC
 * Cool stuff
 ** Hacker news
    #+BEGIN_SRC emacs-lisp
@@ -329,7 +337,9 @@
     (use-package projectile
       :ensure t
       :init
-      (setq projectile-require-project-root nil))
+      (setq projectile-require-project-root nil)
+      :config
+      (projectile-mode))
   #+END_SRC
 * Indentation
   #+BEGIN_SRC emacs-lisp
@@ -402,6 +412,13 @@
        (add-hook 'haskell-mode-hook 'intero-mode))
    #+END_SRC
 ** TODO Python
+   #+BEGIN_SRC emacs-lisp
+     (use-package elpy
+       :ensure t
+       :config
+       (add-hook 'elpy-mode-hook (lambda () (highlight-indentation-mode -1)))
+       (elpy-enable))
+   #+END_SRC
 ** TODO Clojure
 ** TODO Elixir
 ** TODO Go
@@ -418,80 +435,104 @@
      (global-set-key [C-mouse-5] 'text-scale-decrease)
    #+END_SRC
 ** Leader mappings
-   #+BEGIN_SRC emacs-lisp
-     (felipe/name-bind "t" "theme/toggles")
-     (felipe/bind "tt" 'counsel-load-theme "themes")
-     (felipe/bind "td" 'felipe/toggle-dark-theme "toggle dark theme")
-
-     (felipe/name-bind "f" "files")
-     (felipe/bind "ff" 'counsel-find-file "find file")
-     (felipe/name-bind "fe" "edit")
-     (felipe/bind "fed" '(lambda ()
+*** Terminal
+    #+BEGIN_SRC emacs-lisp
+      (felipe/bind "'" 'shell-pop "terminal")
+    #+END_SRC
+*** Toggles
+    #+BEGIN_SRC emacs-lisp
+      (felipe/name-bind "t" "theme/toggles")
+      (felipe/bind "tt" 'counsel-load-theme "themes")
+      (felipe/bind "td" 'felipe/toggle-dark-theme "toggle dark theme")
+    #+END_SRC
+*** Files
+    #+BEGIN_SRC emacs-lisp
+      (felipe/name-bind "f" "files")
+      (felipe/bind "ff" 'counsel-find-file "find file")
+      (felipe/name-bind "fe" "edit")
+      (felipe/bind "fed" '(lambda ()
+                            (interactive)
+                            (find-file "~/.emacs.d/config.org")) "emacs config")
+      (felipe/bind "fei" '(lambda ()
+                            (interactive)
+                            (find-file "~/.config/i3/config")) "i3 config")
+      (felipe/bind "fec" '(lambda ()
+                            (interactive)
+                            (find-file "~/.config/compton.conf")) "compton config")
+      (felipe/bind "fep" '(lambda ()
+                            (interactive)
+                            (find-file "~/.config/polybar/config")) "polybar config")
+      (felipe/bind "fen" '(lambda ()
+                            (interactive)
+                            (find-file "~/nextcloud/notes.org")) "notes")
+    #+END_SRC
+*** Buffers
+    #+BEGIN_SRC emacs-lisp
+      (felipe/name-bind "b" "buffer")
+      (felipe/bind "bb" 'ivy-switch-buffer "find buffer")
+      (felipe/bind "bd" 'kill-this-buffer "delete buffer")
+      (felipe/bind "br" 'rename-buffer "rename buffer")
+      (felipe/bind "bn" 'next-buffer "next buffer")
+      (felipe/bind "bp" 'previous-buffer "previous buffer")
+      (felipe/bind "bs" '(lambda ()
                            (interactive)
-                           (find-file "~/.emacs.d/config.org")) "emacs config")
-     (felipe/bind "fei" '(lambda ()
-                           (interactive)
-                           (find-file "~/.config/i3/config")) "i3 config")
-     (felipe/bind "fec" '(lambda ()
-                           (interactive)
-                           (find-file "~/.config/compton.conf")) "compton config")
-     (felipe/bind "fep" '(lambda ()
-                           (interactive)
-                           (find-file "~/.config/polybar/config")) "polybar config")
-     (felipe/bind "fen" '(lambda ()
-                           (interactive)
-                           (find-file "~/nextcloud/notes.org")) "notes")
-
-     (felipe/name-bind "b" "buffer")
-     (felipe/bind "bb" 'ivy-switch-buffer "find buffer")
-     (felipe/bind "bd" 'kill-this-buffer "delete buffer")
-     (felipe/bind "bn" 'next-buffer "next buffer")
-     (felipe/bind "bp" 'previous-buffer "previous buffer")
-     (felipe/bind "bs" '(lambda ()
-                          (interactive)
-                          (switch-to-buffer "*scratch*")) "scratch buffer")
-     (felipe/bind "bcc" '(lambda ()
-                           (interactive)
-                           (mapcar (lambda (buffer)
-                                     (let ((safe-buffers (list "*scratch*" "*Messages*" "config.org"))
-                                           (name (buffer-name buffer)))
-                                       (unless (or
-                                                (string-prefix-p "*Org" name)
-                                                (member name safe-buffers))
-                                         (kill-buffer buffer)))) (buffer-list))) "clean buffers")
-
-     (felipe/name-bind "w" "window")
-     (felipe/bind "w/" 'split-window-right "split right")
-     (felipe/bind "w-" 'split-window-below "split below")
-     (felipe/bind "wd" 'delete-window "delete window")
-     (felipe/bind "wb" 'balance-windows "balance windows")
-
-     (felipe/name-bind "e" "error")
-     (felipe/bind "en" 'flycheck-next-error "next error")
-     (felipe/bind "ep" 'flycheck-previous-error "previous error")
-
-     (felipe/name-bind "r" "refactor")
-     (felipe/bind "rs" 'replace-string "replace string")
-
-     (felipe/name-bind "p" "projectile")
-     (felipe/bind "pp" 'counsel-projectile-switch-project "switch project")
-     (felipe/bind "pa" 'projectile-add-known-project "add project")
-     (felipe/bind "pf" 'counsel-projectile "find file")
-     (felipe/bind "pg" 'counsel-git-grep "git grep")
-
-     (felipe/name-bind "m" "major mode")
-     (felipe/name-bind "mr" "run/refactor")
-     (felipe/name-bind "mg" "go")
-     (felipe/bind "mgg" 'dumb-jump-go "goto def")
-     (felipe/bind "mgG" 'dumb-jump-go-other-window "goto def in other window")
-
-     (felipe/name-bind "g" "git")
-     (felipe/bind "gg" 'magit-status "status")
-     (felipe/bind "gc" 'magit-commit "commit")
-     (felipe/bind "gp" 'magit-push "push")
-     (felipe/bind "gs" 'magit-stage "stage")
-     (felipe/bind "gU" 'magit-unstage "unstage")
-
-     (felipe/name-bind "o" "org")
-     (felipe/bind "oc" 'org-capture "capture")
-   #+END_SRC
+                           (switch-to-buffer "*scratch*")) "scratch buffer")
+      (felipe/bind "bcc" '(lambda ()
+                            (interactive)
+                            (mapcar (lambda (buffer)
+                                      (let ((safe-buffers (list "*scratch*" "*Messages*" "config.org"))
+                                            (name (buffer-name buffer)))
+                                        (unless (or
+                                                 (string-prefix-p "*Org" name)
+                                                 (member name safe-buffers))
+                                          (kill-buffer buffer)))) (buffer-list))) "clean buffers")
+    #+END_SRC
+*** Window
+    #+BEGIN_SRC emacs-lisp
+      (felipe/name-bind "w" "window")
+      (felipe/bind "w/" 'split-window-right "split right")
+      (felipe/bind "w-" 'split-window-below "split below")
+      (felipe/bind "wd" 'delete-window "delete window")
+      (felipe/bind "wb" 'balance-windows "balance windows")
+    #+END_SRC
+*** Errors
+    #+BEGIN_SRC emacs-lisp
+      (felipe/name-bind "e" "error")
+      (felipe/bind "en" 'flycheck-next-error "next error")
+      (felipe/bind "ep" 'flycheck-previous-error "previous error")
+    #+END_SRC
+*** Refactoring
+    #+BEGIN_SRC emacs-lisp
+      (felipe/name-bind "r" "refactor")
+      (felipe/bind "rs" 'replace-string "replace string")
+    #+END_SRC
+*** Projectile
+    #+BEGIN_SRC emacs-lisp
+      (felipe/name-bind "p" "projectile")
+      (felipe/bind "pp" 'projectile-switch-project "switch project")
+      (felipe/bind "pa" 'projectile-add-known-project "add project")
+      (felipe/bind "pf" 'counsel-projectile "find file")
+      (felipe/bind "pg" 'counsel-git-grep "git grep")
+    #+END_SRC
+*** Major mode
+    #+BEGIN_SRC emacs-lisp
+      (felipe/name-bind "m" "major mode")
+      (felipe/name-bind "mr" "run/refactor")
+      (felipe/name-bind "mg" "go")
+      (felipe/bind "mgg" 'dumb-jump-go "goto def")
+      (felipe/bind "mgG" 'dumb-jump-go-other-window "goto def in other window")
+    #+END_SRC
+*** Git
+    #+BEGIN_SRC emacs-lisp
+      (felipe/name-bind "g" "git")
+      (felipe/bind "gg" 'magit-status "status")
+      (felipe/bind "gc" 'magit-commit "commit")
+      (felipe/bind "gp" 'magit-push "push")
+      (felipe/bind "gs" 'magit-stage "stage")
+      (felipe/bind "gU" 'magit-unstage "unstage")
+    #+END_SRC
+*** Org
+    #+BEGIN_SRC emacs-lisp
+      (felipe/name-bind "o" "org")
+      (felipe/bind "oc" 'org-capture "capture")
+    #+END_SRC
