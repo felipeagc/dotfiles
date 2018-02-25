@@ -354,15 +354,17 @@
      (use-package lsp-mode
        :ensure t
        :after flycheck
+       :init
+       (setq lsp-highlight-symbol-at-point nil)
        :config
        (require 'lsp-flycheck)
        (use-package company-lsp
-	 :ensure t
-	 :after company
-	 :config
-	 (push 'company-lsp company-backends)))
+         :ensure t
+         :after company
+         :config
+         (push 'company-lsp company-backends)))
    #+END_SRC
-** Rust
+** DONE Rust
    #+BEGIN_SRC emacs-lisp
      (use-package rust-mode
        :ensure t)
@@ -375,8 +377,13 @@
        :config
        (add-hook 'rust-mode-hook #'lsp-rust-enable)
        (add-hook 'rust-mode-hook #'flycheck-mode))
+
+     (felipe/bind-mode "mf" 'rust-format-buffer "format" 'rust-mode)
+     (evil-define-key 'normal rust-mode-map "gd" 'xref-find-definitions)
+     (evil-define-key 'normal rust-mode-map "gD" 'xref-find-definitions-other-window)
    #+END_SRC
-** C/C++
+** TODO C/C++
+   TODO: add rtags
    #+BEGIN_SRC emacs-lisp
      (use-package irony
        :ensure t
@@ -388,40 +395,68 @@
        (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
        (use-package company-irony
-	 :ensure t
-	 :after company
-	 :config
-	 (add-to-list 'company-backends 'company-irony))
+         :ensure t
+         :after company
+         :config
+         (add-to-list 'company-backends 'company-irony))
 
        (use-package flycheck-irony
-	 :ensure t
-	 :after flycheck
-	 :config
-	 (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+         :ensure t
+         :after flycheck
+         :config
+         (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
 
        (use-package irony-eldoc
-	 :ensure t
-	 :config
-	 (add-hook 'irony-mode-hook 'irony-eldoc)))
+         :ensure t
+         :config
+         (add-hook 'irony-mode-hook 'irony-eldoc)))
    #+END_SRC
-** Haskell
+** TODO Haskell
    #+BEGIN_SRC emacs-lisp
      (use-package intero
        :ensure t
        :config
        (add-hook 'haskell-mode-hook 'intero-mode))
    #+END_SRC
-** TODO Python
+** DONE Python
    #+BEGIN_SRC emacs-lisp
      (use-package elpy
        :ensure t
        :config
        (add-hook 'elpy-mode-hook (lambda () (highlight-indentation-mode -1)))
        (elpy-enable))
+
+     (felipe/bind-mode "mf" 'elpy-format-code "format" 'python-mode)
+     (evil-define-key 'normal python-mode-map "K" 'elpy-doc)
+     (evil-define-key 'normal python-mode-map "gd" 'elpy-goto-definition)
+     (evil-define-key 'normal python-mode-map "gD" 'elpy-goto-definition-other-window)
    #+END_SRC
 ** TODO Clojure
 ** TODO Elixir
-** TODO Go
+   #+BEGIN_SRC emacs-lisp
+     (use-package alchemist
+       :ensure t)
+   #+END_SRC
+** DONE Go
+   #+BEGIN_SRC emacs-lisp
+     (use-package go-mode
+       :ensure t
+       :config
+       (use-package go-eldoc
+         :ensure t
+         :config
+         (add-hook 'go-mode-hook 'go-eldoc-setup)))
+
+     (use-package company-go
+       :ensure t
+       :after company)
+
+     (felipe/bind-mode "mf" 'gofmt "format" 'go-mode)
+     (felipe/bind-mode "mi" 'go-import-add "add imports" 'go-mode)
+     (evil-define-key 'normal go-mode-map "K" 'godoc-at-point)
+     (evil-define-key 'normal go-mode-map "gd" 'godef-jump)
+     (evil-define-key 'normal go-mode-map "gD" 'godef-jump-other-window)
+   #+END_SRC
 * Keyboard
 ** Make ESC actually escape stuff
    #+BEGIN_SRC emacs-lisp
@@ -514,14 +549,6 @@
       (felipe/bind "pf" 'counsel-projectile "find file")
       (felipe/bind "pg" 'counsel-git-grep "git grep")
     #+END_SRC
-*** Major mode
-    #+BEGIN_SRC emacs-lisp
-      (felipe/name-bind "m" "major mode")
-      (felipe/name-bind "mr" "run/refactor")
-      (felipe/name-bind "mg" "go")
-      (felipe/bind "mgg" 'dumb-jump-go "goto def")
-      (felipe/bind "mgG" 'dumb-jump-go-other-window "goto def in other window")
-    #+END_SRC
 *** Git
     #+BEGIN_SRC emacs-lisp
       (felipe/name-bind "g" "git")
@@ -535,4 +562,12 @@
     #+BEGIN_SRC emacs-lisp
       (felipe/name-bind "o" "org")
       (felipe/bind "oc" 'org-capture "capture")
+    #+END_SRC
+
+*** Major mode
+    #+BEGIN_SRC emacs-lisp
+      (felipe/name-bind "m" "major mode")
+      (felipe/name-bind "mr" "run/refactor")
+      (felipe/name-bind "mf" "format")
+      (felipe/name-bind "mg" "go")
     #+END_SRC
