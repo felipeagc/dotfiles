@@ -41,6 +41,7 @@ bindsym $mod+h focus left
 bindsym $mod+j focus down
 bindsym $mod+k focus up
 bindsym $mod+l focus right
+bindsym $mod+Tab focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -67,7 +68,7 @@ bindsym $mod+v split toggle
 bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
-#bindsym $mod+s layout toggle split
+bindsym $mod+Shift+t layout toggle tabbed split
 
 # toggle tiling / floating
 bindsym $mod+t floating toggle
