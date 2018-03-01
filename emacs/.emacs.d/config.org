@@ -162,18 +162,31 @@
    #+END_SRC
 ** Font
    #+BEGIN_SRC emacs-lisp
+     (setq felipe/fonts '("SF Mono-12:Semibold"
+                          "Iosevka-13"
+                          "Hack-11"))
+
      (defun felipe/font-exists-p (font)
-       "Check if font exists"
-       (if (null (x-list-fonts font)) nil t))
+      "Check if font exists"
+      (if (null (x-list-fonts font)) nil t))
 
      (defun felipe/set-fonts (fonts)
-       "Sets the default font based on a list of fonts"
-       (let ((selected-font (pop fonts)))
-         (if (felipe/font-exists-p selected-font)
-             (setq default-frame-alist `((font . ,selected-font)))
-           (felipe/set-fonts fonts))))
+      "Sets the default font based on a list of fonts"
+      (let ((selected-font (pop fonts)))
+        (if (felipe/font-exists-p selected-font)
+            (progn
+              (setq default-frame-alist `((font . ,selected-font)))
+              (set-frame-font selected-font nil t))
+          (felipe/set-fonts fonts))))
 
-     (felipe/set-fonts '("SF Mono-12:Semibold" "Iosevka-13" "Hack-11"))
+     (setq felipe/are-fonts-setup nil)
+
+     (add-hook 'focus-in-hook '(lambda ()
+                                 (if (not felipe/are-fonts-setup)
+                                     (progn
+                                       (setq felipe/are-fonts-setup t)
+                                       (felipe/set-fonts felipe/fonts))
+                                   nil)))
    #+END_SRC
 ** Theming
    #+BEGIN_SRC emacs-lisp
