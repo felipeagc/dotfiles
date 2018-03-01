@@ -162,7 +162,18 @@
    #+END_SRC
 ** Font
    #+BEGIN_SRC emacs-lisp
-    (setq default-frame-alist '((font . "Iosevka-13")))
+     (defun felipe/font-exists-p (font)
+       "Check if font exists"
+       (if (null (x-list-fonts font)) nil t))
+
+     (defun felipe/set-fonts (fonts)
+       "Sets the default font based on a list of fonts"
+       (let ((selected-font (pop fonts)))
+         (if (felipe/font-exists-p selected-font)
+             (setq default-frame-alist `((font . ,selected-font)))
+           (felipe/set-fonts fonts))))
+
+     (felipe/set-fonts '("SF Mono-12:Semibold" "Iosevka-13" "Hack-11"))
    #+END_SRC
 ** Theming
    #+BEGIN_SRC emacs-lisp
@@ -341,13 +352,6 @@
       :config
       (projectile-mode))
   #+END_SRC
-* Indentation
-  #+BEGIN_SRC emacs-lisp
-    (add-hook 'emacs-lisp-mode-hook
-      (lambda ()
-	(setq tab-width 2)
-	(setq evil-shift-width 2)))
-  #+END_SRC
 * Languages
 ** LSP
    #+BEGIN_SRC emacs-lisp
@@ -363,6 +367,13 @@
          :after company
          :config
          (push 'company-lsp company-backends)))
+   #+END_SRC
+** Emacs lisp
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'emacs-lisp-mode-hook
+       (lambda ()
+         (setq tab-width 2)
+         (setq evil-shift-width 2)))
    #+END_SRC
 ** DONE Rust
    #+BEGIN_SRC emacs-lisp
@@ -410,6 +421,34 @@
          :ensure t
          :config
          (add-hook 'irony-mode-hook 'irony-eldoc)))
+
+     (use-package rtags
+       :ensure t
+       :config
+       (add-hook 'c-mode-hook 'rtags-start-process-unless-running)
+       (add-hook 'c++-mode-hook 'rtags-start-process-unless-running)
+       (add-hook 'objc-mode-hook 'rtags-start-process-unless-running))
+
+     (use-package clang-format
+       :ensure t)
+
+     (use-package meson-mode
+       :ensure t)
+
+     (add-hook 'c++-mode-hook
+       (lambda ()
+         (setq tab-width 2)
+         (setq evil-shift-width 2)))
+
+     (add-hook 'c-mode-hook
+       (lambda ()
+         (setq tab-width 2)
+         (setq evil-shift-width 2)))
+
+     (felipe/bind-mode "mf" 'clang-format-buffer "format" 'c++-mode)
+     (felipe/bind-mode "mf" 'clang-format-buffer "format" 'c-mode)
+     (evil-define-key 'normal c++-mode-map "gd" 'rtags-find-symbol-at-point)
+     (evil-define-key 'normal c-mode-map "gd" 'rtags-find-symbol-at-point)
    #+END_SRC
 ** TODO Haskell
    #+BEGIN_SRC emacs-lisp
@@ -548,6 +587,8 @@
       (felipe/bind "pa" 'projectile-add-known-project "add project")
       (felipe/bind "pf" 'counsel-projectile "find file")
       (felipe/bind "pg" 'counsel-git-grep "git grep")
+
+      (felipe/bind "a" 'projectile-find-other-file "find other file")
     #+END_SRC
 *** Git
     #+BEGIN_SRC emacs-lisp
