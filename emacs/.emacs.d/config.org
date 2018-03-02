@@ -509,6 +509,13 @@
      (evil-define-key 'normal go-mode-map "gd" 'godef-jump)
      (evil-define-key 'normal go-mode-map "gD" 'godef-jump-other-window)
    #+END_SRC
+** TODO Nim
+   #+BEGIN_SRC emacs-lisp
+     (use-package nim-mode
+       :ensure t
+       :config
+       (add-hook 'nim-mode-hook 'nimsuggest-mode))
+   #+END_SRC
 * Keyboard
 ** Make ESC actually escape stuff
    #+BEGIN_SRC emacs-lisp
