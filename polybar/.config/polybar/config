@@ -36,7 +36,7 @@ font-1 = unifont:fontformat=truetype:size=8:antialias=false;1
 font-2 = siji:pixelsize=10;4
 font-3 = Font Awesome:pixelsize=7;2
 
-modules-left = btc eth bch
+modules-left = btc eth bch xrb
 modules-center = i3
 modules-right = mpd volume date powermenu
 
@@ -226,6 +226,13 @@ interval = 20
 format = <label>
 tail = true
 exec = ~/.config/polybar/coin.py eth usd
+
+[module/xrb]
+type = custom/script
+interval = 20
+format = <label>
+tail = true
+exec = ~/.config/polybar/coin.py xrb usd
 
 [settings]
 screenchange-reload = true
