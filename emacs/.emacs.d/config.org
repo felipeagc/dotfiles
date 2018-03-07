@@ -276,6 +276,13 @@
    #+BEGIN_SRC emacs-lisp
      (setq frame-resize-pixelwise t)
    #+END_SRC
+** Dumb jump
+   #+BEGIN_SRC emacs-lisp
+     (use-package dumb-jump
+       :ensure t
+       :config
+       (dumb-jump-mode))
+   #+END_SRC
 * Cool stuff
 ** Hacker news
    #+BEGIN_SRC emacs-lisp
@@ -559,6 +566,11 @@
    #+BEGIN_SRC emacs-lisp
      (global-set-key [C-mouse-4] 'text-scale-increase)
      (global-set-key [C-mouse-5] 'text-scale-decrease)
+   #+END_SRC
+** Dumb jump bindings
+   #+BEGIN_SRC emacs-lisp
+     (evil-global-set-key 'normal "gd" 'dumb-jump-go)
+     (evil-global-set-key 'normal "gD" 'dumb-jump-go-other-window)
    #+END_SRC
 ** Leader mappings
 *** Terminal
