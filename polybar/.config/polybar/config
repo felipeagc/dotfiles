@@ -208,28 +208,28 @@ menu-3-1-exec = menu-open-0
 
 [module/btc]
 type = custom/script
-interval = 20
+interval = 60
 format = <label>
 tail = true
 exec = ~/.config/polybar/coin.py btc usd
 
 [module/bch]
 type = custom/script
-interval = 20
+interval = 60
 format = <label>
 tail = true
 exec = ~/.config/polybar/coin.py bch usd
 
 [module/eth]
 type = custom/script
-interval = 20
+interval = 60
 format = <label>
 tail = true
 exec = ~/.config/polybar/coin.py eth usd
 
 [module/xrb]
 type = custom/script
-interval = 20
+interval = 60
 format = <label>
 tail = true
 exec = ~/.config/polybar/coin.py xrb usd
