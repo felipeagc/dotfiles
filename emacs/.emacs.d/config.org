@@ -162,7 +162,7 @@
    #+END_SRC
 ** Font
    #+BEGIN_SRC emacs-lisp
-     (setq felipe/fonts '("SF Mono-12:Semibold"
+     (setq felipe/fonts '("SF Mono-10:Semibold"
                           "Iosevka-13"
                           "Hack-11"))
 
@@ -282,6 +282,12 @@
        :ensure t
        :config
        (dumb-jump-mode))
+   #+END_SRC
+** Zeal at point
+   Zeal is a documentation browser and this package allows it to integrate with emacs.
+   #+BEGIN_SRC emacs-lisp
+     (use-package zeal-at-point
+       :ensure t)
    #+END_SRC
 * Cool stuff
 ** Hacker news
@@ -502,7 +508,9 @@
        :ensure t)
 
      (use-package cider
-       :ensure t)
+       :ensure t
+       :init
+       (setq nrepl-hide-special-buffers t))
 
      (felipe/bind-mode "me" 'cider-eval-sexp-at-point "eval sexp at point" 'clojure-mode)
      (felipe/bind-mode "ms" 'cider-jack-in "start repl" 'clojure-mode)
