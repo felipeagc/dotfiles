@@ -35,4 +35,6 @@ mkcd () {
     cd -P -- "$1"
 }
 
+[ "$XDG_CURRENT_DESKTOP" = "KDE" ] || [ "$XDG_CURRENT_DESKTOP" = "GNOME" ] || export QT_QPA_PLATFORMTHEME="qt5ct"
+
 source ~/.profile
