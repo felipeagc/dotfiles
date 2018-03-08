@@ -5,3 +5,7 @@ elpa
 irony
 config.el
 custom.el
+.cache
+url
+projectile-bookmarks.eld
+%backup%~
