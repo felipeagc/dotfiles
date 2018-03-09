@@ -221,10 +221,10 @@ animation-charging-framerate = 750
 [module/volume]
 type = internal/volume
 
-format-volume = <label-volume> <bar-volume>
+format-volume = <label-volume>
 
-label-volume = "  "
-label-volume-foreground = ${colors.foreground}
+label-volume = "  %{F#d8d8d8}%percentage%%"
+label-volume-foreground = ${colors.red}
 
 label-muted = "  MUTED"
 label-muted-foreground = #555
