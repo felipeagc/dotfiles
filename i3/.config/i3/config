@@ -124,7 +124,7 @@ assign [class="Corebird"] 5
 assign [class="csgo_linux64"] 10
 assign [class="dota2"] 10
 
-new_window pixel 3
+new_window pixel 1
 # gaps inner 8
 # smart_gaps on
 # smart_borders on

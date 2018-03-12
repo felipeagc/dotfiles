@@ -19,7 +19,7 @@ bottom = true
 background = ${colors.background}
 foreground = ${colors.foreground}
 
-border-top-size = 3
+border-top-size = 1
 border-color = ${colors.background-alt}
 
 line-size = 3
