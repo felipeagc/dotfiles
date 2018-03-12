@@ -230,6 +230,16 @@
        (which-key-mode)) 
    #+END_SRC
 * Misc
+** Disable unwanted buffers
+   #+BEGIN_SRC emacs-lisp
+     (setq-default message-log-max nil)
+     (kill-buffer "*Messages*")
+   #+END_SRC
+** Better yes/no questions in emacs
+   This makes emacs accept only y/n as answers.
+   #+BEGIN_SRC emacs-lisp
+     (fset 'yes-or-no-p 'y-or-n-p)
+   #+END_SRC
 ** Electric pairs
    #+BEGIN_SRC emacs-lisp
      (electric-pair-mode)
