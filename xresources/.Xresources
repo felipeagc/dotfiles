@@ -24,7 +24,7 @@ rofi.lines:		10
 st.font: Iosevka:size=11:antialias=true:autohint=true;
 st.borderpx: 16
 
-URxvt*font: xft:Iosevka:size=14,xft:Symbola
+URxvt*font: xft:SF Mono:size=12,xft:Iosevka:size=14,xft:Symbola
 URxvt*scrollBar: false
 URxvt*transparent: false
 URxvt*internalBorder: 16
