@@ -57,7 +57,6 @@ xterm*utf8: 1
 #define base0F #a16946
 
 *foreground:   		base05
-*fading:		20
 #ifdef background_opacity
 *background:		[background_opacity]base00
 *background-alt:	[background_opacity]base01
