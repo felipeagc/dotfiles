@@ -149,7 +149,7 @@ client.background       $bg
 
 popup_during_fullscreen ignore
 
-exec feh --bg-fill ~/images/outrun.jpg
+exec feh --bg-tile ~/images/wallpaper
 exec mpd
 exec polybar bottom
 exec xsetroot -cursor_name left_ptr
