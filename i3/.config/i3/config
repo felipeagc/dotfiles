@@ -132,7 +132,7 @@ hide_edge_borders both
 
 set_from_resource $fg foreground #f0f0f0
 set $border_active #282828
-set_from_resource $border_inactive background #f0f0f0
+set $border_inactive #282828
 set_from_resource $border_urgent color1 #f0f0f0
 set_from_resource $bg background #f0f0f0
 set_from_resource $bg2 background #f0f0f0
