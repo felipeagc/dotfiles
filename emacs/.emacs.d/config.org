@@ -143,6 +143,11 @@
         (counsel-projectile-mode)))
   #+END_SRC
 * Interface
+** All the icons
+   #+BEGIN_SRC emacs-lisp
+     (use-package all-the-icons
+       :ensure t)
+   #+END_SRC
 ** Hide UI elements
    #+BEGIN_SRC emacs-lisp
      (menu-bar-mode -1)
@@ -228,6 +233,11 @@
        :ensure t
        :config
        (which-key-mode)) 
+   #+END_SRC
+** Neotree
+   #+BEGIN_SRC emacs-lisp
+     (use-package neotree
+       :ensure t)
    #+END_SRC
 * Misc
 ** Disable unwanted buffers
@@ -487,11 +497,13 @@
      (add-hook 'c++-mode-hook
        (lambda ()
          (setq tab-width 2)
+         (setq indent-tabs-mode nil)
          (setq evil-shift-width 2)))
 
      (add-hook 'c-mode-hook
        (lambda ()
          (setq tab-width 2)
+         (setq indent-tabs-mode nil)
          (setq evil-shift-width 2)))
 
      (felipe/bind-mode "mf" 'clang-format-buffer "format" 'c++-mode)
