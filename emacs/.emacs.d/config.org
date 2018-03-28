@@ -408,7 +408,10 @@
        :init
        (setq lsp-highlight-symbol-at-point nil)
        :config
-       (require 'lsp-flycheck)
+       (use-package lsp-ui
+         :ensure t
+         :config
+         (add-hook 'lsp-mode-hook 'lsp-ui-mode))
        (use-package company-lsp
          :ensure t
          :after company
