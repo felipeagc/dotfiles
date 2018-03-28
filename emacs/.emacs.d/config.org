@@ -162,7 +162,7 @@
    #+END_SRC
 ** Font
    #+BEGIN_SRC emacs-lisp
-     (setq felipe/fonts '("SF Mono-10:Semibold"
+     (setq felipe/fonts '("SF Mono-11:Semibold"
                           "Iosevka-13"
                           "Hack-11"))
 
