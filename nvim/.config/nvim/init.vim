@@ -1,5 +1,5 @@
 if &compatible
-	set nocompatible
+  set nocompatible
 endif
 
 " Automatically install plugin manager {{{
@@ -13,69 +13,18 @@ endif
 " Plugins {{{
 call plug#begin('~/.local/share/nvim/plugged')
 
-" Language server protocol
-" Plug 'autozimu/LanguageClient-neovim', {
-"     \ 'branch': 'next',
-"     \ 'do': 'bash install.sh',
-"     \ }
-
 " Completion / linting
 Plug 'w0rp/ale'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
-" Go
-Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries', 'for': 'go' }
-Plug 'zchee/deoplete-go', { 'do': 'make', 'for': 'go' }
-
-" Rust
-Plug 'sebastianmarkow/deoplete-rust'
-
-" Python
-Plug 'zchee/deoplete-jedi', { 'for': 'python' }
-
 " C/C++
-Plug 'tweekmonster/deoplete-clang2'
 Plug 'rhysd/vim-clang-format'
-
-" Solidity
-Plug 'tomlion/vim-solidity'
-
-" Haskell
-Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
-Plug 'parsonsmatt/intero-neovim'
-Plug 'alx741/vim-hindent'
-
-" Purescript
-Plug 'FrigoEU/psc-ide-vim'
-
-" Elixir
-Plug 'elixir-editors/vim-elixir', { 'for': 'elixir' }
-Plug 'slashmili/alchemist.vim', { 'for': 'elixir' }
-
-" Elm
-Plug 'ElmCast/elm-vim', { 'for': 'elm' }
-
-" Javascript
-" Plug 'mxw/vim-jsx'
-Plug 'wokalski/autocomplete-flow'
-
-" Typescript
-Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
-Plug 'peitalin/vim-jsx-typescript', { 'for': 'typescript' }
-
-" Clojure
-
-" GDScript
-Plug 'quabug/vim-gdscript'
 
 " Meson
 Plug 'stfl/meson.vim'
 
 " Polyglot
 Plug 'sheerun/vim-polyglot'
-
-" Scala
-Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
 
 " Snippets
 Plug 'SirVer/ultisnips'
@@ -86,11 +35,8 @@ Plug 'mattn/emmet-vim'
 Plug 'junegunn/goyo.vim'
 
 " UI
-Plug 'Shougo/echodoc.vim'
-Plug 'scrooloose/nerdtree'
 Plug 'equalsraf/neovim-gui-shim'
 Plug 'itchyny/lightline.vim'
-" Plug 'Yggdroot/indentLine'
 
 " Wrappers
 Plug 'tpope/vim-fugitive'
@@ -119,12 +65,6 @@ Plug 'editorconfig/editorconfig-vim'
 
 " Themes
 Plug 'chriskempson/base16-vim'
-Plug 'altercation/vim-colors-solarized'
-
-" Plug 'autozimu/LanguageClient-neovim', {
-"     \ 'branch': 'next',
-"     \ 'do': 'bash install.sh',
-"     \ }
 
 call plug#end()
 " }}}
@@ -170,27 +110,20 @@ set smartcase
 " }}}
 
 " Color scheme settings {{{
+let base16colorspace=256
+
 function! s:base16_customize() abort
-	call Base16hi("LineNr", g:base16_gui03, g:base16_gui00, g:base16_cterm03, g:base16_cterm00, "bold", "")
-	call Base16hi("CursorLineNr", g:base16_gui04, g:base16_gui00, g:base16_cterm04, g:base16_cterm00, "bold", "")
-	call Base16hi("SignColumn", g:base16_gui03, g:base16_gui00, g:base16_cterm03, g:base16_cterm00, "bold", "")
+  call Base16hi("LineNr", g:base16_gui03, g:base16_gui00, g:base16_cterm03, g:base16_cterm00, "bold", "")
+  call Base16hi("CursorLineNr", g:base16_gui04, g:base16_gui00, g:base16_cterm04, g:base16_cterm00, "bold", "")
+  call Base16hi("SignColumn", g:base16_gui03, g:base16_gui00, g:base16_cterm03, g:base16_cterm00, "bold", "")
 endfunction
 
 augroup on_change_colorschema
-	autocmd!
-	autocmd ColorScheme * call s:base16_customize()
+  autocmd!
+  autocmd ColorScheme * call s:base16_customize()
 augroup END
 
 colorscheme base16-default-dark
-
-" let g:solarized_underline=0
-" let g:solarized_bold=0
-" let g:solarized_italics=0
-
-" set background=dark
-" colorscheme solarized
-
-" hi clear SignColumn
 " }}}
 
 " Create non-existing directories before writing buffer {{{
@@ -208,14 +141,9 @@ augroup on_buffer_write
 augroup END
 " }}}
 
-" Disable polyglot for certain languages {{{
-let g:polyglot_disabled = ['elm']
-" }}}
-
 " Deoplete {{{
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#keyword_patterns = {}
-let g:deoplete#keyword_patterns.clojure = '[\w!$%&*+/:<=>?@\^_~\-\.#]*'
 " }}}
 
 " ALE {{{
@@ -251,14 +179,6 @@ let g:LanguageClient_serverCommands = {
     \ }
 
 let g:LanguageClient_autoStart = 1
-" }}}
-
-" NERDTree {{{
-nnoremap <C-t> :NERDTreeToggle<CR>
-let NERDTreeRespectWildIgnore=1
-
-" Close vim if the only window open in NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 " }}}
 
 " Use ctrl-[hjkl] to select the active split {{{
@@ -351,7 +271,7 @@ autocmd FileType haskell setlocal shiftwidth=2 tabstop=2 expandtab
 
 " Rust racer {{{
 let g:deoplete#sources#rust#racer_binary="/usr/bin/racer"
-let g:deoplete#sources#rust#rust_source_path="/home/felipe/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src/"
+let g:deoplete#sources#rust#rust_source_path="~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src/"
 autocmd Filetype rust nmap <buffer> gd <plug>DeopleteRustGoToDefinitionDefault
 autocmd Filetype rust nmap <buffer> K  <plug>DeopleteRustShowDocumentation
 " }}}
@@ -369,13 +289,6 @@ let g:jsx_ext_required = 0
 
 " Fix for base16's highlighting of XML tags {{{
 hi def link xmlEndTag Function
-" }}}
-
-" OCaml {{{
-if executable('opam')
-  let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
-  execute "set rtp+=" . g:opamshare . "/merlin/vim"
-endif
 " }}}
 
 " C/C++ {{{
