@@ -316,6 +316,10 @@
          (with-current-buffer buffer
            ad-do-it)))
    #+END_SRC
+** Reduce scrolling lag
+   #+BEGIN_SRC emacs-lisp
+     (setq auto-window-vscroll nil)
+   #+END_SRC
 * Cool stuff
 ** Hacker news
    #+BEGIN_SRC emacs-lisp
@@ -701,7 +705,7 @@
       (felipe/bind "pp" 'projectile-switch-project "switch project")
       (felipe/bind "pa" 'projectile-add-known-project "add project")
       (felipe/bind "pf" 'counsel-projectile "find file")
-      (felipe/bind "pg" 'counsel-git-grep "git grep")
+      (felipe/bind "pg" 'counsel-projectile-rg "grep")
 
       (felipe/bind "a" 'projectile-find-other-file "find other file")
     #+END_SRC
@@ -727,3 +731,4 @@
       (felipe/name-bind "mf" "format")
       (felipe/name-bind "mg" "go")
     #+END_SRC
+    
