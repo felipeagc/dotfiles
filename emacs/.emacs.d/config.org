@@ -555,9 +555,13 @@
        :init
        (setq nrepl-hide-special-buffers t))
 
-     (felipe/bind-mode "me" 'cider-eval-sexp-at-point "eval sexp at point" 'clojure-mode)
+     (felipe/name-bind-mode "me" "eval" 'clojure-mode)
+     (felipe/bind-mode "meb" 'cider-eval-buffer "eval buffer" 'clojure-mode)
+     (felipe/bind-mode "mea" 'cider-eval-all-files "eval all files" 'clojure-mode)
      (felipe/bind-mode "ms" 'cider-jack-in "start repl" 'clojure-mode)
-     (felipe/bind-mode "mt" 'cider-test-run-ns-tests "run ns tests" 'clojure-mode)
+     (felipe/bind-mode "mr" 'cider-switch-to-repl-buffer "repl buffer" 'clojure-mode)
+     (felipe/bind-mode "mt" 'cider-test-run-project-tests "run project tests" 'clojure-mode)
+     (felipe/bind-mode "mf" 'cider-format-buffer "format" 'clojure-mode)
      (evil-define-key 'normal clojure-mode-map "K" 'cider-doc)
    #+END_SRC
 ** TODO Elixir
