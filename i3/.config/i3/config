@@ -1,4 +1,5 @@
 set $mod Mod4
+set $term urxvt
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -19,9 +20,7 @@ font pango:Fira Sans 10
 floating_modifier $mod
 
 # start a terminal
-# bindsym $mod+Return exec alacritty -e tmux
-bindsym $mod+Return exec urxvt
-# bindsym $mod+Return exec konsole
+bindsym $mod+Return exec $term
 
 # take screenshot
 bindsym Print exec "maim -s /tmp/screenshot.png; imgurbash2 /tmp/screenshot.png"
@@ -35,6 +34,7 @@ bindsym $mod+shift+space exec rofi -show run
 bindsym $mod+p exec rofi-pass
 
 bindsym $mod+n exec nautilus -w
+bindsym $mod+r exec $term -e ranger
 
 # change focus
 bindsym $mod+h focus left
@@ -159,10 +159,10 @@ exec compton -b
 exec nextcloud
 exec emacs --daemon
 
-bindsym $mod+shift+s exec urxvt -name urxvt_scratchpad -e tmux
-exec urxvt -name urxvt_scratchpad -e tmux
-for_window [instance="urxvt_scratchpad"] floating enable;
-for_window [instance="urxvt_scratchpad"] sticky enable;
-for_window [instance="urxvt_scratchpad"] move scratchpad; [instance="urxvt_scratchpad"] scratchpad show; move scratchpad
-bindsym $mod+s [instance="urxvt_scratchpad"] scratchpad show
+# bindsym $mod+shift+s exec urxvt -name urxvt_scratchpad -e tmux
+# exec urxvt -name urxvt_scratchpad -e tmux
+# for_window [instance="urxvt_scratchpad"] floating enable;
+# for_window [instance="urxvt_scratchpad"] sticky enable;
+# for_window [instance="urxvt_scratchpad"] move scratchpad; [instance="urxvt_scratchpad"] scratchpad show; move scratchpad
+# bindsym $mod+s [instance="urxvt_scratchpad"] scratchpad show
 
