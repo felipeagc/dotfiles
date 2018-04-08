@@ -606,6 +606,35 @@
        (add-hook 'csharp-mode-hook #'company-mode)
        (add-hook 'csharp-mode-hook #'flycheck-mode))
    #+END_SRC
+** Typescript
+   #+BEGIN_SRC emacs-lisp
+     (use-package tide
+       :ensure t
+       :config
+       (defun setup-tide-mode ()
+         (interactive)
+         (tide-setup)
+         (flycheck-mode +1)
+         (setq flycheck-check-syntax-automatically '(save mode-enabled))
+         (eldoc-mode +1)
+         (tide-hl-identifier-mode +1)
+         (company-mode +1))
+
+       ;; aligns annotation to the right hand side
+       (setq company-tooltip-align-annotations t)
+
+       ;; formats the buffer before saving
+       ;; (add-hook 'before-save-hook 'tide-format-before-save)
+
+       (add-hook 'typescript-mode-hook #'setup-tide-mode))
+
+
+     (felipe/bind-mode "mf" 'tide-format "format" 'typescript-mode)
+     (felipe/bind-mode "mr" 'tide-rename-symbol "rename symbol" 'typescript-mode)
+     (evil-define-key 'normal typescript-mode-map "K" 'tide-documentation-at-point)
+     (evil-define-key 'normal typescript-mode-map "gd" 'xref-find-definitions)
+     (evil-define-key 'normal typescript-mode-map "gD" 'xref-find-definitions-other-window)
+   #+END_SRC
 * Keyboard
 ** Make ESC actually escape stuff
    #+BEGIN_SRC emacs-lisp
