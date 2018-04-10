@@ -91,7 +91,7 @@
              (progn (setq i 100))))))
 
    #+END_SRC
-* Evil
+* TODO Evil
 ** Evil mode
   #+BEGIN_SRC emacs-lisp
     (use-package evil
@@ -165,6 +165,14 @@
        :config
        (evil-leader/set-leader felipe/leader-key)
        (global-evil-leader-mode))
+   #+END_SRC
+** TODO Evil collection
+   #+BEGIN_SRC emacs-lisp
+     (use-package evil-collection
+       :after evil
+       :ensure t
+       :config
+       (evil-collection-init))
    #+END_SRC
 * Ivy/counsel
   #+BEGIN_SRC emacs-lisp
