@@ -368,6 +368,13 @@
    #+BEGIN_SRC emacs-lisp
      (setq auto-window-vscroll nil)
    #+END_SRC
+** Beacon
+   #+BEGIN_SRC emacs-lisp
+     (use-package beacon
+       :ensure t
+       :config
+       (beacon-mode 1))
+   #+END_SRC
 * Cool stuff
 ** Hacker news
    #+BEGIN_SRC emacs-lisp
