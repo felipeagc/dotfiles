@@ -33,12 +33,12 @@ module-margin-right = 3
 
 font-0 = Roboto Condensed:size=10;2
 font-1 = unifont:fontformat=truetype:size=8:antialias=false;1
-font-2 = siji:pixelsize=10;4
-font-3 = Font Awesome:pixelsize=7;2
+font-2 = Wuncon Siji:pixelsize=10;1
+font-3 = Font Awesome:pixelsize=8;1
 
 modules-left = btc eth bch xrb
 modules-center = i3
-modules-right = mpd volume battery0 battery1 date powermenu
+modules-right = mpd volume battery0 battery1 wireless-network date powermenu
 
 tray-position = right
 tray-padding = 4
@@ -50,9 +50,9 @@ tray-padding = 4
 
 ;override-redirect = true
 
-scroll-up = bspwm-deskprev
-scroll-down = bspwm-desknext
-wm-restack = bspwm
+scroll-up = i3-wsnext
+scroll-down = i3-wsprev
+;wm-restack = i3
 
 ;scroll-up = i3wm-wsnext
 ;scroll-down = i3wm-wsprev
@@ -89,7 +89,7 @@ index-sort = true
 wrapping-scroll = false
 
 ; Only show workspaces on the same output as the bar
-;pin-workspaces = true
+; pin-workspaces = true
 
 label-mode-padding = 2
 label-mode-foreground = #000
@@ -217,6 +217,10 @@ animation-charging-4 = 
 ; Framerate in milliseconds
 animation-charging-framerate = 750 
 
+[module/wireless-network]
+type = internal/network
+interface = wlp3s0
+label-connected = %{F#ab4642} %{F-} %essid%
 
 [module/volume]
 type = internal/volume
