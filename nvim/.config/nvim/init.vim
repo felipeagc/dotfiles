@@ -267,6 +267,7 @@ autocmd FileType glsl setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType cpp setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType haskell setlocal shiftwidth=2 tabstop=2 expandtab
+autocmd FileType lua setlocal shiftwidth=2 tabstop=2 expandtab
 " }}}
 
 " Rust racer {{{
@@ -300,6 +301,10 @@ let g:clang_format#style_options = {
 
 " Emmet {{{
 let g:user_emmet_expandabbr_key = '<C-e>'
+" }}}
+
+" Run love2d game {{{
+autocmd FileType lua nmap <silent> <leader>mr :!love .<CR>
 " }}}
 
 " Leader keybinds {{{
