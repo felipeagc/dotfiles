@@ -540,6 +540,13 @@
        :config
        (beacon-mode 1))
    #+END_SRC
+** Restart emacs
+   #+BEGIN_SRC emacs-lisp
+     (use-package restart-emacs
+       :ensure t
+       :init
+       (setq restart-emacs-restore-frames nil))
+   #+END_SRC
 * Cool stuff
 ** Hacker news
    #+BEGIN_SRC emacs-lisp
@@ -983,4 +990,10 @@
       (felipe/name-bind "mr" "run/refactor")
       (felipe/name-bind "mf" "format")
       (felipe/name-bind "mg" "go")
+    #+END_SRC
+*** Quitting
+    #+BEGIN_SRC emacs-lisp
+      (felipe/name-bind "q" "quit")
+      (felipe/bind "qr" 'restart-emacs "restart emacs/server")
+      (felipe/bind "qq" 'save-buffers-kill-emacs "quit emacs/server")
     #+END_SRC
