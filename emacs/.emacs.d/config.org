@@ -455,8 +455,8 @@
 * Misc
 ** Disable unwanted buffers
    #+BEGIN_SRC emacs-lisp
-     (setq-default message-log-max nil)
-     (kill-buffer "*Messages*")
+     ;; (setq-default message-log-max nil)
+     ;; (kill-buffer "*Messages*")
    #+END_SRC
 ** Better yes/no questions in emacs
    This makes emacs accept only y/n as answers.
