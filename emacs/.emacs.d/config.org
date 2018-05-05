@@ -698,6 +698,32 @@
      (evil-define-key 'normal typescript-mode-map "gd" 'xref-find-definitions)
      (evil-define-key 'normal typescript-mode-map "gD" 'xref-find-definitions-other-window)
    #+END_SRC
+** Lua
+   #+BEGIN_SRC emacs-lisp
+     (use-package lua-mode
+       :ensure t
+       :init
+       (setq lua-indent-level 2))
+
+     (felipe/bind-mode "mr" #'(lambda ()
+                                (interactive)
+                                (shell-command (concat "love " (projectile-project-root))))
+                       "run game" 'lua-mode)
+
+   #+END_SRC
+** GLSL
+   #+BEGIN_SRC emacs-lisp
+     (use-package glsl-mode
+       :ensure t
+       :config
+       (autoload 'glsl-mode "glsl-mode" nil t)
+       (add-to-list 'auto-mode-alist '("\\.glsl\\'" . glsl-mode))
+       (add-to-list 'auto-mode-alist '("\\.glslf\\'" . glsl-mode))
+       (add-to-list 'auto-mode-alist '("\\.glslv\\'" . glsl-mode))
+       (add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
+       (add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
+       (add-to-list 'auto-mode-alist '("\\.geom\\'" . glsl-mode)))
+   #+END_SRC
 * Keyboard
 ** Make ESC actually escape stuff
    #+BEGIN_SRC emacs-lisp
