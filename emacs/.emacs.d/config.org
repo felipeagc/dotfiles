@@ -182,9 +182,17 @@
       :ensure t
       :config
       (ivy-mode 1))
+
     (use-package counsel
       :ensure t
       :after ivy
+      :init
+      (setq counsel-find-file-ignore-regexp
+            (concat
+             ;; File names beginning with # or .
+             "\\(?:\\`[#.]\\)"
+             ;; File names ending with # or ~
+             "\\|\\(?:\\`.+?[#~]\\'\\)"))
       :config
       (use-package counsel-projectile
         :ensure t
