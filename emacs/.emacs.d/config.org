@@ -734,18 +734,26 @@
      ;;     :config
      ;;     (add-hook 'irony-mode-hook 'irony-eldoc)))
 
-     (use-package rtags
+     ;; (use-package rtags
+     ;;   :ensure t
+     ;;   :config
+     ;;   (add-hook 'c-mode-hook 'rtags-start-process-unless-running)
+     ;;   (add-hook 'c++-mode-hook 'rtags-start-process-unless-running)
+     ;;   (add-hook 'objc-mode-hook 'rtags-start-process-unless-running))
+
+     (use-package cquery
        :ensure t
-       :config
-       (add-hook 'c-mode-hook 'rtags-start-process-unless-running)
-       (add-hook 'c++-mode-hook 'rtags-start-process-unless-running)
-       (add-hook 'objc-mode-hook 'rtags-start-process-unless-running))
+       :hook (c-mode-common . lsp-cquery-enable)
+       :init
+       (setq cquery-executable "/usr/bin/cquery"))
 
      (use-package clang-format
        :ensure t)
 
      (use-package meson-mode
-       :ensure t)
+       :ensure t
+       :config
+       (add-hook 'meson-mode-hook 'company-mode))
 
      (add-hook 'c++-mode-hook
        (lambda ()
@@ -761,8 +769,8 @@
 
      (felipe/bind-mode "mf" 'clang-format-buffer "format" 'c++-mode)
      (felipe/bind-mode "mf" 'clang-format-buffer "format" 'c-mode)
-     (evil-define-key 'normal c++-mode-map "gd" 'rtags-find-symbol-at-point)
-     (evil-define-key 'normal c-mode-map "gd" 'rtags-find-symbol-at-point)
+     (evil-define-key 'normal c++-mode-map "gd" 'xref-find-definitions)
+     (evil-define-key 'normal c-mode-map "gd" 'xref-find-definitions)
    #+END_SRC
 ** TODO Haskell
    #+BEGIN_SRC emacs-lisp
