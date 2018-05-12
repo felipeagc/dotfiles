@@ -204,7 +204,9 @@
 ** All the icons
    #+BEGIN_SRC emacs-lisp
      (use-package all-the-icons
-       :ensure t)
+       :ensure t
+       :init
+       (setq inhibit-compacting-font-caches t))
    #+END_SRC
 ** Hide UI elements
    #+BEGIN_SRC emacs-lisp
