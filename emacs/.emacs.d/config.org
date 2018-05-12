@@ -912,6 +912,11 @@
        (add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
        (add-to-list 'auto-mode-alist '("\\.geom\\'" . glsl-mode)))
    #+END_SRC
+** Godot
+   #+BEGIN_SRC emacs-lisp
+     (use-package gdscript-mode
+       :ensure t)
+   #+END_SRC
 * Keyboard
 ** Make ESC actually escape stuff
    #+BEGIN_SRC emacs-lisp
