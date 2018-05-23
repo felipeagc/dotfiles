@@ -768,19 +768,21 @@
        (add-hook 'meson-mode-hook 'company-mode))
 
      (add-hook 'c++-mode-hook
-       (lambda ()
-         (setq tab-width 2)
-         (setq indent-tabs-mode nil)
-         (setq evil-shift-width 2)))
+	       (lambda ()
+		 (setq tab-width 2)
+		 (setq indent-tabs-mode nil)
+		 (setq evil-shift-width 2)))
 
      (add-hook 'c-mode-hook
-       (lambda ()
-         (setq tab-width 2)
-         (setq indent-tabs-mode nil)
-         (setq evil-shift-width 2)))
+	       (lambda ()
+		 (setq tab-width 2)
+		 (setq indent-tabs-mode nil)
+		 (setq evil-shift-width 2)))
 
      (felipe/bind-mode "mf" 'clang-format-buffer "format" 'c++-mode)
      (felipe/bind-mode "mf" 'clang-format-buffer "format" 'c-mode)
+     (felipe/bind-mode "mh" 'cquery-member-hierarchy "format" 'c-mode)
+     (felipe/bind-mode "mh" 'cquery-member-hierarchy "format" 'c++-mode)
      (evil-define-key 'normal c++-mode-map "gd" 'xref-find-definitions)
      (evil-define-key 'normal c-mode-map "gd" 'xref-find-definitions)
    #+END_SRC
