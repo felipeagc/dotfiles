@@ -683,9 +683,10 @@
 ** Emacs lisp
    #+BEGIN_SRC emacs-lisp
      (add-hook 'emacs-lisp-mode-hook
-       (lambda ()
-         (setq tab-width 2)
-         (setq evil-shift-width 2)))
+               (lambda ()
+                 (setq indent-tabs-mode nil)
+                 (setq tab-width 2)
+                 (setq evil-shift-width 2)))
 
      (felipe/bind-mode "me" 'eval-last-sexp "eval last sexp" 'elisp-mode)
    #+END_SRC
