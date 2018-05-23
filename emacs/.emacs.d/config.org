@@ -188,17 +188,17 @@
       :after ivy
       :init
       (setq counsel-find-file-ignore-regexp
-            (concat
-             ;; File names beginning with # or .
-             "\\(?:\\`[#.]\\)"
-             ;; File names ending with # or ~
-             "\\|\\(?:\\`.+?[#~]\\'\\)"))
+	    (concat
+	     ;; File names beginning with # or .
+	     "\\(?:\\`[#.]\\)"
+	     ;; File names ending with # or ~
+	     "\\|\\(?:\\`.+?[#~]\\'\\)"))
       :config
       (use-package counsel-projectile
-        :ensure t
-        :after projectile
-        :config
-        (counsel-projectile-mode)))
+	:ensure t
+	:after projectile
+	:config
+	(counsel-projectile-mode)))
   #+END_SRC
 * Interface
 ** All the icons
@@ -667,9 +667,9 @@
     (use-package projectile
       :ensure t
       :init
-      (setq projectile-require-project-root nil)
+      ;; (setq projectile-require-project-root nil)
       :config
-      (projectile-mode))
+      (projectile-global-mode))
   #+END_SRC
 * Languages
 ** LSP
@@ -1023,7 +1023,7 @@
       (felipe/name-bind "p" "projectile")
       (felipe/bind "pp" 'projectile-switch-project "switch project")
       (felipe/bind "pa" 'projectile-add-known-project "add project")
-      (felipe/bind "pf" 'counsel-projectile "find file")
+      (felipe/bind "pf" 'projectile-find-file "find file")
       (felipe/bind "pg" 'counsel-projectile-rg "grep")
       (felipe/bind "pt" 'org-projectile-capture-for-current-project "org-capture task")
 
