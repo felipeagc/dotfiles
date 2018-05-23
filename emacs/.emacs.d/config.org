@@ -759,9 +759,13 @@
 
      (use-package cquery
        :ensure t
-       :hook (c-mode-common . lsp-cquery-enable)
        :init
-       (setq cquery-executable "/usr/bin/cquery"))
+       (setq cquery-executable "/usr/bin/cquery")
+       :config
+       (defun my-cquery-hook ()
+         (when (not (eq major-mode 'glsl-mode))
+           (lsp-cquery-enable)))
+       (add-hook 'c-mode-common-hook 'my-cquery-hook))
 
      (use-package clang-format
        :ensure t)
