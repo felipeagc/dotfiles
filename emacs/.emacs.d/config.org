@@ -670,6 +670,8 @@
        :config
        (use-package lsp-ui
          :ensure t
+         :init
+         (setq lsp-ui-sideline-enable nil)
          :config
          (add-hook 'lsp-mode-hook 'lsp-ui-mode))
        (use-package company-lsp
