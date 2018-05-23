@@ -204,7 +204,9 @@
 ** All the icons
    #+BEGIN_SRC emacs-lisp
      (use-package all-the-icons
-       :ensure t)
+       :ensure t
+       :init
+       (setq inhibit-compacting-font-caches t))
    #+END_SRC
 ** Hide UI elements
    #+BEGIN_SRC emacs-lisp
@@ -430,10 +432,8 @@
                (nil    . (my-buffer-segment))
                (nil    . (my-modified-status-segment))
                (nil    . (my-read-only-status-segment))
-               (nil    . (my-flycheck-segment))
+               ;; (nil    . (my-flycheck-segment))
                (nil    . (selection-info))))
-       ;; (nil    . (my-flycheck-segment))))
-
        ;; Right edge
        (setq telephone-line-rhs
              '((nil    . (my-vc-segment))
@@ -649,6 +649,18 @@
      (setq org-capture-templates
            '(("t" "To-do" entry (file+headline "~/nextcloud/notes.org" "To-do")
               "* TODO %?")))
+   #+END_SRC
+** Org projectile
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-projectile
+       :ensure t
+       :bind (("C-c n p" . org-projectile-project-todo-completing-read)
+              ("C-c c" . org-capture))
+       :config
+       (org-projectile-per-project)
+       (setq org-projectile-per-project-filepath "todo.org")
+       (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
+       (push (org-projectile-project-todo-entry) org-capture-templates))
    #+END_SRC
 * Projectile
   #+BEGIN_SRC emacs-lisp
@@ -919,6 +931,24 @@
                        "run game" 'lua-mode)
 
    #+END_SRC
+** GLSL
+   #+BEGIN_SRC emacs-lisp
+     (use-package glsl-mode
+       :ensure t
+       :config
+       (autoload 'glsl-mode "glsl-mode" nil t)
+       (add-to-list 'auto-mode-alist '("\\.glsl\\'" . glsl-mode))
+       (add-to-list 'auto-mode-alist '("\\.glslf\\'" . glsl-mode))
+       (add-to-list 'auto-mode-alist '("\\.glslv\\'" . glsl-mode))
+       (add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
+       (add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
+       (add-to-list 'auto-mode-alist '("\\.geom\\'" . glsl-mode)))
+   #+END_SRC
+** Godot
+   #+BEGIN_SRC emacs-lisp
+     (use-package gdscript-mode
+       :ensure t)
+   #+END_SRC
 * Keyboard
 ** Make ESC actually escape stuff
    #+BEGIN_SRC emacs-lisp
@@ -1015,6 +1045,7 @@
       (felipe/bind "pa" 'projectile-add-known-project "add project")
       (felipe/bind "pf" 'counsel-projectile "find file")
       (felipe/bind "pg" 'counsel-projectile-rg "grep")
+      (felipe/bind "pt" 'org-projectile-capture-for-current-project "org-capture task")
 
       (felipe/bind "a" 'projectile-find-other-file "find other file")
     #+END_SRC
