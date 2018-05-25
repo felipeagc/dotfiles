@@ -58,7 +58,6 @@ Plug 'octref/RootIgnore'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'junegunn/gv.vim'
 Plug 'derekwyatt/vim-fswitch'
-Plug 'unblevable/quick-scope'
 Plug 'justinmk/vim-sneak'
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 Plug 'editorconfig/editorconfig-vim'
@@ -336,8 +335,4 @@ nmap <silent> <leader>wb <C-W>=
 nmap <silent> <leader>wd :q<CR>
 
 nmap <silent> <leader>a :FSHere<CR>
-
-" Toggle quick scope
-nmap <leader>q <plug>(QuickScopeToggle)
-vmap <leader>q <plug>(QuickScopeToggle)
 " }}}
