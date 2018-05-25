@@ -1,4 +1,5 @@
 set $mod Mod4
+set $alt Mod1
 set $term urxvt
 
 # Font for window titles. Will also be used by the bar unless a different font
@@ -42,6 +43,7 @@ bindsym $mod+j focus down
 bindsym $mod+k focus up
 bindsym $mod+l focus right
 bindsym $mod+Tab focus right
+bindsym $alt+Tab focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left

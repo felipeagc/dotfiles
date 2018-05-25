@@ -229,8 +229,4 @@ nmap <silent> <leader>wb <C-W>=
 nmap <silent> <leader>wd :q<CR>
 
 nmap <silent> <leader>a :FSHere<CR>
-
-" Toggle quick scope
-nmap <leader>q <plug>(QuickScopeToggle)
-vmap <leader>q <plug>(QuickScopeToggle)
 " }}}
