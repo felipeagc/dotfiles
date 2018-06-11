@@ -227,9 +227,9 @@
    #+END_SRC
 ** Font
    #+BEGIN_SRC emacs-lisp
-     (setq felipe/fonts '("SF Mono-11:Semibold"
-                          "Iosevka-13"
-                          "Hack-11"))
+     (setq felipe/fonts '("SF Mono:Semibold"
+			  "Iosevka"
+			  "Hack"))
 
      (defun felipe/font-exists-p (font)
       "Check if font exists"
@@ -238,20 +238,38 @@
      (defun felipe/set-fonts (fonts)
       "Sets the default font based on a list of fonts"
       (let ((selected-font (pop fonts)))
-        (if (felipe/font-exists-p selected-font)
-            (progn
-              (setq default-frame-alist `((font . ,selected-font)))
-              (set-frame-font selected-font nil t))
-          (felipe/set-fonts fonts))))
+	(if (felipe/font-exists-p selected-font)
+	    (progn
+	      (setq default-frame-alist `((font . ,selected-font)))
+	      (set-frame-font selected-font nil t))
+	  (felipe/set-fonts fonts))))
 
      (setq felipe/are-fonts-setup nil)
 
      (add-hook 'focus-in-hook '(lambda ()
-                                 (if (not felipe/are-fonts-setup)
-                                     (progn
-                                       (setq felipe/are-fonts-setup t)
-                                       (felipe/set-fonts felipe/fonts))
-                                   nil)))
+				 (if (not felipe/are-fonts-setup)
+				     (progn
+				       (setq felipe/are-fonts-setup t)
+				       (felipe/set-fonts felipe/fonts))
+				   nil)))
+
+
+     (setq default-font-size-pt 11)
+
+     (defun felipe/font-size-adj (&optional arg)
+       (interactive "p")
+       (if (= arg 0)
+	   (setq font-size-pt default-font-size-pt)
+	 (setq font-size-pt (+ font-size-pt arg)))
+       ;; The internal font size value is 10x the font size in points unit.
+       ;; So a 10pt font size is equal to 100 in internal font size value.
+       (set-face-attribute 'default nil :height (* font-size-pt 10)))
+
+     (defun felipe/font-size-incr ()  (interactive) (felipe/font-size-adj +1))
+     (defun felipe/font-size-decr ()  (interactive) (felipe/font-size-adj -1))
+     (defun felipe/font-size-reset () (interactive) (felipe/font-size-adj 0))
+
+     (felipe/font-size-reset)
    #+END_SRC
 ** Theming
    #+BEGIN_SRC emacs-lisp
@@ -484,10 +502,12 @@
    #+END_SRC
 ** Smooth scrolling
    #+BEGIN_SRC emacs-lisp
-     (use-package smooth-scrolling
-       :ensure t
-       :config
-       (smooth-scrolling-mode 1))
+     (setq scroll-margin 10
+	   scroll-conservatively 0
+	   scroll-up-aggressively 0.01
+	   scroll-down-aggressively 0.01)
+     (setq-default scroll-up-aggressively 0.01
+		   scroll-down-aggressively 0.01)
    #+END_SRC
 ** Change backup/autosave default directories
    This will stop emacs from making files like =#this#= and =this~= all over the place
@@ -654,6 +674,7 @@
    #+BEGIN_SRC emacs-lisp
      (use-package org-projectile
        :ensure t
+       :after projectile
        :bind (("C-c n p" . org-projectile-project-todo-completing-read)
               ("C-c c" . org-capture))
        :config
@@ -681,18 +702,18 @@
        (setq lsp-highlight-symbol-at-point nil)
        :config
        (use-package lsp-ui
-         :ensure t
-         :init
-         (setq lsp-ui-sideline-enable nil)
-         :config
-         (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+	 :ensure t
+	 :init
+	 (setq lsp-ui-sideline-enable nil)
+	 :config
+	 (add-hook 'lsp-mode-hook 'lsp-ui-mode))
        (use-package company-lsp
-         :ensure t
-         :after company
+	 :ensure t
+	 :after company
 	 :init
 	 (setq company-lsp-async t)
 	 :config
-         (push 'company-lsp company-backends)))
+	 (push 'company-lsp company-backends)))
    #+END_SRC
 ** Emacs lisp
    #+BEGIN_SRC emacs-lisp
@@ -937,8 +958,14 @@
    #+END_SRC
 ** Zoom with mouse scroll
    #+BEGIN_SRC emacs-lisp
-     (global-set-key [C-mouse-4] 'text-scale-increase)
-     (global-set-key [C-mouse-5] 'text-scale-decrease)
+     (global-set-key [C-mouse-4] 'felipe/font-size-incr)
+     (global-set-key [C-mouse-5] 'felipe/font-size-decr)
+   #+END_SRC
+** Zoom keybinds
+   #+BEGIN_SRC emacs-lisp
+     (define-key global-map (kbd "C-=") 'felipe/font-size-incr)
+     (define-key global-map (kbd "C--") 'felipe/font-size-decr)
+     (define-key global-map (kbd "C-0") 'felipe/font-size-reset)
    #+END_SRC
 ** Dumb jump bindings
    #+BEGIN_SRC emacs-lisp
@@ -1012,6 +1039,11 @@
       (felipe/bind "en" 'flycheck-next-error "next error")
       (felipe/bind "ep" 'flycheck-previous-error "previous error")
     #+END_SRC
+*** Ivy
+    #+BEGIN_SRC emacs-lisp
+      (felipe/name-bind "i" "ivy")
+      (felipe/bind "ir" 'ivy-resume "ivy resume")
+    #+END_SRC
 *** Refactoring
     #+BEGIN_SRC emacs-lisp
       (felipe/name-bind "r" "refactor")
@@ -1022,7 +1054,7 @@
       (felipe/name-bind "p" "projectile")
       (felipe/bind "pp" 'projectile-switch-project "switch project")
       (felipe/bind "pa" 'projectile-add-known-project "add project")
-      (felipe/bind "pf" 'projectile-find-file "find file")
+      (felipe/bind "pf" 'counsel-projectile-find-file "find file")
       (felipe/bind "pg" 'counsel-projectile-rg "grep")
       (felipe/bind "pt" 'org-projectile-capture-for-current-project "org-capture task")
 
