@@ -13,33 +13,12 @@ endif
 " Plugins {{{
 call plug#begin('~/.local/share/nvim/plugged')
 
-" Completion / linting
-Plug 'w0rp/ale'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-
-" C/C++
-Plug 'rhysd/vim-clang-format'
-
-" Meson
-Plug 'stfl/meson.vim'
-
 " Polyglot
 Plug 'sheerun/vim-polyglot'
-
-" Snippets
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
-Plug 'mattn/emmet-vim'
-
-" Writing
-Plug 'junegunn/goyo.vim'
 
 " UI
 Plug 'equalsraf/neovim-gui-shim'
 Plug 'itchyny/lightline.vim'
-
-" Wrappers
-Plug 'tpope/vim-fugitive'
 
 " Search
 Plug 'junegunn/fzf', { 'do': './install --bin'}
@@ -56,10 +35,7 @@ Plug 'derekwyatt/vim-fswitch'
 Plug 'alvan/vim-closetag'
 Plug 'octref/RootIgnore'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'junegunn/gv.vim'
 Plug 'derekwyatt/vim-fswitch'
-Plug 'justinmk/vim-sneak'
-Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 Plug 'editorconfig/editorconfig-vim'
 
 " Themes
@@ -140,44 +116,10 @@ augroup on_buffer_write
 augroup END
 " }}}
 
-" Deoplete {{{
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#keyword_patterns = {}
-" }}}
-
-" ALE {{{
-let g:ale_linters = {
-  \'rust': ['rls'],
-  \'python': ['flake8'],
-  \'go': ['gometalinter'],
-  \'typescript': [],
-  \'elixir': [],
-  \'cpp': ['clangcheck'],
-  \}
-
-let g:ale_fixers = {
-  \'javascript': ['eslint']
-  \}
-let g:ale_sign_column_always = 1
-let g:ale_set_highlights = 1
-let g:ale_c_build_dir = './build'
-" highlight clear ALEErrorSign
-" highlight clear ALEWarningSign
-" }}}
-
 " Status line {{{
 let g:lightline = {
       \ 'colorscheme': 'jellybeans',
       \ }
-" }}}
-
-" Language Client configuration {{{
-let g:LanguageClient_serverCommands = {
-    \ 'cpp': ['clangd'],
-    \ 'c': ['clangd'],
-    \ }
-
-let g:LanguageClient_autoStart = 1
 " }}}
 
 " Use ctrl-[hjkl] to select the active split {{{
@@ -220,26 +162,12 @@ let $FZF_DEFAULT_COMMAND = 'rg --files --follow --glob "!.git/*"'
 autocmd FileType fzf tnoremap <buffer> <Esc> <Esc>
 " }}}
 
-" Go {{{
-let g:go_list_type = "quickfix"
-let g:go_list_autoclose = 1
-let g:go_metalinter_autosave = 0
-let g:go_metalinter_enabled = []
-let g:go_metalinter_autosave_enabled = []
-" }}}
-
 " Workaround for https://github.com/jiangmiao/auto-pairs/issues/187 {{{
 autocmd VimEnter,BufEnter,BufWinEnter * silent! iunmap <buffer> <M-">
 " }}}
 
 " Add more filetypes to closetag {{{
 let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.html.eex'
-" }}}
-
-" UltiSnips {{{
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 " }}}
 
 " Folds {{{
@@ -256,11 +184,6 @@ nnoremap tn :tabnext<cr>
 nnoremap tp :tabprev<cr>
 " }}}
 
-" Elm {{{
-let g:elm_setup_keybindings = 0
-autocmd FileType elm map <buffer> K :ElmShowDocs<CR>
-" }}}
-
 " Indentation {{{
 autocmd FileType glsl setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 expandtab
@@ -269,37 +192,8 @@ autocmd FileType haskell setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType lua setlocal shiftwidth=2 tabstop=2 expandtab
 " }}}
 
-" Rust racer {{{
-let g:deoplete#sources#rust#racer_binary="/usr/bin/racer"
-let g:deoplete#sources#rust#rust_source_path="~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src/"
-autocmd Filetype rust nmap <buffer> gd <plug>DeopleteRustGoToDefinitionDefault
-autocmd Filetype rust nmap <buffer> K  <plug>DeopleteRustShowDocumentation
-" }}}
-
-" Haskell {{{
-let g:intero_use_neomake = 0
-let g:hindent_on_save = 0
-
-autocmd Filetype haskell map  <buffer> K :InteroInfo<CR>
-" }}}
-
-" Javascript {{{
-let g:jsx_ext_required = 0
-" }}}
-
 " Fix for base16's highlighting of XML tags {{{
 hi def link xmlEndTag Function
-" }}}
-
-" C/C++ {{{
-let g:clang_format#auto_format = 1
-let g:clang_format#style_options = {
-  \ "SortIncludes": "false"
-  \}
-" }}}
-
-" Emmet {{{
-let g:user_emmet_expandabbr_key = '<C-e>'
 " }}}
 
 " Run love2d game {{{
