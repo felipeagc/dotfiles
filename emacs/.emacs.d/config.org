@@ -91,7 +91,7 @@
              (progn (setq i 100))))))
 
    #+END_SRC
-* TODO Evil
+* Evil
 ** Evil mode
   #+BEGIN_SRC emacs-lisp
     (use-package evil
@@ -168,7 +168,7 @@
        (evil-leader/set-leader felipe/leader-key)
        (global-evil-leader-mode))
    #+END_SRC
-** TODO Evil collection
+** Evil collection
    #+BEGIN_SRC emacs-lisp
      (use-package evil-collection
        :after evil
@@ -947,6 +947,11 @@
 ** Godot
    #+BEGIN_SRC emacs-lisp
      (use-package gdscript-mode
+       :ensure t)
+   #+END_SRC
+** YAML
+   #+BEGIN_SRC emacs-lisp
+     (use-package yaml-mode
        :ensure t)
    #+END_SRC
 * Keyboard
