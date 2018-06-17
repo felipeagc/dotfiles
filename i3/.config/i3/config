@@ -144,13 +144,13 @@ assign [class="csgo_linux64"] 10
 assign [class="dota2"] 10
 
 new_window pixel 3
-gaps inner 12
+# gaps inner 12
 smart_gaps on
 smart_borders on
-hide_edge_borders both
+# hide_edge_borders both
 
 set_from_resource $fg foreground #f0f0f0
-set $border_active #444444
+set $border_active #263b4c
 set $border_inactive #282828
 set_from_resource $border_urgent color1 #f0f0f0
 set_from_resource $bg background #f0f0f0
