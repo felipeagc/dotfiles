@@ -9,22 +9,19 @@ Xft.lcdfilter: lcddefault
 rofi.color-enabled: true
 
 !			bg       border   separator
-rofi.color-window:	#181818, #282828, #181818
+rofi.color-window:	#181818, #263b4c, #181818
 
 ! State			bg       fg       bgalt    hlbg     hlfg	
 rofi.color-normal:	#181818, #585858, #181818, #181818, #d8d8d8
 rofi.color-active:	#181818, #d8d8d8, #181818, #181818, #d8d8d8
 rofi.color-urgent:	#181818, #d8d8d8, #181818, #181818, #d8d8d8
 rofi.font:		Roboto 15
-rofi.bw: 		1
+rofi.bw: 		3
 rofi.padding:		32
 rofi.width:		50
 rofi.lines:		10
 
-st.font: Iosevka:size=11:antialias=true:autohint=true;
-st.borderpx: 16
-
-URxvt*font: xft:SF Mono:size=12,xft:Iosevka:size=14,xft:Symbola
+URxvt*font: xft:SF Mono:Semibold:size=12,xft:Iosevka:size=14,xft:Symbola
 URxvt*scrollBar: false
 URxvt*transparent: false
 URxvt*internalBorder: 16

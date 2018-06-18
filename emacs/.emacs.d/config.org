@@ -227,7 +227,7 @@
    #+END_SRC
 ** Font
    #+BEGIN_SRC emacs-lisp
-     (setq felipe/fonts '("SF Mono:Semibold"
+     (setq felipe/fonts '("SF Mono:semibold"
 			  "Iosevka"
 			  "Hack"))
 
@@ -657,10 +657,10 @@
    #+END_SRC
 ** Org bulltes
    #+BEGIN_SRC emacs-lisp
-     (use-package org-bullets
-       :ensure t
-       :config
-       (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+     ;; (use-package org-bullets
+     ;;   :ensure t
+     ;;   :config
+     ;;   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
    #+END_SRC
 ** Org capture
    #+BEGIN_SRC emacs-lisp

@@ -148,6 +148,7 @@ new_window pixel 3
 smart_gaps on
 smart_borders on
 # hide_edge_borders both
+for_window [class=".*"] border pixel 3
 
 set_from_resource $fg foreground #f0f0f0
 set $border_active #263b4c
