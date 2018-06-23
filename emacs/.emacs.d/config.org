@@ -575,6 +575,11 @@
        :init
        (setq restart-emacs-restore-frames nil))
    #+END_SRC
+** Find other file
+   #+BEGIN_SRC emacs-lisp
+     (use-package cff
+       :ensure t)
+   #+END_SRC
 * Cool stuff
 ** Hacker news
    #+BEGIN_SRC emacs-lisp
@@ -978,6 +983,10 @@
      (evil-global-set-key 'normal "gD" 'dumb-jump-go-other-window)
    #+END_SRC
 ** Leader mappings
+*** Misc
+    #+BEGIN_SRC emacs-lisp
+      (felipe/bind "a" 'cff-find-other-file "find other file")
+    #+END_SRC
 *** Terminal
     #+BEGIN_SRC emacs-lisp
       (felipe/bind "'" 'shell-pop "terminal")
@@ -1062,8 +1071,6 @@
       (felipe/bind "pf" 'counsel-projectile-find-file "find file")
       (felipe/bind "pg" 'counsel-projectile-rg "grep")
       (felipe/bind "pt" 'org-projectile-capture-for-current-project "org-capture task")
-
-      (felipe/bind "a" 'projectile-find-other-file "find other file")
     #+END_SRC
 *** Git
     #+BEGIN_SRC emacs-lisp
