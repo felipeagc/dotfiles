@@ -151,7 +151,7 @@ smart_borders on
 for_window [class=".*"] border pixel 3
 
 set_from_resource $fg foreground #f0f0f0
-set $border_active #263b4c
+set $border_active #334f66
 set $border_inactive #282828
 set_from_resource $border_urgent color1 #f0f0f0
 set_from_resource $bg background #f0f0f0
