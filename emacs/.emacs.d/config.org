@@ -750,15 +750,18 @@
    #+END_SRC
 ** TODO C/C++
    #+BEGIN_SRC emacs-lisp
+     (setq felipe/cquery-enabled nil)
+
      (use-package cquery
        :ensure t
        :init
        (setq cquery-executable "/usr/bin/cquery")
        :config
-       (defun my-cquery-hook ()
-         (when (not (eq major-mode 'glsl-mode))
-           (lsp-cquery-enable)))
-       (add-hook 'c-mode-common-hook 'my-cquery-hook))
+       (defun felipe/cquery-hook ()
+	 (when (and felipe/cquery-enabled
+		    (not (eq major-mode 'glsl-mode)))
+	   (lsp-cquery-enable)))
+       (add-hook 'c-mode-common-hook 'felipe/cquery-hook))
 
      (use-package clang-format
        :ensure t)
@@ -780,6 +783,17 @@
 		 (setq indent-tabs-mode nil)
 		 (setq evil-shift-width 2)))
 
+     (defun felipe/toggle-cquery ()
+       (interactive)
+       (if felipe/cquery-enabled
+	   (progn
+		   (setq felipe/cquery-enabled nil)
+		   (lsp-mode 0))
+	 (progn
+	   (setq felipe/cquery-enabled t)
+	   (felipe/cquery-hook))))
+
+     (felipe/bind-mode "mT" 'felipe/toggle-cquery "toggle cquery" 'c++-mode)
      (felipe/bind-mode "mf" 'clang-format-buffer "format" 'c++-mode)
      (felipe/bind-mode "mf" 'clang-format-buffer "format" 'c-mode)
      (felipe/bind-mode "mh" 'cquery-member-hierarchy "format" 'c-mode)
