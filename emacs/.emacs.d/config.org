@@ -653,13 +653,10 @@
   #+END_SRC
 * Org
   #+BEGIN_SRC emacs-lisp
+    (use-package org
+      :ensure t)
     (setq org-src-fontify-natively t)
   #+END_SRC
-** Org TWBS
-   #+BEGIN_SRC emacs-lisp
-    (use-package ox-twbs
-      :ensure t)
-   #+END_SRC
 ** Org bulltes
    #+BEGIN_SRC emacs-lisp
      ;; (use-package org-bullets
@@ -687,6 +684,18 @@
        (setq org-projectile-per-project-filepath "todo.org")
        (setq org-agenda-files (append org-agenda-files (org-projectile-todo-files)))
        (push (org-projectile-project-todo-entry) org-capture-templates))
+   #+END_SRC
+** Ox TWBS
+   #+BEGIN_SRC emacs-lisp
+    (use-package ox-twbs
+      :ensure t)
+   #+END_SRC
+** Ox Reveal
+   #+BEGIN_SRC emacs-lisp
+    (use-package ox-reveal
+      :ensure t)
+    (use-package htmlize
+      :ensure t)
    #+END_SRC
 * Projectile
   #+BEGIN_SRC emacs-lisp
