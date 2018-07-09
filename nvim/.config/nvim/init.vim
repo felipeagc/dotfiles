@@ -37,6 +37,7 @@ Plug 'octref/RootIgnore'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'derekwyatt/vim-fswitch'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'metakirby5/codi.vim'
 
 " Themes
 Plug 'chriskempson/base16-vim'
@@ -45,7 +46,7 @@ call plug#end()
 " }}}
 
 " Settings {{{
-" set mouse=a
+set mouse=a
 set noshowcmd
 
 set number
