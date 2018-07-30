@@ -1077,7 +1077,7 @@
              :which-key "split right")
       "w-" '(split-window-below
              :which-key "split below")
-      "wd" '(delte-window
+      "wd" '(delete-window
              :which-key "delete window")
       "wb" '(balance-windows
              :which-key "balance windows"))
