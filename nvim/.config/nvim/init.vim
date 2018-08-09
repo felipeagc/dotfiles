@@ -33,7 +33,6 @@ Plug 'tpope/vim-sleuth'
 Plug 'jiangmiao/auto-pairs'
 Plug 'derekwyatt/vim-fswitch'
 Plug 'alvan/vim-closetag'
-Plug 'octref/RootIgnore'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'derekwyatt/vim-fswitch'
 Plug 'editorconfig/editorconfig-vim'
@@ -195,10 +194,6 @@ autocmd FileType lua setlocal shiftwidth=2 tabstop=2 expandtab
 
 " Fix for base16's highlighting of XML tags {{{
 hi def link xmlEndTag Function
-" }}}
-
-" Run love2d game {{{
-autocmd FileType lua nmap <silent> <leader>mr :!love .<CR>
 " }}}
 
 " Leader keybinds {{{

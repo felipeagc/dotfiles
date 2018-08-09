@@ -137,9 +137,6 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
-assign [class="Firefox"] 1
-assign [class="corebird"] 5
-assign [class="Corebird"] 5
 assign [class="csgo_linux64"] 10
 assign [class="dota2"] 10
 
@@ -175,7 +172,7 @@ exec polybar bottom
 exec xsetroot -cursor_name left_ptr
 exec xset r rate 250 40
 exec xrdb ~/.Xresources
-exec compton -b
+exec allow_rgb10_configs=false compton -b
 exec nextcloud
 exec emacs --daemon
 

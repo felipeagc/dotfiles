@@ -141,7 +141,6 @@
      :ensure t
      :after evil
      :config
-     (evil-leader/set-leader felipe/leader-key)
      (global-evil-leader-mode))
    #+END_SRC
 ** Evil collection
@@ -163,6 +162,8 @@
     :ensure t
     :after ivy
     :init
+    (setenv "FZF_DEFAULT_COMMAND"
+            "rg --files --follow --glob \"!.git/*\"")
     (setq counsel-find-file-ignore-regexp
           (concat
            ;; File names beginning with # or .
@@ -203,7 +204,7 @@
    #+END_SRC
 ** Font
    #+BEGIN_SRC emacs-lisp
-   (setq felipe/fonts '("SF Mono:semibold"
+   (setq felipe/fonts '("SF Mono:bold"
                         "Iosevka"
                         "Hack"))
 
@@ -395,8 +396,8 @@
             (multi-line (format "%dL" lines))
             (t (format "%d" (if evil chars (1- chars))))))))
 
-     (setq telephone-line-primary-left-separator 'telephone-line-identity-left)
-     (setq telephone-line-primary-right-separator 'telephone-line-identity-right)
+     ;; (setq telephone-line-primary-left-separator 'telephone-line-identity-left)
+     ;; (setq telephone-line-primary-right-separator 'telephone-line-identity-right)
 
      ;; Set mode-line height
      (setq telephone-line-height 26)
@@ -474,6 +475,12 @@
          scroll-down-aggressively 0.01)
    (setq-default scroll-up-aggressively 0.01
                  scroll-down-aggressively 0.01)
+
+   ;; scroll one line at a time (less "jumpy" than defaults)
+   (setq mouse-wheel-scroll-amount '(3 ((shift) . 3))) ;; one line at a time
+   (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+   (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+   (setq scroll-step 1) ;; keyboard scroll one line at a time
    #+END_SRC
 ** Change backup/autosave default directories
    This will stop emacs from making files like =#this#= and =this~= all over the place
@@ -616,11 +623,13 @@
 * Snippets
   #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
+    :disabled
     :ensure t
     :config
     (yas-global-mode 1))
 
   (use-package yasnippet-snippets
+    :disabled
     :ensure t
     :after yasnippet)
   #+END_SRC
@@ -703,7 +712,8 @@
        :init
        (setq company-transformers nil
              company-lsp-async t
-             company-lsp-cache-candidates nil)
+             company-lsp-cache-candidates nil
+             company-lsp-enable-snippet nil)
        :config
        (push 'company-lsp company-backends)))
    #+END_SRC
@@ -749,6 +759,22 @@
          (lsp-cquery-enable)))
 
      (add-hook 'c-mode-common-hook 'felipe/cquery-hook))
+
+   ;; (setq lsp-clangd-executable "clangd")
+
+   ;; (lsp-define-stdio-client lsp-clangd-c++
+   ;;                          "cpp"
+   ;;                          (lsp-make-traverser "compile_commands.json")
+   ;;                          (list lsp-clangd-executable)
+   ;;                          :ignore-regexps
+   ;;                          '("^Error -[0-9]+: .+$"))
+
+   ;; (lsp-define-stdio-client lsp-clangd-c
+   ;;                          "c"
+   ;;                          (lsp-make-traverser "compile_commands.json")
+   ;;                          (list lsp-clangd-executable)
+   ;;                          :ignore-regexps
+   ;;                          '("^Error -[0-9]+: .+$"))
 
    (use-package bison-mode
      :ensure t)
@@ -1117,8 +1143,8 @@
              :which-key "switch project")
       "pa" '(projectile-add-known-project
              :which-key "add project")
-      "pf" '(counsel-projectile-find-file
-             :which-key "find file")
+      "pf" '(counsel-fzf
+             :which-key "find file (fzf)")
       "pg" '(counsel-projectile-rg
              :which-key "grep"))
     #+END_SRC

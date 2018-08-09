@@ -223,7 +223,7 @@ interface = wlp3s0
 label-connected = %{F#ab4642} %{F-} %essid%
 
 [module/volume]
-type = internal/volume
+type = internal/pulseaudio
 
 format-volume = <label-volume>
 
