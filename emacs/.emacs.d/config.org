@@ -760,40 +760,29 @@
 
      (add-hook 'c-mode-common-hook 'felipe/cquery-hook))
 
-   ;; (setq lsp-clangd-executable "clangd")
-
-   ;; (lsp-define-stdio-client lsp-clangd-c++
-   ;;                          "cpp"
-   ;;                          (lsp-make-traverser "compile_commands.json")
-   ;;                          (list lsp-clangd-executable)
-   ;;                          :ignore-regexps
-   ;;                          '("^Error -[0-9]+: .+$"))
-
-   ;; (lsp-define-stdio-client lsp-clangd-c
-   ;;                          "c"
-   ;;                          (lsp-make-traverser "compile_commands.json")
-   ;;                          (list lsp-clangd-executable)
-   ;;                          :ignore-regexps
-   ;;                          '("^Error -[0-9]+: .+$"))
-
-   (use-package bison-mode
-     :ensure t)
-
    (use-package clang-format
      :ensure t)
 
    (use-package meson-mode
      :ensure t)
 
+   (use-package bison-mode
+     :ensure t
+     :init
+     (setq bison-rule-separator-column 2
+           bison-rule-enumeration-column 4))
+
    (defun felipe/c-indent-hook ()
      (interactive)
-     (setq tab-width 2)
-     (setq evil-shift-width 2)
+     (setq tab-width 2
+           evil-shift-width 2
+           c-basic-offset 2)
      (c-set-offset 'brace-list-intro '+)
      (c-set-offset 'arglist-intro '+)
      (c-set-offset 'arglist-close 0))
 
    (add-hook 'c-mode-common-hook 'felipe/c-indent-hook)
+   (add-hook 'bison-mode-hook 'felipe/c-indent-hook)
 
    (felipe/leader-def 'normal c++-mode-map
      "mf" 'clang-format-buffer)
