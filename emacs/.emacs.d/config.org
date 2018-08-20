@@ -204,46 +204,47 @@
    #+END_SRC
 ** Font
    #+BEGIN_SRC emacs-lisp
-   (setq felipe/fonts '("SF Mono:bold"
-                        "Iosevka"
-                        "Hack"))
+   (setq felipe/fixed-pitch-font "SF Mono"
+         felipe/variable-pitch-font "Fira Sans"
+         felipe/default-fixed-pitch-font-size-pt 11
+         felipe/default-variable-pitch-font-size-pt 14
+         felipe/fixed-pitch-font-size-pt felipe/default-fixed-pitch-font-size-pt
+         felipe/variable-pitch-font-size-pt felipe/default-variable-pitch-font-size-pt)
 
-   (defun felipe/font-exists-p (font)
-    "Check if font exists"
-    (if (null (x-list-fonts font)) nil t))
+   (defun felipe/set-frame-fonts (frame)
+     (set-face-attribute 'default frame
+                         :family felipe/fixed-pitch-font
+                         :weight 'bold
+                         :height (* felipe/fixed-pitch-font-size-pt 10))
+     (set-face-attribute 'fixed-pitch frame
+                         :family felipe/fixed-pitch-font 
+                         :weight 'bold
+                         :height (* felipe/fixed-pitch-font-size-pt 10))
+     (set-face-attribute 'variable-pitch frame
+                         :family felipe/variable-pitch-font
+                         :weight 'bold
+                         :width 'expanded
+                         :height (* felipe/variable-pitch-font-size-pt 10)))
 
-   (defun felipe/set-fonts (fonts)
-    "Sets the default font based on a list of fonts"
-    (let ((selected-font (pop fonts)))
-      (if (felipe/font-exists-p selected-font)
-          (progn
-            (setq default-frame-alist `((font . ,selected-font)))
-            (set-frame-font selected-font nil t))
-        (felipe/set-fonts fonts))))
-
-   (setq felipe/are-fonts-setup nil)
-
-   (add-hook 'focus-in-hook '(lambda ()
-                               (if (not felipe/are-fonts-setup)
-                                   (progn
-                                     (setq felipe/are-fonts-setup t)
-                                     (felipe/set-fonts felipe/fonts))
-                                 nil)))
-
-
-   (setq default-font-size-pt 11)
+   (add-hook 'after-make-frame-functions 'felipe/set-frame-fonts)
 
    (defun felipe/font-size-adj (&optional arg)
      (interactive "p")
      (if (= arg 0)
-         (setq font-size-pt default-font-size-pt)
-       (setq font-size-pt (+ font-size-pt arg)))
+         (progn
+           (setq felipe/fixed-pitch-font-size-pt felipe/default-fixed-pitch-font-size-pt)
+           (setq felipe/variable-pitch-font-size-pt felipe/default-variable-pitch-font-size-pt))
+       (progn
+         (setq felipe/fixed-pitch-font-size-pt (+ felipe/fixed-pitch-font-size-pt arg))
+         (setq felipe/variable-pitch-font-size-pt (+ felipe/variable-pitch-font-size-pt arg))))
      ;; The internal font size value is 10x the font size in points unit.
      ;; So a 10pt font size is equal to 100 in internal font size value.
-     (set-face-attribute 'default nil :height (* font-size-pt 10)))
+     (set-face-attribute 'default nil :height (* felipe/fixed-pitch-font-size-pt 10))
+     (set-face-attribute 'fixed-pitch nil :height (* felipe/fixed-pitch-font-size-pt 10))
+     (set-face-attribute 'variable-pitch nil :height (* felipe/variable-pitch-font-size-pt 10)))
 
-   (defun felipe/font-size-incr ()  (interactive) (felipe/font-size-adj +1))
-   (defun felipe/font-size-decr ()  (interactive) (felipe/font-size-adj -1))
+   (defun felipe/font-size-incr  () (interactive) (felipe/font-size-adj +1))
+   (defun felipe/font-size-decr  () (interactive) (felipe/font-size-adj -1))
    (defun felipe/font-size-reset () (interactive) (felipe/font-size-adj 0))
 
    (felipe/font-size-reset)
@@ -257,168 +258,188 @@
    #+END_SRC
 ** Modeline
    #+BEGIN_SRC emacs-lisp
-   (use-package telephone-line
-     :ensure t
-     :init
-     ;; Need to display telephone-line in *Messages* buffer
-     (defun recreate-message-buffer ()
-       (cl-flet ((buffer-string* (buffer)
-                                 (with-current-buffer buffer
-                                   (buffer-string))))
-         (let ((msg (buffer-string* "*Messages*")))
-           (kill-buffer "*Messages*")
-           (message msg))))
+   (setq-default mode-line-format
+                 '("%e"
+                   mode-line-front-space
+                   mode-line-mule-info
+                   mode-line-client
+                   mode-line-modified
+                   ;; mode-line-remote
+                   ;; mode-line-frame-identification
+                   "   "
+                   mode-line-buffer-identification
+                   mode-line-position
+                   evil-mode-line-tag
+                   (vc-mode vc-mode)
+                   (flycheck-mode flycheck-mode-line)
+                   "  "
+                   mode-line-modes
+                   mode-line-misc-info
+                   mode-line-end-spaces))
+   #+END_SRC
+   #+BEGIN_SRC emacs-lisp
+   ;; (use-package telephone-line
+   ;;   :ensure t
+   ;;   :init
+   ;;   ;; Need to display telephone-line in *Messages* buffer
+   ;;   (defun recreate-message-buffer ()
+   ;;     (cl-flet ((buffer-string* (buffer)
+   ;;                               (with-current-buffer buffer
+   ;;                                 (buffer-string))))
+   ;;       (let ((msg (buffer-string* "*Messages*")))
+   ;;         (kill-buffer "*Messages*")
+   ;;         (message msg))))
 
-     (add-hook 'after-init-hook #'recreate-message-buffer)
+   ;;   (add-hook 'after-init-hook #'recreate-message-buffer)
 
-     :config
-     ;; To create custom segments
-     (require 'telephone-line-utils)
+   ;;   :config
+   ;;   ;; To create custom segments
+   ;;   (require 'telephone-line-utils)
 
-     ;; Set subseparator
-     (if window-system
-         (progn
-           (setq telephone-line-secondary-left-separator
-                 'telephone-line-identity-hollow-left)
-           (setq telephone-line-secondary-right-separator
-                 'telephone-line-identity-hollow-right)))
+   ;;   ;; Set subseparator
+   ;;   (if window-system
+   ;;       (progn
+   ;;         (setq telephone-line-secondary-left-separator
+   ;;               'telephone-line-identity-hollow-left)
+   ;;         (setq telephone-line-secondary-right-separator
+   ;;               'telephone-line-identity-hollow-right)))
 
-     (telephone-line-defsegment my-evil-segment ()
-       (if (telephone-line-selected-window-active)
-           (let ((tag (cond
-                       ((string= evil-state "normal")    ":")
-                       ((string= evil-state "insert")    ">")
-                       ((string= evil-state "replace")   "r")
-                       ((string= evil-state "visual")    "!")
-                       ((string= evil-state "operator")  "=")
-                       ((string= evil-state "motion")    "m")
-                       ((string= evil-state "emacs")     "Emacs")
-                       (t "-"))))
-             (concat " " tag))))
+   ;;   (telephone-line-defsegment my-evil-segment ()
+   ;;     (if (telephone-line-selected-window-active)
+   ;;         (let ((tag (cond
+   ;;                     ((string= evil-state "normal")    ":")
+   ;;                     ((string= evil-state "insert")    ">")
+   ;;                     ((string= evil-state "replace")   "r")
+   ;;                     ((string= evil-state "visual")    "!")
+   ;;                     ((string= evil-state "operator")  "=")
+   ;;                     ((string= evil-state "motion")    "m")
+   ;;                     ((string= evil-state "emacs")     "Emacs")
+   ;;                     (t "-"))))
+   ;;           (concat " " tag))))
 
-     (telephone-line-defsegment my-buffer-segment ()
-       `(""
-         ,(telephone-line-raw mode-line-buffer-identification t)))
+   ;;   (telephone-line-defsegment my-buffer-segment ()
+   ;;     `(""
+   ;;       ,(telephone-line-raw mode-line-buffer-identification t)))
 
-     ;; Display current position in a buffer
-     (telephone-line-defsegment* my-position-segment ()
-       (if (telephone-line-selected-window-active)
-           (if (eq major-mode 'paradox-menu-mode)
-               (telephone-line-trim (format-mode-line mode-line-front-space))
-             '(" %3l,%2c "))))
-     ;; Exclude some buffers in modeline
-     (defvar modeline-ignored-modes nil
-       "List of major modes to ignore in modeline")
+   ;;   ;; Display current position in a buffer
+   ;;   (telephone-line-defsegment* my-position-segment ()
+   ;;     (if (telephone-line-selected-window-active)
+   ;;         (if (eq major-mode 'paradox-menu-mode)
+   ;;             (telephone-line-trim (format-mode-line mode-line-front-space))
+   ;;           '(" %3l,%2c "))))
+   ;;   ;; Exclude some buffers in modeline
+   ;;   (defvar modeline-ignored-modes nil
+   ;;     "List of major modes to ignore in modeline")
 
-     (setq modeline-ignored-modes '("Dashboard"
-                                    "Warnings"
-                                    "Compilation"
-                                    "EShell"
-                                    "Debugger"
-                                    "Quickrun"
-                                    "REPL"
-                                    "IELM"
-                                    "Messages"))
+   ;;   (setq modeline-ignored-modes '("Dashboard"
+   ;;                                  "Warnings"
+   ;;                                  "Compilation"
+   ;;                                  "EShell"
+   ;;                                  "Debugger"
+   ;;                                  "Quickrun"
+   ;;                                  "REPL"
+   ;;                                  "IELM"
+   ;;                                  "Messages"))
 
-     ;; Display modified status
-     (telephone-line-defsegment my-modified-status-segment ()
-       (when (and (buffer-modified-p) (not (member mode-name modeline-ignored-modes)) (not buffer-read-only))
-         (propertize "+" 'face `(:foreground "#85b654"))))
+   ;;   ;; Display modified status
+   ;;   (telephone-line-defsegment my-modified-status-segment ()
+   ;;     (when (and (buffer-modified-p) (not (member mode-name modeline-ignored-modes)) (not buffer-read-only))
+   ;;       (propertize "+" 'face `(:foreground "#85b654"))))
 
-     ;; Display read-only status
-     (telephone-line-defsegment my-read-only-status-segment ()
-       (when buffer-read-only
-         ;; (propertize "ro" 'face `(:foreground "#dbac66"))
-         (propertize (all-the-icons-octicon "key")
-                     'face `(:family ,(all-the-icons-octicon-family) :height 1.0 :foreground "dim gray")
-                     'display '(raise 0.0))))
+   ;;   ;; Display read-only status
+   ;;   (telephone-line-defsegment my-read-only-status-segment ()
+   ;;     (when buffer-read-only
+   ;;       ;; (propertize "ro" 'face `(:foreground "#dbac66"))
+   ;;       (propertize (all-the-icons-octicon "key")
+   ;;                   'face `(:family ,(all-the-icons-octicon-family) :height 1.0 :foreground "dim gray")
+   ;;                   'display '(raise 0.0))))
 
-     ;; Display encoding system
-     (telephone-line-defsegment my-coding-segment ()
-       (let* ((code (symbol-name buffer-file-coding-system))
-              (eol-type (coding-system-eol-type buffer-file-coding-system))
-              (eol (cond
-                    ((eq 0 eol-type) "unix")
-                    ((eq 1 eol-type) "dos")
-                    ((eq 2 eol-type) "mac")
-                    (t "-"))))
-         (concat eol " ")))
+   ;;   ;; Display encoding system
+   ;;   (telephone-line-defsegment my-coding-segment ()
+   ;;     (let* ((code (symbol-name buffer-file-coding-system))
+   ;;            (eol-type (coding-system-eol-type buffer-file-coding-system))
+   ;;            (eol (cond
+   ;;                  ((eq 0 eol-type) "unix")
+   ;;                  ((eq 1 eol-type) "dos")
+   ;;                  ((eq 2 eol-type) "mac")
+   ;;                  (t "-"))))
+   ;;       (concat eol " ")))
 
-     ;; TODO:
-     ;; Hide vc backend in modeline
-     (defadvice vc-mode-line (after strip-backend () activate)
-       (when (stringp vc-mode)
-         (let ((my-vc (replace-regexp-in-string "^ Git." "" vc-mode)))
-           (setq vc-mode my-vc))))
+   ;;   ;; TODO:
+   ;;   ;; Hide vc backend in modeline
+   ;;   (defadvice vc-mode-line (after strip-backend () activate)
+   ;;     (when (stringp vc-mode)
+   ;;       (let ((my-vc (replace-regexp-in-string "^ Git." "" vc-mode)))
+   ;;         (setq vc-mode my-vc))))
 
-     ;; Display current branch
-     ;; TODO: move raise and etc into var
-     (telephone-line-defsegment my-vc-segment ()
-       ;; #6fb593 #4a858c
-       (let (
-             ;; (fg-color "#6fb593") ; kaolin-dark
-             ;; (fg-color "#9f84ae")) ; kaolin-galaxy
-             ;; (fg-color "#709688")) ; kaolin-eclipse
-             (fg-color "#68f3ca")) ; kaolin-aurora
-         (when vc-mode
-           ;; double format to prevent warnings in '*Messages*' buffer
-           (format "%s %s"
-                   (propertize (all-the-icons-octicon "git-branch")
-                               'face `(:family ,(all-the-icons-octicon-family) :height 1.0 :foreground ,fg-color)
-                               'display '(raise 0.0))
-                   (propertize
-                    (format "%s"
-                            (telephone-line-raw vc-mode t))
-                    'face `(:foreground ,fg-color))))))
+   ;;   ;; Display current branch
+   ;;   ;; TODO: move raise and etc into var
+   ;;   (telephone-line-defsegment my-vc-segment ()
+   ;;     ;; #6fb593 #4a858c
+   ;;     (let (
+   ;;           ;; (fg-color "#6fb593") ; kaolin-dark
+   ;;           ;; (fg-color "#9f84ae")) ; kaolin-galaxy
+   ;;           ;; (fg-color "#709688")) ; kaolin-eclipse
+   ;;           (fg-color "#68f3ca")) ; kaolin-aurora
+   ;;       (when vc-mode
+   ;;         ;; double format to prevent warnings in '*Messages*' buffer
+   ;;         (format "%s %s"
+   ;;                 (propertize (all-the-icons-octicon "git-branch")
+   ;;                             'face `(:family ,(all-the-icons-octicon-family) :height 1.0 :foreground ,fg-color)
+   ;;                             'display '(raise 0.0))
+   ;;                 (propertize
+   ;;                  (format "%s"
+   ;;                          (telephone-line-raw vc-mode t))
+   ;;                  'face `(:foreground ,fg-color))))))
 
 
-     (defun column-num-at-pos (pos)
-       (save-excursion
-         (goto-char pos)
-         (current-column)))
+   ;;   (defun column-num-at-pos (pos)
+   ;;     (save-excursion
+   ;;       (goto-char pos)
+   ;;       (current-column)))
 
-     (telephone-line-defsegment selection-info ()
-       "Information about the size of the current selection, when applicable.
-     Supports both Emacs and Evil cursor conventions."
-       (when (or mark-active
-                 (and (bound-and-true-p evil-local-mode)
-                      (eq 'visual evil-state)))
-         (let* ((lines (count-lines (region-beginning) (min (1+ (region-end)) (point-max))))
-                (chars (- (1+ (region-end)) (region-beginning)))
-                (cols (1+ (abs (- (column-num-at-pos (region-end))
-                                  (column-num-at-pos (region-beginning))))))
-                (evil (and (bound-and-true-p evil-state) (eq 'visual evil-state)))
-                (rect (or (bound-and-true-p rectangle-mark-mode)
-                          (and evil (eq 'block evil-visual-selection))))
-                (multi-line (or (> lines 1) (and evil (eq 'line evil-visual-selection)))))
-           (cond
-            (rect (format "%d×%d" lines (if evil cols (1- cols))))
-            (multi-line (format "%dL" lines))
-            (t (format "%d" (if evil chars (1- chars))))))))
+   ;;   (telephone-line-defsegment selection-info ()
+   ;;     "Information about the size of the current selection, when applicable.
+   ;;   Supports both Emacs and Evil cursor conventions."
+   ;;     (when (or mark-active
+   ;;               (and (bound-and-true-p evil-local-mode)
+   ;;                    (eq 'visual evil-state)))
+   ;;       (let* ((lines (count-lines (region-beginning) (min (1+ (region-end)) (point-max))))
+   ;;              (chars (- (1+ (region-end)) (region-beginning)))
+   ;;              (cols (1+ (abs (- (column-num-at-pos (region-end))
+   ;;                                (column-num-at-pos (region-beginning))))))
+   ;;              (evil (and (bound-and-true-p evil-state) (eq 'visual evil-state)))
+   ;;              (rect (or (bound-and-true-p rectangle-mark-mode)
+   ;;                        (and evil (eq 'block evil-visual-selection))))
+   ;;              (multi-line (or (> lines 1) (and evil (eq 'line evil-visual-selection)))))
+   ;;         (cond
+   ;;          (rect (format "%d×%d" lines (if evil cols (1- cols))))
+   ;;          (multi-line (format "%dL" lines))
+   ;;          (t (format "%d" (if evil chars (1- chars))))))))
 
-     ;; (setq telephone-line-primary-left-separator 'telephone-line-identity-left)
-     ;; (setq telephone-line-primary-right-separator 'telephone-line-identity-right)
+   ;;   ;; (setq telephone-line-primary-left-separator 'telephone-line-identity-left)
+   ;;   ;; (setq telephone-line-primary-right-separator 'telephone-line-identity-right)
 
-     ;; Set mode-line height
-     (setq telephone-line-height 26)
+   ;;   ;; Set mode-line height
+   ;;   (setq telephone-line-height 26)
 
-     ;; Left edge
-     ;; TODO: gray background for buffer and mode segment in inactive line
-     (setq telephone-line-lhs
-           '((evil   . (my-evil-segment))
-             (nil    . (my-buffer-segment))
-             (nil    . (my-modified-status-segment))
-             (nil    . (my-read-only-status-segment))
-             ;; (nil    . (my-flycheck-segment))
-             (nil    . (selection-info))))
-     ;; Right edge
-     (setq telephone-line-rhs
-           '((nil    . (my-vc-segment))
-             (accent . (my-position-segment))
-             (nil    . (telephone-line-major-mode-segment))
-             (accent . ((my-coding-segment :active))))) 
+   ;;   ;; Left edge
+   ;;   ;; TODO: gray background for buffer and mode segment in inactive line
+   ;;   (setq telephone-line-lhs
+   ;;         '((evil   . (my-evil-segment))
+   ;;           (nil    . (my-buffer-segment))
+   ;;           (nil    . (my-modified-status-segment))
+   ;;           (nil    . (my-read-only-status-segment))
+   ;;           ;; (nil    . (my-flycheck-segment))
+   ;;           (nil    . (selection-info))))
+   ;;   ;; Right edge
+   ;;   (setq telephone-line-rhs
+   ;;         '((nil    . (my-vc-segment))
+   ;;           (accent . (my-position-segment))
+   ;;           (nil    . (telephone-line-major-mode-segment))
+   ;;           (accent . ((my-coding-segment :active))))) 
 
-     (telephone-line-mode 1))
+   ;;   (telephone-line-mode 1))
    #+END_SRC
 ** Shackle
    #+BEGIN_SRC emacs-lisp
@@ -532,7 +553,7 @@
    #+END_SRC
 ** Reduce scrolling lag
    #+BEGIN_SRC emacs-lisp
-   (setq auto-window-vscroll t)
+   ;; (setq auto-window-vscroll t)
    #+END_SRC
 ** Restart emacs
    #+BEGIN_SRC emacs-lisp
@@ -640,14 +661,25 @@
     :init
     (setq org-src-fontify-natively t
           org-src-preserve-indentation nil 
-          org-edit-src-content-indentation 0))
+          org-edit-src-content-indentation 0
+          org-hide-emphasis-markers t)
+    :config
+    (add-hook 'org-mode-hook 'variable-pitch-mode)
+    (dolist (face '(org-verbatim 
+                    org-table
+                    org-special-keyword
+                    org-code
+                    org-block
+                    org-block-begin-line
+                    org-block-end-line))
+      (set-face-attribute face nil :inherit 'fixed-pitch)))
   #+END_SRC
 ** Org bulltes
    #+BEGIN_SRC emacs-lisp
-     ;; (use-package org-bullets
-     ;;   :ensure t
-     ;;   :config
-     ;;   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+   (use-package org-bullets
+     :ensure t
+     :config
+     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
    #+END_SRC
 ** Org capture
    #+BEGIN_SRC emacs-lisp
@@ -690,6 +722,14 @@
     ;; (setq projectile-require-project-root nil)
     :config
     (projectile-global-mode))
+  #+END_SRC
+* Line numbers
+  #+BEGIN_SRC emacs-lisp
+  ;; (add-hook 'prog-mode-hook (lambda () (display-line-numbers-mode)))
+
+  ;; (add-hook 'display-line-numbers-mode-hook
+  ;;           (lambda ()
+  ;;             (setq display-line-numbers 'relative)))
   #+END_SRC
 * Languages
 ** LSP
@@ -771,6 +811,9 @@
      :init
      (setq bison-rule-separator-column 2
            bison-rule-enumeration-column 4))
+
+   (use-package cmake-mode
+     :ensure t)
 
    (defun felipe/c-indent-hook ()
      (interactive)
@@ -1128,7 +1171,7 @@
     (felipe/leader-def
       :keymaps 'normal
       "p" '(nil :which-key "projectile")
-      "pp" '(projectile-switch-project
+      "pp" '(counsel-projectile-switch-project
              :which-key "switch project")
       "pa" '(projectile-add-known-project
              :which-key "add project")
@@ -1162,3 +1205,19 @@
       "qr" '(restart-emacs :which-key "restart emacs/server")
       "qq" '(save-buffers-kill-emacs :which-key "quit emacs/server"))
     #+END_SRC
+* Diminish
+  #+BEGIN_SRC emacs-lisp
+  (use-package diminish
+    :ensure t
+    :config
+    (diminish 'flycheck-mode)
+    (diminish 'undo-tree-mode)
+    (diminish 'editorconfig-mode)
+    (diminish 'ivy-mode)
+    (diminish 'which-key-mode)
+    (diminish 'evil-commentary-mode)
+    (diminish 'org-src-mode)
+    (diminish 'git-gutter-mode)
+    (diminish 'buffer-face-mode)
+    (diminish 'auto-revert-mode))
+  #+END_SRC
