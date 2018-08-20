@@ -167,19 +167,19 @@ client.background       $bg
 popup_during_fullscreen ignore
 
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
-exec_always --no-startup-id gnome-power-manager
+exec --no-startup-id gnome-power-manager
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id gnome-flashback
 
-exec feh --bg-fill ~/images/wallpaper
-exec mpd
-exec polybar bottom
-exec xsetroot -cursor_name left_ptr
-exec xset r rate 250 40
-exec xrdb ~/.Xresources
-exec allow_rgb10_configs=false compton -b
-exec nextcloud
-exec emacs --daemon
+exec --no-startup-id feh --bg-fill ~/images/wallpaper
+exec --no-startup-id mpd
+exec --no-startup-id polybar bottom
+exec --no-startup-id allow_rgb10_configs=false compton -b
+exec --no-startup-id nextcloud
+exec --no-startup-id emacs --daemon
+exec --no-startup-id xsetroot -cursor_name left_ptr
+exec --no-startup-id xset r rate 250 40
+exec --no-startup-id xrdb ~/.Xresources
 
 # bindsym $mod+shift+s exec urxvt -name urxvt_scratchpad -e tmux
 # exec urxvt -name urxvt_scratchpad -e tmux
