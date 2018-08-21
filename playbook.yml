@@ -9,6 +9,10 @@
       group:
         name: docker
         state: present
+    - name: Add user group
+      group:
+        name: '{{username}}'
+        state: present
     - name: Add user
       user:
         name: '{{username}}'
