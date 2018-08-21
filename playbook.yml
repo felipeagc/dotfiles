@@ -1,0 +1,112 @@
+- hosts: 127.0.0.1
+  connection: local
+  become: yes
+  vars:
+    username: felipe
+    dotfiles_dir: '~/dotfiles/'
+  tasks:
+    - name: Add user
+      user:
+        name: '{{username}}'
+        shell: /bin/zsh
+        groups:
+          - wheel
+          - audio
+          - docker
+          - '{{username}}'
+    - name: Add aur_builder user
+      user:
+        name: aur_builder
+        group: wheel
+    - name: Add aur_builder to sudoers
+      lineinfile:
+        path: /etc/sudoers.d/11-install-aur_builder
+        line: 'aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman'
+        create: yes
+        validate: 'visudo -cf %s'
+    - name: Full system upgrade
+      pacman:
+        update_cache: yes
+        upgrade: yes
+    - name: Install basic repo packages
+      pacman:
+        update_cache: yes
+        name:
+          - base-devel
+          - networkmanager
+          - gdm
+          - gnome-flashback
+          - gnome-settings-daemon
+          - gnome-power-manager
+          - polkit-gnome
+          - feh
+          - flameshot
+          - i3
+          - compton
+          - dunst
+          - firefox
+          - emacs
+          - neovim
+          - mpd
+          - ncmpcpp
+          - tmux
+          - stow
+          - git
+          - syncthing
+          - rxvt-unicode
+          - rofi
+          - zsh
+          - ripgrep
+          - fzf
+          - otf-fira-sans
+          - otf-fira-mono
+          - ttf-roboto
+          - ttf-hack
+          - arc-icon-theme
+          - arc-gtk-theme
+    - name: Install AUR helper
+      become: yes
+      become_user: aur_builder
+      aur:
+        name: pikaur
+        use: makepkg
+        skip_installed: yes
+    - name: Install basic AUR packages
+      aur:
+        use: pikaur
+        name:
+          - polybar
+          - otf-san-francisco
+          - matcha-gtk-theme
+          - i3-gnome
+          - siji-git
+          - ttf-ms-fonts
+        skip_installed: yes
+    - name: Disable Wayland in GDM
+      lineinfile:
+        path: /etc/gdm/custom.conf
+        state: present
+        line: 'WaylandEnable=false'
+        regexp: '#( )*WaylandEnable( )*=( )*false'
+        insertafter: '\[daemon\]'
+    - name: Enable GDM
+      systemd:
+        name: gdm
+        enabled: yes
+    - name: Enable Syncthing
+      systemd:
+        name: 'syncthing@{{username}}.service'
+        enabled: yes
+    - name: Enable NetworkManager
+      systemd:
+        name: NetworkManager 
+        enabled: yes
+    - name: Symlink dotfiles with stow
+      become: yes
+      become_user: '{{username}}'
+      shell: 'stow *(/)'
+      args:
+        chdir: '{{dotfiles_dir}}'
+        executable: '/bin/zsh'
+
+        

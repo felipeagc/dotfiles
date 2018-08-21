@@ -258,26 +258,6 @@
    #+END_SRC
 ** Modeline
    #+BEGIN_SRC emacs-lisp
-   (setq-default mode-line-format
-                 '("%e"
-                   mode-line-front-space
-                   mode-line-mule-info
-                   mode-line-client
-                   mode-line-modified
-                   ;; mode-line-remote
-                   ;; mode-line-frame-identification
-                   "   "
-                   mode-line-buffer-identification
-                   mode-line-position
-                   evil-mode-line-tag
-                   (vc-mode vc-mode)
-                   (flycheck-mode flycheck-mode-line)
-                   "  "
-                   mode-line-modes
-                   mode-line-misc-info
-                   mode-line-end-spaces))
-   #+END_SRC
-   #+BEGIN_SRC emacs-lisp
    ;; (use-package telephone-line
    ;;   :ensure t
    ;;   :init
