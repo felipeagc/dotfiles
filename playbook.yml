@@ -5,6 +5,10 @@
     username: felipe
     dotfiles_dir: '~/dotfiles/'
   tasks:
+    - name: Add docker group
+      group:
+        name: docker
+        state: present
     - name: Add user
       user:
         name: '{{username}}'
