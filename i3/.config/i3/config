@@ -24,7 +24,7 @@ floating_modifier $mod
 bindsym $mod+Return exec $term
 
 # take screenshot
-bindsym Print exec "maim -s /tmp/screenshot.png; imgurbash2 /tmp/screenshot.png"
+bindsym Print exec "flameshot gui"
 
 # kill focused window
 bindsym $mod+w kill

@@ -61,27 +61,6 @@ scroll-down = i3-wsprev
 type = internal/xwindow
 label = %title:0:30:...%
 
-[module/bspwm]
-type = internal/bspwm
-
-label-focused = %index%
-label-focused-background = ${colors.background-alt}
-label-focused-underline= ${colors.primary}
-label-focused-padding = 3
-
-label-occupied = %index%
-label-occupied-padding = 3
-
-label-urgent = %index%!
-label-urgent-background = ${colors.red}
-label-urgent-padding = 3
-
-label-empty = %index%
-label-empty-foreground = ${colors.foreground-alt}
-label-empty-padding = 3
-
-enable-scroll = false
-
 [module/i3]
 type = internal/i3
 format = <label-state> <label-mode>
