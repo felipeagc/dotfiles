@@ -20,6 +20,7 @@ rofi.bw: 		3
 rofi.padding:		32
 rofi.width:		50
 rofi.lines:		10
+rofi.modi:		window,run,ssh,drun
 
 URxvt*font: xft:SF Mono:Semibold:size=12,xft:Iosevka:size=14,xft:Symbola
 URxvt*scrollBar: false
