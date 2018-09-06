@@ -36,7 +36,7 @@ font-1 = unifont:fontformat=truetype:size=8:antialias=false;1
 font-2 = Wuncon Siji:pixelsize=10;1
 font-3 = Font Awesome:pixelsize=8;1
 
-modules-left = btc eth bch xrb
+modules-left = btc eth bch nano
 modules-center = i3
 modules-right = mpd volume battery0 battery1 wireless-laptop wireless-desktop date powermenu
 
@@ -282,12 +282,12 @@ format = <label>
 tail = true
 exec = ~/.config/polybar/coin.py eth usd
 
-[module/xrb]
+[module/nano]
 type = custom/script
 interval = 60
 format = <label>
 tail = true
-exec = ~/.config/polybar/coin.py xrb usd
+exec = ~/.config/polybar/coin.py nano usd
 
 [settings]
 screenchange-reload = true
