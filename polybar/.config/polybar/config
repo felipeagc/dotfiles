@@ -36,9 +36,10 @@ font-1 = unifont:fontformat=truetype:size=8:antialias=false;1
 font-2 = Wuncon Siji:pixelsize=10;1
 font-3 = Font Awesome:pixelsize=8;1
 
-modules-left = btc eth bch nano
+; modules-left = btc eth bch nano
+modules-left = mpd
 modules-center = i3
-modules-right = mpd volume battery0 battery1 wireless-laptop wireless-desktop date powermenu
+modules-right = volume battery0 battery1 wireless-laptop wireless-desktop date powermenu
 
 tray-position = right
 tray-padding = 4
@@ -98,7 +99,7 @@ label-urgent-padding = 3
 [module/mpd]
 type = internal/mpd
 
-format-online = <icon-prev>   <toggle>   <icon-next>   <icon-repeat>
+format-online = <icon-prev>   <toggle>   <icon-next>   <icon-repeat>   <label-song>
 
 label-song-maxlen = 40
 label-song-ellipsis = true
