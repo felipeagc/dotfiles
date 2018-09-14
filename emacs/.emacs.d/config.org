@@ -151,6 +151,19 @@
      :config
      (evil-collection-init))
    #+END_SRC
+** Folding
+   #+BEGIN_SRC emacs-lisp
+   (use-package vimish-fold
+     :ensure t
+     :init
+     (setq vimish-fold-persist-on-saving t))
+
+   (use-package evil-vimish-fold
+     :ensure t
+     :after vimish-fold
+     :init
+     (evil-vimish-fold-mode))
+   #+END_SRC
 * Ivy/counsel
   #+BEGIN_SRC emacs-lisp
   (use-package ivy
