@@ -442,13 +442,11 @@
 * Snippets
   #+BEGIN_SRC emacs-lisp
   (use-package yasnippet
-    :disabled
     :ensure t
     :config
     (yas-global-mode 1))
 
   (use-package yasnippet-snippets
-    :disabled
     :ensure t
     :after yasnippet)
   #+END_SRC
