@@ -71,6 +71,7 @@
           - otf-fira-mono
           - ttf-roboto
           - ttf-hack
+          - otf-font-awesome
           - arc-icon-theme
           - arc-gtk-theme
     - name: Install AUR helper
