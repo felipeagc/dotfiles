@@ -278,12 +278,11 @@
    #+END_SRC
 ** General
    #+BEGIN_SRC emacs-lisp
-   (use-package general
-     :ensure t
-     :config
-     (general-create-definer felipe/leader-def
-       :prefix "SPC"
-       :keymaps '(normal visual motion))
+     (use-package general
+       :ensure t
+       :config
+       (general-create-definer felipe/leader-def
+	 :prefix "SPC"))
    #+END_SRC
 ** Modeline
    #+BEGIN_SRC emacs-lisp
@@ -1160,19 +1159,19 @@
 *** Misc
     #+BEGIN_SRC emacs-lisp
     (felipe/leader-def
-      ;; :keymaps 'normal
+      :keymaps 'normal
       "a" '(cff-find-other-file :which-key "find other file"))
     #+END_SRC
 *** Terminal
     #+BEGIN_SRC emacs-lisp
     (felipe/leader-def
-      ;; :keymaps 'normal
+      :keymaps 'normal
       "'" '(shell-pop :which-key "terminal"))
     #+END_SRC
 *** Toggles
     #+BEGIN_SRC emacs-lisp
     (felipe/leader-def
-      ;; :keymaps 'normal
+      :keymaps 'normal
       "t" '(nil :which-key "theme/toggles")
       "tt" '(counsel-load-theme
              :which-key "themes")
@@ -1182,7 +1181,7 @@
 *** Files
     #+BEGIN_SRC emacs-lisp
     (felipe/leader-def
-      ;; :keymaps 'normal
+      :keymaps 'normal
       "f" '(nil :which-key "file")
       "ff" '(counsel-find-file
              :which-key "find file")
@@ -1207,7 +1206,7 @@
 *** Buffers
     #+BEGIN_SRC emacs-lisp
     (felipe/leader-def
-      ;; :keymaps 'normal
+      :keymaps 'normal
       "b" '(nil :which-key "buffer")
       "bb" '(ivy-switch-buffer
              :which-key "switch buffer")
@@ -1237,7 +1236,7 @@
 *** Window
     #+BEGIN_SRC emacs-lisp
     (felipe/leader-def
-      ;; :keymaps 'normal
+      :keymaps 'normal
       "w" '(nil :which-key "window")
       "w/" '(split-window-right
              :which-key "split right")
@@ -1251,7 +1250,7 @@
 *** Errors
     #+BEGIN_SRC emacs-lisp
     (felipe/leader-def
-      ;; :keymaps 'normal
+      :keymaps 'normal
       "e" '(nil :which-key "error")
       "en" '(flycheck-next-error
              :which-key "next error")
@@ -1261,7 +1260,7 @@
 *** Ivy
     #+BEGIN_SRC emacs-lisp
     (felipe/leader-def
-      ;; :keymaps 'normal
+      :keymaps 'normal
       "i" '(nil :which-key "ivy")
       "ir" '(ivy-resume
              :which-key "resume"))
@@ -1269,7 +1268,7 @@
 *** Refactoring
     #+BEGIN_SRC emacs-lisp
     (felipe/leader-def
-      ;; :keymaps 'normal
+      :keymaps 'normal
       "r" '(nil :which-key "refactor")
       "rs" '(replace-string
              :which-key "replace string"))
@@ -1277,7 +1276,7 @@
 *** Projectile
     #+BEGIN_SRC emacs-lisp
     (felipe/leader-def
-      ;; :keymaps 'normal
+      :keymaps 'normal
       "p" '(nil :which-key "projectile")
       "pp" '(counsel-projectile-switch-project
              :which-key "switch project")
@@ -1291,7 +1290,7 @@
 *** Git
     #+BEGIN_SRC emacs-lisp
     (felipe/leader-def
-      ;; :keymaps 'normal
+      :keymaps 'normal
       "g" '(nil :which-key "git")
       "gg" '(magit-status
              :which-key "status"))
@@ -1299,7 +1298,7 @@
 *** Major mode
     #+BEGIN_SRC emacs-lisp
     (felipe/leader-def
-      ;; :keymaps 'normal
+      :keymaps 'normal
       "m" '(nil :which-key "major mode")
       "mr" '(nil :which-key "run/refactor")
       "mf" '(nil :which-key "format")
@@ -1308,7 +1307,7 @@
 *** Quitting
     #+BEGIN_SRC emacs-lisp
     (felipe/leader-def
-      ;; :keymaps 'normal
+      :keymaps 'normal
       "q" '(nil :which-key "quit")
       "qr" '(restart-emacs :which-key "restart emacs/server")
       "qq" '(save-buffers-kill-emacs :which-key "quit emacs/server"))
