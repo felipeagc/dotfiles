@@ -1,5 +1,3 @@
-GuiFont Iosevka:h12
-if exists('g:GtkGuiLoaded')
-  call rpcnotify(1, 'Gui', 'Font', 'Iosevka 12')
-endif
+GuiFont SF Mono:h10
+GuiPopupmenu 1
 

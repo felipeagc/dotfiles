@@ -185,7 +185,7 @@
     :after ivy
     :init
     (setenv "FZF_DEFAULT_COMMAND"
-            "rg --files --follow --glob \"!.git/*\"")
+            "rg --files --follow --glob \"!thirdparty/*\"")
     (setq counsel-find-file-ignore-regexp
           (concat
            ;; File names beginning with # or .
@@ -789,7 +789,8 @@
        :ensure t
        :init
        (setq lsp-ui-sideline-enable nil
-             lsp-ui-doc-include-signature nil)
+             lsp-ui-doc-include-signature nil
+             lsp-ui-doc-enable nil)
        :config
        (add-hook 'lsp-mode-hook 'lsp-ui-mode))
      (use-package company-lsp
@@ -836,20 +837,21 @@
 ** C/C++
 *** Cquery
     #+BEGIN_SRC emacs-lisp
-    ;; (use-package cquery
-    ;;   :ensure t
-    ;;   :init
-    ;;   (setq cquery-executable "/usr/bin/cquery"
-    ;;         ;; cquery-sem-highlight-method 'font-lock
-    ;;         ;; cquery-extra-init-params '(:completion (:detailedLabel t))
-    ;;         )
-    ;;   :config
-    ;;   (defun felipe/cquery-hook ()
-    ;;     (when (or (eq major-mode 'c-mode)
-    ;;               (eq major-mode 'c++-mode))
-    ;;       (lsp-cquery-enable)))
+    (use-package cquery
+      :ensure t
+      :init
+      (setq cquery-executable "/usr/bin/cquery"
+            ;; cquery-extra-args '("--log-file=/tmp/cq.log")
+            ;; cquery-sem-highlight-method 'font-lock
+            ;; cquery-extra-init-params '(:completion (:detailedLabel t))
+            )
+      :config
+      (defun felipe/cquery-hook ()
+        (when (or (eq major-mode 'c-mode)
+                  (eq major-mode 'c++-mode))
+          (lsp-cquery-enable)))
 
-    ;;   (add-hook 'c-mode-common-hook 'felipe/cquery-hook))
+      (add-hook 'c-mode-common-hook 'felipe/cquery-hook))
     #+END_SRC
 *** CCLS
     #+BEGIN_SRC emacs-lisp
@@ -857,44 +859,50 @@
     ;;   :ensure t
     ;;   :config
     ;;   (defun felipe/ccls-hook ()
-    ;;     (condition-case nil
-    ;;         (lsp-ccls-enable)
-    ;;       (user-error nil)))
-    ;;   (add-hook 'c-mode-hook 'felipe/ccls-hook)
-    ;;   (add-hook 'c++-mode-hook 'felipe/ccls-hook))
+    ;;     (when (or (eq major-mode 'c-mode)
+    ;;               (eq major-mode 'c++-mode))
+    ;;       (lsp-ccls-enable)))
+
+    ;;   (add-hook 'c-mode-common-hook 'felipe/ccls-hook))
     #+END_SRC
 *** Clangd
     #+BEGIN_SRC emacs-lisp
-    (lsp-define-stdio-client
-     lsp-clangd-c
-     "c"
-     'projectile-project-root
-     nil
-     :ignore-regexps
-     '("^Error -[0-9]+: .+$")
-     :command-fn
-     (lambda ()
-       (list "clangd"
-             (concat "-compile-commands-dir="
-                     (projectile-project-root)
-                     "build"))))
+    ;; (lsp-define-stdio-client
+    ;;  lsp-clangd-c
+    ;;  "c"
+    ;;  'projectile-project-root
+    ;;  nil
+    ;;  :ignore-regexps
+    ;;  '("^Error -[0-9]+: .+$")
+    ;;  :command-fn
+    ;;  (lambda ()
+    ;;    (list "clangd"
+    ;;          (concat "-compile-commands-dir="
+    ;;                  (projectile-project-root)
+    ;;                  "build"))))
 
-    (lsp-define-stdio-client
-     lsp-clangd-c++
-     "cpp"
-     'projectile-project-root
-     nil
-     :ignore-regexps
-     '("^Error -[0-9]+: .+$")
-     :command-fn
-     (lambda ()
-       (list "clangd"
-             (concat "-compile-commands-dir="
-                     (projectile-project-root)
-                     "build"))))
+    ;; (lsp-define-stdio-client
+    ;;  lsp-clangd-c++
+    ;;  "cpp"
+    ;;  'projectile-project-root
+    ;;  nil
+    ;;  :ignore-regexps
+    ;;  '("^Error -[0-9]+: .+$")
+    ;;  :command-fn
+    ;;  (lambda ()
+    ;;    (list "clangd"
+    ;;          (concat "-compile-commands-dir="
+    ;;                  (projectile-project-root)
+    ;;                  "build"))))
 
-    (add-hook 'c-mode-hook #'lsp-clangd-c-enable)
-    (add-hook 'c++-mode-hook #'lsp-clangd-c++-enable)
+    ;; (defun felipe/clangd-hook ()
+    ;;   (when (eq major-mode 'c-mode)
+    ;;     (lsp-clangd-c-enable))
+    ;;   (when (eq major-mode 'c++-mode)
+    ;;     (lsp-clangd-c++-enable)))
+
+    ;; (add-hook 'c-mode-hook #'felipe/clangd-hook)
+    ;; (add-hook 'c++-mode-hook #'felipe/clangd-hook)
     #+END_SRC
 *** Misc
     #+BEGIN_SRC emacs-lisp
@@ -932,12 +940,17 @@
         "mf" 'clang-format-buffer
         "mr" 'lsp-rename)
 
+    ;; (general-def 'normal c++-mode-map
+    ;;     "gd" 'xref-find-definitions
+    ;;     "gD" 'xref-find-definitions-other-window)
+    ;; (general-def 'normal c-mode-map
+    ;;     "gd" 'xref-find-definitions
+    ;;     "gD" 'xref-find-definitions-other-window)
+
     (general-def 'normal c++-mode-map
-        "gd" 'xref-find-definitions
-        "gD" 'xref-find-definitions-other-window)
+        "gd" 'lsp-ui-peek-find-definitions)
     (general-def 'normal c-mode-map
-        "gd" 'xref-find-definitions
-        "gD" 'xref-find-definitions-other-window)
+        "gd" 'lsp-ui-peek-find-definitions)
     #+END_SRC
 ** Haskell
    #+BEGIN_SRC emacs-lisp
