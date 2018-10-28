@@ -1173,7 +1173,8 @@
     #+BEGIN_SRC emacs-lisp
     (felipe/leader-def
       :keymaps 'normal
-      "a" '(cff-find-other-file :which-key "find other file"))
+      "a" '(projectile-find-other-file :which-key "other file")
+      "A" '(projectile-find-other-file-other-window :which-key "other file (other window)"))
     #+END_SRC
 *** Terminal
     #+BEGIN_SRC emacs-lisp
