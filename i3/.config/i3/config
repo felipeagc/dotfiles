@@ -135,8 +135,10 @@ bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+q exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
+assign [class="discord"] 8
+assign [class="Steam"] 9
 assign [class="csgo_linux64"] 10
 assign [class="dota2"] 10
 
@@ -166,18 +168,21 @@ client.background       $bg
 
 popup_during_fullscreen ignore
 
-exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
-exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec --no-startup-id gnome-flashback
+# exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
+# exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+# exec --no-startup-id gnome-flashback
 
-# exec --no-startup-id feh --bg-fill ~/images/wallpaper
+exec --no-startup-id /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
+
+exec --no-startup-id nitrogen --restore
 exec --no-startup-id mpd
 exec --no-startup-id polybar bottom
 exec --no-startup-id allow_rgb10_configs=false compton -b
-# exec --no-startup-id nextcloud
-exec --no-startup-id emacs --daemon
+exec --no-startup-id /bin/zsh -c "emacs --daemon"
+exec --no-startup-id dunst
 exec --no-startup-id xsetroot -cursor_name left_ptr
-# exec --no-startup-id xset r rate 250 40
+exec --no-startup-id xset r rate 250 50
+
 exec --no-startup-id xrdb ~/.Xresources
 
 # bindsym $mod+shift+s exec urxvt -name urxvt_scratchpad -e tmux

@@ -42,13 +42,11 @@
         name:
           - base-devel
           - networkmanager
-          - gdm
-          - gnome-flashback
-          - gnome-settings-daemon
-          - gnome-power-manager
-          - polkit-gnome
-          - python-psutil
+          - mate-polkit
+          - lightdm
+          - lightdm-gtk-greeter
           - feh
+          - nitrogen
           - flameshot
           - i3
           - compton
@@ -92,16 +90,9 @@
           - siji-git
           - ttf-ms-fonts
         skip_installed: yes
-    - name: Disable Wayland in GDM
-      lineinfile:
-        path: /etc/gdm/custom.conf
-        state: present
-        line: 'WaylandEnable=false'
-        regexp: '#( )*WaylandEnable( )*=( )*false'
-        insertafter: '\[daemon\]'
-    - name: Enable GDM
+    - name: Enable LightDM
       systemd:
-        name: gdm
+        name: lightdm
         enabled: yes
     - name: Enable Syncthing
       systemd:
@@ -118,77 +109,3 @@
       args:
         chdir: '{{dotfiles_dir}}'
         executable: '/bin/zsh'
-    - name: Set GTK theme
-      become: yes
-      become_user: '{{username}}'
-      dconf:
-        key: '/org/gnome/desktop/interface/gtk-theme'
-        value: '"Matcha-aliz"'
-        state: present
-    - name: Set Icon theme
-      become: yes
-      become_user: '{{username}}'
-      dconf:
-        key: '/org/gnome/desktop/interface/icon-theme'
-        value: '"Arc"'
-        state: present
-    - name: Set window title font
-      become: yes
-      become_user: '{{username}}'
-      dconf:
-        key: '/org/gnome/desktop/wm/preferences/titlebar-font'
-        value: '"Fira Sans Semi-Bold 10"'
-        state: present
-    - name: Set interface font
-      become: yes
-      become_user: '{{username}}'
-      dconf:
-        key: '/org/gnome/desktop/interface/font-name'
-        value: '"Fira Sans Semi-Light 10"'
-        state: present
-    - name: Set document font
-      become: yes
-      become_user: '{{username}}'
-      dconf:
-        key: '/org/gnome/desktop/interface/document-font-name'
-        value: '"Roboto 11"'
-        state: present
-    - name: Set monospace font
-      become: yes
-      become_user: '{{username}}'
-      dconf:
-        key: '/org/gnome/desktop/interface/monospace-font-name'
-        value: '"SF Mono Semi-Bold Extra-Condensed 11"'
-        state: present
-    - name: Enable key repeat
-      become: yes
-      become_user: '{{username}}'
-      dconf:
-        key: '/org/gnome/desktop/peripherals/keyboard/repeat'
-        value: 'true'
-        state: present
-    - name: Set key repeat delay
-      become: yes
-      become_user: '{{username}}'
-      command: 'gsettings set org.gnome.desktop.peripherals.keyboard delay 250'
-    - name: Set key repeat interval
-      become: yes
-      become_user: '{{username}}'
-      command: 'gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 20'
-    - name: Disable mouse acceleration
-      become: yes
-      become_user: '{{username}}'
-      dconf:
-        key: '/org/gnome/desktop/peripherals/mouse/accel-profile'
-        value: '"flat"'
-        state: present
-    - name: Enable touchpad tap to click
-      become: yes
-      become_user: '{{username}}'
-      dconf:
-        key: '/org/gnome/desktop/peripherals/touchpad/tap-to-click'
-        value: 'true'
-        state: present
-
-
-        

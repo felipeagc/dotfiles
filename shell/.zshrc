@@ -26,13 +26,13 @@ alias song="mpc searchplay title $1"
 
 # Execute ls every time we cd
 function chpwd() {
-    emulate -L zsh
-    ls
+  emulate -L zsh
+  ls
 }
 
 mkcd () {
-    mkdir -p -- "$1" &&
-    cd -P -- "$1"
+  mkdir -p -- "$1" &&
+  cd -P -- "$1"
 }
 
 source ~/.profile
