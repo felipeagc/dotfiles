@@ -14,10 +14,8 @@ endif
 call plug#begin('~/.local/share/nvim/plugged')
 
 " Polyglot
-Plug 'sheerun/vim-polyglot'
 
 " Search
-Plug 'junegunn/fzf', { 'do': './install --bin'}
 Plug 'junegunn/fzf.vim'
 
 " Utility
