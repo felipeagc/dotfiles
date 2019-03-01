@@ -22,7 +22,14 @@ rofi.width:		50
 rofi.lines:		10
 rofi.modi:		window,run,ssh,drun
 
-URxvt*font: xft:SF Mono:Semibold:size=11,xft:Iosevka:size=14,xft:Symbola
+st.termname: st-256color
+st.font: Iosevka Term:Semibold:pixelsize=14
+st.borderpx: 16
+st.mouseScrollLines: 5
+st.bold_font: 1
+st.actionfps: 60
+
+URxvt*font: xft:Iosevka Term:Semibold:size=11,xft:Symbola
 URxvt*scrollBar: false
 URxvt*transparent: false
 URxvt*internalBorder: 16
@@ -38,38 +45,38 @@ URxvt*letterSpace: -1
 xterm*utf8: 1
 
 ! special
-*.foreground:   #dfdfdf
+*.foreground:   #dedede
 *.background:   #121212
-*.cursorColor:  #e4e4e4
+*.cursorColor:  #dedede
 
 ! black
 *.color0:       #121212
-*.color8:       #6c6c6c
+*.color8:       #dedede
 
 ! red
-*.color1:       #af5f5f
-*.color9:       #af5f5f
+*.color1:       #e27373
+*.color9:       #ffa1a1
 
 ! green
-*.color2:       #d75f5f
-*.color10:      #d75f5f
+*.color2:       #94b979
+*.color10:      #bddeab
 
 ! yellow
-*.color3:       #afd7d7
-*.color11:      #afd7d7
+*.color3:       #ffba7b
+*.color11:      #ffdca0
 
 ! blue
-*.color4:       #af8787
-*.color12:      #af8787
+*.color4:       #97bedc
+*.color12:      #b1d8f6
 
 ! magenta
-*.color5:       #dfaf87
-*.color13:      #dfaf87
+*.color5:       #e1c0fa
+*.color13:      #fbdaff
 
 ! cyan
-*.color6:       #ffafaf
-*.color14:      #ffb2af
+*.color6:       #00988e
+*.color14:      #1ab2a8
 
 ! white
-*.color7:       #dfdfdf
-*.color15:      #dfdfdf
+*.color7:       #dedede
+*.color15:      #ffffff
