@@ -24,6 +24,11 @@ alias dc="docker-compose"
 
 alias song="mpc searchplay title $1"
 
+alias config-i3="$EDITOR $HOME/.config/i3/config"
+alias config-compton="$EDITOR $HOME/.config/compton.conf"
+alias config-dunst="$EDITOR $HOME/.config/dunst/dunstrc"
+alias config-polybar="$EDITOR $HOME/.config/polybar/config"
+
 # Execute ls every time we cd
 function chpwd() {
   emulate -L zsh
