@@ -273,34 +273,6 @@ menu-3-0-exec = systemctl poweroff
 menu-3-1 = cancel
 menu-3-1-exec = menu-open-0
 
-[module/btc]
-type = custom/script
-interval = 60
-format = <label>
-tail = true
-exec = ~/.config/polybar/coin.py btc usd
-
-[module/bch]
-type = custom/script
-interval = 60
-format = <label>
-tail = true
-exec = ~/.config/polybar/coin.py bch usd
-
-[module/eth]
-type = custom/script
-interval = 60
-format = <label>
-tail = true
-exec = ~/.config/polybar/coin.py eth usd
-
-[module/nano]
-type = custom/script
-interval = 60
-format = <label>
-tail = true
-exec = ~/.config/polybar/coin.py nano usd
-
 [settings]
 screenchange-reload = true
 ;compositing-background = xor
