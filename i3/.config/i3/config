@@ -82,8 +82,6 @@ bindsym $mod+a focus parent
 # focus the child container
 #bindsym $mod+d focus child
 
-bindsym $mod+e exec emacsclient -c
-
 bindsym XF86MonBrightnessUp exec xbacklight -inc 10
 bindsym XF86MonBrightnessDown exec xbacklight -dec 10
 
@@ -166,7 +164,6 @@ exec --no-startup-id nitrogen --restore
 exec --no-startup-id mpd
 exec --no-startup-id polybar bottom
 exec --no-startup-id allow_rgb10_configs=false compton -b
-exec --no-startup-id /bin/zsh -c "emacs --daemon"
 exec --no-startup-id dunst
 exec --no-startup-id xsetroot -cursor_name left_ptr
 exec --no-startup-id xset r rate 250 50
