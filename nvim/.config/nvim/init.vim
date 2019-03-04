@@ -82,6 +82,10 @@ set smartcase
 
 " Don't auto indent ':' in c/c++
 set cinoptions+=L0
+
+" Open help vertically
+autocmd FileType help wincmd L
+autocmd FileType man wincmd L
 " }}}
 
 " Color scheme settings {{{
