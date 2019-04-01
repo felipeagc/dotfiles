@@ -35,6 +35,9 @@ Plug 'ludovicchabant/vim-gutentags'
 Plug 'brooth/far.vim'
 Plug 'airblade/vim-gitgutter'
 
+" Languages
+Plug 'tikhomirov/vim-glsl'
+
 " Themes
 Plug 'nanotech/jellybeans.vim'
 
@@ -226,5 +229,19 @@ augroup cppbindings
   autocmd!
   autocmd Filetype cpp nmap <buffer> <silent> <leader>mf :ClangFormat<CR>
   autocmd Filetype cpp nmap <buffer> <leader>mb :!ninja -C build<CR>
+augroup end
+" }}}
+
+" LaTeX bindings {{{
+let g:tex_flavor="latex"
+
+function! LaunchZathura()
+  execute 'silent !zathura "' . expand('%:p:r') . '.pdf" &'
+endfunction
+
+augroup texbindings
+  autocmd!
+  autocmd Filetype tex nmap <buffer> <silent> <leader>mp :call LaunchZathura()<CR>
+  autocmd Filetype tex nmap <buffer> <leader>mb :!pdflatex "%"<CR>
 augroup end
 " }}}

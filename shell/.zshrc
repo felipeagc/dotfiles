@@ -29,6 +29,15 @@ alias config-compton="$EDITOR $HOME/.config/compton.conf"
 alias config-dunst="$EDITOR $HOME/.config/dunst/dunstrc"
 alias config-polybar="$EDITOR $HOME/.config/polybar/config"
 
+export EDITOR=nvim
+export GIT_EDITOR=nvim
+export BROWSER=firefox
+export TERMINAL=xst
+export FILEBROWSER=nautilus
+
+# QT5CT theme
+[ "$XDG_CURRENT_DESKTOP" = "KDE" ] || [ "$XDG_CURRENT_DESKTOP" = "GNOME" ] || export QT_QPA_PLATFORMTHEME="qt5ct"
+
 # Execute ls every time we cd
 function chpwd() {
   emulate -L zsh
@@ -39,5 +48,3 @@ mkcd () {
   mkdir -p -- "$1" &&
   cd -P -- "$1"
 }
-
-source ~/.profile
