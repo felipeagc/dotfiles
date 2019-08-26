@@ -2,6 +2,10 @@ if &compatible
   set nocompatible
 endif
 
+syntax enable
+filetype plugin on
+filetype plugin indent on
+
 " Automatically install plugin manager {{{
 if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
   silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
@@ -13,8 +17,6 @@ endif
 " Plugins {{{
 call plug#begin('~/.local/share/nvim/plugged')
 
-" Polyglot
-
 " Search
 Plug 'junegunn/fzf.vim'
 
@@ -23,7 +25,6 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-abolish'
 Plug 'christoomey/vim-tmux-navigator'
@@ -37,9 +38,14 @@ Plug 'airblade/vim-gitgutter'
 
 " Languages
 Plug 'tikhomirov/vim-glsl'
+Plug 'ziglang/zig.vim'
+Plug 'fatih/vim-go'
+Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
+Plug '~/.local/share/nvim/plugged/fl.vim'
 
 " Themes
 Plug 'nanotech/jellybeans.vim'
+Plug 'gruvbox-community/gruvbox'
 
 call plug#end()
 " }}}
@@ -57,15 +63,14 @@ set scrolloff=10
 set clipboard=unnamedplus
 set completeopt=noinsert,menuone,noselect
 
-" set tabstop=4
-" set shiftwidth=4
+set tabstop=2
+set shiftwidth=2
 set autoindent
 set smartindent
 set smarttab
 
 set wrap
 set wildignore+=*.so,*.swp,*.zip,*.o,*.png,*.jpg,*.jpeg,*/target/*,*/build/*,*/node_modules/*,tags,*.glb,*.gltf,*.hdr
-set noswapfile
 set hidden
 " set completeopt+=noselect
 set noshowmode
@@ -85,15 +90,15 @@ set smartcase
 
 " Don't auto indent ':' in c/c++
 set cinoptions+=L0
-
-" Open help vertically
-autocmd FileType help wincmd L
-autocmd FileType man wincmd L
 " }}}
 
 " Color scheme settings {{{
 let g:jellybeans_use_gui_italics = 0
-colorscheme jellybeans
+
+let g:gruvbox_contrast_dark = 'hard'
+let g:gruvbox_sign_column = 'bg0'
+
+colorscheme gruvbox
 " }}}
 
 " Small quality of life stuff {{{
@@ -115,12 +120,6 @@ augroup on_buffer_write
   autocmd BufWritePre * call s:Mkdir()
 augroup END
 
-" Use ctrl-[hjkl] to select the active split
-nmap <silent> <c-k> :wincmd k<CR>
-nmap <silent> <c-j> :wincmd j<CR>
-nmap <silent> <c-h> :wincmd h<CR>
-nmap <silent> <c-l> :wincmd l<CR>
-
 " Continuous indentation shift
 vnoremap < <gv
 vnoremap > >gv
@@ -139,6 +138,23 @@ let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.html.eex'
 
 autocmd FileType netrw setl bufhidden=wipe
 let g:netrw_fastbrowse = 0
+
+" Fix false positive C bracket error
+let c_no_bracket_error=1
+let c_no_curly_error = 1
+
+" Open help vertically
+autocmd FileType help wincmd L
+autocmd FileType man wincmd L
+
+" netrw
+let g:netrw_banner=0
+let g:netrw_browse_split=4  " open in prior window
+let g:netrw_altv=1          " split to the right
+let g:netrw_liststyle=3     " tree view
+let g:netrw_list_hide=netrw_gitignore#Hide()
+let g:netrw_localrmdir='rm -r'
+
 " }}}
 
 " FZF {{{
@@ -165,11 +181,11 @@ set foldmethod=manual
 autocmd	FileType vim setlocal foldlevel=0 " Close all folds
 autocmd	FileType vim setlocal foldmethod=marker
 
-augroup remember_folds
-  autocmd!
-  autocmd BufWinLeave *.* mkview
-  autocmd BufWinEnter *.* silent! loadview
-augroup END
+" augroup remember_folds
+"   autocmd!
+"   autocmd BufWinLeave *.* mkview
+"   autocmd BufWinEnter *.* silent! loadview
+" augroup END
 " }}}
 
 " Indentation {{{
@@ -180,6 +196,7 @@ autocmd FileType c setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType haskell setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType lua setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType json setlocal shiftwidth=2 tabstop=2 expandtab
+autocmd FileType go setlocal shiftwidth=4 tabstop=4 noexpandtab
 " }}}
 
 " Leader keybinds {{{
@@ -205,7 +222,8 @@ nmap <silent> <leader>bcc :bufdo bd<CR>
 
 nmap <silent> <leader>en :cnext<CR>
 nmap <silent> <leader>ep :cprev<CR>
-nmap <silent> <leader>el :clist<CR>
+nmap <silent> <leader>el :copen<CR>
+nmap <silent> <leader>eL :cclose<CR>
 
 nmap <silent> <leader>w/ :vsplit<CR>
 nmap <silent> <leader>w- :split<CR>
@@ -218,21 +236,33 @@ nmap <silent> <leader>a :A<CR>
 nmap <silent> <leader>A :AV<CR>
 " }}}
 
-" C/C++ bindings {{{
+" C/C++ {{{
+let g:compiler_gcc_ignore_unmatched_lines = 1
+
 augroup cbindings
   autocmd!
+  autocmd Filetype c setlocal makeprg=ninja\ -C\ build
   autocmd Filetype c nmap <buffer> <silent> <leader>mf :ClangFormat<CR>
-  autocmd Filetype c nmap <buffer> <leader>mb :!ninja -C build<CR>
+  autocmd Filetype c nmap <buffer> <leader>mb :make<CR>
 augroup end
 
 augroup cppbindings
   autocmd!
+  autocmd Filetype cpp setlocal makeprg=ninja\ -C\ build
   autocmd Filetype cpp nmap <buffer> <silent> <leader>mf :ClangFormat<CR>
-  autocmd Filetype cpp nmap <buffer> <leader>mb :!ninja -C build<CR>
+  autocmd Filetype cpp nmap <buffer> <leader>mb :make<CR>
 augroup end
 " }}}
 
-" LaTeX bindings {{{
+" GLSL {{{
+augroup glslbindings
+  autocmd!
+  autocmd Filetype glsl setlocal makeprg=make\ -C\ shaders 
+  autocmd Filetype glsl nmap <buffer> <leader>mb :make<CR>
+augroup end
+" }}}
+
+" LaTeX {{{
 let g:tex_flavor="latex"
 
 function! LaunchZathura()
@@ -245,3 +275,36 @@ augroup texbindings
   autocmd Filetype tex nmap <buffer> <leader>mb :!pdflatex "%"<CR>
 augroup end
 " }}}
+
+" Zig {{{
+let g:zig_fmt_autosave = 0
+
+augroup zigbindings
+  autocmd!
+  autocmd Filetype zig nmap <buffer> <leader>mb :!zig build<CR>
+augroup end
+" }}}
+
+" Go {{{
+augroup gobindings
+  autocmd!
+  autocmd Filetype go nmap <buffer> <leader>mb :GoBuild<CR>
+  autocmd Filetype go nmap <buffer> <leader>mf :GoFmt<CR>
+  autocmd Filetype go nmap <buffer> <leader>mi :GoImports<CR>
+augroup end
+" }}}
+
+" Python {{{
+augroup pythonbindings
+  autocmd!
+  autocmd Filetype python nmap <buffer> <leader>mf :YAPF<CR>
+augroup end
+" }}}
+
+" D {{{
+augroup dbindings
+  autocmd FileType d setlocal efm=%*[^@]@%f\(%l\):\ %m,%f\(%l\\,%c\):\ %m,%f\(%l\):\ %m
+  autocmd Filetype d setlocal makeprg=dub\ build
+  autocmd Filetype d nmap <buffer> <leader>mb :make<CR>
+augroup end
+"}}}

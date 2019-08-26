@@ -23,16 +23,18 @@ rofi.lines:		10
 rofi.modi:		window,run,ssh,drun
 
 st.termname: st-256color
-st.font: Iosevka Term:Semibold:pixelsize=14
-st.borderpx: 16
+st.font: DejaVu Sans Mono:bold:size=10
+st.cwscale: 1.0
+st.borderpx: 12
 st.mouseScrollLines: 5
 st.bold_font: 1
 st.actionfps: 60
+st.xfps: 120
 
-URxvt*font: xft:Iosevka Term:Semibold:size=11,xft:Symbola
+URxvt*font: xft:DejaVu Sans Mono:bold:size=10,xft:Symbola
 URxvt*scrollBar: false
 URxvt*transparent: false
-URxvt*internalBorder: 16
+URxvt*internalBorder: 12
 
 URxvt*keysym.Shift-Control-V: eval:paste_clipboard
 URxvt*keysym.Shift-Control-C: eval:selection_to_clipboard
@@ -44,39 +46,32 @@ URxvt*letterSpace: -1
 
 xterm*utf8: 1
 
-! special
-*.foreground:   #dedede
-*.background:   #121212
-*.cursorColor:  #dedede
 
-! black
-*.color0:       #121212
-*.color8:       #dedede
-
-! red
-*.color1:       #e27373
-*.color9:       #ffa1a1
-
-! green
-*.color2:       #94b979
-*.color10:      #bddeab
-
-! yellow
-*.color3:       #ffba7b
-*.color11:      #ffdca0
-
-! blue
-*.color4:       #97bedc
-*.color12:      #b1d8f6
-
-! magenta
-*.color5:       #e1c0fa
-*.color13:      #fbdaff
-
-! cyan
-*.color6:       #00988e
-*.color14:      #1ab2a8
-
-! white
-*.color7:       #dedede
-*.color15:      #ffffff
+! hard contrast: *background: #1d2021
+*background: #282828
+! soft contrast: *background: #32302f
+*foreground: #ebdbb2
+! Black + DarkGrey
+*color0:  #282828
+*color8:  #928374
+! DarkRed + Red
+*color1:  #cc241d
+*color9:  #fb4934
+! DarkGreen + Green
+*color2:  #98971a
+*color10: #b8bb26
+! DarkYellow + Yellow
+*color3:  #d79921
+*color11: #fabd2f
+! DarkBlue + Blue
+*color4:  #458588
+*color12: #83a598
+! DarkMagenta + Magenta
+*color5:  #b16286
+*color13: #d3869b
+! DarkCyan + Cyan
+*color6:  #689d6a
+*color14: #8ec07c
+! LightGrey + White
+*color7:  #a89984
+*color15: #ebdbb2

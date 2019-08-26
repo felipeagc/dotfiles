@@ -110,7 +110,7 @@ label-urgent-padding = 3
 [module/mpd]
 type = internal/mpd
 
-format-online = <icon-prev>   <toggle>   <icon-next>   <icon-repeat>   <label-song>
+format-online = <icon-prev>   <toggle>   <icon-next>   <icon-repeat>   <label-song>   <label-time>
 
 label-song-maxlen = 40
 label-song-ellipsis = true

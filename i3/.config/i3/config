@@ -21,8 +21,6 @@ bindsym $mod+w kill
 bindsym $mod+space exec rofi -show drun
 bindsym $mod+shift+space exec rofi -show run
 
-bindsym $mod+n exec nvim-qt
-
 # change focus
 bindsym $mod+h focus left
 bindsym $mod+j focus down
