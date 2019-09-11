@@ -197,6 +197,7 @@ autocmd FileType haskell setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType lua setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType json setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType go setlocal shiftwidth=4 tabstop=4 noexpandtab
+autocmd FileType rmd setlocal shiftwidth=2 tabstop=2 expandtab
 " }}}
 
 " Leader keybinds {{{
@@ -273,6 +274,14 @@ augroup texbindings
   autocmd!
   autocmd Filetype tex nmap <buffer> <silent> <leader>mp :call LaunchZathura()<CR>
   autocmd Filetype tex nmap <buffer> <leader>mb :!pdflatex "%"<CR>
+augroup end
+" }}}
+
+" R Markdown {{{
+augroup rmdbindings
+  autocmd!
+  autocmd Filetype rmd nmap <buffer> <silent> <leader>mp :call LaunchZathura()<CR>
+  autocmd Filetype rmd nmap <buffer> <leader>mb :!echo<space>"require(rmarkdown);<space>render('<c-r>%')"<space>\|<space>R<space>--vanilla<enter>
 augroup end
 " }}}
 
