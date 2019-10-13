@@ -243,7 +243,22 @@ awful.screen.connect_for_each_screen(function(s)
     end)
   ))
 
-  s.bat = lain.widget.bat {}
+  s.bat = lain.widget.bat {
+    batteries = {"BAT0", "BAT1"},
+    settings = function()
+      if #nat_now.n_status == 0 then
+        return
+      end
+
+      local perc = bat_now.perc ~= "N/A" and bat_now.perc .. "%" or bat_now.perc
+
+      if bat_now.ac_status == 1 then
+        perc = perc .. " plug"
+      end
+
+      widget:set_markup(perc .. " " .. bat_now.watt .. "W")
+    end
+  }
 
   s.net = awful.widget.watch(
     "nmcli -c no  -g NAME connection show --active",
@@ -287,12 +302,12 @@ awful.screen.connect_for_each_screen(function(s)
 
       spacing        = 12,
 
-      s.bat,
-      s.volume.bar,
+      s.bat.widget,
       s.net,
       s.mem,
       wibox.widget.textclock(),
       awful.widget.keyboardlayout(),
+      s.volume.bar,
       wibox.widget.systray(),
       s.mylayoutbox,
       mylauncher,
