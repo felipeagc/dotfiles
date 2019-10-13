@@ -44,7 +44,6 @@ Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
 Plug '~/.local/share/nvim/plugged/fl.vim'
 
 " Themes
-Plug 'nanotech/jellybeans.vim'
 Plug 'gruvbox-community/gruvbox'
 
 call plug#end()
@@ -93,10 +92,9 @@ set cinoptions+=L0
 " }}}
 
 " Color scheme settings {{{
-let g:jellybeans_use_gui_italics = 0
-
 let g:gruvbox_contrast_dark = 'hard'
 let g:gruvbox_sign_column = 'bg0'
+let g:gruvbox_termcolors=16
 
 colorscheme gruvbox
 " }}}

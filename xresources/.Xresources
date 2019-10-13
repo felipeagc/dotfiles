@@ -8,22 +8,22 @@ Xft.lcdfilter: lcddefault
 
 rofi.color-enabled: true
 
-!			bg       border   separator
-rofi.color-window:	#181818, #263b4c, #181818
+!										bg       border   separator
+rofi.color-window:	#1d2021, #ebdbb2, #1d2021
 
-! State			bg       fg       bgalt    hlbg     hlfg	
-rofi.color-normal:	#181818, #585858, #181818, #181818, #d8d8d8
-rofi.color-active:	#181818, #d8d8d8, #181818, #181818, #d8d8d8
-rofi.color-urgent:	#181818, #d8d8d8, #181818, #181818, #d8d8d8
-rofi.font:		Roboto 15
-rofi.bw: 		3
-rofi.padding:		32
-rofi.width:		50
-rofi.lines:		10
-rofi.modi:		window,run,ssh,drun
+! State							bg       fg       bgalt    hlbg     hlfg	
+rofi.color-normal:	#1d2021, #928374, #1d2021, #1d2021, #ebdbb2
+rofi.color-active:	#1d2021, #ebdbb2, #1d2021, #1d2021, #ebdbb2
+rofi.color-urgent:	#1d2021, #ebdbb2, #1d2021, #1d2021, #ebdbb2
+rofi.font:		      sans 14
+rofi.bw: 		        2
+rofi.padding:		    32
+rofi.width:		      50
+rofi.lines:		      10
+rofi.modi:		      window,run,ssh,drun
 
 st.termname: st-256color
-st.font: DejaVu Sans Mono:bold:size=10
+st.font: monospace:bold:pixelsize=14
 st.cwscale: 1.0
 st.borderpx: 12
 st.mouseScrollLines: 5
@@ -47,9 +47,10 @@ URxvt*letterSpace: -1
 xterm*utf8: 1
 
 
-! hard contrast: *background: #1d2021
+! *background-hard: #1d2021
 *background: #282828
-! soft contrast: *background: #32302f
+! *background-soft: #32302f
+
 *foreground: #ebdbb2
 ! Black + DarkGrey
 *color0:  #282828
