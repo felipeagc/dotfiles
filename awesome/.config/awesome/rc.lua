@@ -18,6 +18,7 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 local lain = require("lain")
+local markup = lain.util.markup
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -246,9 +247,7 @@ awful.screen.connect_for_each_screen(function(s)
   s.bat = lain.widget.bat {
     batteries = {"BAT0", "BAT1"},
     settings = function()
-      if #nat_now.n_status == 0 then
-        return
-      end
+      if bat_now.perc == "N/A" then return end
 
       local perc = bat_now.perc ~= "N/A" and bat_now.perc .. "%" or bat_now.perc
 
@@ -256,7 +255,7 @@ awful.screen.connect_for_each_screen(function(s)
         perc = perc .. " plug"
       end
 
-      widget:set_markup(perc .. " " .. bat_now.watt .. "W")
+      widget:set_markup(markup.fg.color(beautiful.yellow, perc .. " " .. bat_now.watt .. "W"))
     end
   }
 
@@ -264,13 +263,16 @@ awful.screen.connect_for_each_screen(function(s)
     "nmcli -c no  -g NAME connection show --active",
     10, -- 10 seconds
     function(widget, stdout)
-      -- customize here
-      widget:set_text(stdout)
+      for line in stdout:gmatch("[^\r\n]+") do
+        widget:set_markup(markup.fg.color(beautiful.green, line))
+      end
     end)
   
   s.mem = lain.widget.mem {
     settings = function()
-      widget:set_markup("RAM " .. mem_now.perc .. "%")
+      widget:set_markup(markup.fg.color(
+        beautiful.cyan,
+        "RAM " .. string.format("%.1f", tonumber(mem_now.used)/1024) .. "GiB"))
     end
   }
 
@@ -305,8 +307,9 @@ awful.screen.connect_for_each_screen(function(s)
       s.bat.widget,
       s.net,
       s.mem,
-      wibox.widget.textclock(),
-      awful.widget.keyboardlayout(),
+      wibox.widget.textclock(
+        markup(beautiful.blue, "%A, %B %d   ") ..
+        markup(beautiful.magenta, "%H:%M")),
       s.volume.bar,
       wibox.widget.systray(),
       s.mylayoutbox,
@@ -324,58 +327,58 @@ root.buttons(gears.table.join(
 
 -- {{{ Key bindings
 globalkeys = gears.table.join(
-    awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
-              {description="show help", group="awesome"}),
-    awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
-              {description = "view previous", group = "tag"}),
-    awful.key({ modkey,           }, "Right",  awful.tag.viewnext,
-              {description = "view next", group = "tag"}),
-    awful.key({ modkey,           }, "Escape", awful.tag.history.restore,
-              {description = "go back", group = "tag"}),
+    awful.key({ modkey }, "s",      hotkeys_popup.show_help,
+              { description = "show help", group="awesome" }),
+    awful.key({ modkey }, "Left",   awful.tag.viewprev,
+              { description = "view previous", group = "tag" }),
+    awful.key({ modkey }, "Right",  awful.tag.viewnext,
+              { description = "view next", group = "tag" }),
+    awful.key({ modkey }, "Escape", awful.tag.history.restore,
+              { description = "go back", group = "tag" }),
 
     -- Layout manipulation
-    awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,
-              {description = "jump to urgent client", group = "client"}),
+    awful.key({ modkey }, "u", awful.client.urgent.jumpto,
+              { description = "jump to urgent client", group = "client" }),
     awful.key(
-        { modkey,           }, "Tab",
+        { modkey }, "Tab",
         function ()
           awful.client.focus.history.previous()
           if client.focus then
             client.focus:raise()
           end
         end,
-        {description = "go back", group = "client"}),
+        { description = "go back", group = "client" }),
 
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
-              {description = "open a terminal", group = "launcher"}),
+              { description = "open a terminal", group = "launcher" }),
     awful.key({ modkey, "Control" }, "r", awesome.restart,
-              {description = "reload awesome", group = "awesome"}),
+              { description = "reload awesome", group = "awesome" }),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit,
-              {description = "quit awesome", group = "awesome"}),
+              { description = "quit awesome", group = "awesome" }),
 
     awful.key({ modkey,           }, "l",     function () awful.client.focus.bydirection("right") end,
-              {description = "focus right", group = "layout"}),
+              { description = "focus right", group = "layout" }),
     awful.key({ modkey,           }, "h",     function () awful.client.focus.bydirection("left") end,
-              {description = "focus left", group = "layout"}),
+              { description = "focus left", group = "layout" }),
     awful.key({ modkey,           }, "j",     function () awful.client.focus.bydirection("down") end,
-              {description = "focus down", group = "layout"}),
+              { description = "focus down", group = "layout" }),
     awful.key({ modkey,           }, "k",     function () awful.client.focus.bydirection("up") end,
-              {description = "focus up", group = "layout"}),
+              { description = "focus up", group = "layout" }),
 
     awful.key({ modkey, "Shift"   }, "l",     function () awful.client.swap.bydirection("right") end,
-              {description = "swap right", group = "layout"}),
+              { description = "swap right", group = "layout" }),
     awful.key({ modkey, "Shift"   }, "h",     function () awful.client.swap.bydirection("left") end,
-              {description = "swap left", group = "layout"}),
+              { description = "swap left", group = "layout" }),
     awful.key({ modkey, "Shift"   }, "j",     function () awful.client.swap.bydirection("down") end,
-              {description = "swap down", group = "layout"}),
+              { description = "swap down", group = "layout" }),
     awful.key({ modkey, "Shift"   }, "k",     function () awful.client.swap.bydirection("up") end,
-              {description = "swap up", group = "layout"}),
+              { description = "swap up", group = "layout" }),
 
     awful.key({ modkey,           }, "b",     function () awful.layout.inc( 1)                end,
-              {description = "select next", group = "layout"}),
+              { description = "select next", group = "layout" }),
     awful.key({ modkey, "Shift"   }, "b",     function () awful.layout.inc(-1)                end,
-              {description = "select previous", group = "layout"}),
+              { description = "select previous", group = "layout" }),
 
     awful.key(
         { modkey, "Control" }, "n",
@@ -388,27 +391,27 @@ globalkeys = gears.table.join(
             )
           end
         end,
-        {description = "restore minimized", group = "client"}),
+        { description = "restore minimized", group = "client" }),
 
     -- Prompt
     awful.key(
         { modkey }, "space", function () awful.spawn("rofi -show drun") end,
-        {description = "rofi", group = "launcher"}),
+        { description = "rofi", group = "launcher" }),
     awful.key(
         { modkey , "Shift" }, "space", function () awful.spawn("rofi -show run") end,
-        {description = "rofi (raw)", group = "launcher"}),
+        { description = "rofi (raw)", group = "launcher" }),
 
     -- Screenshot
     awful.key(
         { }, "Print", function () awful.spawn("flameshot gui") end,
-        {description = "flameshot", group = "launcher"}),
+        { description = "flameshot", group = "launcher" }),
 
     awful.key(
         { modkey }, "v", function()
           awful.spawn("pactl set-source-mute @DEFAULT_SOURCE@ toggle")
           awful.spawn("notify-send \"Mic mute toggled\"")
         end,
-        {description = "toggle mic", group = "launcher"})
+        { description = "toggle mic", group = "launcher" })
 )
 
 clientkeys = gears.table.join(
@@ -607,6 +610,7 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 
 awful.spawn.once("xrdb ~/.Xresources")
 awful.spawn.once("xset r rate 250 50")
+awful.spawn.once("xsetroot -cursor_name left_ptr")
 awful.spawn.with_shell(gears.filesystem.get_configuration_dir() .. "autorun.sh")
 
 -- }}}

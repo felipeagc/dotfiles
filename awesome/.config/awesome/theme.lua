@@ -16,15 +16,27 @@ local theme = dofile(themes_path.."default/theme.lua")
 
 theme.font          = "sans 8"
 
-theme.red = xrdb.color9
-theme.dark_red = xrdb.color1
-theme.green = xrdb.color10
-theme.dark_green = xrdb.color2
+theme.black        = xrdb.color0
+theme.dark_grey    = xrdb.color8
+theme.dark_red     = xrdb.color1
+theme.red          = xrdb.color9
+theme.dark_green   = xrdb.color2
+theme.green        = xrdb.color10
+theme.dark_yellow  = xrdb.color3
+theme.yellow       = xrdb.color11
+theme.dark_blue    = xrdb.color4
+theme.blue         = xrdb.color12
+theme.dark_magenta = xrdb.color5
+theme.magenta      = xrdb.color13
+theme.dark_cyan    = xrdb.color6
+theme.cyan         = xrdb.color14
+theme.light_grey   = xrdb.color7
+theme.white        = xrdb.color15
 
 theme.bg_normal     = "#1d2021"
-theme.bg_focus      = xrdb.color8
-theme.bg_urgent     = xrdb.color9
-theme.bg_minimize   = xrdb.color8
+theme.bg_focus      = theme.dark_grey
+theme.bg_urgent     = theme.red
+theme.bg_minimize   = theme.dark_grey
 theme.bg_systray    = theme.bg_normal
 
 theme.fg_normal     = xrdb.foreground
@@ -37,6 +49,8 @@ theme.border_width  = dpi(2)
 theme.border_normal = xrdb.color0
 theme.border_focus  = theme.bg_focus
 theme.border_marked = xrdb.color10
+
+theme.wibar_border_color = theme.bg_normal
 
 theme.notification_icon_size = 48
 theme.notification_width = 200
@@ -115,21 +129,23 @@ theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(
   taglist_square_size, theme.fg_normal)
 
 -- Try to determine if we are running light or dark colorscheme:
-local bg_numberic_value = 0;
-for s in theme.bg_normal:gmatch("[a-fA-F0-9][a-fA-F0-9]") do
-  bg_numberic_value = bg_numberic_value + tonumber("0x"..s);
-end
-local is_dark_bg = (bg_numberic_value < 383)
+-- local bg_numberic_value = 0;
+-- for s in theme.bg_normal:gmatch("[a-fA-F0-9][a-fA-F0-9]") do
+--   bg_numberic_value = bg_numberic_value + tonumber("0x"..s);
+-- end
+-- local is_dark_bg = (bg_numberic_value < 383)
 
 -- Generate wallpaper:
-local wallpaper_bg = theme.bg_normal
-local wallpaper_fg = xrdb.color7
-local wallpaper_alt_fg = xrdb.color12
-if not is_dark_bg then
-  wallpaper_bg, wallpaper_fg = wallpaper_fg, wallpaper_bg
-end
-theme.wallpaper = function(s)
-  return theme_assets.wallpaper(wallpaper_bg, wallpaper_fg, wallpaper_alt_fg, s)
-end
+-- local wallpaper_bg = theme.bg_normal
+-- local wallpaper_fg = xrdb.color7
+-- local wallpaper_alt_fg = xrdb.color12
+-- if not is_dark_bg then
+--   wallpaper_bg, wallpaper_fg = wallpaper_fg, wallpaper_bg
+-- end
+-- theme.wallpaper = function(s)
+--   return theme_assets.wallpaper(wallpaper_bg, wallpaper_fg, wallpaper_alt_fg, s)
+-- end
+
+theme.wallpaper = "~/images/wallpaper.jpg"
 
 return theme
