@@ -411,7 +411,25 @@ globalkeys = gears.table.join(
           awful.spawn("pactl set-source-mute @DEFAULT_SOURCE@ toggle")
           awful.spawn("notify-send \"Mic mute toggled\"")
         end,
-        { description = "toggle mic", group = "launcher" })
+        { description = "toggle mic", group = "launcher" }),
+
+    -- Extra keys
+    awful.key(
+        {}, "XF86MonBrightnessUp", function() awful.spawn("xbacklight -inc 10") end,
+        { description = "increase screen brightness", group = "extra" }),
+    awful.key(
+        {}, "XF86MonBrightnessDown", function() awful.spawn("xbacklight -dec 10") end,
+        { description = "decrease screen brightness", group = "extra" }),
+
+    awful.key(
+        {}, "XF86AudioRaiseVolume", function() awful.spawn("pactl set-sink-volume 0 +5%") end,
+        { description = "increase volume", group = "extra" }),
+    awful.key(
+        {}, "XF86AudioLowerVolume", function() awful.spawn("pactl set-sink-volume 0 -5%") end,
+        { description = "decrease volume", group = "extra" }),
+    awful.key(
+        {}, "XF86AudioMute", function() awful.spawn("pactl set-sink-mute 0 toggle") end,
+        { description = "mute volume", group = "extra" })
 )
 
 clientkeys = gears.table.join(
