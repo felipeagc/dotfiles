@@ -175,15 +175,10 @@ let g:gutentags_generate_on_missing = 0
 " }}}
 
 " Folds {{{
-set foldmethod=manual
+set foldmethod=marker
+set foldlevel=1
 autocmd	FileType vim setlocal foldlevel=0 " Close all folds
 autocmd	FileType vim setlocal foldmethod=marker
-
-" augroup remember_folds
-"   autocmd!
-"   autocmd BufWinLeave *.* mkview
-"   autocmd BufWinEnter *.* silent! loadview
-" augroup END
 " }}}
 
 " Indentation {{{
@@ -311,7 +306,7 @@ augroup end
 " D {{{
 augroup dbindings
   autocmd FileType d setlocal efm=%*[^@]@%f\(%l\):\ %m,%f\(%l\\,%c\):\ %m,%f\(%l\):\ %m
-  autocmd Filetype d setlocal makeprg=dub\ build
+  autocmd Filetype d setlocal makeprg=dub\ build\ -q
   autocmd Filetype d nmap <buffer> <leader>mb :make<CR>
 augroup end
 "}}}
