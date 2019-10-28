@@ -12,6 +12,17 @@ source $ZSH/oh-my-zsh.sh
 
 unsetopt CORRECT
 
+export EDITOR=nvim
+export GIT_EDITOR=nvim
+export BROWSER=chromium
+export TERMINAL=xst
+export FILEBROWSER=nautilus
+
+if [ -n "$DESKTOP_SESSION" ];then
+    eval $(gnome-keyring-daemon --start)
+    export SSH_AUTH_SOCK
+fi
+
 alias ga="git add $1"
 alias gc="git commit -m $1"
 alias gp="git push $1 $2"
