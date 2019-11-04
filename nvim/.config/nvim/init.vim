@@ -191,6 +191,7 @@ autocmd FileType lua setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType json setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType go setlocal shiftwidth=4 tabstop=4 noexpandtab
 autocmd FileType rmd setlocal shiftwidth=2 tabstop=2 expandtab
+autocmd FileType bzl setlocal shiftwidth=2 tabstop=2 expandtab
 " }}}
 
 " Leader keybinds {{{
