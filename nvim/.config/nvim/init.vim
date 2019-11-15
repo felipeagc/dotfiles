@@ -35,6 +35,7 @@ Plug 'cohama/lexima.vim'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'brooth/far.vim'
 Plug 'airblade/vim-gitgutter'
+Plug 'dense-analysis/ale'
 
 " Languages
 Plug 'tikhomirov/vim-glsl'
@@ -50,6 +51,7 @@ call plug#end()
 " }}}
 
 " Settings {{{
+set exrc
 set mouse=a
 set noshowcmd
 
@@ -155,6 +157,34 @@ let g:netrw_localrmdir='rm -r'
 
 " }}}
 
+" ALE {{{
+let g:ale_fixers = {
+\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+\   'd': ['uncrustify'],
+\}
+
+" Enable fixing when saving
+let g:ale_fix_on_save = 1
+let g:ale_completion_enabled = 0
+
+let g:ale_c_uncrustify_options = '-c .uncrustify.cfg'
+
+" Only check when saving
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_insert_leave = 0
+" You can disable this option too
+" if you don't want linters to run on opening a file
+let g:ale_lint_on_enter = 0
+
+" Use quickfix list instead of loclist
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
+
+let g:ale_linters = {
+\   'd': ['dmd'],
+\}
+"}}}
+
 " FZF {{{
 " Set FZF to use ripgrep
 let $FZF_DEFAULT_COMMAND = 'rg --files --follow --glob "!.git/*"'
@@ -191,7 +221,7 @@ autocmd FileType lua setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType json setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType go setlocal shiftwidth=4 tabstop=4 noexpandtab
 autocmd FileType rmd setlocal shiftwidth=2 tabstop=2 expandtab
-autocmd FileType bzl setlocal shiftwidth=2 tabstop=2 expandtab
+autocmd FileType bzl setlocal shiftwidth=4 tabstop=4 expandtab
 " }}}
 
 " Leader keybinds {{{
@@ -249,14 +279,6 @@ augroup cppbindings
 augroup end
 " }}}
 
-" GLSL {{{
-augroup glslbindings
-  autocmd!
-  autocmd Filetype glsl setlocal makeprg=make\ -C\ shaders 
-  autocmd Filetype glsl nmap <buffer> <leader>mb :make<CR>
-augroup end
-" }}}
-
 " LaTeX {{{
 let g:tex_flavor="latex"
 
@@ -307,7 +329,7 @@ augroup end
 " D {{{
 augroup dbindings
   autocmd FileType d setlocal efm=%*[^@]@%f\(%l\):\ %m,%f\(%l\\,%c\):\ %m,%f\(%l\):\ %m
-  autocmd Filetype d setlocal makeprg=make
+  autocmd Filetype d setlocal makeprg=dub\ build\ -q
   autocmd Filetype d nmap <buffer> <leader>mb :make<CR>
 augroup end
 "}}}
