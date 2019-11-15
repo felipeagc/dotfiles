@@ -160,7 +160,7 @@ let g:netrw_localrmdir='rm -r'
 " ALE {{{
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'd': ['uncrustify'],
+\   'd': [],
 \}
 
 " Enable fixing when saving
@@ -168,6 +168,8 @@ let g:ale_fix_on_save = 1
 let g:ale_completion_enabled = 0
 
 let g:ale_c_uncrustify_options = '-c .uncrustify.cfg'
+let g:ale_d_dfmt_options = '-c .'
+let g:ale_glsl_glslang_options = '-V'
 
 " Only check when saving
 let g:ale_lint_on_text_changed = 'never'
