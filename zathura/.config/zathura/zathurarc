@@ -4,8 +4,6 @@ set recolor-lightcolor #ebdbb2
 
 set font "DejaVu Sans Mono 9"
 
-set smooth-scroll "true"
-
 set default-bg "#1d2021"
 set default-fg "#ebdbb2"
 
