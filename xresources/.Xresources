@@ -11,7 +11,7 @@ rofi.color-enabled: true
 !										bg       border   separator
 rofi.color-window:	#1d2021, #ebdbb2, #1d2021
 
-! State							bg       fg       bgalt    hlbg     hlfg	
+! State							bg       fg       bgalt    hlbg     hlfg
 rofi.color-normal:	#1d2021, #928374, #1d2021, #1d2021, #ebdbb2
 rofi.color-active:	#1d2021, #ebdbb2, #1d2021, #1d2021, #ebdbb2
 rofi.color-urgent:	#1d2021, #ebdbb2, #1d2021, #1d2021, #ebdbb2
@@ -23,7 +23,7 @@ rofi.lines:		      10
 rofi.modi:		      window,run,ssh,drun
 
 st.termname: st-256color
-st.font: monospace:bold:pixelsize=14
+st.font: DejaVu Sans Mono:pixelsize=12
 st.cwscale: 1.0
 st.borderpx: 12
 st.mouseScrollLines: 5

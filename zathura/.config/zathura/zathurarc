@@ -1,0 +1,20 @@
+set selection-clipboard clipboard
+set recolor-darkcolor #1d2021
+set recolor-lightcolor #ebdbb2
+
+set font "DejaVu Sans Mono 9"
+
+set smooth-scroll "true"
+
+set default-bg "#1d2021"
+set default-fg "#ebdbb2"
+
+set statusbar-bg "#32302f"
+set statusbar-fg "#ebdbb2"
+set statusbar-v-padding 8
+
+set recolor "true"
+set recolor-darkcolor "#ebdbb2"
+set recolor-lightcolor "#1d2021"
+set recolor-reverse-video "true"
+set recolor-keephue "true"
