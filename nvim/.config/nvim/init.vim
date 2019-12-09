@@ -27,21 +27,17 @@ Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-abolish'
-Plug 'christoomey/vim-tmux-navigator'
 Plug 'felipeagc/a.vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'rhysd/vim-clang-format'
 Plug 'cohama/lexima.vim'
 Plug 'ludovicchabant/vim-gutentags'
-Plug 'brooth/far.vim'
 Plug 'airblade/vim-gitgutter'
-Plug 'dense-analysis/ale'
 
 " Languages
 Plug 'tikhomirov/vim-glsl'
 Plug 'ziglang/zig.vim'
 Plug 'fatih/vim-go'
-Plug 'google/yapf', { 'rtp': 'plugins/vim', 'for': 'python' }
 Plug '~/.local/share/nvim/plugged/fl.vim'
 
 " Themes
@@ -91,6 +87,7 @@ set smartcase
 
 " Don't auto indent ':' in c/c++
 set cinoptions+=L0
+set cinoptions+=l1
 " }}}
 
 " Color scheme settings {{{
@@ -123,6 +120,7 @@ augroup END
 " Continuous indentation shift
 vnoremap < <gv
 vnoremap > >gv
+vnoremap <s-lt> <gv
 
 " Remap :W to :w
 cnoreabbrev W w
@@ -155,37 +153,11 @@ let g:netrw_liststyle=3     " tree view
 let g:netrw_list_hide=netrw_gitignore#Hide()
 let g:netrw_localrmdir='rm -r'
 
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 " }}}
-
-" ALE {{{
-let g:ale_fixers = {
-\   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'd': [],
-\}
-
-" Enable fixing when saving
-let g:ale_fix_on_save = 1
-let g:ale_completion_enabled = 0
-
-let g:ale_c_uncrustify_options = '-c .uncrustify.cfg'
-let g:ale_d_dfmt_options = '-c .'
-let g:ale_glsl_glslang_options = '-V'
-
-" Only check when saving
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_insert_leave = 0
-" You can disable this option too
-" if you don't want linters to run on opening a file
-let g:ale_lint_on_enter = 0
-
-" Use quickfix list instead of loclist
-let g:ale_set_loclist = 0
-let g:ale_set_quickfix = 1
-
-let g:ale_linters = {
-\   'd': ['dmd'],
-\}
-"}}}
 
 " FZF {{{
 " Set FZF to use ripgrep
