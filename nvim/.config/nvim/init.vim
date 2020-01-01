@@ -33,9 +33,12 @@ Plug 'rhysd/vim-clang-format'
 Plug 'cohama/lexima.vim'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'airblade/vim-gitgutter'
+Plug 'derekwyatt/vim-fswitch'
+Plug 'brooth/far.vim'
 
 " Languages
 Plug 'tikhomirov/vim-glsl'
+Plug 'beyondmarc/hlsl.vim'
 Plug 'ziglang/zig.vim'
 Plug 'fatih/vim-go'
 Plug '~/.local/share/nvim/plugged/fl.vim'
@@ -60,8 +63,8 @@ set scrolloff=10
 set clipboard=unnamedplus
 set completeopt=noinsert,menuone,noselect
 
-set tabstop=2
-set shiftwidth=2
+set tabstop=4
+set shiftwidth=4
 set autoindent
 set smartindent
 set smarttab
@@ -186,10 +189,10 @@ autocmd	FileType vim setlocal foldmethod=marker
 " }}}
 
 " Indentation {{{
-autocmd FileType glsl setlocal shiftwidth=2 tabstop=2 expandtab
+autocmd FileType glsl setlocal shiftwidth=4 tabstop=4 expandtab
 autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 expandtab
-autocmd FileType cpp setlocal shiftwidth=2 tabstop=2 expandtab
-autocmd FileType c setlocal shiftwidth=2 tabstop=2 expandtab
+autocmd FileType cpp setlocal shiftwidth=4 tabstop=4 expandtab
+autocmd FileType c setlocal shiftwidth=4 tabstop=4 expandtab
 autocmd FileType haskell setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType lua setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType json setlocal shiftwidth=2 tabstop=2 expandtab
@@ -231,8 +234,8 @@ nmap <silent> <leader>wd :q<CR>
 
 nmap <silent> <leader>gs :vertical Gstatus<CR>
 
-nmap <silent> <leader>a :A<CR>
-nmap <silent> <leader>A :AV<CR>
+nmap <silent> <leader>a :FSHere<CR>
+nmap <silent> <leader>A :FSSplitRight<CR>
 " }}}
 
 " C/C++ {{{
@@ -307,3 +310,12 @@ augroup dbindings
   autocmd Filetype d nmap <buffer> <leader>mb :make<CR>
 augroup end
 "}}}
+
+" GLSL {{{
+augroup glslbindings
+  autocmd Filetype glsl setlocal makeprg=make\ -C\ shaders
+  autocmd Filetype glsl nmap <buffer> <leader>mb :make<CR>
+  autocmd BufEnter *.frag let b:fswitchdst = 'vert' | let b:fswitchlocs = '.'
+  autocmd BufEnter *.vert let b:fswitchdst = 'frag' | let b:fswitchlocs = '.'
+augroup end
+" }}}
