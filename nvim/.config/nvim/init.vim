@@ -170,13 +170,6 @@ let $FZF_DEFAULT_COMMAND = 'rg --files --follow --glob "!.git/*"'
 autocmd FileType fzf tnoremap <buffer> <Esc> <Esc>
 " }}}
 
-" a.vim {{{
-let g:alternateExtensions_vert = "frag"
-let g:alternateExtensions_frag = "vert"
-let g:alternateExtensions_glslv = "glslf"
-let g:alternateExtensions_glslf = "glslv"
-" }}}
-
 " Gutentags {{{
 let g:gutentags_generate_on_missing = 0
 " }}}
@@ -241,11 +234,19 @@ nmap <silent> <leader>A :FSSplitRight<CR>
 " C/C++ {{{
 let g:compiler_gcc_ignore_unmatched_lines = 1
 
+function! ClangRename()
+	let offset = line2byte(line("."))+col(".")
+	let new_name = input("New name: ")
+	let file_name = expand('%:p')
+	execute "!clang-rename ".file_name." -p=".getcwd()."/build -i -offset ".offset." -new-name ".new_name
+endfunction
+
 augroup cbindings
   autocmd!
   autocmd Filetype c setlocal makeprg=ninja\ -C\ build
   autocmd Filetype c nmap <buffer> <silent> <leader>mf :ClangFormat<CR>
   autocmd Filetype c nmap <buffer> <leader>mb :make<CR>
+  autocmd Filetype c nmap <buffer> <leader>mr :call ClangRename()<CR>
 augroup end
 
 augroup cppbindings
@@ -270,11 +271,15 @@ augroup texbindings
 augroup end
 " }}}
 
-" R Markdown {{{
-augroup rmdbindings
+" Asciidoc {{{
+function! OpenAsciidoc()
+  execute 'silent !xdg-open "' . expand('%:p:r') . '.html" &'
+endfunction
+
+augroup adocbindings
   autocmd!
-  autocmd Filetype rmd nmap <buffer> <silent> <leader>mp :call LaunchZathura()<CR>
-  autocmd Filetype rmd nmap <buffer> <leader>mb :!echo<space>"require(rmarkdown);<space>render('<c-r>%')"<space>\|<space>R<space>--vanilla<enter>
+  autocmd Filetype asciidoc nmap <buffer> <silent> <leader>mp :call OpenAsciidoc()<CR>
+  autocmd Filetype asciidoc nmap <buffer> <leader>mb :!asciidoctor "%" -d book<CR>
 augroup end
 " }}}
 

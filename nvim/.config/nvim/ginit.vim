@@ -1,3 +1,3 @@
-GuiFont DejaVu Sans Mono:h9
+GuiFont! Terminus:h10
 GuiPopupmenu 0
 GuiTabline 0
