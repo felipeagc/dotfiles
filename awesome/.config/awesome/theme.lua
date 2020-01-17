@@ -14,7 +14,7 @@ local themes_path = gfs.get_themes_dir()
 local theme = dofile(themes_path.."default/theme.lua")
 -- load vector assets' generators for this theme
 
-theme.font          = "Terminus 8"
+theme.font          = "IBM Plex Sans 9"
 
 theme.black        = xrdb.color0
 theme.dark_grey    = xrdb.color8

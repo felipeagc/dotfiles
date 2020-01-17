@@ -12,28 +12,28 @@ rofi.color-enabled: true
 rofi.color-window:	#1d2021, #ebdbb2, #1d2021
 
 ! State							bg       fg       bgalt    hlbg     hlfg
-rofi.color-normal:	#1d2021, #928374, #1d2021, #1d2021, #ebdbb2
-rofi.color-active:	#1d2021, #ebdbb2, #1d2021, #1d2021, #ebdbb2
-rofi.color-urgent:	#1d2021, #ebdbb2, #1d2021, #1d2021, #ebdbb2
-rofi.font:		    Terminus 13
-rofi.bw: 		    2
-rofi.padding:		16
-rofi.width:		    40
-rofi.lines:		    12
-rofi.modi:		    window,run,ssh,drun
+rofi.color-normal:  #1d2021, #928374, #1d2021, #1d2021, #ebdbb2
+rofi.color-active:  #1d2021, #ebdbb2, #1d2021, #1d2021, #ebdbb2
+rofi.color-urgent:  #1d2021, #ebdbb2, #1d2021, #1d2021, #ebdbb2
+rofi.font:          IBM Plex Sans 15
+rofi.bw:            2
+rofi.padding:       16
+rofi.width:         50
+rofi.lines:         12
+rofi.modi:          window,run,ssh,drun
 
-st.termname: st-256color
-st.font: Terminus:size=10
-st.cwscale: 0.8
-st.borderpx: 12
+st.termname:         st-256color
+st.font:             IBM Plex Mono:size=10
+st.cwscale:          1.0
+st.borderpx:         12
 st.mouseScrollLines: 5
-st.bold_font: 1
-st.actionfps: 60
-st.xfps: 120
+st.bold_font:        1
+st.actionfps:        60
+st.xfps:             120
 
-URxvt*font: xft:Hack:pixelsize=12,xft:Symbola
-URxvt*scrollBar: false
-URxvt*transparent: false
+URxvt*font:           xft:Hack:pixelsize=12,xft:Symbola
+URxvt*scrollBar:      false
+URxvt*transparent:    false
 URxvt*internalBorder: 12
 
 URxvt*keysym.Shift-Control-V: eval:paste_clipboard
