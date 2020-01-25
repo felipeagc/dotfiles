@@ -15,6 +15,12 @@
 ;; This makes emacs accept only y/n as answers.
 (fset 'yes-or-no-p 'y-or-n-p)
 
+;; Pixelwise resizing
+;; (setq frame-resize-pixelwise t)
+
+;; Stop asking to follow symlinks
+(setq vc-follow-symlinks t)
+
 ;; Visuals
 (add-to-list 'default-frame-alist '(font . "IBM Plex Mono-10"))
 (setq font-lock-maximum-decoration 2) ;; Minimize the syntax highlighting a bit
@@ -28,12 +34,11 @@
 (scroll-bar-mode -1)
 (blink-cursor-mode 0)
 
-;; Disable scroll bars
-(defun felipe/disable-scroll-bars (frame)
-  (modify-frame-parameters frame
-			   '((vertical-scroll-bars . nil)
-			     (horizontal-scroll-bars . nil))))
-(add-hook 'after-make-frame-functions 'felipe/disable-scroll-bars)
+;; Frame settings
+(defun felipe/after-frame (frame)
+  (modify-frame-parameters frame '((vertical-scroll-bars . nil)
+                                   (horizontal-scroll-bars . nil))))
+(add-hook 'after-make-frame-functions 'felipe/after-frame)
 
 ;; Indentation
 (setq-default indent-tabs-mode nil
@@ -43,6 +48,29 @@
 
 ;; Auto closing pairs
 (electric-pair-mode)
+
+;; Highlight matching brace
+(setq show-paren-delay 0)
+(show-paren-mode 1)
+
+;; Auto-close compilation buffer
+(defun felipe/bury-compile-buffer-if-successful (buffer string)
+  "Bury a compilation buffer if succeeded without warnings "
+  (if (and
+       (string-match "compilation" (buffer-name buffer))
+       (string-match "finished" string)
+       (not
+        (with-current-buffer buffer
+          (search-forward "warning" nil t))))
+      (run-with-timer 1 nil
+                      (lambda (buf)
+                        (bury-buffer buf)
+                        (switch-to-prev-buffer (get-buffer-window buf) 'kill))
+                      buffer)))
+(add-hook 'compilation-finish-functions 'felipe/bury-compile-buffer-if-successful)
+
+;; Highlight current line in programming modes
+(add-hook 'prog-mode-hook 'hl-line-mode)
 
 ;; Use-package
 (straight-use-package 'use-package)
@@ -96,9 +124,28 @@
   (evil-commentary-mode))
 
 ;; Theme
-(use-package gruvbox-theme
+(use-package darktooth-theme
   :config
-  (load-theme 'gruvbox t))
+  (load-theme 'darktooth t)
+  (darktooth-modeline-two)
+  (set-face-background 'vertical-border (face-attribute 'darktooth-modeline-one-inactive :background))
+  (set-face-foreground 'vertical-border (face-background 'vertical-border))
+  (set-face-attribute 'mode-line nil :height 90)
+  (set-face-attribute 'mode-line-inactive nil :height 90))
+
+;; Modeline format
+(column-number-mode)
+(setq-default mode-line-format
+      (list "-" 
+            'mode-line-mule-info
+            'mode-line-modified
+            "  "
+            'mode-line-buffer-identification
+            'vc-mode
+            "  ("
+            'mode-name
+            ")  "
+            'mode-line-position))
 
 ;; Ivy
 (use-package ivy
@@ -116,7 +163,12 @@
          ;; File names beginning with # or .
          "\\(?:\\`[#.]\\)"
          ;; File names ending with # or ~
-         "\\|\\(?:\\`.+?[#~]\\'\\)")))
+         "\\|\\(?:\\`.+?[#~]\\'\\)"))
+  :config
+  (use-package counsel-projectile
+    :after projectile
+    :config
+    (counsel-projectile-mode)))
 
 (use-package general
   :config
@@ -128,6 +180,8 @@
   :keymaps 'normal
   "a" 'projectile-find-other-file
   "A" 'projectile-find-other-file-other-window
+
+  "ir" 'ivy-resume
 
   "w/" 'split-window-right
   "w-" 'split-window-below
@@ -146,9 +200,10 @@
   "bn" 'next-buffer
   "bp" 'previous-buffer
 
-  "pp" 'projectile-switch-project
-  "pf" 'counsel-fzf
+  "pp" 'counsel-projectile-switch-project
+  "pf" 'counsel-projectile-find-file
   "pa" 'projectile-add-known-project
+  "pg" 'counsel-projectile-rg
 
   "gs" 'magit-status
 
@@ -195,19 +250,17 @@
         projectile-completion-system 'ivy)
   (projectile-global-mode))
 
-;; Highlight
+;; Highlight TODO
 (use-package hl-todo
   :config
   (global-hl-todo-mode))
 
 ;; C/C++
+(use-package meson-mode)
 (use-package cmake-mode)
 (use-package clang-format)
 
-(use-package modern-cpp-font-lock
-  :config
-  (add-hook 'c-mode-hook #'modern-c++-font-lock-mode)
-  (add-hook 'c++-mode-hook #'modern-c++-font-lock-mode))
+(add-to-list 'auto-mode-alist '("\\.inl\\'" . c-mode))
 
 (felipe/leader-def 'normal c-mode-map
   "mf" 'clang-format-buffer)
@@ -225,3 +278,34 @@
   (add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
   (add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
   (add-to-list 'auto-mode-alist '("\\.geom\\'" . glsl-mode)))
+
+;; Asciidoc
+(define-derived-mode adoc-mode fundamental-mode "AsciiDoc"
+  "major mode for editing asciidoc."
+  (setq font-lock-defaults
+        '((("^=.*$" . font-lock-keyword-face)
+           ("^\\*+.+$" . font-lock-variable-name-face)
+           ("[^ ]+://[^ ]+\\[.+\\]$" . font-lock-type-face)))))
+
+(add-to-list 'auto-mode-alist '("\\.adoc\\'" . adoc-mode))
+
+(felipe/leader-def 'normal adoc-mode-map
+  "mbh" (lambda ()
+          (interactive)
+          (compile (let ((file (file-name-nondirectory buffer-file-name)))
+                     (format "asciidoctor -b html5 %s" file))))
+  "mbp" (lambda ()
+          (interactive)
+          (compile (let ((file (file-name-nondirectory buffer-file-name)))
+                     (format "asciidoctor-pdf %s" file))))
+  "mph" (lambda ()
+          (interactive)
+          (let ((filename (buffer-file-name)))
+            (browse-url (concat "file://" (file-name-sans-extension filename) ".html"))))
+  "mpp" (lambda ()
+          (interactive)
+          (start-process "zathura" nil "zathura" (concat (file-name-sans-extension (buffer-file-name)) ".pdf"))))
+
+;; Other major modes
+(use-package org)
+(use-package yaml-mode)
