@@ -1,3 +1,3 @@
-GuiFont! IBM Plex Mono Medium:h9
+GuiFont! IBM Plex Mono Text:h10
 GuiPopupmenu 0
 GuiTabline 0

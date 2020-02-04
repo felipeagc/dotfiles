@@ -18,6 +18,7 @@ endif
 call plug#begin('~/.local/share/nvim/plugged')
 
 " Search
+Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 
 " Utility
@@ -35,6 +36,8 @@ Plug 'ludovicchabant/vim-gutentags'
 Plug 'airblade/vim-gitgutter'
 Plug 'derekwyatt/vim-fswitch'
 Plug 'brooth/far.vim'
+
+Plug 'neomake/neomake'
 
 " Languages
 Plug 'tikhomirov/vim-glsl'
@@ -94,7 +97,7 @@ set cinoptions+=l1
 " }}}
 
 " Color scheme settings {{{
-let g:gruvbox_contrast_dark = 'hard'
+" let g:gruvbox_contrast_dark = 'hard'
 let g:gruvbox_sign_column = 'bg0'
 let g:gruvbox_termcolors=16
 
@@ -162,11 +165,25 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 " }}}
 
-" FZF {{{
-" Set FZF to use ripgrep
-let $FZF_DEFAULT_COMMAND = 'rg --files --follow --glob "!.git/*"'
+" Neomake {{{
+call neomake#configure#automake('w')
+call neomake#config#set('maker_defaults.remove_invalid_entries', 1)
 
-" ESC to exit FZF
+let g:neomake_c_enabled_makers = []
+let g:neomake_cpp_enabled_makers = []
+let g:neomake_cursormoved_delay = 0
+let g:neomake_open_list = 2
+" }}}
+
+" FZF {{{
+let $FZF_DEFAULT_OPTS='--color=gutter:-1 --layout=reverse --margin=1,2'
+
+if executable('ag')
+  let $FZF_DEFAULT_COMMAND = 'ag -g ""'
+endif
+
+let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.6 } }
+
 autocmd FileType fzf tnoremap <buffer> <Esc> <Esc>
 " }}}
 
@@ -198,10 +215,10 @@ autocmd FileType bzl setlocal shiftwidth=4 tabstop=4 expandtab
 let mapleader = " "
 
 nmap <silent> <leader>ff :Files<CR>
-nmap <silent> <leader>fg :execute 'Rg '.input('Grep: ')<CR>
+nmap <silent> <leader>fg :execute 'Ag '.input('Grep: ')<CR>
 nmap <silent> <leader>fr :Farp<CR>
 nmap <silent> <leader>fed :e $MYVIMRC<CR>
-nmap <silent> <leader>fer :so $MYVIMRC<CR>
+nmap <silent> <leader>feg :e $HOME/.config/nvim/ginit.vim<CR>
 
 nmap <silent> <leader>tc :tabnew<CR>
 nmap <silent> <leader>tn :tabnext<CR>
@@ -234,26 +251,20 @@ nmap <silent> <leader>A :FSSplitRight<CR>
 " C/C++ {{{
 let g:compiler_gcc_ignore_unmatched_lines = 1
 
-function! ClangRename()
-	let offset = line2byte(line("."))+col(".")
-	let new_name = input("New name: ")
-	let file_name = expand('%:p')
-	execute "!clang-rename ".file_name." -p=".getcwd()."/build -i -offset ".offset." -new-name ".new_name
-endfunction
-
 augroup cbindings
   autocmd!
   autocmd Filetype c setlocal makeprg=ninja\ -C\ build
+  autocmd Filetype c setlocal errorformat=../%f:%l:%c:%m,%-G%.%#
   autocmd Filetype c nmap <buffer> <silent> <leader>mf :ClangFormat<CR>
-  autocmd Filetype c nmap <buffer> <leader>mb :make<CR>
-  autocmd Filetype c nmap <buffer> <leader>mr :call ClangRename()<CR>
+  autocmd Filetype c nmap <buffer> <leader>mb :Neomake!<CR>
 augroup end
 
 augroup cppbindings
   autocmd!
   autocmd Filetype cpp setlocal makeprg=ninja\ -C\ build
+  autocmd Filetype cpp setlocal errorformat=../%f:%l:%c:%m,%-G%.%#
   autocmd Filetype cpp nmap <buffer> <silent> <leader>mf :ClangFormat<CR>
-  autocmd Filetype cpp nmap <buffer> <leader>mb :make<CR>
+  autocmd Filetype cpp nmap <buffer> <leader>mb :Neomake!<CR>
 augroup end
 " }}}
 
@@ -273,13 +284,15 @@ augroup end
 
 " Asciidoc {{{
 function! OpenAsciidoc()
-  execute 'silent !xdg-open "' . expand('%:p:r') . '.html" &'
+  execute 'silent !xdg-open "' . expand('%:p:r') . '.pdf" &'
 endfunction
+
 
 augroup adocbindings
   autocmd!
+  autocmd Filetype asciidoc setlocal makeprg=asciidoctor-pdf\ %
+  autocmd Filetype asciidoc nmap <buffer> <leader>mb :Neomake!<CR>
   autocmd Filetype asciidoc nmap <buffer> <silent> <leader>mp :call OpenAsciidoc()<CR>
-  autocmd Filetype asciidoc nmap <buffer> <leader>mb :!asciidoctor "%" -d book<CR>
 augroup end
 " }}}
 

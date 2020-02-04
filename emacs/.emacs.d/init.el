@@ -31,7 +31,7 @@
 ;; Disable UI elements
 (menu-bar-mode -1)
 (tool-bar-mode -1)
-(scroll-bar-mode -1)
+;; (scroll-bar-mode -1)
 (blink-cursor-mode 0)
 
 ;; Frame settings
@@ -152,6 +152,18 @@
   :config
   (ivy-mode 1))
 
+(use-package ivy-xref
+  :after ivy
+  :init
+  ;; xref initialization is different in Emacs 27 - there are two different
+  ;; variables which can be set rather than just one
+  (when (>= emacs-major-version 27)
+    (setq xref-show-definitions-function #'ivy-xref-show-defs))
+  ;; Necessary in Emacs <27. In Emacs 27 it will affect all xref-based
+  ;; commands other than xref-find-definitions (e.g. project-find-regexp)
+  ;; as well
+  (setq xref-show-xrefs-function #'ivy-xref-show-xrefs))
+
 ;; Counsel
 (use-package counsel
   :after ivy
@@ -205,6 +217,9 @@
   "pa" 'projectile-add-known-project
   "pg" 'counsel-projectile-rg
 
+  "en" 'next-error
+  "ep" 'previous-error
+
   "gs" 'magit-status
 
   "mb" 'projectile-compile-project)
@@ -212,8 +227,8 @@
 ;; Company
 (use-package company
   :config
-  (define-key company-active-map (kbd "M-n") nil)
-  (define-key company-active-map (kbd "M-p") nil)
+  ;; (define-key company-active-map (kbd "M-n") nil)
+  ;; (define-key company-active-map (kbd "M-p") nil)
   (define-key company-active-map (kbd "C-n") #'company-select-next)
   (define-key company-active-map (kbd "C-p") #'company-select-previous)
   (global-company-mode))
@@ -261,6 +276,16 @@
 (use-package clang-format)
 
 (add-to-list 'auto-mode-alist '("\\.inl\\'" . c-mode))
+
+(defun felipe/c-c++-hook ()
+  (when (boundp 'company-backends)
+    (make-local-variable 'company-backends)
+    ;; remove clang backend
+    (setq company-backends (delete 'company-clang company-backends))
+    ))
+
+(add-hook 'c++-mode-hook 'felipe/c-c++-hook)
+(add-hook 'c-mode-hook 'felipe/c-c++-hook)
 
 (felipe/leader-def 'normal c-mode-map
   "mf" 'clang-format-buffer)
