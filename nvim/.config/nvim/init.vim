@@ -28,10 +28,9 @@ Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-abolish'
-Plug 'felipeagc/a.vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'rhysd/vim-clang-format'
-Plug 'cohama/lexima.vim'
+Plug 'cohama/lexima.vim' " Auto closing braces
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'airblade/vim-gitgutter'
 Plug 'derekwyatt/vim-fswitch'
@@ -44,6 +43,7 @@ Plug 'tikhomirov/vim-glsl'
 Plug 'beyondmarc/hlsl.vim'
 Plug 'ziglang/zig.vim'
 Plug 'fatih/vim-go'
+Plug 'chadversary/vim-meson'
 Plug '~/.local/share/nvim/plugged/fl.vim'
 
 " Themes
@@ -165,6 +165,11 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 " }}}
 
+" Termdebug {{{
+let g:termdebug_wide = 50
+packadd termdebug
+" }}}
+
 " Neomake {{{
 call neomake#configure#automake('w')
 call neomake#config#set('maker_defaults.remove_invalid_entries', 1)
@@ -236,6 +241,12 @@ nmap <silent> <leader>en :cnext<CR>
 nmap <silent> <leader>ep :cprev<CR>
 nmap <silent> <leader>el :copen<CR>
 nmap <silent> <leader>eL :cclose<CR>
+
+nmap <silent> <leader>dd :execute 'Termdebug '.input('File to debug: ')<CR>
+nmap <silent> <leader>db :Break<CR>
+nmap <silent> <leader>dB :Clear<CR>
+nmap <silent> <leader>ds :Step<CR>
+nmap <silent> <leader>dn :Over<CR>
 
 nmap <silent> <leader>w/ :vsplit<CR>
 nmap <silent> <leader>w- :split<CR>
@@ -335,5 +346,11 @@ augroup glslbindings
   autocmd Filetype glsl nmap <buffer> <leader>mb :make<CR>
   autocmd BufEnter *.frag let b:fswitchdst = 'vert' | let b:fswitchlocs = '.'
   autocmd BufEnter *.vert let b:fswitchdst = 'frag' | let b:fswitchlocs = '.'
+augroup end
+" }}}
+
+" HLSL {{{
+augroup hlslbindings
+  autocmd Filetype hlsl nmap <buffer> <silent> <leader>mf :ClangFormat<CR>
 augroup end
 " }}}
