@@ -57,7 +57,7 @@ beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
 -- beautiful.init(gears.filesystem.get_themes_dir() .. "xresources/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
-terminal = "xst"
+terminal = "xterm"
 editor = os.getenv("EDITOR") or "nvim"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -621,7 +621,7 @@ client.connect_signal("focus", function(c) c.border_color = beautiful.border_foc
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 
 awful.spawn.once("xrdb ~/.Xresources")
-awful.spawn.once("xset r rate 250 50")
+awful.spawn.once("xset r rate 220 60")
 awful.spawn.once("xsetroot -cursor_name left_ptr")
 awful.spawn.with_shell(gears.filesystem.get_configuration_dir() .. "autorun.sh")
 

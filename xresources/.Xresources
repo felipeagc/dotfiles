@@ -8,10 +8,10 @@ Xft.lcdfilter: lcddefault
 
 rofi.color-enabled: true
 
-!										bg       border   separator
+!                   bg       border   separator
 rofi.color-window:	#1d2021, #ebdbb2, #1d2021
 
-! State							bg       fg       bgalt    hlbg     hlfg
+! State             bg       fg       bgalt    hlbg     hlfg
 rofi.color-normal:  #1d2021, #928374, #1d2021, #1d2021, #ebdbb2
 rofi.color-active:  #1d2021, #ebdbb2, #1d2021, #1d2021, #ebdbb2
 rofi.color-urgent:  #1d2021, #ebdbb2, #1d2021, #1d2021, #ebdbb2
@@ -44,8 +44,14 @@ URxvt*perl-ext-common: default,resize-font
 
 URxvt*letterSpace: -1
 
-xterm*utf8: 1
-
+XTerm.vt100.scrollBar: false
+XTerm.vt100.internalBorder: 12
+XTerm.vt100.locale: true
+XTerm.vt100.renderFont: true
+XTerm.vt100.faceName: IBM Plex Mono Text:pixelsize=13:antialias=true
+XTerm.vt100.translations: #override \n\
+	Ctrl Shift <Key>C: copy-selection(CLIPBOARD) \n\
+	Ctrl Shift <Key>V: insert-selection(CLIPBOARD)
 
 ! *background-hard: #1d2021
 *background: #282828
