@@ -44,8 +44,11 @@ URxvt*perl-ext-common: default,resize-font
 
 URxvt*letterSpace: -1
 
+XTerm*borderWidth: 0
+
 XTerm.vt100.scrollBar: false
 XTerm.vt100.internalBorder: 12
+XTerm.vt100.borderWidth: 0
 XTerm.vt100.locale: true
 XTerm.vt100.renderFont: true
 XTerm.vt100.faceName: IBM Plex Mono Text:pixelsize=13:antialias=true
