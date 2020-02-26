@@ -21,7 +21,9 @@ bottom = true
 background = ${colors.background}
 foreground = ${colors.foreground}
 
-border-size = 6
+underline-size = 4
+
+border-size = 8
 border-color = ${colors.background}
 
 padding-left = 0
@@ -37,7 +39,7 @@ font-3 = siji:pixelsize=10;1
 
 modules-left = i3 xwindow
 modules-center =
-modules-right = wlan wlan2 pulseaudio memory battery battery2 date powermenu
+modules-right = wlan wlan2 pulseaudio memory battery battery2 date time powermenu
 
 tray-position = right
 tray-padding = 2
@@ -78,6 +80,7 @@ label-focused = %index%
 label-focused-foreground = ${colors.background}
 label-focused-background = ${colors.background-alt}
 label-focused-padding = 2
+label-focused-underline = ${colors.background-alt}
 
 ; unfocused = Inactive workspace on any monitor
 label-unfocused = %index%
@@ -91,6 +94,7 @@ label-visible-padding = ${self.label-focused-padding}
 ; urgent = Workspace with urgency hint set
 label-urgent = %index%
 label-urgent-background = ${colors.red}
+label-urgent-foreground = ${colors.background}
 label-urgent-padding = 2
 
 ; Separator in between workspaces
@@ -125,10 +129,18 @@ interface = wlp5s0
 type = internal/date
 interval = 5
 
-date = " %d-%m-%Y"
+date = "%A, %B %d"
+
+label = %date%
+label-foreground = ${colors.blue}
+
+[module/time]
+type = internal/date
+interval = 5
+
 time = %H:%M
 
-label = %date% %time%
+label = %time%
 label-foreground = ${colors.magenta}
 
 [module/pulseaudio]
@@ -188,10 +200,10 @@ menu-0-1-exec = menu-open-2
 menu-1-0 = cancel
 menu-1-0-exec = menu-open-0
 menu-1-1 = reboot
-menu-1-1-exec = sudo reboot
+menu-1-1-exec = systemctl reboot
 
 menu-2-0 = power off
-menu-2-0-exec = sudo poweroff
+menu-2-0-exec = systemctl poweroff
 menu-2-1 = cancel
 menu-2-1-exec = menu-open-0
 
