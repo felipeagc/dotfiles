@@ -77,6 +77,8 @@ set wildignore+=*.so,*.swp,*.zip,*.o,*.png,*.jpg,*.jpeg,*/target/*,*/build/*,*/n
 set hidden
 " set completeopt+=noselect
 set noshowmode
+set modeline
+set modelines=1
 
 set undofile
 set undodir=~/.vim/undodir
@@ -262,18 +264,26 @@ nmap <silent> <leader>A :FSSplitRight<CR>
 " C/C++ {{{
 let g:compiler_gcc_ignore_unmatched_lines = 1
 
+function! SetCMakeprg()
+	if !empty(glob("meson.build")) || !empty(glob("CMakeLists.txt"))
+		setlocal makeprg=ninja\ -C\ build
+		setlocal errorformat=../%f:%l:%c:%m,%-G%.%#
+	endif
+	if !empty(glob("makefile")) || !empty(glob("Makefile"))
+		setlocal makeprg=make
+	endif
+endfunction
+
 augroup cbindings
   autocmd!
-  autocmd Filetype c setlocal makeprg=ninja\ -C\ build
-  autocmd Filetype c setlocal errorformat=../%f:%l:%c:%m,%-G%.%#
+  autocmd Filetype c call SetCMakeprg()
   autocmd Filetype c nmap <buffer> <silent> <leader>mf :ClangFormat<CR>
   autocmd Filetype c nmap <buffer> <leader>mb :Neomake!<CR>
 augroup end
 
 augroup cppbindings
   autocmd!
-  autocmd Filetype cpp setlocal makeprg=ninja\ -C\ build
-  autocmd Filetype cpp setlocal errorformat=../%f:%l:%c:%m,%-G%.%#
+  autocmd Filetype cpp call SetCMakeprg()
   autocmd Filetype cpp nmap <buffer> <silent> <leader>mf :ClangFormat<CR>
   autocmd Filetype cpp nmap <buffer> <leader>mb :Neomake!<CR>
 augroup end
@@ -297,7 +307,6 @@ augroup end
 function! OpenAsciidoc()
   execute 'silent !xdg-open "' . expand('%:p:r') . '.pdf" &'
 endfunction
-
 
 augroup adocbindings
   autocmd!

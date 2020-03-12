@@ -1,7 +1,7 @@
 # This file contains fish universal variable definitions.
 # VERSION: 3.0
 SETUVAR BROWSER:chromium
-SETUVAR EDITOR:nvim
+SETUVAR --export EDITOR:nvim
 SETUVAR FILEBROWSER:nautilus
 SETUVAR GIT_EDITOR:nvim
 SETUVAR TERMINAL:xterm
