@@ -150,4 +150,7 @@ exec --no-startup-id dunst
 exec --no-startup-id xsetroot -cursor_name left_ptr
 exec --no-startup-id xset r rate 230 60
 
+exec --no-startup-id ibus-daemon -drx 
+
 exec --no-startup-id xrdb ~/.Xresources
+exec --no-startup-id gnome-keyring-daemon --start

@@ -99,10 +99,9 @@ set cinoptions+=l1
 " }}}
 
 " Color scheme settings {{{
-" let g:gruvbox_contrast_dark = 'hard'
+let g:gruvbox_contrast_dark = 'hard'
 let g:gruvbox_sign_column = 'bg0'
 let g:gruvbox_termcolors=16
-
 colorscheme gruvbox
 " }}}
 
@@ -200,7 +199,7 @@ let g:gutentags_generate_on_missing = 0
 
 " Folds {{{
 set foldmethod=marker
-set foldlevel=1
+set foldlevel=0
 autocmd	FileType vim setlocal foldlevel=0 " Close all folds
 autocmd	FileType vim setlocal foldmethod=marker
 " }}}
@@ -322,6 +321,14 @@ let g:zig_fmt_autosave = 0
 augroup zigbindings
   autocmd!
   autocmd Filetype zig nmap <buffer> <leader>mb :!zig build<CR>
+augroup end
+" }}}
+
+" Fl {{{
+augroup flbindings
+  autocmd Filetype fl setlocal makeprg=make
+  autocmd Filetype fl setlocal errorformat=%f:%l:%c:\ %trror:\ %m
+  autocmd Filetype fl nmap <buffer> <leader>mb :Neomake!<CR>
 augroup end
 " }}}
 
