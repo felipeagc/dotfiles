@@ -35,6 +35,7 @@ Plug 'ludovicchabant/vim-gutentags'
 Plug 'airblade/vim-gitgutter'
 Plug 'derekwyatt/vim-fswitch'
 Plug 'brooth/far.vim'
+Plug 'tommcdo/vim-lion' " Alignment
 
 Plug 'neomake/neomake'
 
@@ -99,8 +100,8 @@ set cinoptions+=l1
 " }}}
 
 " Color scheme settings {{{
-let g:gruvbox_contrast_dark = 'hard'
-let g:gruvbox_sign_column = 'bg0'
+let g:gruvbox_contrast_dark = 'medium'
+" let g:gruvbox_sign_column = 'bg1'
 let g:gruvbox_termcolors=16
 colorscheme gruvbox
 " }}}
@@ -177,6 +178,7 @@ call neomake#config#set('maker_defaults.remove_invalid_entries', 1)
 
 let g:neomake_c_enabled_makers = []
 let g:neomake_cpp_enabled_makers = []
+let g:neomake_d_enabled_makers = []
 let g:neomake_cursormoved_delay = 0
 let g:neomake_open_list = 2
 " }}}
@@ -227,8 +229,6 @@ nmap <silent> <leader>fed :e $MYVIMRC<CR>
 nmap <silent> <leader>feg :e $HOME/.config/nvim/ginit.vim<CR>
 
 nmap <silent> <leader>tc :tabnew<CR>
-nmap <silent> <leader>tn :tabnext<CR>
-nmap <silent> <leader>tp :tabprev<CR>
 nmap <silent> <leader>td :tabclose<CR>
 
 nmap <silent> <leader>bn :bn<CR>
@@ -349,10 +349,23 @@ augroup end
 " }}}
 
 " D {{{
+function! SetDMakeprg()
+	if !empty(glob("dub.sdl")) || !empty(glob("dub.json"))
+		setlocal makeprg=dub\ build
+	elseif !empty(glob("makefile")) || !empty(glob("Makefile")) || !empty(glob("GNUmakefile"))
+		setlocal makeprg=make
+	elseif !empty(glob("Tupfile"))
+		setlocal makeprg=tup\ .
+	endif
+endfunction
+
 augroup dbindings
-  autocmd FileType d setlocal efm=%*[^@]@%f\(%l\):\ %m,%f\(%l\\,%c\):\ %m,%f\(%l\):\ %m
-  autocmd Filetype d setlocal makeprg=dub\ build\ -q
-  autocmd Filetype d nmap <buffer> <leader>mb :make<CR>
+  autocmd Filetype d call SetDMakeprg()
+
+  autocmd FileType d setlocal errorformat=%f\(%l\\,%c\):\ %trror:\ %m,%-G%.%#
+  " autocmd FileType d setlocal errorformat=%f(%l,%c):\ %trror:\ %m
+  " autocmd FileType d setlocal efm=%*[^@]@%f\(%l\):\ %m,%f\(%l\\,%c\):\ %m,%f\(%l\):\ %m
+  autocmd Filetype d nmap <buffer> <leader>mb :Neomake!<CR>
 augroup end
 "}}}
 

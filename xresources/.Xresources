@@ -47,7 +47,7 @@ URxvt*letterSpace: -1
 XTerm*borderWidth: 0
 
 XTerm.vt100.scrollBar: false
-XTerm.vt100.internalBorder: 12
+XTerm.vt100.internalBorder: 0
 XTerm.vt100.borderWidth: 0
 XTerm.vt100.locale: true
 XTerm.vt100.renderFont: true
