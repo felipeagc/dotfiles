@@ -45,6 +45,6 @@ volume() {
 }
 
 while :; do
-	xsetroot -name " $(volume) $SEP$(echo -e '\x02') $(_date) "
+	xsetroot -name " $(volume) $SEP $(_date) "
 	sleep 1
 done

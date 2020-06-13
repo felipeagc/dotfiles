@@ -90,6 +90,7 @@ struct Client {
 	char name[256];
 	float mina, maxa;
 	int x, y, w, h;
+	int sfx, sfy, sfw, sfh; /* stored float geometry, used on mode revert */
 	int oldx, oldy, oldw, oldh;
 	int basew, baseh, incw, inch, maxw, maxh, minw, minh;
 	int bw, oldbw;
@@ -153,6 +154,7 @@ static int applysizehints(Client *c, int *x, int *y, int *w, int *h, int interac
 static void arrange(Monitor *m);
 static void arrangemon(Monitor *m);
 static void attach(Client *c);
+static void attachBelow(Client *c);
 static void attachstack(Client *c);
 static void buttonpress(XEvent *e);
 static void checkotherwm(void);
@@ -162,7 +164,6 @@ static void clientmessage(XEvent *e);
 static void configure(Client *c);
 static void configurenotify(XEvent *e);
 static void configurerequest(XEvent *e);
-static void copyvalidchars(char *text, char *rawtext);
 static Monitor *createmon(void);
 static void destroynotify(XEvent *e);
 static void detach(Client *c);
@@ -251,9 +252,6 @@ static pid_t winpid(Window w);
 /* variables */
 static const char broken[] = "broken";
 static char stext[256];
-static char rawstext[256];
-static int statuscmdn;
-static char lastbutton[] = "-";
 static int screen;
 static int sw, sh;           /* X display screen geometry width, height */
 static int bh, blw = 0;      /* bar geometry */
@@ -425,6 +423,21 @@ attach(Client *c)
 	c->next = c->mon->clients;
 	c->mon->clients = c;
 }
+void
+attachBelow(Client *c)
+{
+	//If there is nothing on the monitor or the selected client is floating, attach as normal
+	if(c->mon->sel == NULL || c->mon->sel == c || c->mon->sel->isfloating) {
+		attach(c);
+		return;
+	}
+
+	//Set the new client's next property to the same as the currently selected clients next
+	c->next = c->mon->sel->next;
+	//Set the currently selected clients next property to the new client
+	c->mon->sel->next = c;
+
+}
 
 void
 attachstack(Client *c)
@@ -482,7 +495,6 @@ buttonpress(XEvent *e)
 	Client *c;
 	Monitor *m;
 	XButtonPressedEvent *ev = &e->xbutton;
-	*lastbutton = '0' + ev->button;
 
 	click = ClkRootWin;
 	/* focus monitor if necessary */
@@ -501,26 +513,9 @@ buttonpress(XEvent *e)
 			arg.ui = 1 << i;
 		} else if (ev->x < x + blw)
 			click = ClkLtSymbol;
-		else if (ev->x > (x = selmon->ww - TEXTW(stext) + lrpad)) {
+		else if (ev->x > selmon->ww - TEXTW(stext))
 			click = ClkStatusText;
-
-			char *text = rawstext;
-			int i = -1;
-			char ch;
-			statuscmdn = 0;
-			while (text[++i]) {
-				if ((unsigned char)text[i] < ' ') {
-					ch = text[i];
-					text[i] = '\0';
-					x += TEXTW(text) - lrpad;
-					text[i] = ch;
-					text += i+1;
-					i = -1;
-					if (x >= ev->x) break;
-					if (ch <= LENGTH(statuscmds)) statuscmdn = ch - 1;
-				}
-			}
-		} else
+		else
 			click = ClkWinTitle;
 	} else if ((c = wintoclient(ev->window))) {
 		focus(c);
@@ -704,19 +699,6 @@ configurerequest(XEvent *e)
 		XConfigureWindow(dpy, ev->window, ev->value_mask, &wc);
 	}
 	XSync(dpy, False);
-}
-
-void
-copyvalidchars(char *text, char *rawtext)
-{
-	int i = -1, j = 0;
-
-	while(rawtext[++i]) {
-		if ((unsigned char)rawtext[i] >= ' ') {
-			text[j++] = rawtext[i];
-		}
-	}
-	text[j] = '\0';
 }
 
 Monitor *
@@ -1153,13 +1135,20 @@ manage(Window w, XWindowAttributes *wa)
 	updatewindowtype(c);
 	updatesizehints(c);
 	updatewmhints(c);
+	c->sfx = c->x;
+	c->sfy = c->y;
+	c->sfw = c->w;
+	c->sfh = c->h;
 	XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
 	grabbuttons(c, 0);
 	if (!c->isfloating)
 		c->isfloating = c->oldstate = trans != None || c->isfixed;
 	if (c->isfloating)
 		XRaiseWindow(dpy, c->win);
-	attach(c);
+	if( attachbelow )
+		attachBelow(c);
+	else
+		attach(c);
 	attachstack(c);
 	XChangeProperty(dpy, root, netatom[NetClientList], XA_WINDOW, 32, PropModeAppend,
 		(unsigned char *) &(c->win), 1);
@@ -1398,9 +1387,14 @@ void
 resizemouse(const Arg *arg)
 {
 	int ocx, ocy, nw, nh;
+	int ocx2, ocy2, nx, ny;
 	Client *c;
 	Monitor *m;
 	XEvent ev;
+	int horizcorner, vertcorner;
+	int di;
+	unsigned int dui;
+	Window dummy;
 	Time lasttime = 0;
 
 	if (!(c = selmon->sel))
@@ -1410,10 +1404,18 @@ resizemouse(const Arg *arg)
 	restack(selmon);
 	ocx = c->x;
 	ocy = c->y;
+	ocx2 = c->x + c->w;
+	ocy2 = c->y + c->h;
 	if (XGrabPointer(dpy, root, False, MOUSEMASK, GrabModeAsync, GrabModeAsync,
 		None, cursor[CurResize]->cursor, CurrentTime) != GrabSuccess)
 		return;
-	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, c->w + c->bw - 1, c->h + c->bw - 1);
+	if (!XQueryPointer (dpy, c->win, &dummy, &dummy, &di, &di, &nx, &ny, &dui))
+		return;
+	horizcorner = nx < c->w / 2;
+	vertcorner  = ny < c->h / 2;
+	XWarpPointer (dpy, None, c->win, 0, 0, 0, 0,
+			horizcorner ? (-c->bw) : (c->w + c->bw -1),
+			vertcorner  ? (-c->bw) : (c->h + c->bw -1));
 	do {
 		XMaskEvent(dpy, MOUSEMASK|ExposureMask|SubstructureRedirectMask, &ev);
 		switch(ev.type) {
@@ -1429,6 +1431,11 @@ resizemouse(const Arg *arg)
 
 			nw = MAX(ev.xmotion.x - ocx - 2 * c->bw + 1, 1);
 			nh = MAX(ev.xmotion.y - ocy - 2 * c->bw + 1, 1);
+			nx = horizcorner ? ev.xmotion.x : c->x;
+			ny = vertcorner ? ev.xmotion.y : c->y;
+			nw = MAX(horizcorner ? (ocx2 - nx) : (ev.xmotion.x - ocx - 2 * c->bw + 1), 1);
+			nh = MAX(vertcorner ? (ocy2 - ny) : (ev.xmotion.y - ocy - 2 * c->bw + 1), 1);
+
 			if (c->mon->wx + nw >= selmon->wx && c->mon->wx + nw <= selmon->wx + selmon->ww
 			&& c->mon->wy + nh >= selmon->wy && c->mon->wy + nh <= selmon->wy + selmon->wh)
 			{
@@ -1437,11 +1444,13 @@ resizemouse(const Arg *arg)
 					togglefloating(NULL);
 			}
 			if (!selmon->lt[selmon->sellt]->arrange || c->isfloating)
-				resize(c, c->x, c->y, nw, nh, 1);
+				resize(c, nx, ny, nw, nh, 1);
 			break;
 		}
 	} while (ev.type != ButtonRelease);
-	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, c->w + c->bw - 1, c->h + c->bw - 1);
+	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0,
+		      horizcorner ? (-c->bw) : (c->w + c->bw - 1),
+		      vertcorner ? (-c->bw) : (c->h + c->bw - 1));
 	XUngrabPointer(dpy, CurrentTime);
 	while (XCheckMaskEvent(dpy, EnterWindowMask, &ev));
 	if ((m = recttomon(c->x, c->y, c->w, c->h)) != selmon) {
@@ -1524,7 +1533,10 @@ sendmon(Client *c, Monitor *m)
 	detachstack(c);
 	c->mon = m;
 	c->tags = m->tagset[m->seltags]; /* assign tags of target monitor */
-	attach(c);
+	if( attachbelow )
+		attachBelow(c);
+	else
+		attach(c);
 	attachstack(c);
 	focus(NULL);
 	arrange(NULL);
@@ -1748,10 +1760,6 @@ spawn(const Arg *arg)
 {
 	if (arg->v == dmenucmd)
 		dmenumon[0] = '0' + selmon->num;
-	else if (arg->v == statuscmd) {
-		statuscmd[2] = statuscmds[statuscmdn];
-		setenv("BUTTON", lastbutton, 1);
-	}
 	if (fork() == 0) {
 		if (dpy)
 			close(ConnectionNumber(dpy));
@@ -1825,8 +1833,16 @@ togglefloating(const Arg *arg)
 		return;
 	selmon->sel->isfloating = !selmon->sel->isfloating || selmon->sel->isfixed;
 	if (selmon->sel->isfloating)
-		resize(selmon->sel, selmon->sel->x, selmon->sel->y,
-			selmon->sel->w, selmon->sel->h, 0);
+		/* restore last known float dimensions */
+		resize(selmon->sel, selmon->sel->sfx, selmon->sel->sfy,
+		       selmon->sel->sfw, selmon->sel->sfh, False);
+	else {
+		/* save last known float dimensions */
+		selmon->sel->sfx = selmon->sel->x;
+		selmon->sel->sfy = selmon->sel->y;
+		selmon->sel->sfw = selmon->sel->w;
+		selmon->sel->sfh = selmon->sel->h;
+	}
 	arrange(selmon);
 }
 
@@ -2025,7 +2041,10 @@ updategeom(void)
 					m->clients = c->next;
 					detachstack(c);
 					c->mon = mons;
-					attach(c);
+					if( attachbelow )
+						attachBelow(c);
+					else
+						attach(c);
 					attachstack(c);
 				}
 				if (m == selmon)
@@ -2115,10 +2134,8 @@ updatesizehints(Client *c)
 void
 updatestatus(void)
 {
-	if (!gettextprop(root, XA_WM_NAME, rawstext, sizeof(rawstext)))
+	if (!gettextprop(root, XA_WM_NAME, stext, sizeof(stext)))
 		strcpy(stext, "dwm-"VERSION);
-	else
-		copyvalidchars(stext, rawstext);
 	drawbar(selmon);
 }
 
