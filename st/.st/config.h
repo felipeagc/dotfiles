@@ -86,31 +86,31 @@ unsigned int tabspaces = 8;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
-	/* 8 normal colors */
-	"black",
-	"red3",
-	"green3",
-	"yellow3",
-	"blue2",
-	"magenta3",
-	"cyan3",
-	"gray90",
+    /* 8 normal colors */
+    [0] = "#1C1C1C", /* hard contrast: #1d2021 / soft contrast: #32302f */
+    [1] = "#AF5F5F", /* red     */
+    [2] = "#5F875F", /* green   */
+    [3] = "#87875F", /* yellow  */
+    [4] = "#5F87AF", /* blue    */
+    [5] = "#5F5F87", /* magenta */
+    [6] = "#5F8787", /* cyan    */
+    [7] = "#6C6C6C", /* white   */
 
-	/* 8 bright colors */
-	"gray50",
-	"red",
-	"green",
-	"yellow",
-	"#5c5cff",
-	"magenta",
-	"cyan",
-	"white",
+    /* 8 bright colors */
+    [8]  = "#444444", /* black   */
+    [9]  = "#FF8700", /* red     */
+    [10] = "#87AF87", /* green   */
+    [11] = "#FFFFAF", /* yellow  */
+    [12] = "#8FAFD7", /* blue    */
+    [13] = "#8787AF", /* magenta */
+    [14] = "#5FAFAF", /* cyan    */
+    [15] = "#FFFFFF", /* white   */
+
 
 	[255] = 0,
 
-	/* more colors can be added after 255 to use with DefaultXX */
-	"#cccccc",
-	"#555555",
+    [256] = "#BCBCBC", /* foreground */
+    [257] = "#262626", /* background */
 };
 
 
@@ -118,8 +118,8 @@ static const char *colorname[] = {
  * Default colors (colorname index)
  * foreground, background, cursor, reverse cursor
  */
-unsigned int defaultfg = 7;
-unsigned int defaultbg = 0;
+unsigned int defaultfg = 256;
+unsigned int defaultbg = 257;
 static unsigned int defaultcs = 256;
 static unsigned int defaultrcs = 257;
 
@@ -180,9 +180,9 @@ static Shortcut shortcuts[] = {
 	{ ControlMask,          XK_Print,       toggleprinter,  {.i =  0} },
 	{ ShiftMask,            XK_Print,       printscreen,    {.i =  0} },
 	{ XK_ANY_MOD,           XK_Print,       printsel,       {.i =  0} },
-	{ TERMMOD,              XK_Prior,       zoom,           {.f = +1} },
-	{ TERMMOD,              XK_Next,        zoom,           {.f = -1} },
-	{ TERMMOD,              XK_Home,        zoomreset,      {.f =  0} },
+	{ ControlMask,          XK_equal,       zoom,           {.f = +1} },
+	{ ControlMask,          XK_minus,       zoom,           {.f = -1} },
+	{ ControlMask,          XK_0,           zoomreset,      {.f =  0} },
 	{ TERMMOD,              XK_C,           clipcopy,       {.i =  0} },
 	{ TERMMOD,              XK_V,           clippaste,      {.i =  0} },
 	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },

@@ -48,7 +48,7 @@ Plug 'chadversary/vim-meson'
 Plug '~/.local/share/nvim/plugged/fl.vim'
 
 " Themes
-Plug 'gruvbox-community/gruvbox'
+Plug 'romainl/Apprentice'
 
 call plug#end()
 " }}}
@@ -100,10 +100,7 @@ set cinoptions+=l1
 " }}}
 
 " Color scheme settings {{{
-let g:gruvbox_contrast_dark = 'medium'
-" let g:gruvbox_sign_column = 'bg1'
-let g:gruvbox_termcolors=16
-colorscheme gruvbox
+colorscheme apprentice
 " }}}
 
 " Small quality of life stuff {{{
@@ -167,11 +164,6 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 " }}}
 
-" Termdebug {{{
-let g:termdebug_wide = 50
-packadd termdebug
-" }}}
-
 " Neomake {{{
 call neomake#configure#automake('w')
 call neomake#config#set('maker_defaults.remove_invalid_entries', 1)
@@ -184,13 +176,13 @@ let g:neomake_open_list = 2
 " }}}
 
 " FZF {{{
-let $FZF_DEFAULT_OPTS='--color=gutter:-1 --layout=reverse --margin=1,2'
+let $FZF_DEFAULT_OPTS='--color=gutter:-1 --layout=reverse'
 
 if executable('ag')
-  let $FZF_DEFAULT_COMMAND = 'ag -g ""'
+	let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 endif
 
-let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.6 } }
+let g:fzf_preview_window = ''
 
 autocmd FileType fzf tnoremap <buffer> <Esc> <Esc>
 " }}}
