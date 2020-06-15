@@ -49,6 +49,8 @@ Plug '~/.local/share/nvim/plugged/fl.vim'
 
 " Themes
 Plug 'romainl/Apprentice'
+Plug 'adlawson/vim-sorcerer'
+Plug 'ajh17/Spacegray.vim'
 
 call plug#end()
 " }}}
@@ -100,7 +102,8 @@ set cinoptions+=l1
 " }}}
 
 " Color scheme settings {{{
-colorscheme apprentice
+set termguicolors
+colorscheme spacegray
 " }}}
 
 " Small quality of life stuff {{{
@@ -158,10 +161,8 @@ let g:netrw_liststyle=3     " tree view
 let g:netrw_list_hide=netrw_gitignore#Hide()
 let g:netrw_localrmdir='rm -r'
 
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
+nnoremap <C-j> <C-w>w
+nnoremap <C-k> <C-w>W
 " }}}
 
 " Neomake {{{

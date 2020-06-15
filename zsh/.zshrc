@@ -1,5 +1,5 @@
 # Set up the prompt
-export PS1=$'%F{cyan}[%F{reset}%B%n@%M%b %~%F{cyan}]%F{green}$%F{reset} '
+export PS1=$'%F{cyan}[%F{reset}%B%n@%M%b %F{yellow}%~%F{cyan}]%F{green}$%F{reset} '
 
 setopt histignorealldups sharehistory hist_ignore_space
 
