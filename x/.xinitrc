@@ -3,8 +3,7 @@ picom -b &
 nitrogen --restore &
 dunst &
 gnome-keyring-daemon --start &
-ibus-daemon -drx &
-$HOME/.dwm/dwmbar.sh &
+dwmstatus &
 
 csum=$(sha1sum $(which dwm))
 new_csum=""
