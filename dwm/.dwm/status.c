@@ -9,6 +9,7 @@ static pa_threaded_mainloop *mainloop;
 static pa_mainloop_api *mainloop_api;
 static pa_context *context;
 static char vol_buf[32] = "(no pulseaudio)";
+static char mic_buf[32] = "(no pulseaudio)";
 static char date_buf[32];
 static char time_buf[32];
 static char status_buf[1024];
@@ -16,7 +17,9 @@ static char status_buf[1024];
 static void
 update_status(void)
 {
-    sprintf(status_buf, "  %s /  %s /  %s ", vol_buf, time_buf, date_buf);
+    sprintf(status_buf, " %s %s /  %s /  %s ", mic_buf, vol_buf, time_buf, date_buf);
+    sprintf(status_buf, " %s %s /  %s /  %s ", mic_buf, vol_buf, time_buf, date_buf);
+
 
     Display *dpy = XOpenDisplay(NULL);
     int screen = DefaultScreen(dpy);
@@ -26,7 +29,7 @@ update_status(void)
 }
 
 static void
-sink_info_callback( pa_context *c, const pa_sink_info *i, int eol, void *userdata)
+sink_info_callback(pa_context *c, const pa_sink_info *i, int eol, void *userdata)
 {
     if (i)
     {
@@ -37,9 +40,20 @@ sink_info_callback( pa_context *c, const pa_sink_info *i, int eol, void *userdat
 }
 
 static void
+source_info_callback(pa_context *c, const pa_source_info *i, int eol, void *userdata)
+{
+    if (i)
+    {
+        sprintf(mic_buf, "%s", i->mute ? " muted / " : "");
+        update_status();
+    }
+}
+
+static void
 server_info_callback(pa_context *c, const pa_server_info *i, void *userdata)
 {
     pa_context_get_sink_info_by_name(c, i->default_sink_name, sink_info_callback, userdata);
+    pa_context_get_source_info_by_name(c, i->default_source_name, source_info_callback, userdata);
 }
 
 static void
@@ -53,6 +67,10 @@ subscribe_callback(pa_context *c, pa_subscription_event_type_t type, uint32_t id
     {
         case PA_SUBSCRIPTION_EVENT_SINK:
             pa_context_get_sink_info_by_index(c, idx, sink_info_callback, userdata);
+            break;
+
+        case PA_SUBSCRIPTION_EVENT_SOURCE:
+            pa_context_get_source_info_by_index(c, idx, source_info_callback, userdata);
             break;
 
         default:
@@ -79,7 +97,7 @@ context_state_callback(pa_context *c, void *userdata)
             // Subscribe to sink events from the server. This is how we get
             // volume change notifications from the server.
             pa_context_set_subscribe_callback(c, subscribe_callback, userdata);
-            pa_context_subscribe(c, PA_SUBSCRIPTION_MASK_SINK, NULL, NULL);
+            pa_context_subscribe(c, PA_SUBSCRIPTION_MASK_SINK | PA_SUBSCRIPTION_MASK_SOURCE, NULL, NULL);
             break;
 
         case PA_CONTEXT_TERMINATED:
