@@ -2,7 +2,6 @@ xset r rate 230 60 &
 picom -b &
 nitrogen --restore &
 dunst &
-gnome-keyring-daemon --start &
 dwmstatus &
 
 csum=$(sha1sum $(which dwm))

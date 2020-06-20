@@ -19,8 +19,7 @@ eval "$(dircolors -b)"
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-colors ''
 
-eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
-export SSH_AUTH_SOCK
+eval `keychain -q --eval --agents ssh id_rsa`
 
 alias ls='ls --color=auto'
 
