@@ -250,6 +250,8 @@ static Client *swallowingclient(Window w);
 static Client *termforwin(const Client *c);
 static pid_t winpid(Window w);
 
+static void toggleswallow(const Arg *arg);
+
 
 /* variables */
 static const char broken[] = "broken";
@@ -284,6 +286,7 @@ static Display *dpy;
 static Drw *drw;
 static Monitor *mons, *selmon;
 static Window root, wmcheckwin;
+static int shouldswallow = 1;
 
 static xcb_connection_t *xcon;
 
@@ -457,9 +460,16 @@ attachstack(Client *c)
 	c->mon->stack = c;
 }
 
+static void toggleswallow(const Arg *arg)
+{
+    shouldswallow = !shouldswallow;
+}
+
 void
 swallow(Client *p, Client *c)
 {
+    if (!shouldswallow) return;
+
 	if (c->noswallow || c->isterminal)
 		return;
 

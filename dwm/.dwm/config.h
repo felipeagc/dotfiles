@@ -30,7 +30,7 @@ static const Rule rules[] = {
 	{ "Gimp",     NULL,       NULL,       0,            1,           0,         0,        -1 },
 	{ "discord",  NULL,       NULL,       1 << 8,       0,           0,         0,        -1 },
 	{ "Spotify",  NULL,       NULL,       1 << 8,       0,           0,         0,        -1 },
-	{ "st",       NULL,       NULL,       0,            0,           0,         1,        -1 },
+	{ "st",       NULL,       NULL,       0,            0,           1,         1,        -1 },
 };
 
 /* layout(s) */
@@ -89,6 +89,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_y,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                       XK_r,      setlayout,      {0} },
 	{ MODKEY,                       XK_g,      togglefloating, {0} },
+	{ MODKEY,                       XK_s,      toggleswallow,  {0} },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
