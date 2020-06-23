@@ -171,6 +171,7 @@ call neomake#config#set('maker_defaults.remove_invalid_entries', 1)
 
 let g:neomake_c_enabled_makers = []
 let g:neomake_cpp_enabled_makers = []
+let g:neomake_cuda_enabled_makers = []
 let g:neomake_d_enabled_makers = []
 let g:neomake_cursormoved_delay = 0
 let g:neomake_open_list = 2
@@ -278,6 +279,13 @@ augroup cppbindings
   autocmd Filetype cpp call SetCMakeprg()
   autocmd Filetype cpp nmap <buffer> <silent> <leader>mf :ClangFormat<CR>
   autocmd Filetype cpp nmap <buffer> <leader>mb :Neomake!<CR>
+augroup end
+
+augroup cudabindings
+  autocmd!
+  autocmd Filetype cuda call SetCMakeprg()
+  autocmd Filetype cuda nmap <buffer> <silent> <leader>mf :ClangFormat<CR>
+  autocmd Filetype cuda nmap <buffer> <leader>mb :Neomake!<CR>
 augroup end
 " }}}
 
