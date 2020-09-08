@@ -1,3 +1,4 @@
+;; Setup straight {{{
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -10,6 +11,9 @@
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
+;; }}}
+
+;; Small tweaks {{{
 
 ;; Better yes/no questions
 ;; This makes emacs accept only y/n as answers.
@@ -22,16 +26,25 @@
 (setq vc-follow-symlinks t)
 
 ;; Visuals
-(add-to-list 'default-frame-alist '(font . "IBM Plex Mono-10"))
+(add-to-list 'default-frame-alist '(font . "Source Code Pro Medium-10.5"))
 (setq font-lock-maximum-decoration 2) ;; Minimize the syntax highlighting a bit
 
-;; Scroll margin
-(setq scroll-margin 10)
+;; Fix scrolling
+(setq mouse-wheel-scroll-amount '(3 ((shift) . 3))) ;; one line at a time
+(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+
+(setq scroll-margin 1
+      scroll-conservatively 0
+      scroll-up-aggressively 0.01
+      scroll-down-aggressively 0.01)
+(setq-default scroll-up-aggressively 0.01
+              scroll-down-aggressively 0.01)
 
 ;; Disable UI elements
 (menu-bar-mode -1)
 (tool-bar-mode -1)
-;; (scroll-bar-mode -1)
+(scroll-bar-mode -1)
 (blink-cursor-mode 0)
 
 ;; Frame settings
@@ -72,14 +85,18 @@
 ;; Highlight current line in programming modes
 (add-hook 'prog-mode-hook 'hl-line-mode)
 
-;; Use-package
+;; }}}
+
+;; Use-package {{{
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
+;; }}}
 
-;; No littering
+;; No littering {{{
 (use-package no-littering)
+;; }}}
 
-;; Evil
+;; Evil {{{
 (use-package evil
   :init
   :config
@@ -90,10 +107,8 @@
     '(evil-ex-define-cmd "W[rite]" 'evil-write))
 
   ;; Better window switching keys
-  (define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
-  (define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
-  (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
-  (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
+  (define-key evil-normal-state-map (kbd "C-j") 'evil-window-next)
+  (define-key evil-normal-state-map (kbd "C-k") 'evil-window-prev)
 
   ;; Overload shifts so that they don't lose the selection
   (defun felipe/evil-shift-left-visual ()
@@ -110,30 +125,33 @@
 
   (define-key evil-visual-state-map (kbd ">") 'felipe/evil-shift-right-visual)
   (define-key evil-visual-state-map (kbd "<") 'felipe/evil-shift-left-visual))
+;; }}}
 
-;; Evil surrround
+;; Evil surrround {{{
 (use-package evil-surround
   :after evil
   :config
   (global-evil-surround-mode 1))
+;; }}}
 
-;; Evil commentary
+;; Evil commentary {{{
 (use-package evil-commentary
   :after evil
   :config
   (evil-commentary-mode))
+;; }}}
 
-;; Theme
-(use-package darktooth-theme
-  :config
-  (load-theme 'darktooth t)
-  (darktooth-modeline-two)
-  (set-face-background 'vertical-border (face-attribute 'darktooth-modeline-one-inactive :background))
-  (set-face-foreground 'vertical-border (face-background 'vertical-border))
-  (set-face-attribute 'mode-line nil :height 90)
-  (set-face-attribute 'mode-line-inactive nil :height 90))
+;; Theme {{{
+(use-package jetbrains-darcula-theme
+  :straight (:host github :repo "ianpan870102/jetbrains-darcula-emacs-theme")
+  :custom
+  (load-theme 'jetbrains-darcula t))
+;; (use-package gruvbox-theme
+;;   :config
+;;   (load-theme 'gruvbox-dark-medium t))
+;; }}}
 
-;; Modeline format
+;; Modeline format {{{
 (column-number-mode)
 (setq-default mode-line-format
       (list "-" 
@@ -146,8 +164,9 @@
             'mode-name
             ")  "
             'mode-line-position))
+;; }}}
 
-;; Ivy
+;; Ivy {{{
 (use-package ivy
   :config
   (ivy-mode 1))
@@ -163,8 +182,9 @@
   ;; commands other than xref-find-definitions (e.g. project-find-regexp)
   ;; as well
   (setq xref-show-xrefs-function #'ivy-xref-show-xrefs))
+;; }}}
 
-;; Counsel
+;; Counsel {{{
 (use-package counsel
   :after ivy
   :init
@@ -181,13 +201,20 @@
     :after projectile
     :config
     (counsel-projectile-mode)))
+;; }}}
+
+;; Keybindings {{{
+(define-key evil-normal-state-map (kbd "C-p") 'counsel-projectile)
 
 (use-package general
   :config
   (general-create-definer felipe/leader-def
     :prefix "SPC"))
 
-;; Leader bindings
+(evil-define-key '(normal visual) prog-mode-map
+ "[q" 'previous-error
+ "]q" 'next-error)
+
 (felipe/leader-def
   :keymaps 'normal
   "a" 'projectile-find-other-file
@@ -223,8 +250,9 @@
   "gs" 'magit-status
 
   "mb" 'projectile-compile-project)
+;; }}}
 
-;; Company
+;; Company {{{
 (use-package company
   :config
   ;; (define-key company-active-map (kbd "M-n") nil)
@@ -232,45 +260,32 @@
   (define-key company-active-map (kbd "C-n") #'company-select-next)
   (define-key company-active-map (kbd "C-p") #'company-select-previous)
   (global-company-mode))
+;; }}}
 
-;; Magit
+;; Magit {{{
 (use-package magit
   :config
   (use-package evil-magit
     :after evil))
 
 (use-package ssh-agency)
+;; }}}
 
-;; Git gutter fringe
-(use-package git-gutter-fringe
-  :config
-  (global-git-gutter-mode +1)
-
-  (setq-default fringes-outside-margins t)
-  ;; thin fringe bitmaps
-  (fringe-helper-define 'git-gutter-fr:added '(center repeated)
-    "XXX.....")
-  (fringe-helper-define 'git-gutter-fr:modified '(center repeated)
-    "XXX.....")
-  (fringe-helper-define 'git-gutter-fr:deleted 'bottom
-    "X......."
-    "XX......"
-    "XXX....."
-    "XXXX...."))
-
-;; Projectile
+;; Projectile {{{
 (use-package projectile
   :config
   (setq compilation-read-command nil ; Stops projectile from asking for compile command
         projectile-completion-system 'ivy)
   (projectile-global-mode))
+;; }}}
 
-;; Highlight TODO
+;; Highlight TODO {{{
 (use-package hl-todo
   :config
   (global-hl-todo-mode))
+;; }}}
 
-;; C/C++
+;; C/C++ {{{
 (use-package meson-mode)
 (use-package cmake-mode)
 (use-package clang-format)
@@ -291,8 +306,9 @@
   "mf" 'clang-format-buffer)
 (felipe/leader-def 'normal c++-mode-map
   "mf" 'clang-format-buffer)
+;; }}}
 
-;; GLSL
+;; GLSL {{{
 (use-package glsl-mode
   :defer t
   :config
@@ -303,34 +319,9 @@
   (add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
   (add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
   (add-to-list 'auto-mode-alist '("\\.geom\\'" . glsl-mode)))
+;; }}}
 
-;; Asciidoc
-(define-derived-mode adoc-mode fundamental-mode "AsciiDoc"
-  "major mode for editing asciidoc."
-  (setq font-lock-defaults
-        '((("^=.*$" . font-lock-keyword-face)
-           ("^\\*+.+$" . font-lock-variable-name-face)
-           ("[^ ]+://[^ ]+\\[.+\\]$" . font-lock-type-face)))))
-
-(add-to-list 'auto-mode-alist '("\\.adoc\\'" . adoc-mode))
-
-(felipe/leader-def 'normal adoc-mode-map
-  "mbh" (lambda ()
-          (interactive)
-          (compile (let ((file (file-name-nondirectory buffer-file-name)))
-                     (format "asciidoctor -b html5 %s" file))))
-  "mbp" (lambda ()
-          (interactive)
-          (compile (let ((file (file-name-nondirectory buffer-file-name)))
-                     (format "asciidoctor-pdf %s" file))))
-  "mph" (lambda ()
-          (interactive)
-          (let ((filename (buffer-file-name)))
-            (browse-url (concat "file://" (file-name-sans-extension filename) ".html"))))
-  "mpp" (lambda ()
-          (interactive)
-          (start-process "zathura" nil "zathura" (concat (file-name-sans-extension (buffer-file-name)) ".pdf"))))
-
-;; Other major modes
+;; Other major modes {{{
 (use-package org)
 (use-package yaml-mode)
+;; }}}

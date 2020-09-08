@@ -28,29 +28,29 @@ Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-dispatch'
 Plug 'editorconfig/editorconfig-vim'
-Plug 'rhysd/vim-clang-format'
 Plug 'cohama/lexima.vim' " Auto closing braces
 Plug 'ludovicchabant/vim-gutentags'
-Plug 'airblade/vim-gitgutter'
+" Plug 'airblade/vim-gitgutter'
 Plug 'derekwyatt/vim-fswitch'
 Plug 'brooth/far.vim'
 Plug 'tommcdo/vim-lion' " Alignment
-
-Plug 'neomake/neomake'
+Plug 'dense-analysis/ale'
+" Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'bfrg/vim-cpp-modern'
 
 " Languages
 Plug 'tikhomirov/vim-glsl'
 Plug 'beyondmarc/hlsl.vim'
 Plug 'ziglang/zig.vim'
-Plug 'fatih/vim-go'
-Plug 'chadversary/vim-meson'
+" Plug 'chadversary/vim-meson'
 Plug '~/.local/share/nvim/plugged/fl.vim'
 
 " Themes
-Plug 'romainl/Apprentice'
-Plug 'adlawson/vim-sorcerer'
-Plug 'ajh17/Spacegray.vim'
+Plug 'gruvbox-community/gruvbox'
+Plug 'sainnhe/gruvbox-material'
 
 call plug#end()
 " }}}
@@ -90,11 +90,11 @@ set linebreak
 " note trailing space at end of next line
 set showbreak=>\ \ \
 set shortmess+=c
-" set termguicolors
+set termguicolors
 " set ttymouse=sgr
 
-set ignorecase
-set smartcase
+" set ignorecase
+" set smartcase
 
 " Don't auto indent ':' in c/c++
 set cinoptions+=L0
@@ -102,8 +102,7 @@ set cinoptions+=l1
 " }}}
 
 " Color scheme settings {{{
-set termguicolors
-colorscheme spacegray
+colorscheme gruvbox-material
 " }}}
 
 " Small quality of life stuff {{{
@@ -165,16 +164,53 @@ nnoremap <C-j> <C-w>w
 nnoremap <C-k> <C-w>W
 " }}}
 
-" Neomake {{{
-call neomake#configure#automake('w')
-call neomake#config#set('maker_defaults.remove_invalid_entries', 1)
+" ALE {{{
+let g:ale_completion_enabled = 1
+let g:ale_linters = {
+\   'c': [],
+\   'cpp': [],
+\   'd': [],
+\   'python': [],
+\   'tex': [],
+\   'go': ['gopls'],
+\}
+let g:ale_fixers = {
+\   'c': ['clang-format'],
+\   'cpp': ['clang-format'],
+\   'd': [],
+\   'python': [],
+\   'tex': [],
+\   'go': ['goimports', 'gofmt'],
+\}
 
-let g:neomake_c_enabled_makers = []
-let g:neomake_cpp_enabled_makers = []
-let g:neomake_cuda_enabled_makers = []
-let g:neomake_d_enabled_makers = []
-let g:neomake_cursormoved_delay = 0
-let g:neomake_open_list = 2
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
+" }}}
+
+" Treesitter {{{
+" lua <<EOF
+" require'nvim-treesitter.configs'.setup {
+"     highlight = {
+"       enable = true                     -- false will disable the whole extension
+"     },
+"     refactor = {
+"       smart_rename = {
+"         enable = true,
+"         keymaps = {
+"           smart_rename = "grr"          -- mapping to rename reference under cursor
+"         }
+"       }
+"     }
+" }
+" EOF
+
+" highlight link TSError Normal
+" highlight link TSPunctDelimiter Normal
+" highlight link TSPunctSpecial Normal
+" highlight link TSParameter Normal
+" highlight link TSField Normal
+" highlight link TSOperator Normal
+" highlight link TSPunctBracket Normal
 " }}}
 
 " FZF {{{
@@ -216,7 +252,7 @@ autocmd FileType bzl setlocal shiftwidth=4 tabstop=4 expandtab
 " Leader keybinds {{{
 let mapleader = " "
 
-nmap <silent> <leader>ff :Files<CR>
+nmap <silent> <c-p> :Files<CR>
 nmap <silent> <leader>fg :execute 'Ag '.input('Grep: ')<CR>
 nmap <silent> <leader>fr :Farp<CR>
 nmap <silent> <leader>fed :e $MYVIMRC<CR>
@@ -232,12 +268,6 @@ nmap <silent> <leader>bd :bd<CR>
 nmap <silent> <leader>bD :bd!<CR>
 nmap <silent> <leader>bcc :bufdo bd<CR>
 
-nmap <silent> <leader>en :cnext<CR>
-nmap <silent> <leader>ep :cprev<CR>
-nmap <silent> <leader>el :copen<CR>
-nmap <silent> <leader>eL :cclose<CR>
-
-nmap <silent> <leader>dd :execute 'Termdebug '.input('File to debug: ')<CR>
 nmap <silent> <leader>db :Break<CR>
 nmap <silent> <leader>dB :Clear<CR>
 nmap <silent> <leader>ds :Step<CR>
@@ -252,15 +282,23 @@ nmap <silent> <leader>gs :vertical Gstatus<CR>
 
 nmap <silent> <leader>a :FSHere<CR>
 nmap <silent> <leader>A :FSSplitRight<CR>
+
+nmap <silent> <leader>mc :Copen<CR>
 " }}}
 
 " C/C++ {{{
 let g:compiler_gcc_ignore_unmatched_lines = 1
+let g:cpp_no_cpp17 = 1
 
 function! SetCMakeprg()
-	if !empty(glob("meson.build")) || !empty(glob("CMakeLists.txt"))
+	" We have to add this pattern twice because dispatch.vim is retarded
+	setlocal errorformat+=%-G%.%#,%-G%.%# 
+
+	if !empty(glob("meson.build"))
 		setlocal makeprg=ninja\ -C\ build
-		setlocal errorformat=../%f:%l:%c:%m,%-G%.%#
+	endif
+	if !empty(glob("CMakeLists.txt"))
+		setlocal makeprg=ninja\ -C\ build
 	endif
 	if !empty(glob("makefile")) || !empty(glob("Makefile"))
 		setlocal makeprg=make
@@ -270,22 +308,22 @@ endfunction
 augroup cbindings
   autocmd!
   autocmd Filetype c call SetCMakeprg()
-  autocmd Filetype c nmap <buffer> <silent> <leader>mf :ClangFormat<CR>
-  autocmd Filetype c nmap <buffer> <leader>mb :Neomake!<CR>
+  autocmd Filetype c nmap <buffer> <silent> <leader>mf :ALEFix<CR>
+  autocmd Filetype c nmap <buffer> <leader>mb :Make<CR>
 augroup end
 
 augroup cppbindings
   autocmd!
   autocmd Filetype cpp call SetCMakeprg()
-  autocmd Filetype cpp nmap <buffer> <silent> <leader>mf :ClangFormat<CR>
-  autocmd Filetype cpp nmap <buffer> <leader>mb :Neomake!<CR>
+  autocmd Filetype cpp nmap <buffer> <silent> <leader>mf :ALEFix<CR>
+  autocmd Filetype cpp nmap <buffer> <leader>mb :Make<CR>
 augroup end
 
 augroup cudabindings
   autocmd!
   autocmd Filetype cuda call SetCMakeprg()
-  autocmd Filetype cuda nmap <buffer> <silent> <leader>mf :ClangFormat<CR>
-  autocmd Filetype cuda nmap <buffer> <leader>mb :Neomake!<CR>
+  autocmd Filetype cuda nmap <buffer> <silent> <leader>mf :ALEFix<CR>
+  autocmd Filetype cuda nmap <buffer> <leader>mb :Make<CR>
 augroup end
 " }}}
 
@@ -298,8 +336,10 @@ endfunction
 
 augroup texbindings
   autocmd!
+  autocmd Filetype tex setlocal makeprg=rubber\ --pdf\ %
+  autocmd Filetype tex setlocal efm=%f:%l:\ %m,%f:%l-%\\d%\\+:\ %m
   autocmd Filetype tex nmap <buffer> <silent> <leader>mp :call LaunchZathura()<CR>
-  autocmd Filetype tex nmap <buffer> <leader>mb :!pdflatex "%"<CR>
+  autocmd Filetype tex nmap <buffer> <leader>mb :Make<CR>
 augroup end
 " }}}
 
@@ -311,17 +351,8 @@ endfunction
 augroup adocbindings
   autocmd!
   autocmd Filetype asciidoc setlocal makeprg=asciidoctor-pdf\ %
-  autocmd Filetype asciidoc nmap <buffer> <leader>mb :Neomake!<CR>
+  autocmd Filetype asciidoc nmap <buffer> <leader>mb :Make<CR>
   autocmd Filetype asciidoc nmap <buffer> <silent> <leader>mp :call OpenAsciidoc()<CR>
-augroup end
-" }}}
-
-" Zig {{{
-let g:zig_fmt_autosave = 0
-
-augroup zigbindings
-  autocmd!
-  autocmd Filetype zig nmap <buffer> <leader>mb :!zig build<CR>
 augroup end
 " }}}
 
@@ -329,16 +360,18 @@ augroup end
 augroup flbindings
   autocmd Filetype fl setlocal makeprg=make
   autocmd Filetype fl setlocal errorformat=%f:%l:%c:\ %trror:\ %m
-  autocmd Filetype fl nmap <buffer> <leader>mb :Neomake!<CR>
+  autocmd Filetype fl nmap <buffer> <leader>mb :Make<CR>
 augroup end
 " }}}
 
 " Go {{{
+let g:go_highlight_trailing_whitespace_error=0
+
 augroup gobindings
   autocmd!
-  autocmd Filetype go nmap <buffer> <leader>mb :GoBuild<CR>
-  autocmd Filetype go nmap <buffer> <leader>mf :GoFmt<CR>
-  autocmd Filetype go nmap <buffer> <leader>mi :GoImports<CR>
+  autocmd Filetype go setlocal makeprg=go\ build
+  autocmd Filetype go nmap <buffer> <leader>mb :Make<CR>
+  autocmd Filetype go nmap <buffer> <silent> <leader>mf :ALEFix<CR>
 augroup end
 " }}}
 
@@ -363,10 +396,10 @@ endfunction
 augroup dbindings
   autocmd Filetype d call SetDMakeprg()
 
-  autocmd FileType d setlocal errorformat=%f\(%l\\,%c\):\ %trror:\ %m,%-G%.%#
+  " autocmd FileType d setlocal errorformat=%f\(%l\\,%c\):\ %trror:\ %m,%-G%.%#
   " autocmd FileType d setlocal errorformat=%f(%l,%c):\ %trror:\ %m
-  " autocmd FileType d setlocal efm=%*[^@]@%f\(%l\):\ %m,%f\(%l\\,%c\):\ %m,%f\(%l\):\ %m
-  autocmd Filetype d nmap <buffer> <leader>mb :Neomake!<CR>
+  autocmd FileType d setlocal efm=%*[^@]@%f\(%l\):\ %m,%f\(%l\\,%c\):\ %m,%f\(%l\):\ %m
+  autocmd Filetype d nmap <buffer> <leader>mb :Make<CR>
 augroup end
 "}}}
 
@@ -381,6 +414,5 @@ augroup end
 
 " HLSL {{{
 augroup hlslbindings
-  autocmd Filetype hlsl nmap <buffer> <silent> <leader>mf :ClangFormat<CR>
 augroup end
 " }}}
