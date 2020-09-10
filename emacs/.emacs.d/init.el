@@ -142,13 +142,9 @@
 ;; }}}
 
 ;; Theme {{{
-(use-package jetbrains-darcula-theme
-  :straight (:host github :repo "ianpan870102/jetbrains-darcula-emacs-theme")
-  :custom
-  (load-theme 'jetbrains-darcula t))
-;; (use-package gruvbox-theme
-;;   :config
-;;   (load-theme 'gruvbox-dark-medium t))
+(use-package darktooth-theme
+  :config
+  (load-theme 'darktooth t))
 ;; }}}
 
 ;; Modeline format {{{
@@ -200,11 +196,27 @@
   (use-package counsel-projectile
     :after projectile
     :config
-    (counsel-projectile-mode)))
+    (counsel-projectile-mode))
+
+  (use-package counsel-etags
+    :init
+    ;; Don't ask before rereading the TAGS files if they have changed
+    (setq tags-revert-without-query t)
+    ;; Don't warn when TAGS files are large
+    (setq large-file-warning-threshold nil)
+    (add-hook 'prog-mode-hook
+              (lambda ()
+                (add-hook 'after-save-hook
+                          'counsel-etags-virtual-update-tags 'append 'local)))
+    :config
+    (setq counsel-etags-update-interval 60)
+    (push "build" counsel-etags-ignore-directories))
+  )
 ;; }}}
 
 ;; Keybindings {{{
 (define-key evil-normal-state-map (kbd "C-p") 'counsel-projectile)
+(define-key evil-normal-state-map (kbd "C-]") 'counsel-etags-find-tag-at-point)
 
 (use-package general
   :config
@@ -255,11 +267,19 @@
 ;; Company {{{
 (use-package company
   :config
-  ;; (define-key company-active-map (kbd "M-n") nil)
-  ;; (define-key company-active-map (kbd "M-p") nil)
-  (define-key company-active-map (kbd "C-n") #'company-select-next)
-  (define-key company-active-map (kbd "C-p") #'company-select-previous)
-  (global-company-mode))
+  (define-key evil-insert-state-map (kbd "C-n") 'company-complete)
+  (define-key evil-insert-state-map (kbd "C-p") 'company-complete)
+  (define-key company-active-map (kbd "C-n") 'company-select-next)
+  (define-key company-active-map (kbd "C-p") 'company-select-previous)
+  (define-key company-active-map (kbd "RET") 'company-complete-selection)
+  (define-key company-active-map (kbd "<ret>") 'company-complete-selection)
+  (global-company-mode)
+  (setq company-minimum-prefix-length 1))
+
+(use-package company-ctags
+  :after company
+  :config
+  (company-ctags-auto-setup))
 ;; }}}
 
 ;; Magit {{{
@@ -292,6 +312,10 @@
 
 (add-to-list 'auto-mode-alist '("\\.inl\\'" . c-mode))
 
+;; Highlight function names
+(font-lock-add-keywords 'c-mode '(("\\(\\w+\\)\\s-*\(" (1 font-lock-function-name-face))) t)
+(font-lock-add-keywords 'c++-mode '(("\\(\\w+\\)\\s-*\(" (1 font-lock-function-name-face))) t)
+
 (defun felipe/c-c++-hook ()
   (when (boundp 'company-backends)
     (make-local-variable 'company-backends)
@@ -319,6 +343,12 @@
   (add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
   (add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
   (add-to-list 'auto-mode-alist '("\\.geom\\'" . glsl-mode)))
+;; }}}
+
+;; HLSL {{{
+(use-package shader-mode
+  :config
+  (add-to-list 'auto-mode-alist '("\\.hlsl$" . shader-mode)))
 ;; }}}
 
 ;; Other major modes {{{
