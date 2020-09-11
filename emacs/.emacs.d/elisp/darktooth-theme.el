@@ -170,7 +170,10 @@
   (font-lock-type-face                               (:foreground darktooth-lightblue4))
   (font-lock-warning-face                            (:foreground darktooth-neutral_red :bold t))
 
-  (origami-fold-header-face                  (:foreground darktooth-medium :background darktooth-dark1))
+  (origami-fold-header-face                  (:inherit 'font-lock-comment-face
+                                                       ;; :foreground darktooth-medium 
+                                                       :background darktooth-dark1)
+                                             )
 
   ;; MODE SUPPORT: which-key
   (which-key-key-face                        (:inherit 'font-lock-variable-name-face))

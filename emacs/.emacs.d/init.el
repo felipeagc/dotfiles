@@ -43,7 +43,7 @@
 (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
 (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
 
-(setq scroll-margin 1
+(setq scroll-margin 6
       scroll-conservatively 0
       scroll-up-aggressively 0.01
       scroll-down-aggressively 0.01)
