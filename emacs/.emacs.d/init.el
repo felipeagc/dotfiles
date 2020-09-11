@@ -13,6 +13,10 @@
   (load bootstrap-file nil 'nomessage))
 ;; }}}
 
+;; Add ~/.emacs.d/elisp to load path {{{
+(add-to-list 'load-path (concat user-emacs-directory "/elisp"))
+;; }}}
+
 ;; Small tweaks {{{
 
 ;; Better yes/no questions
@@ -22,12 +26,17 @@
 ;; Pixelwise resizing
 ;; (setq frame-resize-pixelwise t)
 
+;; Treat underscores as a part of a word
+(add-hook 'after-change-major-mode-hook
+        (lambda ()
+            (modify-syntax-entry ?_ "w")))
+  
 ;; Stop asking to follow symlinks
 (setq vc-follow-symlinks t)
 
 ;; Visuals
 (add-to-list 'default-frame-alist '(font . "Source Code Pro Medium-10.5"))
-(setq font-lock-maximum-decoration 2) ;; Minimize the syntax highlighting a bit
+(setq font-lock-maximum-decoration 3) ;; Minimize the syntax highlighting a bit
 
 ;; Fix scrolling
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 3))) ;; one line at a time
@@ -83,8 +92,7 @@
 (add-hook 'compilation-finish-functions 'felipe/bury-compile-buffer-if-successful)
 
 ;; Highlight current line in programming modes
-(add-hook 'prog-mode-hook 'hl-line-mode)
-
+;; (add-hook 'prog-mode-hook 'hl-line-mode)
 ;; }}}
 
 ;; Use-package {{{
@@ -125,6 +133,26 @@
 
   (define-key evil-visual-state-map (kbd ">") 'felipe/evil-shift-right-visual)
   (define-key evil-visual-state-map (kbd "<") 'felipe/evil-shift-left-visual))
+
+(use-package origami
+  :ensure t
+  :init
+  (setq origami-show-fold-header t)
+  :config
+  (defun felipe/origami-toggle-node ()
+    (interactive)
+    (save-excursion                                  ;; leave point where it is
+      (goto-char (point-at-eol))                     ;; then go to the end of line
+      (origami-toggle-node (current-buffer) (point)) ;; and try to fold
+      ))
+  (define-key evil-normal-state-map (kbd "za") 'felipe/origami-toggle-node)
+
+  (add-hook 'prog-mode-hook
+            (lambda ()
+              (setq-local origami-fold-style 'triple-braces)
+              (origami-mode)
+              (origami-close-all-nodes (current-buffer))))
+  )
 ;; }}}
 
 ;; Evil surrround {{{
@@ -142,9 +170,11 @@
 ;; }}}
 
 ;; Theme {{{
-(use-package darktooth-theme
+(use-package autothemer
   :config
-  (load-theme 'darktooth t))
+    (require 'darktooth-theme)
+    (load-theme 'darktooth t)
+    (darktooth-modeline-two))
 ;; }}}
 
 ;; Modeline format {{{
@@ -215,7 +245,7 @@
 ;; }}}
 
 ;; Keybindings {{{
-(define-key evil-normal-state-map (kbd "C-p") 'counsel-projectile)
+(define-key evil-normal-state-map (kbd "C-p") 'counsel-projectile-find-file)
 (define-key evil-normal-state-map (kbd "C-]") 'counsel-etags-find-tag-at-point)
 
 (use-package general
@@ -241,7 +271,7 @@
   "wb" 'balance-windows
 
   "ff" 'counsel-find-file
-  "fg" 'counsel-rg
+  "fg" 'counsel-ag
   "fed" (lambda ()
           (interactive)
           (find-file "~/.emacs.d/init.el"))
@@ -299,7 +329,7 @@
   (projectile-global-mode))
 ;; }}}
 
-;; Highlight TODO {{{
+;; Highlight todo {{{
 (use-package hl-todo
   :config
   (global-hl-todo-mode))
@@ -313,8 +343,8 @@
 (add-to-list 'auto-mode-alist '("\\.inl\\'" . c-mode))
 
 ;; Highlight function names
-(font-lock-add-keywords 'c-mode '(("\\(\\w+\\)\\s-*\(" (1 font-lock-function-name-face))) t)
-(font-lock-add-keywords 'c++-mode '(("\\(\\w+\\)\\s-*\(" (1 font-lock-function-name-face))) t)
+;; (font-lock-add-keywords 'c-mode '(("\\(\\w+\\)\\s-*\(" (1 font-lock-function-name-face))) t)
+;; (font-lock-add-keywords 'c++-mode '(("\\(\\w+\\)\\s-*\(" (1 font-lock-function-name-face))) t)
 
 (defun felipe/c-c++-hook ()
   (when (boundp 'company-backends)
