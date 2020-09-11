@@ -162,7 +162,7 @@
   ;; Built-in syntax
   (font-lock-builtin-face                            (:foreground darktooth-bright_orange))
   (font-lock-constant-face                           (:foreground darktooth-burlywood4))
-  (font-lock-comment-face                            (:foreground darktooth-dark4))
+  (font-lock-comment-face                            (:foreground darktooth-bright_aqua))
   (font-lock-function-name-face                      (:foreground darktooth-light4))
   (font-lock-keyword-face                            (:foreground darktooth-sienna))
   (font-lock-string-face                             (:foreground darktooth-darkslategray4))

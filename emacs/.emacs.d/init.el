@@ -100,8 +100,9 @@
 (setq straight-use-package-by-default t)
 ;; }}}
 
-;; No littering {{{
+;; Small packages {{{
 (use-package no-littering)
+(use-package rainbow-mode)
 ;; }}}
 
 ;; Evil {{{
@@ -117,6 +118,10 @@
   ;; Better window switching keys
   (define-key evil-normal-state-map (kbd "C-j") 'evil-window-next)
   (define-key evil-normal-state-map (kbd "C-k") 'evil-window-prev)
+
+  (define-key evil-normal-state-map (kbd "C-]") 'xref-find-definitions)
+  (define-key evil-normal-state-map (kbd "gd") 'evil-search-word-forward)
+  (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 
   ;; Overload shifts so that they don't lose the selection
   (defun felipe/evil-shift-left-visual ()
@@ -153,16 +158,12 @@
               (origami-mode)
               (origami-close-all-nodes (current-buffer))))
   )
-;; }}}
 
-;; Evil surrround {{{
 (use-package evil-surround
   :after evil
   :config
   (global-evil-surround-mode 1))
-;; }}}
 
-;; Evil commentary {{{
 (use-package evil-commentary
   :after evil
   :config
@@ -246,7 +247,6 @@
 
 ;; Keybindings {{{
 (define-key evil-normal-state-map (kbd "C-p") 'counsel-projectile-find-file)
-(define-key evil-normal-state-map (kbd "C-]") 'counsel-etags-find-tag-at-point)
 
 (use-package general
   :config
