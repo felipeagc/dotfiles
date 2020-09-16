@@ -19,6 +19,12 @@
 
 ;; Small tweaks {{{
 
+;; Inhibit electric indent
+(setq electric-indent-inhibit t)
+
+;; Disable welcome screen
+(setq inhibit-startup-screen t)
+
 ;; Better yes/no questions
 ;; This makes emacs accept only y/n as answers.
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -72,7 +78,7 @@
 (electric-pair-mode)
 
 ;; Highlight matching brace
-(setq show-paren-delay 0)
+(setq show-paren-delay 0.2)
 (show-paren-mode 1)
 
 ;; Auto-close compilation buffer
@@ -102,7 +108,7 @@
 
 ;; Small packages {{{
 (use-package no-littering)
-(use-package rainbow-mode)
+(use-package rainbow-mode) ;; Display colors
 ;; }}}
 
 ;; Evil {{{
@@ -304,7 +310,8 @@
   (define-key company-active-map (kbd "RET") 'company-complete-selection)
   (define-key company-active-map (kbd "<ret>") 'company-complete-selection)
   (global-company-mode)
-  (setq company-minimum-prefix-length 1))
+  (setq company-minimum-prefix-length 1
+        company-idle-delay nil))
 
 (use-package company-ctags
   :after company
@@ -343,8 +350,8 @@
 (add-to-list 'auto-mode-alist '("\\.inl\\'" . c-mode))
 
 ;; Highlight function names
-;; (font-lock-add-keywords 'c-mode '(("\\(\\w+\\)\\s-*\(" (1 font-lock-function-name-face))) t)
-;; (font-lock-add-keywords 'c++-mode '(("\\(\\w+\\)\\s-*\(" (1 font-lock-function-name-face))) t)
+(font-lock-add-keywords 'c-mode '(("\\(\\w+\\)\\s-*\(" (1 font-lock-function-name-face))) t)
+(font-lock-add-keywords 'c++-mode '(("\\(\\w+\\)\\s-*\(" (1 font-lock-function-name-face))) t)
 
 (defun felipe/c-c++-hook ()
   (when (boundp 'company-backends)
@@ -382,6 +389,7 @@
 ;; }}}
 
 ;; Other major modes {{{
+(use-package d-mode)
 (use-package org)
 (use-package yaml-mode)
 ;; }}}
