@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;; Setup straight {{{
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -18,6 +20,15 @@
 ;; }}}
 
 ;; Small tweaks {{{
+
+;; GC tweaks
+(setq gc-cons-threshold most-positive-fixnum ; 2^61 bytes
+      gc-cons-percentage 0.6)
+
+(add-hook 'emacs-startup-hook
+  (lambda ()
+    (setq gc-cons-threshold 16777216 ; 16mb
+          gc-cons-percentage 0.1)))
 
 ;; Inhibit electric indent
 (setq electric-indent-inhibit t)
@@ -350,8 +361,37 @@
 (add-to-list 'auto-mode-alist '("\\.inl\\'" . c-mode))
 
 ;; Highlight function names
-(font-lock-add-keywords 'c-mode '(("\\(\\w+\\)\\s-*\(" (1 font-lock-function-name-face))) t)
-(font-lock-add-keywords 'c++-mode '(("\\(\\w+\\)\\s-*\(" (1 font-lock-function-name-face))) t)
+(add-hook 'c-mode-common-hook (lambda ()
+    (font-lock-add-keywords nil '(
+        ; Valid hex number (will highlight invalid suffix though)
+        ("\\b0x[[:xdigit:]]+[uUlL]*\\b" . font-lock-string-face)
+
+        ; Invalid hex number
+        ("\\b0x\\(\\w\\|\\.\\)+\\b" . font-lock-warning-face)
+
+        ; Valid floating point number.
+        ("\\(\\b[0-9]+\\|\\)\\(\\.\\)\\([0-9]+\\(e[-]?[0-9]+\\)?\\([lL]?\\|[dD]?[fF]?\\)\\)\\b" (1 font-lock-string-face) (3 font-lock-string-face))
+
+        ; Invalid floating point number.  Must be before valid decimal.
+        ("\\b[0-9].*?\\..+?\\b" . font-lock-warning-face)
+
+        ; Valid decimal number.  Must be before octal regexes otherwise 0 and 0l
+        ; will be highlighted as errors.  Will highlight invalid suffix though.
+        ("\\b\\(\\(0\\|[1-9][0-9]*\\)[uUlL]*\\)\\b" 1 font-lock-string-face)
+
+        ; Valid octal number
+        ("\\b0[0-7]+[uUlL]*\\b" . font-lock-string-face)
+
+        ; Floating point number with no digits after the period.  This must be
+        ; after the invalid numbers, otherwise it will "steal" some invalid
+        ; numbers and highlight them as valid.
+        ("\\b\\([0-9]+\\)\\." (1 font-lock-string-face))
+
+        ; Invalid number.  Must be last so it only highlights anything not
+        ; matched above.
+        ("\\b[0-9]\\(\\w\\|\\.\\)+?\\b" . font-lock-warning-face)
+    ))
+))
 
 (defun felipe/c-c++-hook ()
   (when (boundp 'company-backends)
