@@ -51,6 +51,7 @@ Plug '~/.local/share/nvim/plugged/fl.vim'
 " Themes
 Plug 'gruvbox-community/gruvbox'
 Plug 'sainnhe/gruvbox-material'
+Plug 'junegunn/seoul256.vim'
 
 call plug#end()
 " }}}
@@ -60,7 +61,7 @@ set exrc
 set mouse=a
 set noshowcmd
 
-set cursorline
+" set cursorline
 
 " set number
 " set relativenumber
@@ -94,7 +95,7 @@ set termguicolors
 " set ttymouse=sgr
 
 " set ignorecase
-" set smartcase
+set smartcase
 
 " Don't auto indent ':' in c/c++
 set cinoptions+=L0
@@ -102,7 +103,10 @@ set cinoptions+=l1
 " }}}
 
 " Color scheme settings {{{
-colorscheme gruvbox-material
+" colorscheme gruvbox
+let g:seoul256_srgb = 1
+let g:seoul256_background = 234
+colo seoul256
 " }}}
 
 " Small quality of life stuff {{{
@@ -309,21 +313,21 @@ augroup cbindings
   autocmd!
   autocmd Filetype c call SetCMakeprg()
   autocmd Filetype c nmap <buffer> <silent> <leader>mf :ALEFix<CR>
-  autocmd Filetype c nmap <buffer> <leader>mb :Make<CR>
+  autocmd Filetype c nmap <buffer> <F7> :Make<CR>
 augroup end
 
 augroup cppbindings
   autocmd!
   autocmd Filetype cpp call SetCMakeprg()
   autocmd Filetype cpp nmap <buffer> <silent> <leader>mf :ALEFix<CR>
-  autocmd Filetype cpp nmap <buffer> <leader>mb :Make<CR>
+  autocmd Filetype cpp nmap <buffer> <F7> :Make<CR>
 augroup end
 
 augroup cudabindings
   autocmd!
   autocmd Filetype cuda call SetCMakeprg()
   autocmd Filetype cuda nmap <buffer> <silent> <leader>mf :ALEFix<CR>
-  autocmd Filetype cuda nmap <buffer> <leader>mb :Make<CR>
+  autocmd Filetype cuda nmap <buffer> <F7> :Make<CR>
 augroup end
 " }}}
 
@@ -339,7 +343,7 @@ augroup texbindings
   autocmd Filetype tex setlocal makeprg=rubber\ --pdf\ %
   autocmd Filetype tex setlocal efm=%f:%l:\ %m,%f:%l-%\\d%\\+:\ %m
   autocmd Filetype tex nmap <buffer> <silent> <leader>mp :call LaunchZathura()<CR>
-  autocmd Filetype tex nmap <buffer> <leader>mb :Make<CR>
+  autocmd Filetype tex nmap <buffer> <F7> :Make<CR>
 augroup end
 " }}}
 
@@ -351,7 +355,7 @@ endfunction
 augroup adocbindings
   autocmd!
   autocmd Filetype asciidoc setlocal makeprg=asciidoctor-pdf\ %
-  autocmd Filetype asciidoc nmap <buffer> <leader>mb :Make<CR>
+  autocmd Filetype asciidoc nmap <buffer> <F7> :Make<CR>
   autocmd Filetype asciidoc nmap <buffer> <silent> <leader>mp :call OpenAsciidoc()<CR>
 augroup end
 " }}}
@@ -360,7 +364,7 @@ augroup end
 augroup flbindings
   autocmd Filetype fl setlocal makeprg=make
   autocmd Filetype fl setlocal errorformat=%f:%l:%c:\ %trror:\ %m
-  autocmd Filetype fl nmap <buffer> <leader>mb :Make<CR>
+  autocmd Filetype fl nmap <buffer> <F7> :Make<CR>
 augroup end
 " }}}
 
@@ -370,7 +374,7 @@ let g:go_highlight_trailing_whitespace_error=0
 augroup gobindings
   autocmd!
   autocmd Filetype go setlocal makeprg=go\ build
-  autocmd Filetype go nmap <buffer> <leader>mb :Make<CR>
+  autocmd Filetype go nmap <buffer> <F7> :Make<CR>
   autocmd Filetype go nmap <buffer> <silent> <leader>mf :ALEFix<CR>
 augroup end
 " }}}
@@ -399,14 +403,21 @@ augroup dbindings
   " autocmd FileType d setlocal errorformat=%f\(%l\\,%c\):\ %trror:\ %m,%-G%.%#
   " autocmd FileType d setlocal errorformat=%f(%l,%c):\ %trror:\ %m
   autocmd FileType d setlocal efm=%*[^@]@%f\(%l\):\ %m,%f\(%l\\,%c\):\ %m,%f\(%l\):\ %m
-  autocmd Filetype d nmap <buffer> <leader>mb :Make<CR>
+  autocmd Filetype d nmap <buffer> <F7> :Make<CR>
 augroup end
 "}}}
+
+" Zig {{{
+let g:zig_fmt_autosave = 0
+augroup zigbindings
+	autocmd Filetype zig nmap <buffer> <F7> :Make<CR>
+augroup end
+" }}}
 
 " GLSL {{{
 augroup glslbindings
   autocmd Filetype glsl setlocal makeprg=make\ -C\ shaders
-  autocmd Filetype glsl nmap <buffer> <leader>mb :make<CR>
+  autocmd Filetype glsl nmap <buffer> <F7> :make<CR>
   autocmd BufEnter *.frag let b:fswitchdst = 'vert' | let b:fswitchlocs = '.'
   autocmd BufEnter *.vert let b:fswitchdst = 'frag' | let b:fswitchlocs = '.'
 augroup end
