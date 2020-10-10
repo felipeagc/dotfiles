@@ -156,26 +156,6 @@
   (define-key evil-visual-state-map (kbd ">") 'felipe/evil-shift-right-visual)
   (define-key evil-visual-state-map (kbd "<") 'felipe/evil-shift-left-visual))
 
-(use-package origami
-  :ensure t
-  :init
-  (setq origami-show-fold-header t)
-  :config
-  (defun felipe/origami-toggle-node ()
-    (interactive)
-    (save-excursion                                  ;; leave point where it is
-      (goto-char (point-at-eol))                     ;; then go to the end of line
-      (origami-toggle-node (current-buffer) (point)) ;; and try to fold
-      ))
-  (define-key evil-normal-state-map (kbd "za") 'felipe/origami-toggle-node)
-
-  (add-hook 'prog-mode-hook
-            (lambda ()
-              (setq-local origami-fold-style 'triple-braces)
-              (origami-mode)
-              (origami-close-all-nodes (current-buffer))))
-  )
-
 (use-package evil-surround
   :after evil
   :config
@@ -193,11 +173,10 @@
 ;; }}}
 
 ;; Theme {{{
-(use-package autothemer
+(use-package seoul256-theme
   :config
-    (require 'darktooth-theme)
-    (load-theme 'darktooth t)
-    (darktooth-modeline-two))
+  (setq seoul256-background 234)
+  (load-theme 'seoul256 t))
 ;; }}}
 
 ;; Modeline format {{{
@@ -357,7 +336,7 @@
   )
 ;; }}}
 
-;; Highlight todo {{{
+;; Highlight TODO {{{
 (use-package hl-todo
   :config
   (global-hl-todo-mode))
@@ -388,6 +367,16 @@
 
 ;; D {{{
 (use-package d-mode)
+;; }}}
+
+;; Zig {{{
+(use-package zig-mode
+  :init
+  (setq zig-format-on-save nil)
+  :config
+  (projectile-register-project-type 'zig '("build.zig")
+                                    :project-file "build.zig"
+                                    :compile "zig build"))
 ;; }}}
 
 ;; GLSL {{{
