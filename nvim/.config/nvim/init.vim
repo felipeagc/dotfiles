@@ -94,7 +94,7 @@ set shortmess+=c
 set termguicolors
 " set ttymouse=sgr
 
-" set ignorecase
+set ignorecase
 set smartcase
 
 " Don't auto indent ':' in c/c++
@@ -176,6 +176,7 @@ let g:ale_linters = {
 \   'd': [],
 \   'python': [],
 \   'tex': [],
+\   'zig': [],
 \   'go': ['gopls'],
 \}
 let g:ale_fixers = {
@@ -184,37 +185,12 @@ let g:ale_fixers = {
 \   'd': [],
 \   'python': [],
 \   'tex': [],
+\   'zig': [],
 \   'go': ['goimports', 'gofmt'],
 \}
 
 let g:ale_set_loclist = 0
 let g:ale_set_quickfix = 1
-" }}}
-
-" Treesitter {{{
-" lua <<EOF
-" require'nvim-treesitter.configs'.setup {
-"     highlight = {
-"       enable = true                     -- false will disable the whole extension
-"     },
-"     refactor = {
-"       smart_rename = {
-"         enable = true,
-"         keymaps = {
-"           smart_rename = "grr"          -- mapping to rename reference under cursor
-"         }
-"       }
-"     }
-" }
-" EOF
-
-" highlight link TSError Normal
-" highlight link TSPunctDelimiter Normal
-" highlight link TSPunctSpecial Normal
-" highlight link TSParameter Normal
-" highlight link TSField Normal
-" highlight link TSOperator Normal
-" highlight link TSPunctBracket Normal
 " }}}
 
 " FZF {{{
@@ -249,8 +225,6 @@ autocmd FileType haskell setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType lua setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType json setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType go setlocal shiftwidth=4 tabstop=4 noexpandtab
-autocmd FileType rmd setlocal shiftwidth=2 tabstop=2 expandtab
-autocmd FileType bzl setlocal shiftwidth=4 tabstop=4 expandtab
 " }}}
 
 " Leader keybinds {{{
