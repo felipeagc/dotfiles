@@ -15,10 +15,6 @@
   (load bootstrap-file nil 'nomessage))
 ;; }}}
 
-;; Add ~/.emacs.d/elisp to load path {{{
-(add-to-list 'load-path (concat user-emacs-directory "/elisp"))
-;; }}}
-
 ;; Small tweaks {{{
 
 ;; GC tweaks
