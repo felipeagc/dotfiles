@@ -30,6 +30,9 @@
     (setq gc-cons-threshold 16777216 ; 16mb
           gc-cons-percentage 0.1)))
 
+;; Don't ask for compile command
+(setq compilation-read-command nil)
+
 ;; Inhibit electric indent
 (setq electric-indent-inhibit t)
 
@@ -52,7 +55,7 @@
 (setq vc-follow-symlinks t)
 
 ;; Visuals
-(add-to-list 'default-frame-alist '(font . "Source Code Pro Medium-10.5"))
+(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-11"))
 (setq font-lock-maximum-decoration 3) ;; Minimize the syntax highlighting a bit
 
 ;; Fix scrolling
@@ -89,7 +92,7 @@
 (electric-pair-mode)
 
 ;; Highlight matching brace
-(setq show-paren-delay 0.2)
+(setq show-paren-delay 0.0)
 (show-paren-mode 1)
 
 ;; Auto-close compilation buffer
@@ -136,7 +139,6 @@
   (define-key evil-normal-state-map (kbd "C-j") 'evil-window-next)
   (define-key evil-normal-state-map (kbd "C-k") 'evil-window-prev)
 
-  (define-key evil-normal-state-map (kbd "C-]") 'xref-find-definitions)
   (define-key evil-normal-state-map (kbd "gd") 'evil-search-word-forward)
   (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 
@@ -177,6 +179,19 @@
   :config
   (setq seoul256-background 234)
   (load-theme 'seoul256 t))
+
+(set-face-attribute 'mode-line nil
+                    :height 110
+                    :inverse-video nil
+                    :box `(:line-width 6 :color ,(face-attribute 'mode-line :background) :style nil))
+
+(set-face-attribute 'mode-line-inactive nil
+                    :height 110
+                    :inverse-video nil
+                    :box `(:line-width 6 :color ,(face-attribute 'mode-line-inactive :background) :style nil))
+
+(set-face-attribute 'vertical-border nil
+                    :foreground (face-attribute 'mode-line-inactive :foreground))
 ;; }}}
 
 ;; Modeline format {{{
@@ -216,53 +231,54 @@
 (use-package counsel
   :after ivy
   :init
-  (setenv "FZF_DEFAULT_COMMAND"
-          "rg --files --follow")
   (setq counsel-find-file-ignore-regexp
         (concat
          ;; File names beginning with # or .
          "\\(?:\\`[#.]\\)"
          ;; File names ending with # or ~
-         "\\|\\(?:\\`.+?[#~]\\'\\)"))
-  :config
-  (use-package counsel-projectile
-    :after projectile
-    :config
-    (counsel-projectile-mode))
+         "\\|\\(?:\\`.+?[#~]\\'\\)")))
+;; }}}
 
-  (use-package counsel-etags
-    :init
-    ;; Don't ask before rereading the TAGS files if they have changed
-    (setq tags-revert-without-query t)
-    ;; Don't warn when TAGS files are large
-    (setq large-file-warning-threshold nil)
-    (add-hook 'prog-mode-hook
-              (lambda ()
-                (add-hook 'after-save-hook
-                          'counsel-etags-virtual-update-tags 'append 'local)))
-    :config
-    (setq counsel-etags-update-interval 60)
-    (push "build" counsel-etags-ignore-directories))
+;; Ctags {{{
+;; (use-package ctags-update
+;;   :config
+;;   (ctags-global-auto-update-mode)
+;;   (setq ctags-update-prompt-create-tags nil))
+(use-package counsel-etags
+  :bind (("C-]" . counsel-etags-find-tag-at-point))
+  :init
+  (add-hook 'prog-mode-hook
+        (lambda ()
+          (add-hook 'after-save-hook
+            'counsel-etags-virtual-update-tags 'append 'local)))
+  :config
+  (setq counsel-etags-update-interval 60)
+  (push "build" counsel-etags-ignore-directories)
+  (push "zig-cache" counsel-etags-ignore-directories)
   )
 ;; }}}
 
 ;; Keybindings {{{
-(define-key evil-normal-state-map (kbd "C-p") 'counsel-projectile-find-file)
+(defun felipe/project-find-file ()
+  (interactive)
+  (let* ((pr (project-current t))
+         (dirs (project-roots pr)))
+    (project-find-file-in nil dirs pr)))
+
+(define-key evil-normal-state-map (kbd "C-q") 'previous-error)
+(define-key evil-normal-state-map (kbd "C-e") 'next-error)
+(define-key evil-normal-state-map (kbd "C-a") 'ff-find-other-file)
+(define-key evil-normal-state-map (kbd "C-p") 'felipe/project-find-file)
+(define-key evil-normal-state-map (kbd "C-b") 'counsel-switch-buffer)
+(define-key evil-normal-state-map (kbd "<f7>") 'compile)
 
 (use-package general
   :config
   (general-create-definer felipe/leader-def
     :prefix "SPC"))
 
-(evil-define-key '(normal visual) prog-mode-map
- "[q" 'previous-error
- "]q" 'next-error)
-
 (felipe/leader-def
   :keymaps 'normal
-  "a" 'projectile-find-other-file
-  "A" 'projectile-find-other-file-other-window
-
   "ir" 'ivy-resume
 
   "w/" 'split-window-right
@@ -277,22 +293,21 @@
           (interactive)
           (find-file "~/.emacs.d/init.el"))
 
-  "bb" 'counsel-switch-buffer
   "bd" 'kill-this-buffer
   "bn" 'next-buffer
   "bp" 'previous-buffer
 
-  "pp" 'counsel-projectile-switch-project
-  "pf" 'counsel-projectile-find-file
-  "pa" 'projectile-add-known-project
-  "pg" 'counsel-projectile-rg
-
   "en" 'next-error
   "ep" 'previous-error
 
-  "gs" 'magit-status
+  "gs" 'magit-status)
+;; }}}
 
-  "mb" 'projectile-compile-project)
+;; Zooming {{{
+(use-package default-text-scale
+  :config
+  (define-key evil-normal-state-map (kbd "C-=") 'default-text-scale-increase)
+  (define-key evil-normal-state-map (kbd "C--") 'default-text-scale-decrease))
 ;; }}}
 
 ;; Company {{{
@@ -307,11 +322,6 @@
   (global-company-mode)
   (setq company-minimum-prefix-length 1
         company-idle-delay nil))
-
-(use-package company-ctags
-  :after company
-  :config
-  (company-ctags-auto-setup))
 ;; }}}
 
 ;; Magit {{{
@@ -321,19 +331,6 @@
     :after evil))
 
 (use-package ssh-agency)
-;; }}}
-
-;; Projectile {{{
-(use-package projectile
-  :config
-  (setq compilation-read-command nil ; Stops projectile from asking for compile command
-        projectile-completion-system 'ivy)
-  (projectile-global-mode)
-
-  (projectile-register-project-type 'dlang-dub '("dub.sdl")
-                                    :project-file "dub.sdl"
-                                    :compile "dub build")
-  )
 ;; }}}
 
 ;; Highlight TODO {{{
@@ -349,12 +346,21 @@
 
 (add-to-list 'auto-mode-alist '("\\.inl\\'" . c-mode))
 
+(defun felipe/set-compile-command (proj-file command-str)
+  (let ((proj-dir (locate-dominating-file default-directory proj-file)))
+    (when proj-dir
+        (set (make-local-variable 'compile-command) (format command-str proj-dir)))
+    ))
+
 (defun felipe/c-c++-hook ()
   (when (boundp 'company-backends)
     (make-local-variable 'company-backends)
     ;; remove clang backend
-    (setq company-backends (delete 'company-clang company-backends))
-    ))
+    (setq company-backends (delete 'company-clang company-backends)))
+  (felipe/set-compile-command "CMakeLists.txt" "cmake --build %s/build")
+  (felipe/set-compile-command "meson.build" "ninja -C %s/build")
+  (felipe/set-compile-command "Makefile" "make -f %s/Makefile")
+  (felipe/set-compile-command "makefile" "make -f %s/makefile"))
 
 (add-hook 'c++-mode-hook 'felipe/c-c++-hook)
 (add-hook 'c-mode-hook 'felipe/c-c++-hook)
@@ -366,7 +372,12 @@
 ;; }}}
 
 ;; D {{{
-(use-package d-mode)
+(use-package d-mode
+  :config
+  (add-hook 'd-mode-hook (lambda ()
+    (set (make-local-variable 'compile-command)
+         "dub build")))
+  )
 ;; }}}
 
 ;; Zig {{{
@@ -374,9 +385,10 @@
   :init
   (setq zig-format-on-save nil)
   :config
-  (projectile-register-project-type 'zig '("build.zig")
-                                    :project-file "build.zig"
-                                    :compile "zig build"))
+  (add-hook 'zig-mode-hook (lambda ()
+     (set (make-local-variable 'compile-command)
+          "zig build")))
+  )
 ;; }}}
 
 ;; GLSL {{{

@@ -18,6 +18,7 @@ compinit
 eval "$(dircolors -b)"
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' menu select
 
 eval `keychain -q --eval --agents ssh id_rsa`
 
