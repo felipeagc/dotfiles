@@ -301,9 +301,9 @@
 
 ;; Zooming {{{
 (use-package default-text-scale
-  :config
-  (define-key evil-normal-state-map (kbd "C-=") 'default-text-scale-increase)
-  (define-key evil-normal-state-map (kbd "C--") 'default-text-scale-decrease))
+  :defer t
+  :bind (("C-=" . default-text-scale-increase)
+         ("C--" . default-text-scale-decrease)))
 ;; }}}
 
 ;; Company {{{
@@ -322,6 +322,7 @@
 
 ;; Magit {{{
 (use-package magit
+  :defer t
   :config
   (use-package evil-magit
     :after evil))
@@ -335,18 +336,20 @@
   (global-hl-todo-mode))
 ;; }}}
 
-;; C/C++ {{{
-(use-package meson-mode)
-(use-package cmake-mode)
-(use-package clang-format)
-
-(add-to-list 'auto-mode-alist '("\\.inl\\'" . c-mode))
-
 (defun felipe/set-compile-command (proj-file command-str)
   (let ((proj-dir (locate-dominating-file default-directory proj-file)))
     (when proj-dir
-        (set (make-local-variable 'compile-command) (format command-str proj-dir)))
-    ))
+        (set (make-local-variable 'compile-command) (format command-str proj-dir)))))
+
+;; C/C++ {{{
+(use-package meson-mode
+  :defer t)
+(use-package cmake-mode
+  :defer t)
+(use-package clang-format
+  :defer t)
+
+(add-to-list 'auto-mode-alist '("\\.inl\\'" . c-mode))
 
 (defun felipe/c-c++-hook ()
   (when (boundp 'company-backends)
@@ -369,22 +372,18 @@
 
 ;; D {{{
 (use-package d-mode
+  :defer t
   :config
-  (add-hook 'd-mode-hook (lambda ()
-    (set (make-local-variable 'compile-command)
-         "dub build")))
-  )
+  (felipe/set-compile-command "dub.sdl" "dub build"))
 ;; }}}
 
 ;; Zig {{{
 (use-package zig-mode
+  :defer t
   :init
   (setq zig-format-on-save nil)
   :config
-  (add-hook 'zig-mode-hook (lambda ()
-     (set (make-local-variable 'compile-command)
-          "zig build")))
-  )
+  (felipe/set-compile-command "build.zig" "zig build"))
 ;; }}}
 
 ;; GLSL {{{
@@ -402,11 +401,14 @@
 
 ;; HLSL {{{
 (use-package shader-mode
+  :defer t
   :config
   (add-to-list 'auto-mode-alist '("\\.hlsl$" . shader-mode)))
 ;; }}}
 
 ;; Other major modes {{{
-(use-package org)
-(use-package yaml-mode)
+(use-package org
+  :defer t)
+(use-package yaml-mode
+  :defer t)
 ;; }}}
