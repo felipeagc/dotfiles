@@ -23,6 +23,7 @@ zstyle ':completion:*' menu select
 eval `keychain -q --eval --agents ssh id_rsa`
 
 alias ls='ls --color=auto'
+alias ll="ls -l"
 
 alias ga="git add $1"
 alias gc="git commit -m $1"

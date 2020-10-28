@@ -51,7 +51,7 @@
 (setq vc-follow-symlinks t)
 
 ;; Visuals
-(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-11"))
+(add-to-list 'default-frame-alist '(font . "IBM Plex Mono-11"))
 (setq font-lock-maximum-decoration 3) ;; Minimize the syntax highlighting a bit
 
 ;; Fix scrolling
@@ -118,7 +118,6 @@
 
 ;; Small packages {{{
 (use-package no-littering)
-(use-package rainbow-mode) ;; Display colors
 ;; }}}
 
 ;; Evil {{{
@@ -130,10 +129,6 @@
   ;; :W to save buffer
   (eval-after-load 'evil-ex
     '(evil-ex-define-cmd "W[rite]" 'evil-write))
-
-  ;; Better window switching keys
-  (define-key evil-normal-state-map (kbd "C-j") 'evil-window-next)
-  (define-key evil-normal-state-map (kbd "C-k") 'evil-window-prev)
 
   (define-key evil-normal-state-map (kbd "gd") 'evil-search-word-forward)
   (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
@@ -236,10 +231,6 @@
 ;; }}}
 
 ;; Ctags {{{
-;; (use-package ctags-update
-;;   :config
-;;   (ctags-global-auto-update-mode)
-;;   (setq ctags-update-prompt-create-tags nil))
 (use-package counsel-etags
   :bind (("C-]" . counsel-etags-find-tag-at-point))
   :init
@@ -263,9 +254,19 @@
 
 (define-key evil-normal-state-map (kbd "C-q") 'previous-error)
 (define-key evil-normal-state-map (kbd "C-e") 'next-error)
+
 (define-key evil-normal-state-map (kbd "C-a") 'ff-find-other-file)
 (define-key evil-normal-state-map (kbd "C-p") 'felipe/project-find-file)
+(define-key evil-normal-state-map (kbd "C-f") 'counsel-find-file)
+
 (define-key evil-normal-state-map (kbd "C-b") 'counsel-switch-buffer)
+(define-key evil-normal-state-map (kbd "M-q") 'kill-this-buffer)
+(define-key evil-normal-state-map (kbd "M-j") 'next-buffer)
+(define-key evil-normal-state-map (kbd "M-k") 'previous-buffer)
+
+(define-key evil-normal-state-map (kbd "C-j") 'evil-window-next)
+(define-key evil-normal-state-map (kbd "C-k") 'evil-window-prev)
+
 (define-key evil-normal-state-map (kbd "<f7>") 'compile)
 
 (use-package general
@@ -285,9 +286,7 @@
 
   "ff" 'counsel-find-file
   "fg" 'counsel-ag
-  "fed" (lambda ()
-          (interactive)
-          (find-file "~/.emacs.d/init.el"))
+  "fed" (lambda () (interactive) (find-file "~/.emacs.d/init.el"))
 
   "bd" 'kill-this-buffer
   "bn" 'next-buffer
@@ -374,7 +373,9 @@
 (use-package d-mode
   :defer t
   :config
-  (felipe/set-compile-command "dub.sdl" "dub build"))
+  (add-hook 'd-mode-hook
+            (lambda ()
+              (felipe/set-compile-command "dub.sdl" "dub build"))))
 ;; }}}
 
 ;; Zig {{{
@@ -383,12 +384,13 @@
   :init
   (setq zig-format-on-save nil)
   :config
-  (felipe/set-compile-command "build.zig" "zig build"))
+  (add-hook 'zig-mode-hook
+            (lambda ()
+              (felipe/set-compile-command "build.zig" "zig build"))))
 ;; }}}
 
 ;; GLSL {{{
 (use-package glsl-mode
-  :defer t
   :config
   (autoload 'glsl-mode "glsl-mode" nil t)
   (add-to-list 'auto-mode-alist '("\\.glsl\\'" . glsl-mode))
@@ -402,8 +404,7 @@
 ;; HLSL {{{
 (use-package shader-mode
   :defer t
-  :config
-  (add-to-list 'auto-mode-alist '("\\.hlsl$" . shader-mode)))
+  :mode ("\\.hlsl\\'" . shader-mode))
 ;; }}}
 
 ;; Other major modes {{{
