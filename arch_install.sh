@@ -34,7 +34,7 @@ mount /dev/sda1 /mnt/boot # boot partition
 mount /dev/sda3 /mnt/home # home partition
 
 pacstrap /mnt base base-devel linux linux-firmware \
-	git openssh neovim vim emacs stow zsh dmenu dunst xorg xorg-xinit keychain networkmanager parted \
+	systemd-swap git openssh neovim vim emacs stow zsh dmenu dunst xorg xorg-xinit keychain networkmanager parted \
 	ctags fzf the_silver_searcher redshift brightnessctl hsetroot xsel xclip \
 	sway mako gammastep grim slurp swayidle \
 	ttf-dejavu ttf-hack noto-fonts noto-fonts-extra noto-fonts-emoji noto-fonts-cjk ttf-ibm-plex adobe-source-code-pro-fonts \
@@ -42,6 +42,8 @@ pacstrap /mnt base base-devel linux linux-firmware \
 genfstab -U /mnt >> /mnt/etc/fstab
 arch-chroot /mnt
 
+echo "swapfc_enabled=1" >> /etc/systemd/swap.conf
+systemctl enable systemd-swap
 systemctl enable NetworkManager
 
 ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
