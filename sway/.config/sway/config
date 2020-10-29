@@ -18,7 +18,7 @@ set $term st
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu dmenu_path | dmenu | xargs swaymsg exec --
+set $menu dmenu_run_history
 
 ### Output configuration
 #
@@ -222,3 +222,4 @@ default_border pixel
 hide_edge_borders smart
 
 exec --no-startup-id gammastep
+exec --no-startup-id brightnessctl s 35%
