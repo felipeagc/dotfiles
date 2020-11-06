@@ -33,24 +33,18 @@ Plug 'tpope/vim-dispatch'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'cohama/lexima.vim' " Auto closing braces
 Plug 'ludovicchabant/vim-gutentags'
-" Plug 'airblade/vim-gitgutter'
 Plug 'derekwyatt/vim-fswitch'
-Plug 'brooth/far.vim'
 Plug 'tommcdo/vim-lion' " Alignment
 Plug 'dense-analysis/ale'
-" Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'bfrg/vim-cpp-modern'
 
 " Languages
 Plug 'tikhomirov/vim-glsl'
 Plug 'beyondmarc/hlsl.vim'
 Plug 'ziglang/zig.vim'
-" Plug 'chadversary/vim-meson'
 Plug '~/.local/share/nvim/plugged/fl.vim'
 
 " Themes
-Plug 'gruvbox-community/gruvbox'
-Plug 'sainnhe/gruvbox-material'
 Plug 'junegunn/seoul256.vim'
 
 call plug#end()
@@ -103,14 +97,13 @@ set cinoptions+=l1
 " }}}
 
 " Color scheme settings {{{
-" colorscheme gruvbox
 let g:seoul256_srgb = 1
 let g:seoul256_background = 234
-colo seoul256
+color seoul256
+hi Normal ctermbg=NONE guibg=NONE
 " }}}
 
-" Small quality of life stuff {{{
-
+" Small quality of life stuff {{{ 
 " Clear highlights with escape
 nnoremap <silent> <esc> :noh<return><esc>
 
@@ -230,9 +223,14 @@ autocmd FileType go setlocal shiftwidth=4 tabstop=4 noexpandtab
 " Leader keybinds {{{
 let mapleader = " "
 
+nmap <silent> <c-e> :cnext<CR>
+nmap <silent> <c-q> :cprevious<CR>
+nmap <silent> <c-a> :FSHere<CR>
+nmap <silent> <c-b> :Buffers<CR>
+
 nmap <silent> <c-p> :Files<CR>
+
 nmap <silent> <leader>fg :execute 'Ag '.input('Grep: ')<CR>
-nmap <silent> <leader>fr :Farp<CR>
 nmap <silent> <leader>fed :e $MYVIMRC<CR>
 nmap <silent> <leader>feg :e $HOME/.config/nvim/ginit.vim<CR>
 
@@ -246,20 +244,12 @@ nmap <silent> <leader>bd :bd<CR>
 nmap <silent> <leader>bD :bd!<CR>
 nmap <silent> <leader>bcc :bufdo bd<CR>
 
-nmap <silent> <leader>db :Break<CR>
-nmap <silent> <leader>dB :Clear<CR>
-nmap <silent> <leader>ds :Step<CR>
-nmap <silent> <leader>dn :Over<CR>
-
 nmap <silent> <leader>w/ :vsplit<CR>
 nmap <silent> <leader>w- :split<CR>
 nmap <silent> <leader>wb <C-W>=
 nmap <silent> <leader>wd :q<CR>
 
 nmap <silent> <leader>gs :vertical Gstatus<CR>
-
-nmap <silent> <leader>a :FSHere<CR>
-nmap <silent> <leader>A :FSSplitRight<CR>
 
 nmap <silent> <leader>mc :Copen<CR>
 " }}}

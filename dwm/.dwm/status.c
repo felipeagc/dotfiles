@@ -18,14 +18,15 @@ static void
 update_status(void)
 {
     sprintf(status_buf, " %s %s /  %s /  %s ", mic_buf, vol_buf, time_buf, date_buf);
-    sprintf(status_buf, " %s %s /  %s /  %s ", mic_buf, vol_buf, time_buf, date_buf);
-
 
     Display *dpy = XOpenDisplay(NULL);
     int screen = DefaultScreen(dpy);
     Window root = RootWindow(dpy, screen);
     XStoreName(dpy, root, status_buf);
 	XCloseDisplay(dpy);
+
+    fprintf(stdout, "%s\n", status_buf);
+    fflush(stdout);
 }
 
 static void

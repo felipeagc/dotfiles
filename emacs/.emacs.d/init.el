@@ -51,7 +51,7 @@
 (setq vc-follow-symlinks t)
 
 ;; Visuals
-(add-to-list 'default-frame-alist '(font . "IBM Plex Mono-11"))
+(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-11"))
 (setq font-lock-maximum-decoration 3) ;; Minimize the syntax highlighting a bit
 
 ;; Fix scrolling
@@ -166,10 +166,23 @@
 ;; }}}
 
 ;; Theme {{{
-(use-package seoul256-theme
+;; (use-package seoul256-theme
+;;   :config
+;;   (setq seoul256-background 234)
+;;   (load-theme 'seoul256 t))
+
+(use-package zenburn-theme
   :config
-  (setq seoul256-background 234)
-  (load-theme 'seoul256 t))
+  (setq zenburn-override-colors-alist
+        '(("zenburn-bg" . "#111111")
+          ("zenburn-bg-1"  . "#555555")
+          ("zenburn-bg+05" . "#222222")
+          ("zenburn-bg+1"  . "#222222")
+          ("zenburn-bg+2"  . "#3F3F3F")
+          ("zenburn-bg+3"  . "#4F4F4F")))
+  (load-theme 'zenburn t)
+
+  (set-face-attribute 'fringe 'nil :background "#111111"))
 
 (set-face-attribute 'mode-line nil
                     :height 110
