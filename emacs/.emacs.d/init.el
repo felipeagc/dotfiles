@@ -118,6 +118,12 @@
 
 ;; Small packages {{{
 (use-package no-littering)
+(use-package string-inflection
+  :after evil
+  :config
+  (define-key evil-normal-state-map (kbd "grc") 'string-inflection-lower-camelcase)
+  (define-key evil-normal-state-map (kbd "grs") 'string-inflection-underscore)
+  (define-key evil-normal-state-map (kbd "grp") 'string-inflection-camelcase))
 ;; }}}
 
 ;; Evil {{{
@@ -424,5 +430,7 @@
 (use-package org
   :defer t)
 (use-package yaml-mode
+  :defer t)
+(use-package markdown-mode
   :defer t)
 ;; }}}
