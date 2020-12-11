@@ -376,8 +376,8 @@
     (setq company-backends (delete 'company-clang company-backends)))
   (felipe/set-compile-command "CMakeLists.txt" "cmake --build %s/build")
   (felipe/set-compile-command "meson.build" "ninja -C %s/build")
-  (felipe/set-compile-command "Makefile" "make -f %s/Makefile")
-  (felipe/set-compile-command "makefile" "make -f %s/makefile"))
+  (felipe/set-compile-command "Makefile" "make -C %s")
+  (felipe/set-compile-command "makefile" "make -C %s"))
 
 (add-hook 'c++-mode-hook 'felipe/c-c++-hook)
 (add-hook 'c-mode-hook 'felipe/c-c++-hook)
@@ -395,6 +395,16 @@
   (add-hook 'd-mode-hook
             (lambda ()
               (felipe/set-compile-command "dub.sdl" "dub build"))))
+;; }}}
+
+;; Go {{{
+(use-package go-mode
+  :defer t
+  :config
+  (add-hook 'go-mode-hook
+            (lambda ()
+              (felipe/set-compile-command "makefile" "make -C %s")
+              (felipe/set-compile-command "Makefile" "make -C %s"))))
 ;; }}}
 
 ;; Zig {{{
@@ -433,4 +443,19 @@
   :defer t)
 (use-package markdown-mode
   :defer t)
+;; }}}
+
+;; LSP {{{
+(use-package eldoc)
+
+(use-package lsp-mode
+  :hook (go-mode . lsp-deferred)
+  :commands (lsp lsp-deferred)
+  :init
+  (setq
+   lsp-semantic-highlighting nil
+   lsp-enable-text-document-color nil
+   lsp-signature-auto-activate t
+   lsp-signature-render-documentation t
+   ))
 ;; }}}

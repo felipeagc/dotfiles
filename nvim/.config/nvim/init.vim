@@ -46,6 +46,7 @@ Plug '~/.local/share/nvim/plugged/fl.vim'
 
 " Themes
 Plug 'junegunn/seoul256.vim'
+Plug 'jnurmine/Zenburn'
 
 call plug#end()
 " }}}
@@ -85,7 +86,6 @@ set linebreak
 " note trailing space at end of next line
 set showbreak=>\ \ \
 set shortmess+=c
-set termguicolors
 " set ttymouse=sgr
 
 set ignorecase
@@ -97,10 +97,10 @@ set cinoptions+=l1
 " }}}
 
 " Color scheme settings {{{
-let g:seoul256_srgb = 1
-let g:seoul256_background = 234
-color seoul256
-hi Normal ctermbg=NONE guibg=NONE
+" let g:seoul256_srgb = 1
+" let g:seoul256_background = 234
+" color seoul256
+" hi Normal ctermbg=NONE guibg=NONE
 " }}}
 
 " Small quality of life stuff {{{ 

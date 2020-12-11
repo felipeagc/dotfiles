@@ -5,8 +5,8 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Hack:pixelsize=14:antialias=true:autohint=true";
-static int borderpx = 2;
+static char *font = "DejaVu Sans Mono:pixelsize=15:antialias=true:autohint=true";
+static int borderpx = 0;
 
 /*
  * What program is execed by st depends of these precedence rules:
@@ -86,40 +86,41 @@ unsigned int tabspaces = 8;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
-    [0] = "#282828", /* hard contrast: #1d2021 / soft contrast: #32302f */
-    [1] = "#cc241d", /* red     */
-    [2] = "#98971a", /* green   */
-    [3] = "#d79921", /* yellow  */
-    [4] = "#458588", /* blue    */
-    [5] = "#b16286", /* magenta */
-    [6] = "#689d6a", /* cyan    */
-    [7] = "#a89984", /* white   */
+    [0] = "#3f3f3f", /* hard contrast: #1d2021 / soft contrast: #32302f */
+    [1] = "#cc9393", /* red     */
+    [2] = "#7f9f7f", /* green   */
+    [3] = "#d0bf8f", /* yellow  */
+    [4] = "#6ca0a3", /* blue    */
+    [5] = "#dc8cc3", /* magenta */
+    [6] = "#93e0e3", /* cyan    */
+    [7] = "#dcdccc", /* white   */
 
     /* 8 bright colors */
-    [8]  = "#928374", /* black   */
-    [9]  = "#fb4934", /* red     */
-    [10] = "#b8bb26", /* green   */
-    [11] = "#fabd2f", /* yellow  */
-    [12] = "#83a598", /* blue    */
-    [13] = "#d3869b", /* magenta */
-    [14] = "#8ec07c", /* cyan    */
-    [15] = "#ebdbb2", /* white   */
+    [8]  = "#000000", /* black   */
+    [9]  = "#dca3a3", /* red     */
+    [10] = "#bfebbf", /* green   */
+    [11] = "#f0dfaf", /* yellow  */
+    [12] = "#8cd0d3", /* blue    */
+    [13] = "#dc8cc3", /* magenta */
+    [14] = "#93e0e3", /* cyan    */
+    [15] = "#ffffff", /* white   */
 
 
 	[255] = 0,
 
-    [256] = "#ebdbb2", /* foreground */
-    [257] = "#282828", /* background */
+    [256] = "#111111", /* background */
+    [257] = "#dcdccc", /* foreground */
+    [258] = "#aaaaaa", /* cursor */
 };
 
 /*
  * Default colors (colorname index)
  * foreground, background, cursor, reverse cursor
  */
-unsigned int defaultfg = 15;
-unsigned int defaultbg = 0;
-static unsigned int defaultcs = 15;
-static unsigned int defaultrcs = 257;
+unsigned int defaultfg = 257;
+unsigned int defaultbg = 256;
+static unsigned int defaultcs = 258;
+static unsigned int defaultrcs = 256;
 
 /*
  * Default shape of cursor
