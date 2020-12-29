@@ -42,6 +42,7 @@ Plug 'bfrg/vim-cpp-modern'
 Plug 'tikhomirov/vim-glsl'
 Plug 'beyondmarc/hlsl.vim'
 Plug 'ziglang/zig.vim'
+Plug 'zah/nim.vim'
 Plug '~/.local/share/nvim/plugged/fl.vim'
 
 " Themes
@@ -97,13 +98,20 @@ set cinoptions+=l1
 " }}}
 
 " Color scheme settings {{{
-" let g:seoul256_srgb = 1
+
+" highlight trailing whitespace
+hi ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+
+" set termguicolors
 " let g:seoul256_background = 234
 " color seoul256
+" color zenburn
 " hi Normal ctermbg=NONE guibg=NONE
+hi MatchParen cterm=none ctermbg=238 ctermfg=none
 " }}}
 
-" Small quality of life stuff {{{ 
+" Small quality of life stuff {{{
 " Clear highlights with escape
 nnoremap <silent> <esc> :noh<return><esc>
 
@@ -260,7 +268,7 @@ let g:cpp_no_cpp17 = 1
 
 function! SetCMakeprg()
 	" We have to add this pattern twice because dispatch.vim is retarded
-	setlocal errorformat+=%-G%.%#,%-G%.%# 
+	setlocal errorformat+=%-G%.%#,%-G%.%#
 
 	if !empty(glob("meson.build"))
 		setlocal makeprg=ninja\ -C\ build
