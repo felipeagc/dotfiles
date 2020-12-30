@@ -129,6 +129,8 @@
 ;; Evil {{{
 (use-package evil
   :init
+  (setq evil-want-integration t
+        evil-want-keybinding nil)
   :config
   (evil-mode 1)
 
@@ -154,6 +156,11 @@
 
   (define-key evil-visual-state-map (kbd ">") 'felipe/evil-shift-right-visual)
   (define-key evil-visual-state-map (kbd "<") 'felipe/evil-shift-left-visual))
+
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init 'magit))
 
 (use-package evil-surround
   :after evil
@@ -338,12 +345,15 @@
         company-idle-delay nil))
 ;; }}}
 
+;; Flycheck {{{
+(use-package flycheck
+  :defer t
+  :hook (lsp-mode . flycheck-mode))
+;; }}}
+
 ;; Magit {{{
 (use-package magit
-  :defer t
-  :config
-  (use-package evil-magit
-    :after evil))
+  :defer t)
 
 (use-package ssh-agency)
 ;; }}}
@@ -352,6 +362,29 @@
 (use-package hl-todo
   :config
   (global-hl-todo-mode))
+;; }}}
+
+;; LSP {{{
+(use-package eldoc)
+
+(use-package lsp-mode
+  :hook ((go-mode . lsp-deferred)
+         (zig-mode . lsp-deferred))
+  :commands (lsp lsp-deferred)
+  :init
+  (setq
+   lsp-semantic-highlighting nil
+   lsp-enable-text-document-color nil
+   lsp-signature-auto-activate t
+   lsp-signature-render-documentation t
+   lsp-headerline-breadcrumb-enable nil)
+  :config
+  (add-to-list 'lsp-language-id-configuration '(zig-mode . "zig"))
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection (lsp-stdio-connection "~/.zls/zig-cache/bin/zls")
+    :major-modes '(zig-mode)
+    :server-id 'zls)))
 ;; }}}
 
 (defun felipe/set-compile-command (proj-file command-str)
@@ -445,17 +478,3 @@
   :defer t)
 ;; }}}
 
-;; LSP {{{
-(use-package eldoc)
-
-(use-package lsp-mode
-  :hook (go-mode . lsp-deferred)
-  :commands (lsp lsp-deferred)
-  :init
-  (setq
-   lsp-semantic-highlighting nil
-   lsp-enable-text-document-color nil
-   lsp-signature-auto-activate t
-   lsp-signature-render-documentation t
-   ))
-;; }}}
