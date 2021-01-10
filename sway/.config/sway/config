@@ -151,6 +151,7 @@ bindsym $mod+period exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym $mod+comma exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 bindsym $mod+v exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 bindsym Print exec grim -g "$(slurp)" - | wl-copy
+bindsym $mod+i exec chromium --enable-features=UseOzonePlatform --ozone-platform=wayland
 
 assign [class="Spotify"] workspace number 9:misc
 assign [class="discord"] workspace number 9:misc

@@ -176,6 +176,11 @@
   :after evil
   :config
   (evil-lion-mode))
+
+(use-package undo-tree
+  :config
+  (global-undo-tree-mode)
+  (evil-set-undo-system 'undo-tree))
 ;; }}}
 
 ;; Theme {{{
@@ -448,7 +453,7 @@
   :config
   (add-hook 'zig-mode-hook
             (lambda ()
-              (felipe/set-compile-command "build.zig" "zig build"))))
+              (felipe/set-compile-command "build.zig" "cd %s && zig build"))))
 ;; }}}
 
 ;; GLSL {{{
