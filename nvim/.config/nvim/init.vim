@@ -7,15 +7,27 @@ filetype plugin on
 filetype plugin indent on
 
 " Automatically install plugin manager {{{
-if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
-  silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
-        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+if has("win64") || has("win32") || has("win16")
+	if empty(glob('$LOCALAPPDATA\nvim\autoload\plug.vim'))
+		silent ! powershell (md "$env:LOCALAPPDATA\nvim\autoload")
+		silent ! powershell (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim', $env:LOCALAPPDATA + '\nvim\autoload\plug.vim')
+		autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+	endif
+else
+    if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
+  	silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
+            \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    endif
 endif
 " }}}
 
 " Plugins {{{
-call plug#begin('~/.local/share/nvim/plugged')
+if has("win64") || has("win32") || has("win16")
+	call plug#begin('$LOCALAPPDATA\nvim-data\plugged')
+else
+	call plug#begin('~/.local/share/nvim/plugged')
+endif
 
 " Search
 Plug 'junegunn/fzf'
@@ -43,7 +55,6 @@ Plug 'tikhomirov/vim-glsl'
 Plug 'beyondmarc/hlsl.vim'
 Plug 'ziglang/zig.vim'
 Plug 'zah/nim.vim'
-Plug '~/.local/share/nvim/plugged/fl.vim'
 
 " Themes
 Plug 'junegunn/seoul256.vim'
@@ -329,14 +340,6 @@ augroup adocbindings
   autocmd Filetype asciidoc setlocal makeprg=asciidoctor-pdf\ %
   autocmd Filetype asciidoc nmap <buffer> <F7> :Make<CR>
   autocmd Filetype asciidoc nmap <buffer> <silent> <leader>mp :call OpenAsciidoc()<CR>
-augroup end
-" }}}
-
-" Fl {{{
-augroup flbindings
-  autocmd Filetype fl setlocal makeprg=make
-  autocmd Filetype fl setlocal errorformat=%f:%l:%c:\ %trror:\ %m
-  autocmd Filetype fl nmap <buffer> <F7> :Make<CR>
 augroup end
 " }}}
 
