@@ -36,9 +36,9 @@ mount /dev/sda3 /mnt/home # home partition
 pacstrap /mnt base base-devel linux linux-firmware \
 	systemd-swap git openssh neovim vim emacs stow zsh dmenu dunst xorg xorg-xinit keychain networkmanager parted \
 	ctags fzf the_silver_searcher redshift brightnessctl hsetroot xsel xclip \
-	sway mako gammastep grim slurp swayidle \
+	sway mako gammastep grim slurp swayidle swaybg swaylock waybar \
 	ttf-dejavu ttf-hack noto-fonts noto-fonts-extra noto-fonts-emoji noto-fonts-cjk ttf-ibm-plex adobe-source-code-pro-fonts \
-	gnome-themes-extra lxappearance-gtk3 pulseaudio pavucontrol chromium
+	gnome-themes-extra lxappearance-gtk3 pipewire pipewire-pulse pipewire-jack pavucontrol chromium
 genfstab -U /mnt >> /mnt/etc/fstab
 arch-chroot /mnt
 

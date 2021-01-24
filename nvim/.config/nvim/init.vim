@@ -111,15 +111,17 @@ set cinoptions+=l1
 " Color scheme settings {{{
 
 " highlight trailing whitespace
+
+set termguicolors
+"
+" let g:seoul256_background = 234
+" color zenburn
+color seoul256
+hi Normal ctermbg=NONE guibg=NONE
+
+hi MatchParen cterm=none ctermbg=238 ctermfg=none
 hi ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
-
-" set termguicolors
-" let g:seoul256_background = 234
-" color seoul256
-" color zenburn
-" hi Normal ctermbg=NONE guibg=NONE
-hi MatchParen cterm=none ctermbg=238 ctermfg=none
 " }}}
 
 " Small quality of life stuff {{{
@@ -386,6 +388,13 @@ augroup end
 let g:zig_fmt_autosave = 0
 augroup zigbindings
 	autocmd Filetype zig nmap <buffer> <F7> :Make<CR>
+augroup end
+" }}}
+
+" Ocaml {{{
+augroup ocamlbindings
+	autocmd Filetype ocaml setlocal makeprg=dune\ build
+	autocmd Filetype ocaml nmap <buffer> <F7> :Make<CR>
 augroup end
 " }}}
 

@@ -23,7 +23,7 @@
 
 (add-hook 'emacs-startup-hook
   (lambda ()
-    (setq gc-cons-threshold 16777216 ; 16mb
+    (setq gc-cons-threshold 100000000
           gc-cons-percentage 0.1)))
 
 ;; Don't ask for compile command
@@ -374,7 +374,8 @@
 
 (use-package lsp-mode
   :hook ((go-mode . lsp-deferred)
-         (zig-mode . lsp-deferred))
+         (zig-mode . lsp-deferred)
+         (typescript-mode . lsp-deferred))
   :commands (lsp lsp-deferred)
   :init
   (setq
@@ -445,6 +446,10 @@
               (felipe/set-compile-command "Makefile" "make -C %s"))))
 ;; }}}
 
+;; Javascript / Typescript {{{
+(use-package typescript-mode)
+;; }}}
+
 ;; Zig {{{
 (use-package zig-mode
   :defer t
@@ -474,6 +479,40 @@
   :mode ("\\.hlsl\\'" . shader-mode))
 ;; }}}
 
+;; Rust {{{
+(use-package rust-mode
+  :defer t
+  :init
+  (setq rust-format-on-save nil)
+  :config
+  (add-hook 'rust-mode-hook
+            (lambda ()
+              (felipe/set-compile-command "Cargo.toml" "cd %s && cargo build")))
+
+  (felipe/leader-def 'normal rust-mode-map
+    "mf" 'rust-format-buffer))
+;; }}}
+
+;; Ocaml {{{
+(use-package tuareg
+  :defer t
+  :config
+  (add-hook 'tuareg-mode-hook
+            (lambda ()
+              (felipe/set-compile-command "dune-project" "cd %s && dune build"))))
+
+(use-package ocamlformat
+  :after tuareg
+  :config
+  (felipe/leader-def 'normal tuareg-mode-map
+    "mf" 'ocamlformat))
+;; }}}
+
+;; Haskell {{{
+(use-package haskell-mode
+  :defer t)
+;; }}}
+
 ;; Other major modes {{{
 (use-package org
   :defer t)
@@ -482,4 +521,3 @@
 (use-package markdown-mode
   :defer t)
 ;; }}}
-
