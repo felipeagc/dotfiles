@@ -499,6 +499,8 @@
   :config
   (add-hook 'tuareg-mode-hook
             (lambda ()
+              (felipe/set-compile-command "Makefile" "make -C %s")
+              (felipe/set-compile-command "makefile" "make -C %s")
               (felipe/set-compile-command "dune-project" "cd %s && dune build"))))
 
 (use-package ocamlformat
