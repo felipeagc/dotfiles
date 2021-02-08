@@ -52,7 +52,9 @@
 
 ;; Visuals
 (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-11"))
-(setq font-lock-maximum-decoration 3) ;; Minimize the syntax highlighting a bit
+(add-to-list 'default-frame-alist '(font . "Cascadia Code-12"))
+(add-to-list 'default-frame-alist '(font . "Jetbrains Mono-11"))
+;; (setq font-lock-maximum-decoration 2) ;; Minimize the syntax highlighting a bit
 
 ;; Fix scrolling
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 3))) ;; one line at a time
@@ -375,6 +377,7 @@
 (use-package lsp-mode
   :hook ((go-mode . lsp-deferred)
          (zig-mode . lsp-deferred)
+         (tuareg-mode . lsp-deferred)
          (typescript-mode . lsp-deferred))
   :commands (lsp lsp-deferred)
   :init
@@ -385,12 +388,22 @@
    lsp-signature-render-documentation t
    lsp-headerline-breadcrumb-enable nil)
   :config
+  (felipe/leader-def 'normal lsp-mode-map
+    "mf" 'lsp-format-buffer
+    "mi" 'lsp-organize-imports)
   (add-to-list 'lsp-language-id-configuration '(zig-mode . "zig"))
   (lsp-register-client
    (make-lsp-client
     :new-connection (lsp-stdio-connection "~/.zls/zig-cache/bin/zls")
     :major-modes '(zig-mode)
-    :server-id 'zls)))
+    :server-id 'zls))
+  (add-to-list 'lsp-language-id-configuration '(tuareg-mode . "ocaml"))
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection (lsp-stdio-connection "ocamllsp")
+    :major-modes '(tuareg-mode)
+    :server-id 'ocamllsp))
+  )
 ;; }}}
 
 (defun felipe/set-compile-command (proj-file command-str)
@@ -413,7 +426,7 @@
     (make-local-variable 'company-backends)
     ;; remove clang backend
     (setq company-backends (delete 'company-clang company-backends)))
-  (felipe/set-compile-command "CMakeLists.txt" "cmake --build %s/build")
+  (felipe/set-compile-command "CMakeLists.txt" "cd %1$s/build && cmake --build %1$s/build")
   (felipe/set-compile-command "meson.build" "ninja -C %s/build")
   (felipe/set-compile-command "Makefile" "make -C %s")
   (felipe/set-compile-command "makefile" "make -C %s"))
@@ -503,6 +516,14 @@
               (felipe/set-compile-command "makefile" "make -C %s")
               (felipe/set-compile-command "dune-project" "cd %s && dune build"))))
 
+;; (use-package merlin
+;;   :after tuareg
+;;   :hook ((tuareg-mode caml-mode) . merlin-mode))
+
+;; (use-package merlin-eldoc
+;;   :after merlin
+;;   :hook ((tuareg-mode caml-mode) . merlin-eldoc-setup))
+
 (use-package ocamlformat
   :after tuareg
   :config
@@ -513,6 +534,29 @@
 ;; Haskell {{{
 (use-package haskell-mode
   :defer t)
+;; }}}
+
+;; Clojure {{{
+(use-package clojure-mode
+  :defer t
+  :config
+  (define-clojure-indent
+    (defroutes 'defun)
+    (GET 2)
+    (POST 2)
+    (PUT 2)
+    (DELETE 2)
+    (HEAD 2)
+    (ANY 2)
+    (OPTIONS 2)
+    (PATCH 2)
+    (rfn 2)
+    (let-routes 1)
+    (context 2)))
+
+(use-package cider
+  :defer t
+  :after clojure-mode)
 ;; }}}
 
 ;; Other major modes {{{
