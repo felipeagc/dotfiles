@@ -6,22 +6,6 @@ Xft.autohint: false
 Xft.hintstyle: hintslight
 Xft.lcdfilter: lcddefault
 
-rofi.color-enabled: true
-
-!                   bg       border   separator
-rofi.color-window:	#1d2021, #ebdbb2, #1d2021
-
-! State             bg       fg       bgalt    hlbg     hlfg
-rofi.color-normal:  #1d2021, #928374, #1d2021, #1d2021, #ebdbb2
-rofi.color-active:  #1d2021, #ebdbb2, #1d2021, #1d2021, #ebdbb2
-rofi.color-urgent:  #1d2021, #ebdbb2, #1d2021, #1d2021, #ebdbb2
-rofi.font:          IBM Plex Sans 15
-rofi.bw:            2
-rofi.padding:       16
-rofi.width:         50
-rofi.lines:         12
-rofi.modi:          window,run,ssh,drun
-
 st.termname:         st-256color
 st.font:             IBM Plex Mono:size=10
 st.cwscale:          1.0
