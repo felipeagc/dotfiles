@@ -19,6 +19,7 @@ in
   hardware.enableAllFirmware = true;
   virtualisation.libvirtd.enable = true;
   virtualisation.docker.enable = true;
+  virtualisation.lxd.enable = true;
   programs.dconf.enable = true;
 
   # Use the systemd-boot EFI boot loader.
@@ -99,7 +100,7 @@ in
   users.users.felipe = {
     isNormalUser = true;
     shell = pkgs.zsh;
-    extraGroups = [ "wheel" "networkmanager" "video" "docker" "libvirtd" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "networkmanager" "video" "docker" "libvirtd" "lxd" ];
   };
 
   fonts.fonts = with pkgs; [
@@ -116,13 +117,14 @@ in
     keychain
     firefox chromium discord spotify
     obs-studio obs-wlrobs xdg-desktop-portal xdg-desktop-portal-wlr
-    clang_11 gcc10 gdb lldb gnumake cmake ninja meson ctags manpages
+    clang_11 gcc10 pkg-config gdb lldb gnumake cmake ninja meson ctags manpages
     lxappearance gnome-themes-standard
     pavucontrol playerctl
     youtube-dl mpv zathura tree htop psmisc
     any-nix-shell
     virt-manager
 	python3
+	gnome3.file-roller gnome3.nautilus lz4
   ] ++ (if is_laptop then [] else [ pkgs.zenstates ]);
 
   systemd.services.disable-c6 = if !is_laptop then {
