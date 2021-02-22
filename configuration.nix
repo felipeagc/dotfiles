@@ -22,9 +22,21 @@ in
   virtualisation.lxd.enable = true;
   programs.dconf.enable = true;
 
-  # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot.supportedFilesystems = [ "ntfs" ];
+  boot.loader = {
+		efi = {
+			canTouchEfiVariables = true;
+			efiSysMountPoint = "/boot";
+		};
+
+		grub = {
+			devices = [ "nodev" ];
+			efiSupport = true;
+			enable = true;
+			version = 2;
+			useOSProber = true;
+		};
+  };
 
   networking.hostName = if is_laptop then "felipe-laptop" else "felipe-desktop"; # Define your hostname.
   networking.networkmanager.enable = true;
@@ -37,8 +49,8 @@ in
   # Per-interface useDHCP will be mandatory in the future, so this generated config
   # replicates the default behaviour.
   networking.useDHCP = false;
-  networking.interfaces.enp0s25.useDHCP = true;
-  networking.interfaces.wlp3s0.useDHCP = true;
+  #networking.interfaces.enp0s25.useDHCP = true;
+  #networking.interfaces.wlp3s0.useDHCP = true;
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -60,6 +72,8 @@ in
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+
+  services.geoclue2.enable = true;
 
   # Enable sound.
   sound.enable = true;
@@ -84,10 +98,12 @@ in
       mako # notification daemon
       alacritty # Alacritty is the default terminal in the config
       dmenu
-	  rofi
+      rofi
       slurp
+      grim
       brightnessctl
       gammastep
+      xdg-utils
     ];
   };
 
@@ -103,6 +119,7 @@ in
     extraGroups = [ "wheel" "networkmanager" "video" "docker" "libvirtd" "lxd" ];
   };
 
+  fonts.fontconfig.hinting.enable = false;
   fonts.fonts = with pkgs; [
 	cantarell-fonts
     noto-fonts noto-fonts-emoji noto-fonts-cjk
@@ -117,13 +134,14 @@ in
     keychain
     firefox chromium discord spotify
     obs-studio obs-wlrobs xdg-desktop-portal xdg-desktop-portal-wlr
-    clang_11 gcc10 pkg-config gdb lldb gnumake cmake ninja meson ctags manpages
-    lxappearance gnome-themes-standard
+    clang_11 gcc10 pkg-config valgrind gdb lldb gnumake cmake ninja meson ctags manpages
+	go gopls
+    lxappearance gnome-themes-standard gnome-themes-extra
     pavucontrol playerctl
-    youtube-dl mpv zathura tree htop psmisc
+    youtube-dl mpv zathura tree htop psmisc tmux
     any-nix-shell
-    virt-manager
-	python3
+    virt-manager docker-compose
+	python3Full
 	gnome3.file-roller gnome3.nautilus lz4
   ] ++ (if is_laptop then [] else [ pkgs.zenstates ]);
 
@@ -132,9 +150,9 @@ in
     wantedBy = [ "basic.target" ];
     after = [ "sysinit.target" "local-fs.target" ];
     serviceConfig.Type = "oneshot";
-    serviceConfig.ExecStart = pkgs.writeBash "disable-c6-state" ''
+    serviceConfig.ExecStart = pkgs.writers.writeBash "disable-c6-state" ''
       ${pkgs.kmod}/bin/modprobe msr
-      ${pkgs.python3}/bin/python ${pkgs.zenstates}/zenstates.py --c6-disable --list
+      ${pkgs.python3}/bin/python ${pkgs.zenstates}/bin/zenstates --c6-disable --list
     '';
   } else {};
 

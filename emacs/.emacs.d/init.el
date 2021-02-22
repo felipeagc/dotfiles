@@ -52,8 +52,8 @@
 
 ;; Visuals
 (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-11"))
-(add-to-list 'default-frame-alist '(font . "Cascadia Code-12"))
 (add-to-list 'default-frame-alist '(font . "Jetbrains Mono-11"))
+(add-to-list 'default-frame-alist '(font . "Cascadia Code-11"))
 ;; (setq font-lock-maximum-decoration 2) ;; Minimize the syntax highlighting a bit
 
 ;; Fix scrolling
@@ -191,31 +191,49 @@
 ;;   (setq seoul256-background 234)
 ;;   (load-theme 'seoul256 t))
 
-(use-package zenburn-theme
+;; (use-package zenburn-theme
+;;   :config
+;;   (setq zenburn-override-colors-alist
+;;         '(("zenburn-bg" . "#111111")
+;;           ("zenburn-bg-1"  . "#555555")
+;;           ("zenburn-bg+05" . "#222222")
+;;           ("zenburn-bg+1"  . "#222222")
+;;           ("zenburn-bg+2"  . "#3F3F3F")
+;;           ("zenburn-bg+3"  . "#4F4F4F")))
+;;   (load-theme 'zenburn t)
+
+;;   (set-face-attribute 'vertical-border nil
+;;                       :foreground (face-attribute 'mode-line-inactive :foreground))
+
+;; (set-face-attribute 'mode-line nil
+;;                     :height 110
+;;                     :inverse-video nil
+;;                     :box `(:line-width 6 :color ,(face-attribute 'mode-line :background) :style nil))
+
+;; (set-face-attribute 'mode-line-inactive nil
+;;                     :height 110
+;;                     :inverse-video nil
+;;                     :box `(:line-width 6 :color ,(face-attribute 'mode-line-inactive :background) :style nil))
+
+;;   (set-face-attribute 'fringe 'nil :background "#111111"))
+
+(use-package monokai-pro-theme
   :config
-  (setq zenburn-override-colors-alist
-        '(("zenburn-bg" . "#111111")
-          ("zenburn-bg-1"  . "#555555")
-          ("zenburn-bg+05" . "#222222")
-          ("zenburn-bg+1"  . "#222222")
-          ("zenburn-bg+2"  . "#3F3F3F")
-          ("zenburn-bg+3"  . "#4F4F4F")))
-  (load-theme 'zenburn t)
+  (load-theme 'monokai-pro t)
+  ;; Invert active/inactive modeline colors
+  (let ((active-background (face-attribute 'mode-line-inactive :background))
+        (inactive-background (face-attribute 'mode-line :background)))
+        (set-face-attribute 'mode-line nil
+                            :height 120
+                            :inverse-video nil
+                            :background active-background
+                            :box `(:line-width 6 :color ,active-background :style nil))
 
-  (set-face-attribute 'fringe 'nil :background "#111111"))
-
-(set-face-attribute 'mode-line nil
-                    :height 110
-                    :inverse-video nil
-                    :box `(:line-width 6 :color ,(face-attribute 'mode-line :background) :style nil))
-
-(set-face-attribute 'mode-line-inactive nil
-                    :height 110
-                    :inverse-video nil
-                    :box `(:line-width 6 :color ,(face-attribute 'mode-line-inactive :background) :style nil))
-
-(set-face-attribute 'vertical-border nil
-                    :foreground (face-attribute 'mode-line-inactive :foreground))
+        (set-face-attribute 'mode-line-inactive nil
+                            :height 120
+                            :inverse-video nil
+                            :background inactive-background
+                            :box `(:line-width 6 :color ,inactive-background :style nil))))
 ;; }}}
 
 ;; Modeline format {{{
@@ -378,12 +396,16 @@
   :hook ((go-mode . lsp-deferred)
          (zig-mode . lsp-deferred)
          (tuareg-mode . lsp-deferred)
-         (typescript-mode . lsp-deferred))
+         (typescript-mode . lsp-deferred)
+         (web-mode . lsp-deferred))
   :commands (lsp lsp-deferred)
   :init
   (setq
+   lsp-enable-snippet nil
    lsp-semantic-highlighting nil
+   lsp-semantic-tokens-enable nil
    lsp-enable-text-document-color nil
+   lsp-enable-symbol-highlighting nil
    lsp-signature-auto-activate t
    lsp-signature-render-documentation t
    lsp-headerline-breadcrumb-enable nil)
@@ -418,6 +440,11 @@
   :defer t)
 (use-package clang-format
   :defer t)
+
+(font-lock-add-keywords 'c-mode
+                   '(("\\<\\([a-zA-Z_]*\\) *("  1 font-lock-function-name-face)))
+(font-lock-add-keywords 'c++-mode
+                   '(("\\<\\([a-zA-Z_]*\\) *("  1 font-lock-function-name-face)))
 
 (add-to-list 'auto-mode-alist '("\\.inl\\'" . c-mode))
 
@@ -457,6 +484,13 @@
             (lambda ()
               (felipe/set-compile-command "makefile" "make -C %s")
               (felipe/set-compile-command "Makefile" "make -C %s"))))
+;; }}}
+
+;; Web {{{
+(use-package web-mode
+  :config
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.svelte\\'" . web-mode)))
 ;; }}}
 
 ;; Javascript / Typescript {{{

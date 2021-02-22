@@ -59,6 +59,8 @@ Plug 'zah/nim.vim'
 " Themes
 Plug 'junegunn/seoul256.vim'
 Plug 'jnurmine/Zenburn'
+Plug 'morhetz/gruvbox'
+Plug 'sainnhe/sonokai'
 
 call plug#end()
 " }}}
@@ -113,14 +115,24 @@ set cinoptions+=l1
 " highlight trailing whitespace
 
 set termguicolors
-"
+
 " let g:seoul256_background = 234
+" color seoul256
+
 " color zenburn
-color seoul256
-hi Normal ctermbg=NONE guibg=NONE
+
+" let g:gruvbox_italic = 0
+" let g:gruvbox_underline = 0
+" let g:gruvbox_contrast_dark = 'hard'
+" color gruvbox
+
+let g:sonokai_style = 'shusia'
+color sonokai
+
+" hi Normal ctermbg=NONE guibg=NONE
 
 hi MatchParen cterm=none ctermbg=238 ctermfg=none
-hi ExtraWhitespace ctermbg=red guibg=red
+hi ExtraWhitespace ctermbg=magenta guibg=magenta
 match ExtraWhitespace /\s\+$/
 " }}}
 
@@ -244,8 +256,8 @@ autocmd FileType go setlocal shiftwidth=4 tabstop=4 noexpandtab
 " Leader keybinds {{{
 let mapleader = " "
 
-nmap <silent> <c-e> :cnext<CR>
-nmap <silent> <c-q> :cprevious<CR>
+nmap <silent> <c-e> :CNext<CR>
+nmap <silent> <c-q> :CPrev<CR>
 nmap <silent> <c-a> :FSHere<CR>
 nmap <silent> <c-b> :Buffers<CR>
 
@@ -275,19 +287,49 @@ nmap <silent> <leader>gs :vertical Gstatus<CR>
 nmap <silent> <leader>mc :Copen<CR>
 " }}}
 
+" Quickfix helpers {{{
+function! CNext()
+	let current = get(getqflist({'idx': 0}), 'idx', 0)
+	let length = len(getqflist())
+	if length == 1 || (current == length && length > 0)
+		:cc
+	elseif length > 0
+		:cnext
+	endif
+endfunction
+
+function! CPrev()
+	let current = get(getqflist({'idx': 0}), 'idx', 0)
+	let length = len(getqflist())
+	if length == 1 || (current == 1 && length > 0)
+		:cc
+	elseif length > 0
+		:cprev
+	endif
+endfunction
+
+command! CNext call CNext()
+command! CPrev call CPrev()
+" }}}
+
 " C/C++ {{{
 let g:compiler_gcc_ignore_unmatched_lines = 1
 let g:cpp_no_cpp17 = 1
 
 function! SetCMakeprg()
 	" We have to add this pattern twice because dispatch.vim is retarded
-	setlocal errorformat+=%-G%.%#,%-G%.%#
+	setlocal errorformat=
+				\%f:%l:%c:\ %trror:\ %m,
+				\%f:%l:%c:\ %tarning:\ %m,
+				\%f:%l:\ %trror:\ %m,
+				\%f:%l:\ %tarning:\ %m,
+				\%-G%.%#,%-G%.%#
 
 	if !empty(glob("meson.build"))
 		setlocal makeprg=ninja\ -C\ build
 	endif
 	if !empty(glob("CMakeLists.txt"))
-		setlocal makeprg=ninja\ -C\ build
+		setlocal makeprg=cmake\ --build\ build
 	endif
 	if !empty(glob("makefile")) || !empty(glob("Makefile"))
 		setlocal makeprg=make

@@ -188,3 +188,9 @@
     border-color: #c9545d;
     color: #c9545d;
 }
+
+#workspaces button:hover {
+	box-shadow: inherit;
+	text-shadow: inherit;
+    background: #383838;
+}

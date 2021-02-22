@@ -1,5 +1,5 @@
 # Set up the prompt
-export PS1=$'%F{cyan}[%F{reset}%B%n@%M%b %F{yellow}%~%F{cyan}]%F{green}$%F{reset} '
+export PS1=$'%F{blue}[%F{reset}%B%n@%M%b %F{yellow}%~%F{blue}]%F{green}$%F{reset} '
 
 setopt histignorealldups sharehistory hist_ignore_space
 
@@ -44,5 +44,5 @@ mkcd () {
   cd -P -- "$1"
 }
 
-# opam configuration
-test -r $HOME/.opam/opam-init/init.zsh && . $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+export GOPATH=$HOME/.gopath
+export PATH=$PATH:$GOPATH/bin
