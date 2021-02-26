@@ -21,6 +21,7 @@ in
   virtualisation.docker.enable = true;
   virtualisation.lxd.enable = true;
   programs.dconf.enable = true;
+  virtualisation.virtualbox.host.enable = true;
 
   boot.supportedFilesystems = [ "ntfs" ];
   boot.loader = {
@@ -127,13 +128,25 @@ in
     jetbrains-mono hack-font cascadia-code
   ];
 
+  services.pipewire.enable = true;
+
+  xdg.portal.enable = true;
+  xdg.portal.gtkUsePortal = true;
+  xdg.portal.extraPortals = with pkgs; [ xdg-desktop-portal-wlr xdg-desktop-portal-gtk ];
+
+  environment.sessionVariables = {
+	  MOZ_ENABLE_WAYLAND = "1";
+	  XDG_CURRENT_DESKTOP = "sway";
+	  XDG_SESSION_TYPE = "wayland";
+  };
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     wget curl neovim git stow emacs fzf silver-searcher
     keychain
-    firefox chromium discord spotify
-    obs-studio obs-wlrobs xdg-desktop-portal xdg-desktop-portal-wlr
+    firefox-wayland chromium discord spotify
+    obs-studio obs-v4l2sink obs-wlrobs xdg-desktop-portal xdg-desktop-portal-wlr
     clang_11 gcc10 pkg-config valgrind gdb lldb gnumake cmake ninja meson ctags manpages
 	go gopls
     lxappearance gnome-themes-standard gnome-themes-extra

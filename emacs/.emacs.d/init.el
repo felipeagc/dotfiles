@@ -281,33 +281,47 @@
          "\\|\\(?:\\`.+?[#~]\\'\\)")))
 ;; }}}
 
-;; Ctags {{{
-(use-package counsel-etags
-  :bind (("C-]" . counsel-etags-find-tag-at-point))
+;; Projectile {{{
+(use-package projectile
   :init
-  (add-hook 'prog-mode-hook
-        (lambda ()
-          (add-hook 'after-save-hook
-            'counsel-etags-virtual-update-tags 'append 'local)))
+  (setq projectile-enable-idle-timer t
+        projectile-idle-timer-seconds 10
+        tags-revert-without-query 1
+        tags-add-tables nil
+        large-file-warning-threshold nil)
   :config
-  (setq counsel-etags-update-interval 60)
-  (push "build" counsel-etags-ignore-directories)
-  (push "zig-cache" counsel-etags-ignore-directories)
-  )
+  (projectile-mode +1))
+
+(use-package counsel-projectile
+  :after projectile)
+;; }}}
+
+;; Ctags {{{
+;; (use-package counsel-etags
+;;   :bind (("C-]" . counsel-etags-find-tag-at-point))
+;;   :config
+;;   (setq counsel-etags-update-interval 60)
+;;   (push "build" counsel-etags-ignore-directories)
+;;   (push "zig-cache" counsel-etags-ignore-directories)
+;;   ;; Don't ask before rereading the TAGS files if they have changed
+;;   (setq tags-revert-without-query t)
+;;   ;; Don't warn when TAGS files are large
+;;   (setq large-file-warning-threshold nil)
+;;   ;; Setup auto update now
+;;   (add-hook 'prog-mode-hook
+;;             (lambda ()
+;;               (add-hook 'after-save-hook
+;;                         'counsel-etags-virtual-update-tags 'append 'local)
+;;               ))
+;;   )
 ;; }}}
 
 ;; Keybindings {{{
-(defun felipe/project-find-file ()
-  (interactive)
-  (let* ((pr (project-current t))
-         (dirs (project-roots pr)))
-    (project-find-file-in nil dirs pr)))
-
 (define-key evil-normal-state-map (kbd "C-q") 'previous-error)
 (define-key evil-normal-state-map (kbd "C-e") 'next-error)
 
-(define-key evil-normal-state-map (kbd "C-a") 'ff-find-other-file)
-(define-key evil-normal-state-map (kbd "C-p") 'felipe/project-find-file)
+(define-key evil-normal-state-map (kbd "C-a") 'projectile-find-other-file)
+(define-key evil-normal-state-map (kbd "C-p") 'counsel-projectile-find-file)
 (define-key evil-normal-state-map (kbd "C-f") 'counsel-find-file)
 
 (define-key evil-normal-state-map (kbd "C-b") 'counsel-switch-buffer)
