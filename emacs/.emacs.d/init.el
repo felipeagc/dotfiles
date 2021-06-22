@@ -430,7 +430,7 @@
   (add-to-list 'lsp-language-id-configuration '(zig-mode . "zig"))
   (lsp-register-client
    (make-lsp-client
-    :new-connection (lsp-stdio-connection "~/.zls/zig-cache/bin/zls")
+    :new-connection (lsp-stdio-connection "zls")
     :major-modes '(zig-mode)
     :server-id 'zls))
   (add-to-list 'lsp-language-id-configuration '(tuareg-mode . "ocaml"))

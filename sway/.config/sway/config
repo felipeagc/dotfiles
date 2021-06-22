@@ -14,15 +14,12 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $term alacritty
-# Your preferred application launcher
-# Note: pass the final command to swaymsg so that the resulting window can be opened
-# on the original workspace that the command was run on.
-set $menu rofi -show drun
+set $term kitty
 
 ### Output configuration
 #
 output * bg #404040 solid_color
+output * bg "~/images/wallpaper.jpg" fill
 output * max_render_time off
 
 xwayland force
@@ -65,7 +62,8 @@ bindsym $mod+Return exec $term
 bindsym $mod+w kill
 
 # Start your launcher
-bindsym $mod+Space exec $menu
+bindsym $mod+Space exec rofi -show drun
+bindsym $mod+Shift+Space exec rofi -show run
 
 # Drag floating windows by holding down $mod and left mouse button.
 # Resize them with right mouse button + $mod.
@@ -131,6 +129,8 @@ bindsym $mod+Shift+0 move container to workspace number 10:games
 #
 
 bindsym $mod+b split toggle
+bindsym $mod+r layout toggle tabbed split
+bindsym $mod+Tab focus next sibling
 
 # bindsym $mod+$left nop layout left
 # bindsym $mod+$right nop layout right
@@ -153,7 +153,12 @@ bindsym $mod+period exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym $mod+comma exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 bindsym $mod+v exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 bindsym Print exec grim -g "$(slurp)" - | wl-copy
+bindsym Shift+Print exec grim -g "$(slurp)" $HOME/images/$(date +'%F_%Hh%Mm%Ss_grim.png')
+bindsym $mod+Shift+p exec grim -g "$(slurp -p)" -t ppm - | convert - -format '#%[hex:p{0,0}]' info:- | wl-copy
 bindsym $mod+i exec chromium --enable-features=UseOzonePlatform --ozone-platform=wayland
+
+bindsym $mod+s scratchpad show
+bindsym $mod+Shift+s move scratchpad
 
 assign [class="Spotify"] workspace number 9:misc
 assign [class="discord"] workspace number 9:misc
@@ -181,6 +186,11 @@ default_border pixel
 smart_borders on
 hide_edge_borders smart
 
+exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
+exec hash dbus-update-activation-environment 2>/dev/null && \
+     dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
+
+exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id waybar
 exec --no-startup-id gammastep
 exec --no-startup-id brightnessctl s 35%
