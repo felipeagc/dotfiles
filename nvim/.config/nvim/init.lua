@@ -49,7 +49,7 @@ require('packer').startup(function()
 	use 'tpope/vim-dispatch'
 
 	use 'editorconfig/editorconfig-vim'
-	use 'cohama/lexima.vim'
+	-- use 'cohama/lexima.vim'
 	use 'derekwyatt/vim-fswitch'
 	-- use 'romgrk/nvim-treesitter-context'
 	-- use 'ludovicchabant/vim-gutentags'
@@ -65,13 +65,19 @@ require('packer').startup(function()
 	use 'DingDean/wgsl.vim'
 	use 'peterhoeg/vim-qml'
 	use 'rust-lang/rust.vim'
+	use 'dart-lang/dart-vim-plugin'
 	use '~/tmp/dusk.vim'
+	use '~/tmp/lang.vim'
 
-	use 'kyazdani42/nvim-tree.lua'
-
-	use { 'embark-theme/vim', as = 'embark' }
+	-- use { 'embark-theme/vim', as = 'embark' }
+	use 'folke/lsp-colors.nvim'
 	use 'nanotech/jellybeans.vim'
 	use 'folke/tokyonight.nvim'
+	use 'ishan9299/nvim-solarized-lua'
+	use 'lifepillar/vim-solarized8'
+	use 'jnurmine/Zenburn'
+	use 'rktjmp/lush.nvim'
+	use 'metalelf0/jellybeans-nvim'
 	-- use 'sainnhe/sonokai'
 	-- use 'ayu-theme/ayu-vim'
 end)
@@ -117,8 +123,8 @@ vim.o.cinoptions = vim.o.cinoptions .. 'l1'
 
 vim.wo.number = false
 vim.wo.cursorline = true
--- vim.wo.foldmethod = 'marker'
--- vim.wo.foldlevel = 0
+vim.wo.foldmethod = 'marker'
+vim.wo.foldlevel = 0
 -- }}}
 
 -- Package configuration {{{
@@ -129,6 +135,8 @@ lspconfig.zls.setup{ }
 lspconfig.tsserver.setup{ }
 lspconfig.ocamllsp.setup{ }
 lspconfig.rust_analyzer.setup{ }
+lspconfig.nimls.setup{ }
+lspconfig.dartls.setup{ }
 
 require('compe').setup {
 	enabled = true,
@@ -159,21 +167,47 @@ require('compe').setup {
 
 require('gitsigns').setup {}
 
-local actions = require('telescope.actions')
+local telescope_builtin = require('telescope.builtin')
+
 require('telescope').setup{
 	defaults = {
 		mappings = {
 			i = {
-				["<esc>"] = actions.close
+				["<esc>"] = require('telescope.actions').close
 			},
 		},
-	}
+	},
 }
 
+felipe = {}
+
+felipe.telescope_theme = require('telescope.themes').get_ivy{
+	layout_config = {
+		height = 15,
+	},
+	previewer = false,
+}
+
+function felipe.find_files()
+	telescope_builtin.find_files(felipe.telescope_theme)
+end
+
+function felipe.file_browser()
+	telescope_builtin.file_browser(felipe.telescope_theme)
+end
+
+function felipe.buffers()
+	telescope_builtin.buffers(felipe.telescope_theme)
+end
+
+function felipe.live_grep()
+	telescope_builtin.live_grep(felipe.telescope_theme)
+end
+
 -- require('nvim-treesitter.configs').setup {
--- 	ensure_installed = { 'lua', 'c', 'cpp', 'go' }, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+-- 	ensure_installed = { 'lua', 'c', 'cpp', 'go' },
 -- 	highlight = {
--- 		enable = true,            -- false will disable the whole extension
+-- 		enable = true,
 -- 		custom_captures = {
 -- 			["operator"] = "Normal",
 -- 			["property"] = "Normal",
@@ -182,7 +216,12 @@ require('telescope').setup{
 -- 		},
 -- 	},
 -- }
+
+vim.g.neovide_cursor_animation_length = 0
+vim.g.neovide_cursor_antialiasing = false
 -- }}}
+
+vim.cmd[[set background=dark]]
 
 -- Jellybeans color scheme {{{
 -- vim.g.jellybeans_overrides = {
@@ -207,9 +246,10 @@ require('telescope').setup{
 -- }}}
 
 -- Tokyonight color scheme {{{
--- vim.g.tokyonight_style = "night"
-vim.g.tokyonight_style = "storm"
-vim.cmd[[colorscheme tokyonight]]
+vim.g.tokyonight_style = "night"
+-- vim.g.tokyonight_style = "storm"
+-- vim.g.tokyonight_style = "day"
+-- vim.cmd[[colorscheme tokyonight]]
 -- }}}
 
 -- Other color schemes {{{
@@ -222,15 +262,28 @@ vim.cmd[[colorscheme tokyonight]]
 
 -- vim.g.ayucolor = "mirage"
 -- vim.cmd('colorscheme ayu')
+
+-- vim.cmd[[colorscheme solarized-high]]
+-- vim.cmd[[colorscheme solarized8_high]]
+
+-- vim.g.zenburn_high_Contrast = 1
+-- vim.cmd[[colorscheme zenburn]]
+
+vim.cmd[[colorscheme jellybeans-nvim]]
+vim.cmd[[
+	autocmd ColorScheme * hi! DiffAdd guibg=#333333 guifg=#d2ebbe ctermbg=none
+	autocmd ColorScheme * hi! DiffChange guibg=#333333 guifg=#dad085 ctermbg=none
+	autocmd ColorScheme * hi! DiffDelete guibg=#333333 guifg=#f0a0c0 ctermbg=none
+]]
 -- }}}
 
 -- Keybinds {{{
 vim.g.mapleader = ' '
 
-vim.api.nvim_set_keymap('n', '<C-p>', ':Telescope find_files<CR>', { silent = true })
-vim.api.nvim_set_keymap('n', '<C-f>', ':Telescope file_browser<CR>', { silent = true })
-vim.api.nvim_set_keymap('n', '<C-b>', ':Telescope buffers<CR>', { silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>fg', ':Telescope live_grep<CR>', { silent = true })
+vim.api.nvim_set_keymap('n', '<C-p>', ':lua felipe.find_files()<CR>', { silent = true })
+vim.api.nvim_set_keymap('n', '<C-f>', ':lua felipe.file_browser()<CR>', { silent = true })
+vim.api.nvim_set_keymap('n', '<C-b>', ':lua felipe.buffers()<CR>', { silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>fg', ':lua felipe.live_grep()<CR>', { silent = true })
 
 vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>w', { noremap = true })
 vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>W', { noremap = true })
@@ -316,20 +369,21 @@ vim.cmd [[
 -- Indentation {{{
 -- vim.cmd([[
 -- 	autocmd FileType glsl setlocal shiftwidth=4 tabstop=4 expandtab
--- 	autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 expandtab
 -- 	autocmd FileType cpp setlocal shiftwidth=4 tabstop=4 expandtab
 -- 	autocmd FileType c setlocal shiftwidth=4 tabstop=4 expandtab
 -- 	autocmd FileType haskell setlocal shiftwidth=2 tabstop=2 expandtab
--- 	autocmd FileType lua setlocal shiftwidth=2 tabstop=2 expandtab
--- 	autocmd FileType json setlocal shiftwidth=2 tabstop=2 expandtab
--- 	autocmd FileType go setlocal shiftwidth=4 tabstop=4 noexpandtab
+-- 	autocmd FileType dart setlocal shiftwidth=2 tabstop=2 expandtab
 -- ]])
 -- }}}
 
 -- Completion {{{
-vim.api.nvim_set_keymap('i', '<CR>', "compe#confirm(lexima#expand('<LT>CR>', 'i'))", { silent = true, expr = true })
+-- vim.api.nvim_set_keymap('i', '<CR>', "compe#confirm(lexima#expand('<LT>CR>', 'i'))", { silent = true, expr = true })
 vim.api.nvim_set_keymap('i', '<C-n>', 'compe#complete()', { silent = true, expr = true })
 vim.api.nvim_set_keymap('i', '<C-p>', 'compe#complete()', { silent = true, expr = true })
+-- }}}
+
+-- Markdown {{{
+vim.g.vim_markdown_folding_disabled = 1
 -- }}}
 
 -- C/C++ {{{
@@ -360,6 +414,7 @@ nvim_create_augroups({
 		{"Filetype", "c", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
 		{"Filetype", "c", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting_sync(nil, 1000)<CR>"},
 		{"Filetype", "c", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
+		{"Filetype", "c", "nmap <silent> <buffer> <Leader>mi :Telescope lsp_code_actions<CR>"},
 		{"Filetype", "c", "nmap <silent> <buffer> <F7>       :Make<CR>"},
 		{"Filetype", "c", "lua set_c_makeprg()"},
 	},
@@ -371,6 +426,7 @@ nvim_create_augroups({
 		{"Filetype", "cpp", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
 		{"Filetype", "cpp", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting_sync(nil, 1000)<CR>"},
 		{"Filetype", "cpp", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
+		{"Filetype", "cpp", "nmap <silent> <buffer> <Leader>mi :Telescope lsp_code_actions<CR>"},
 		{"Filetype", "cpp", "nmap <silent> <buffer> <F7>       :Make<CR>"},
 		{"Filetype", "cpp", "lua set_c_makeprg()"},
 	},
@@ -463,7 +519,7 @@ nvim_create_augroups({
 	},
 })
 -- }}}
---
+
 -- Rust {{{
 vim.g.cargo_makeprg_params = "check"
 
@@ -478,6 +534,44 @@ nvim_create_augroups({
 		{"Filetype", "rust", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
 		{"Filetype", "rust", "nmap <silent> <buffer> <Leader>mi :Telescope lsp_code_actions<CR>"},
 		{"Filetype", "rust", "nmap <silent> <buffer> <F7>       :Make<CR>"},
+	},
+})
+-- }}}
+
+-- Nim {{{
+nvim_create_augroups({
+	nimtbindingslua = {
+		{"Filetype", "nim", "setlocal shiftwidth=2 tabstop=2 expandtab"},
+		{"Filetype", "nim", "setlocal omnifunc=v:lua.vim.lsp.omnifunc"},
+		{"Filetype", "nim", "setlocal cpt-=t"},
+		{"Filetype", "nim", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
+		{"Filetype", "nim", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
+		{"Filetype", "nim", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting_sync(nil, 1000)<CR>"},
+		{"Filetype", "nim", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
+		{"Filetype", "nim", "nmap <silent> <buffer> <Leader>mi :Telescope lsp_code_actions<CR>"},
+		{"Filetype", "nim", "nmap <silent> <buffer> <F7>       :Make<CR>"},
+		{"Filetype", "nim", "setlocal makeprg=nimble\\ --noColor\\ build"},
+	},
+})
+-- }}}
+
+-- Dart {{{
+vim.g.dart_style_guide = "2"
+
+function flutter_hot_reload()
+	vim.cmd [[silent execute '!kill -SIGUSR1 $(pgrep -f "[f]lutter_tool.*run")']]
+end
+
+nvim_create_augroups({
+	dartbindingslua = {
+		{"Filetype", "dart", "setlocal omnifunc=v:lua.vim.lsp.omnifunc"},
+		{"Filetype", "dart", "setlocal cpt-=t"},
+		{"Filetype", "dart", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
+		{"Filetype", "dart", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
+		{"Filetype", "dart", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting_sync(nil, 1000)<CR>"},
+		{"Filetype", "dart", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
+		{"Filetype", "dart", "nmap <silent> <buffer> <Leader>mi :Telescope lsp_code_actions<CR>"},
+		{"Filetype", "dart", "nmap <silent> <buffer> <F7> :lua flutter_hot_reload()<CR>"},
 	},
 })
 -- }}}

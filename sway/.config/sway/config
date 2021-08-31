@@ -62,8 +62,14 @@ bindsym $mod+Return exec $term
 bindsym $mod+w kill
 
 # Start your launcher
-bindsym $mod+Space exec rofi -show drun
-bindsym $mod+Shift+Space exec rofi -show run
+bindsym $mod+Space exec BEMENU_BACKEND=wayland bemenu-run \
+	-i -p Run \
+	--tf "#ffffff" \
+	--tb "#285577" \
+	--hf "#285577" \
+	-H 30 --fn DejaVu\ Sans\ Mono\ 12
+# bindsym $mod+Space exec rofi -show drun
+# bindsym $mod+Shift+Space exec rofi -show run
 
 # Drag floating windows by holding down $mod and left mouse button.
 # Resize them with right mouse button + $mod.
@@ -148,7 +154,7 @@ bindsym $mod+t floating toggle
 
 bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
 bindsym XF86MonBrightnessUp exec brightnessctl set +5%
-bindsym $mod+p exec playerctl -p spotify play-pause
+bindsym $mod+p exec playerctl -p psst\,spotify play-pause
 bindsym $mod+period exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym $mod+comma exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 bindsym $mod+v exec pactl set-source-mute @DEFAULT_SOURCE@ toggle

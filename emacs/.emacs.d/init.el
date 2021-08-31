@@ -26,6 +26,10 @@
     (setq gc-cons-threshold 100000000
           gc-cons-percentage 0.1)))
 
+;; Supress warnings
+(require 'warnings)
+(add-to-list 'warning-suppress-types '(comp))
+
 ;; Don't ask for compile command
 (setq compilation-read-command nil)
 
@@ -51,9 +55,10 @@
 (setq vc-follow-symlinks t)
 
 ;; Visuals
-(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-11"))
-(add-to-list 'default-frame-alist '(font . "Jetbrains Mono-11"))
-(add-to-list 'default-frame-alist '(font . "Cascadia Code-11"))
+(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-12"))
+;; (add-to-list 'default-frame-alist '(font . "Cascadia Code-11.5"))
+(add-to-list 'default-frame-alist '(font . "IBM Plex Mono-11.5"))
+;; (add-to-list 'default-frame-alist '(font . "Jetbrains Mono-11.5"))
 ;; (setq font-lock-maximum-decoration 2) ;; Minimize the syntax highlighting a bit
 
 ;; Fix scrolling
@@ -87,7 +92,7 @@
               c-default-style "bsd")
 
 ;; Auto closing pairs
-(electric-pair-mode)
+;; (electric-pair-mode)
 
 ;; Highlight matching brace
 (setq show-paren-delay 0.0)
@@ -191,49 +196,53 @@
 ;;   (setq seoul256-background 234)
 ;;   (load-theme 'seoul256 t))
 
-;; (use-package zenburn-theme
-;;   :config
-;;   (setq zenburn-override-colors-alist
-;;         '(("zenburn-bg" . "#111111")
-;;           ("zenburn-bg-1"  . "#555555")
-;;           ("zenburn-bg+05" . "#222222")
-;;           ("zenburn-bg+1"  . "#222222")
-;;           ("zenburn-bg+2"  . "#3F3F3F")
-;;           ("zenburn-bg+3"  . "#4F4F4F")))
-;;   (load-theme 'zenburn t)
-
-;;   (set-face-attribute 'vertical-border nil
-;;                       :foreground (face-attribute 'mode-line-inactive :foreground))
-
-;; (set-face-attribute 'mode-line nil
-;;                     :height 110
-;;                     :inverse-video nil
-;;                     :box `(:line-width 6 :color ,(face-attribute 'mode-line :background) :style nil))
-
-;; (set-face-attribute 'mode-line-inactive nil
-;;                     :height 110
-;;                     :inverse-video nil
-;;                     :box `(:line-width 6 :color ,(face-attribute 'mode-line-inactive :background) :style nil))
-
-;;   (set-face-attribute 'fringe 'nil :background "#111111"))
-
-(use-package monokai-pro-theme
+(use-package zenburn-theme
   :config
-  (load-theme 'monokai-pro t)
-  ;; Invert active/inactive modeline colors
-  (let ((active-background (face-attribute 'mode-line-inactive :background))
-        (inactive-background (face-attribute 'mode-line :background)))
-        (set-face-attribute 'mode-line nil
-                            :height 120
-                            :inverse-video nil
-                            :background active-background
-                            :box `(:line-width 6 :color ,active-background :style nil))
+  (setq zenburn-override-colors-alist
+        '(("zenburn-bg" . "#111111")
+          ("zenburn-bg-1"  . "#555555")
+          ("zenburn-bg+05" . "#222222")
+          ("zenburn-bg+1"  . "#222222")
+          ("zenburn-bg+2"  . "#3F3F3F")
+          ("zenburn-bg+3"  . "#4F4F4F")))
+  (load-theme 'zenburn t)
 
-        (set-face-attribute 'mode-line-inactive nil
-                            :height 120
-                            :inverse-video nil
-                            :background inactive-background
-                            :box `(:line-width 6 :color ,inactive-background :style nil))))
+  (set-face-attribute 'vertical-border nil
+                      :foreground (face-attribute 'mode-line-inactive :foreground))
+
+  (set-face-attribute 'mode-line nil
+                      ;; :height 110
+                      :inverse-video nil
+                      :box `(:line-width 6 :color ,(face-attribute 'mode-line :background) :style nil))
+
+  (set-face-attribute 'mode-line-inactive nil
+                      ;; :height 110
+                      :inverse-video nil
+                      :box `(:line-width 6 :color ,(face-attribute 'mode-line-inactive :background) :style nil))
+
+  (set-face-attribute 'fringe 'nil :background "#111111"))
+
+;; (use-package monokai-pro-theme
+;;   :config
+;;   (load-theme 'monokai-pro t)
+;;   ;; Invert active/inactive modeline colors
+;;   (let ((active-background (face-attribute 'mode-line-inactive :background))
+;;         (inactive-background (face-attribute 'mode-line :background)))
+;;         (set-face-attribute 'mode-line nil
+;;                             :height 120
+;;                             :inverse-video nil
+;;                             :background active-background
+;;                             :box `(:line-width 6 :color ,active-background :style nil))
+
+;;         (set-face-attribute 'mode-line-inactive nil
+;;                             :height 120
+;;                             :inverse-video nil
+;;                             :background inactive-background
+;;                             :box `(:line-width 6 :color ,inactive-background :style nil))))
+
+;; (use-package jbeans-theme
+;;   :config
+;;   (load-theme 'jbeans t))
 ;; }}}
 
 ;; Modeline format {{{
@@ -284,11 +293,12 @@
 ;; Projectile {{{
 (use-package projectile
   :init
-  (setq projectile-enable-idle-timer t
-        projectile-idle-timer-seconds 10
-        tags-revert-without-query 1
-        tags-add-tables nil
-        large-file-warning-threshold nil)
+  (setq
+   ;; projectile-enable-idle-timer t
+   ;; projectile-idle-timer-seconds 10
+   ;; tags-revert-without-query 1
+   ;; tags-add-tables nil
+   large-file-warning-threshold nil)
   :config
   (projectile-mode +1))
 
@@ -332,6 +342,9 @@
 (define-key evil-normal-state-map (kbd "C-j") 'evil-window-next)
 (define-key evil-normal-state-map (kbd "C-k") 'evil-window-prev)
 
+(define-key compilation-mode-map (kbd "C-j") 'evil-window-next)
+(define-key compilation-mode-map (kbd "C-k") 'evil-window-prev)
+
 (define-key evil-normal-state-map (kbd "<f7>") 'compile)
 
 (use-package general
@@ -367,7 +380,8 @@
 (use-package default-text-scale
   :defer t
   :bind (("C-=" . default-text-scale-increase)
-         ("C--" . default-text-scale-decrease)))
+         ("C--" . default-text-scale-decrease)
+         ("C-0" . default-text-scale-reset)))
 ;; }}}
 
 ;; Company {{{
@@ -381,7 +395,9 @@
   (define-key company-active-map (kbd "<ret>") 'company-complete-selection)
   (global-company-mode)
   (setq company-minimum-prefix-length 1
-        company-idle-delay nil))
+        company-idle-delay nil
+        ;; company-format-margin-function nil ;; disable icons
+        ))
 ;; }}}
 
 ;; Flycheck {{{
@@ -392,9 +408,36 @@
 
 ;; Magit {{{
 (use-package magit
-  :defer t)
+  :defer t
+  :config
+  (evil-define-key 'normal 'magit-mode-map (kbd "C-j") 'evil-window-next)
+  (evil-define-key 'normal 'magit-mode-map (kbd "C-k") 'evil-window-prev))
 
 (use-package ssh-agency)
+;; }}}
+
+;; Git gutter {{{
+(use-package git-gutter-fringe
+  :init
+  :config
+  ;; standardize default fringe width
+  (if (fboundp 'fringe-mode) (fringe-mode '4))
+
+  (setq-default fringes-outside-margins t ;; places the git gutter outside the margins.
+                left-fringe-width  10)
+
+  (set-face-foreground 'git-gutter-fr:modified "#D0BF8F")
+  ;; (set-face-foreground 'git-gutter:added "green")
+  ;; (set-face-foreground 'git-gutter:deleted "red")
+
+  ;; thin fringe bitmaps
+  (define-fringe-bitmap
+    'git-gutter-fr:added [224] nil nil '(center repeated))
+  (define-fringe-bitmap
+    'git-gutter-fr:modified [224] nil nil '(center repeated))
+  (define-fringe-bitmap
+    'git-gutter-fr:deleted [128 192 224 240] nil nil 'bottom)
+  (global-git-gutter-mode +1))
 ;; }}}
 
 ;; Highlight TODO {{{
@@ -407,7 +450,9 @@
 (use-package eldoc)
 
 (use-package lsp-mode
-  :hook ((go-mode . lsp-deferred)
+  :hook ((c-mode . lsp-deferred)
+         (c++-mode . lsp-deferred)
+         (go-mode . lsp-deferred)
          (zig-mode . lsp-deferred)
          (tuareg-mode . lsp-deferred)
          (typescript-mode . lsp-deferred)
@@ -421,7 +466,7 @@
    lsp-enable-text-document-color nil
    lsp-enable-symbol-highlighting nil
    lsp-signature-auto-activate t
-   lsp-signature-render-documentation t
+   lsp-signature-render-documentation nil
    lsp-headerline-breadcrumb-enable nil)
   :config
   (felipe/leader-def 'normal lsp-mode-map
@@ -448,17 +493,9 @@
         (set (make-local-variable 'compile-command) (format command-str proj-dir)))))
 
 ;; C/C++ {{{
-(use-package meson-mode
-  :defer t)
-(use-package cmake-mode
-  :defer t)
-(use-package clang-format
-  :defer t)
-
-(font-lock-add-keywords 'c-mode
-                   '(("\\<\\([a-zA-Z_]*\\) *("  1 font-lock-function-name-face)))
-(font-lock-add-keywords 'c++-mode
-                   '(("\\<\\([a-zA-Z_]*\\) *("  1 font-lock-function-name-face)))
+(use-package meson-mode :defer t)
+(use-package cmake-mode :defer t)
+(use-package clang-format :defer t)
 
 (add-to-list 'auto-mode-alist '("\\.inl\\'" . c-mode))
 
@@ -502,13 +539,12 @@
 
 ;; Web {{{
 (use-package web-mode
-  :config
-  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.svelte\\'" . web-mode)))
-;; }}}
-
-;; Javascript / Typescript {{{
-(use-package typescript-mode)
+  :mode (("\\.js\\'" . web-mode)
+         ("\\.jsx\\'" .  web-mode)
+         ("\\.ts\\'" . web-mode)
+         ("\\.tsx\\'" . web-mode)
+         ("\\.html\\'" . web-mode)
+         ("\\.svelte\\'" . web-mode)))
 ;; }}}
 
 ;; Zig {{{
@@ -520,6 +556,15 @@
   (add-hook 'zig-mode-hook
             (lambda ()
               (felipe/set-compile-command "build.zig" "cd %s && zig build"))))
+;; }}}
+
+;; Lua {{{
+(use-package lua-mode
+  :defer t
+  :init
+  (setq lua-indent-nested-block-content-align nil
+        lua-indent-close-paren-align nil
+        lua-indent-level 4))
 ;; }}}
 
 ;; GLSL {{{
@@ -563,14 +608,6 @@
               (felipe/set-compile-command "Makefile" "make -C %s")
               (felipe/set-compile-command "makefile" "make -C %s")
               (felipe/set-compile-command "dune-project" "cd %s && dune build"))))
-
-;; (use-package merlin
-;;   :after tuareg
-;;   :hook ((tuareg-mode caml-mode) . merlin-mode))
-
-;; (use-package merlin-eldoc
-;;   :after merlin
-;;   :hook ((tuareg-mode caml-mode) . merlin-eldoc-setup))
 
 (use-package ocamlformat
   :after tuareg
