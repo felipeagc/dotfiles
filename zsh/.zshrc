@@ -49,7 +49,5 @@ export PATH=$PATH:$GOPATH/bin
 
 export _JAVA_AWT_WM_NONREPARENTING=1
 
-export QEMU_LD_PREFIX=/usr/aarch64-linux-gnu
-
 # opam configuration
-test -r /home/felipe/.opam/opam-init/init.zsh && . /home/felipe/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+test -r $HOME/.opam/opam-init/init.zsh && . $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
