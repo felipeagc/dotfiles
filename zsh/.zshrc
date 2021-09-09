@@ -48,6 +48,8 @@ export GOPATH=$HOME/.gopath
 export PATH=$PATH:$GOPATH/bin
 
 export _JAVA_AWT_WM_NONREPARENTING=1
+export COMPOSE_DOCKER_CLI_BUILD=1
+export DOCKER_BUILDKIT=1
 
 # opam configuration
 test -r $HOME/.opam/opam-init/init.zsh && . $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
