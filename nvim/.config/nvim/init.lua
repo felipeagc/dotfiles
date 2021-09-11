@@ -40,6 +40,7 @@ require('packer').startup(function()
             'hrsh7th/cmp-path'
         }
     }
+    use 'ray-x/lsp_signature.nvim'
 
     use 'tpope/vim-surround'
     use 'tpope/vim-commentary'
@@ -66,6 +67,7 @@ require('packer').startup(function()
     use 'peterhoeg/vim-qml'
     use 'rust-lang/rust.vim'
     use 'dart-lang/dart-vim-plugin'
+    use 'ledger/vim-ledger'
     use '~/tmp/dusk.vim'
     use '~/tmp/lang.vim'
 
@@ -127,7 +129,7 @@ vim.wo.foldlevel = 0
 -- }}}
 
 -- Package configuration {{{
-local cmp = require('cmp')
+local cmp = require("cmp")
 cmp.setup({
     snippet = {},
     mapping = {
@@ -144,36 +146,30 @@ cmp.setup({
     },
 })
 
+require("lsp_signature").setup({
+    bind = true, 
+    hint_enable = false,
+    floating_window = true,
+    hint_prefix = "",
+    handler_opts = {
+        border = "none"   -- double, single, shadow, none
+    },
+})
+
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
 
-local lspconfig = require('lspconfig')
-lspconfig.clangd.setup{
-    capabilities = capabilities,
-}
-lspconfig.gopls.setup{ 
-    capabilities = capabilities,
-}
--- lspconfig.zls.setup{
--- 	capabilities = capabilities,
--- }
-lspconfig.tsserver.setup{
-    capabilities = capabilities,
-}
-lspconfig.ocamllsp.setup{
-    capabilities = capabilities,
-}
-lspconfig.rust_analyzer.setup{
-    capabilities = capabilities,
-}
-lspconfig.nimls.setup{
-    capabilities = capabilities,
-}
-lspconfig.dartls.setup{
-    capabilities = capabilities,
-}
+local lspconfig = require("lspconfig")
+lspconfig.clangd.setup{ capabilities = capabilities, }
+lspconfig.gopls.setup{ capabilities = capabilities, }
+-- lspconfig.zls.setup{ capabilities = capabilities, }
+lspconfig.tsserver.setup{ capabilities = capabilities, }
+lspconfig.ocamllsp.setup{ capabilities = capabilities, }
+lspconfig.rust_analyzer.setup{ capabilities = capabilities, }
+lspconfig.nimls.setup{ capabilities = capabilities, }
+lspconfig.dartls.setup{ capabilities = capabilities, }
 
-require('gitsigns').setup {}
+require("gitsigns").setup({})
 
 vim.cmd[[
 let $FZF_DEFAULT_OPTS='--color=gutter:-1 --layout=reverse'
@@ -251,6 +247,8 @@ vim.api.nvim_set_keymap('n', '<Leader>bcc', ':%bd|e#<CR>', { silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>gs', ':vertical Git<CR>', { silent = true })
 
 vim.api.nvim_set_keymap('n', '<C-a>', ':FSHere<CR>', { silent = true })
+
+vim.api.nvim_set_keymap('n', '<f7>', ':Make<CR>', { silent = true })
 -- }}}
 
 -- Small quality of life stuff {{{
