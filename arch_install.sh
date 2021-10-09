@@ -40,13 +40,18 @@ arch-chroot /mnt
 echo "swapfc_enabled=1" >> /etc/systemd/swap.conf
 systemctl enable systemd-swap
 systemctl enable NetworkManager
+systemctl enable systemd-resolved
+systemctl enable sshd
+systemctl enable libvirtd
 
+ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
 hwclock --systohc
 
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen
 echo "KEYMAP=br-abnt2" > /etc/vconsole.conf # keyboard layout
+localectl set-locale LANG=en_US.UTF-8
 
 echo "felipe-desktop" >> /etc/hostname
 
@@ -76,6 +81,7 @@ passwd felipe # set user password
 
 echo "%wheel ALL=(ALL) ALL" >> /etc/sudoers # allow users in wheel to use sudo
 
+# Fix thinkpad touchpad not working after sleep
 echo "options psmouse synaptics_intertouch=0" >> /etc/modprobe.d/psmouse_serio2_setup.conf
 
 su felipe
