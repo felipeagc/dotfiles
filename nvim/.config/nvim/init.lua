@@ -32,15 +32,11 @@ require('packer').startup(function()
     use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
 
     use 'neovim/nvim-lspconfig'
-    use {
-        "hrsh7th/nvim-cmp",
-        requires = {
-            'hrsh7th/cmp-buffer',
-            'hrsh7th/cmp-nvim-lsp',
-            'hrsh7th/cmp-path'
-        }
-    }
     use 'ray-x/lsp_signature.nvim'
+    use {
+        'nvim-treesitter/nvim-treesitter',
+        run = ':TSUpdate'
+    }
 
     use 'tpope/vim-surround'
     use 'tpope/vim-commentary'
@@ -129,22 +125,21 @@ vim.wo.foldlevel = 0
 -- }}}
 
 -- Package configuration {{{
-local cmp = require("cmp")
-cmp.setup({
-    snippet = {},
-    mapping = {
-        ['<C-p>'] = cmp.mapping.select_prev_item(),
-        ['<C-n>'] = cmp.mapping.complete(),
-    },
-    sources = {
-        { name = 'nvim_lsp' },
-        { name = 'buffer' },
-        { name = 'path' },
-    },
-    completion = {
-        autocomplete = false,
-    },
-})
+-- local cmp = require("cmp")
+-- cmp.setup({
+--     snippet = {},
+--     mapping = {
+--         ['<C-p>'] = cmp.mapping.select_prev_item(),
+--         ['<C-n>'] = cmp.mapping.complete(),
+--     },
+--     sources = {
+--         { name = 'nvim_lsp' },
+--         { name = 'path' },
+--     },
+--     completion = {
+--         autocomplete = false,
+--     },
+-- })
 
 require("lsp_signature").setup({
     bind = true, 
@@ -156,18 +151,27 @@ require("lsp_signature").setup({
     },
 })
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+-- local capabilities = vim.lsp.protocol.make_client_capabilities()
+-- capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
 
 local lspconfig = require("lspconfig")
-lspconfig.clangd.setup{ capabilities = capabilities, }
-lspconfig.gopls.setup{ capabilities = capabilities, }
+-- lspconfig.clangd.setup{ capabilities = capabilities, }
+-- lspconfig.gopls.setup{ capabilities = capabilities, }
 -- lspconfig.zls.setup{ capabilities = capabilities, }
-lspconfig.tsserver.setup{ capabilities = capabilities, }
-lspconfig.ocamllsp.setup{ capabilities = capabilities, }
-lspconfig.rust_analyzer.setup{ capabilities = capabilities, }
-lspconfig.nimls.setup{ capabilities = capabilities, }
-lspconfig.dartls.setup{ capabilities = capabilities, }
+-- lspconfig.tsserver.setup{ capabilities = capabilities, }
+-- lspconfig.ocamllsp.setup{ capabilities = capabilities, }
+-- lspconfig.rust_analyzer.setup{ capabilities = capabilities, }
+-- lspconfig.nimls.setup{ capabilities = capabilities, }
+-- lspconfig.dartls.setup{ capabilities = capabilities, }
+
+lspconfig.clangd.setup{}
+lspconfig.gopls.setup{}
+lspconfig.zls.setup{}
+lspconfig.tsserver.setup{}
+lspconfig.ocamllsp.setup{}
+lspconfig.rust_analyzer.setup{}
+lspconfig.nimls.setup{}
+lspconfig.dartls.setup{}
 
 require("gitsigns").setup({})
 
@@ -182,7 +186,7 @@ let g:fzf_preview_window = ''
 ]]
 -- }}}
 
-vim.cmd[[set background=dark]]
+vim.cmd [[set background=dark]]
 
 -- Tokyonight color scheme {{{
 vim.g.tokyonight_style = "night"
@@ -249,6 +253,9 @@ vim.api.nvim_set_keymap('n', '<Leader>gs', ':vertical Git<CR>', { silent = true 
 vim.api.nvim_set_keymap('n', '<C-a>', ':FSHere<CR>', { silent = true })
 
 vim.api.nvim_set_keymap('n', '<f7>', ':Make<CR>', { silent = true })
+
+-- Disable ex mode binding
+vim.cmd[[map Q <Nop>]]
 -- }}}
 
 -- Small quality of life stuff {{{
@@ -314,9 +321,23 @@ vim.cmd([[
 -- }}}
 
 -- Completion {{{
--- vim.api.nvim_set_keymap('i', '<CR>', "compe#confirm(lexima#expand('<LT>CR>', 'i'))", { silent = true, expr = true })
--- vim.api.nvim_set_keymap('i', '<C-n>', 'compe#complete()', { silent = true, expr = true })
--- vim.api.nvim_set_keymap('i', '<C-p>', 'compe#complete()', { silent = true, expr = true })
+vim.cmd [[inoremap <silent> <C-n> <C-x><C-o>]]
+-- }}}
+
+-- Treesitter {{{
+require("nvim-treesitter.configs").setup {
+  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  -- ignore_install = { "javascript" }, -- List of parsers to ignore installing
+  highlight = {
+    enable = true,              -- false will disable the whole extension
+    disable = { "c", "cpp" },  -- list of language that will be disabled
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+}
 -- }}}
 
 -- Markdown {{{
@@ -337,6 +358,9 @@ function set_c_makeprg()
     if vim.fn.filereadable('makefile') == 1 or vim.fn.filereadable('Makefile') == 1 then
         vim.api.nvim_buf_set_option(0, 'makeprg', 'make')
     end
+    if vim.fn.filereadable('platformio.ini') == 1 then
+        vim.api.nvim_buf_set_option(0, 'makeprg', 'pio run')
+    end
 end
 
 vim.g.compiler_gcc_ignore_unmatched_lines = 1
@@ -349,7 +373,7 @@ nvim_create_augroups({
         {"Filetype", "c", "setlocal shiftwidth=4 tabstop=4 expandtab"},
         {"Filetype", "c", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
         {"Filetype", "c", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "c", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting_sync(nil, 1000)<CR>"},
+        {"Filetype", "c", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
         {"Filetype", "c", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
         {"Filetype", "c", "nmap <silent> <buffer> <F7>       :Make<CR>"},
         {"Filetype", "c", "lua set_c_makeprg()"},
@@ -360,7 +384,7 @@ nvim_create_augroups({
         {"Filetype", "cpp", "setlocal shiftwidth=4 tabstop=4 expandtab"},
         {"Filetype", "cpp", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
         {"Filetype", "cpp", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "cpp", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting_sync(nil, 1000)<CR>"},
+        {"Filetype", "cpp", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
         {"Filetype", "cpp", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
         {"Filetype", "cpp", "nmap <silent> <buffer> <F7>       :Make<CR>"},
         {"Filetype", "cpp", "lua set_c_makeprg()"},
@@ -369,6 +393,37 @@ nvim_create_augroups({
 -- }}}
 
 -- Go {{{
+function goimports(timeoutms)
+    local context = { source = { organizeImports = true } }
+    vim.validate { context = { context, "t", true } }
+
+    local params = vim.lsp.util.make_range_params()
+    params.context = context
+
+    -- See the implementation of the textDocument/codeAction callback
+    -- (lua/vim/lsp/handler.lua) for how to do this properly.
+    local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, timeout_ms)
+    if not result or next(result) == nil then return end
+    if not result[1] then return end
+    local actions = result[1].result
+    if not actions then return end
+    local action = actions[1]
+
+    -- textDocument/codeAction can return either Command[] or CodeAction[]. If it
+    -- is a CodeAction, it can have either an edit, a command or both. Edits
+    -- should be executed first.
+    if action.edit or type(action.command) == "table" then
+        if action.edit then
+            vim.lsp.util.apply_workspace_edit(action.edit)
+        end
+        if type(action.command) == "table" then
+            vim.lsp.buf.execute_command(action.command)
+        end
+    else
+        vim.lsp.buf.execute_command(action)
+    end
+end
+
 nvim_create_augroups({
     gobindingslua = {
         {"Filetype", "go", "setlocal shiftwidth=4 tabstop=4 noexpandtab"},
@@ -376,9 +431,12 @@ nvim_create_augroups({
         {"Filetype", "go", "setlocal cpt-=t"},
         {"Filetype", "go", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
         {"Filetype", "go", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "go", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting_sync(nil, 1000)<CR>"},
+        {"Filetype", "go", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
         {"Filetype", "go", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
+        {"Filetype", "go", "nmap <silent> <buffer> <Leader>mi <cmd>lua vim.lsp.buf.code_action()<CR>"},
         {"Filetype", "go", "nmap <silent> <buffer> <F7>       :Make<CR>"},
+        -- {"BufWritePre", "*.go", "lua vim.lsp.buf.formatting_sync(nil, 1000)"},
+        -- {"BufWritePre", "*.go", "lua goimports(1000)"},
     },
 })
 -- }}}
@@ -393,7 +451,7 @@ nvim_create_augroups({
         {"Filetype", "zig", "setlocal cpt-=t"},
         {"Filetype", "zig", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
         {"Filetype", "zig", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "zig", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting_sync(nil, 1000)<CR>"},
+        {"Filetype", "zig", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
         {"Filetype", "zig", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
         {"Filetype", "zig", "nmap <silent> <buffer> <F7>       :Make<CR>"},
     },
@@ -408,7 +466,7 @@ nvim_create_augroups({
         {"Filetype", "javascript", "setlocal cpt-=t"},
         {"Filetype", "javascript", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
         {"Filetype", "javascript", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "javascript", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting_sync(nil, 1000)<CR>"},
+        {"Filetype", "javascript", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
         {"Filetype", "javascript", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
         {"Filetype", "javascript", "nmap <silent> <buffer> <F7>       :Make<CR>"},
     },
@@ -418,7 +476,7 @@ nvim_create_augroups({
         {"Filetype", "typescript", "setlocal cpt-=t"},
         {"Filetype", "typescript", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
         {"Filetype", "typescript", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "typescript", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting_sync(nil, 1000)<CR>"},
+        {"Filetype", "typescript", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
         {"Filetype", "typescript", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
         {"Filetype", "typescript", "nmap <silent> <buffer> <F7>       :Make<CR>"},
     },
@@ -428,7 +486,7 @@ nvim_create_augroups({
         {"Filetype", "typescriptreact", "setlocal cpt-=t"},
         {"Filetype", "typescriptreact", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
         {"Filetype", "typescriptreact", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "typescriptreact", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting_sync(nil, 1000)<CR>"},
+        {"Filetype", "typescriptreact", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
         {"Filetype", "typescriptreact", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
         {"Filetype", "typescriptreact", "nmap <silent> <buffer> <F7>       :Make<CR>"},
     },
@@ -443,7 +501,7 @@ nvim_create_augroups({
         {"Filetype", "ocaml", "setlocal cpt-=t"},
         {"Filetype", "ocaml", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
         {"Filetype", "ocaml", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "ocaml", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting_sync(nil, 1000)<CR>"},
+        {"Filetype", "ocaml", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
         {"Filetype", "ocaml", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
     },
 })
@@ -459,8 +517,9 @@ nvim_create_augroups({
         {"Filetype", "rust", "setlocal cpt-=t"},
         {"Filetype", "rust", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
         {"Filetype", "rust", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "rust", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting_sync(nil, 1000)<CR>"},
+        {"Filetype", "rust", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
         {"Filetype", "rust", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
+        {"Filetype", "rust", "nmap <silent> <buffer> <Leader>mi <cmd>lua vim.lsp.buf.code_action()<CR>"},
         {"Filetype", "rust", "nmap <silent> <buffer> <F7>       :Make<CR>"},
     },
 })
@@ -474,7 +533,7 @@ nvim_create_augroups({
         {"Filetype", "nim", "setlocal cpt-=t"},
         {"Filetype", "nim", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
         {"Filetype", "nim", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "nim", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting_sync(nil, 1000)<CR>"},
+        {"Filetype", "nim", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
         {"Filetype", "nim", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
         {"Filetype", "nim", "nmap <silent> <buffer> <F7>       :Make<CR>"},
         {"Filetype", "nim", "setlocal makeprg=nimble\\ --noColor\\ build"},
@@ -495,7 +554,7 @@ nvim_create_augroups({
         {"Filetype", "dart", "setlocal cpt-=t"},
         {"Filetype", "dart", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
         {"Filetype", "dart", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "dart", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting_sync(nil, 1000)<CR>"},
+        {"Filetype", "dart", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
         {"Filetype", "dart", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
         {"Filetype", "dart", "nmap <silent> <buffer> <F7> :lua flutter_hot_reload()<CR>"},
     },

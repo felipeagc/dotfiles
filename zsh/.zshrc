@@ -44,6 +44,8 @@ mkcd () {
   cd -P -- "$1"
 }
 
+export PATH=$PATH:$HOME/.local/bin
+
 export GOPATH=$HOME/.gopath
 export PATH=$PATH:$GOPATH/bin
 

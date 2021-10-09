@@ -210,15 +210,25 @@
   (set-face-attribute 'vertical-border nil
                       :foreground (face-attribute 'mode-line-inactive :foreground))
 
+  ;; (set-face-attribute 'mode-line nil
+  ;;                     ;; :height 110
+  ;;                     :inverse-video nil
+  ;;                     :box `(:line-width 6 :color ,(face-attribute 'mode-line :background) :style nil))
+
+  ;; (set-face-attribute 'mode-line-inactive nil
+  ;;                     ;; :height 110
+  ;;                     :inverse-video nil
+  ;;                     :box `(:line-width 6 :color ,(face-attribute 'mode-line-inactive :background) :style nil))
+
   (set-face-attribute 'mode-line nil
                       ;; :height 110
                       :inverse-video nil
-                      :box `(:line-width 6 :color ,(face-attribute 'mode-line :background) :style nil))
+                      :box `(:line-width 2 :color ,(face-attribute 'mode-line :background) :style nil))
 
   (set-face-attribute 'mode-line-inactive nil
                       ;; :height 110
                       :inverse-video nil
-                      :box `(:line-width 6 :color ,(face-attribute 'mode-line-inactive :background) :style nil))
+                      :box `(:line-width 2 :color ,(face-attribute 'mode-line-inactive :background) :style nil))
 
   (set-face-attribute 'fringe 'nil :background "#111111"))
 
@@ -651,4 +661,71 @@
   :defer t)
 (use-package markdown-mode
   :defer t)
+(use-package ledger-mode
+  :defer t
+  :mode ("\\.journal\\'" . ledger-mode)
+  :config
+  (felipe/leader-def 'normal ledger-mode-map
+    "mf" 'ledger-mode-clean-buffer))
 ;; }}}
+
+(require 'js)
+
+(setq mylang-font-lock-keywords
+      (let* (
+            ;; define several category of keywords
+             (x-keywords '("if" "else" "while" "when" "switch" "and" "or"
+                           "type" "struct" "import" "distinct"
+                           "return" "continue" "break"
+                           "fn" "var" "val" "const" "global" "extern" "export" "vararg"))
+             (x-types '("void" "bool" "u8" "u16" "u32" "u64" "i8" "i16" "i32" "i64" "f32" "f64"))
+             (x-constants '("null" "undefined" "true" "false"))
+             (x-functions '("@sizeof" "@alignof" "@defined" "@bitcast"))
+
+             ;; generate regex string for each category of keywords
+             (x-keywords-regexp (regexp-opt x-keywords 'words))
+             (x-types-regexp (regexp-opt x-types 'words))
+             (x-constants-regexp (regexp-opt x-constants 'words))
+             (x-functions-regexp (regexp-opt x-functions 'words)))
+
+        `(
+          ;; Hash directives
+          ("#\\w+" . font-lock-function-name-face)
+          ;; At directives
+          ("@\\w+" . font-lock-function-name-face)
+          (,x-types-regexp . font-lock-type-face)
+          (,x-constants-regexp . font-lock-constant-face)
+          (,x-functions-regexp . font-lock-function-name-face)
+          (,x-keywords-regexp . font-lock-keyword-face)
+          ;; note: order above matters, because once colored, that part won't change.
+          ;; in general, put longer words first
+          )))
+
+(setq mylang-mode-syntax-table
+      (let ( (synTable (make-syntax-table)))
+        ;; C++ style comment “// …”
+        (modify-syntax-entry ?\/ ". 12b" synTable)
+        (modify-syntax-entry ?\n "> b" synTable)
+        synTable))
+
+;;;###autoload
+(define-derived-mode mylang-mode prog-mode "mylang mode"
+  "Major mode for my programming language"
+
+  (setq-local comment-start "//")
+  (setq-local comment-end "")
+  (setq-local comment-padding " ")
+  (setq-local comment-style 'indent)
+  (setq-local electric-indent-chars
+              (append "{}():;," electric-indent-chars))
+  (setq-local indent-tabs-mode nil)
+  (setq-local indent-line-function 'js-indent-line)
+
+  ;; code for syntax highlighting
+  (setq font-lock-defaults '((mylang-font-lock-keywords)))
+  )
+
+(add-to-list 'auto-mode-alist '("\\.lang\\'" . mylang-mode))
+
+;; add the mode to the `features' list
+(provide 'mylang-mode)
