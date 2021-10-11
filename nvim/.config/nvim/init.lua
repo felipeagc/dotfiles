@@ -151,29 +151,31 @@ require("lsp_signature").setup({
     },
 })
 
--- local capabilities = vim.lsp.protocol.make_client_capabilities()
--- capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
-
 local lspconfig = require("lspconfig")
--- lspconfig.clangd.setup{ capabilities = capabilities, }
--- lspconfig.gopls.setup{ capabilities = capabilities, }
--- lspconfig.zls.setup{ capabilities = capabilities, }
--- lspconfig.tsserver.setup{ capabilities = capabilities, }
--- lspconfig.ocamllsp.setup{ capabilities = capabilities, }
--- lspconfig.rust_analyzer.setup{ capabilities = capabilities, }
--- lspconfig.nimls.setup{ capabilities = capabilities, }
--- lspconfig.dartls.setup{ capabilities = capabilities, }
 
-lspconfig.clangd.setup{}
-lspconfig.gopls.setup{}
-lspconfig.zls.setup{}
-lspconfig.tsserver.setup{}
-lspconfig.ocamllsp.setup{}
-lspconfig.rust_analyzer.setup{}
-lspconfig.nimls.setup{}
-lspconfig.dartls.setup{}
+local function on_lsp_attach(client, bufnr)
+    local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+    local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
-require("gitsigns").setup({})
+    buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+    local opts = { noremap=true, silent=true }
+
+    buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+    buf_set_keymap('n', '<c-]>', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+    buf_set_keymap('n', '<Leader>mf', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+    buf_set_keymap('n', '<Leader>mr', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+    buf_set_keymap('n', '<Leader>mi', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+end
+
+local servers = { "clangd", "gopls", "zls", "tsserver", "ocamllsp", "rust_analyzer", "nimls", "dartls" }
+for _, lsp in ipairs(servers) do
+    lspconfig[lsp].setup{
+        on_attach = on_lsp_attach,
+    }
+end
+
+require("gitsigns").setup{}
 
 vim.cmd[[
 let $FZF_DEFAULT_OPTS='--color=gutter:-1 --layout=reverse'
@@ -311,12 +313,19 @@ vim.cmd [[
 
 -- Indentation {{{
 vim.cmd([[
+    autocmd FileType c setlocal shiftwidth=4 tabstop=4 expandtab
+    autocmd FileType cpp setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType lua setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType glsl setlocal shiftwidth=4 tabstop=4 expandtab
-    autocmd FileType cpp setlocal shiftwidth=4 tabstop=4 expandtab
-    autocmd FileType c setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType haskell setlocal shiftwidth=2 tabstop=2 expandtab
+    autocmd FileType ocaml setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType dart setlocal shiftwidth=2 tabstop=2 expandtab
+    autocmd FileType zig setlocal shiftwidth=4 tabstop=4 expandtab
+    autocmd FileType javascript setlocal shiftwidth=4 tabstop=4 expandtab
+    autocmd FileType typescript setlocal shiftwidth=4 tabstop=4 expandtab
+    autocmd FileType typescriptreact setlocal shiftwidth=4 tabstop=4 expandtab
+    autocmd FileType rust setlocal shiftwidth=4 tabstop=4 expandtab
+    autocmd FileType nim setlocal shiftwidth=2 tabstop=2 expandtab
 ]])
 -- }}}
 
@@ -368,24 +377,12 @@ vim.g.compiler_gcc_ignore_unmatched_lines = 1
 
 nvim_create_augroups({
     cbindingslua = {
-        {"Filetype", "c", "setlocal omnifunc=v:lua.vim.lsp.omnifunc"},
         {"Filetype", "c", "setlocal cpt-=t"},
-        {"Filetype", "c", "setlocal shiftwidth=4 tabstop=4 expandtab"},
-        {"Filetype", "c", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
-        {"Filetype", "c", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "c", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
-        {"Filetype", "c", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
         {"Filetype", "c", "nmap <silent> <buffer> <F7>       :Make<CR>"},
         {"Filetype", "c", "lua set_c_makeprg()"},
     },
     cppbindingslua = {
-        {"Filetype", "cpp", "setlocal omnifunc=v:lua.vim.lsp.omnifunc"},
         {"Filetype", "cpp", "setlocal cpt-=t"},
-        {"Filetype", "cpp", "setlocal shiftwidth=4 tabstop=4 expandtab"},
-        {"Filetype", "cpp", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
-        {"Filetype", "cpp", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "cpp", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
-        {"Filetype", "cpp", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
         {"Filetype", "cpp", "nmap <silent> <buffer> <F7>       :Make<CR>"},
         {"Filetype", "cpp", "lua set_c_makeprg()"},
     },
@@ -427,13 +424,7 @@ end
 nvim_create_augroups({
     gobindingslua = {
         {"Filetype", "go", "setlocal shiftwidth=4 tabstop=4 noexpandtab"},
-        {"Filetype", "go", "setlocal omnifunc=v:lua.vim.lsp.omnifunc"},
         {"Filetype", "go", "setlocal cpt-=t"},
-        {"Filetype", "go", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
-        {"Filetype", "go", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "go", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
-        {"Filetype", "go", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
-        {"Filetype", "go", "nmap <silent> <buffer> <Leader>mi <cmd>lua vim.lsp.buf.code_action()<CR>"},
         {"Filetype", "go", "nmap <silent> <buffer> <F7>       :Make<CR>"},
         -- {"BufWritePre", "*.go", "lua vim.lsp.buf.formatting_sync(nil, 1000)"},
         -- {"BufWritePre", "*.go", "lua goimports(1000)"},
@@ -446,13 +437,7 @@ vim.g.zig_fmt_autosave = 0
 
 nvim_create_augroups({
     zigbindingslua = {
-        {"Filetype", "zig", "setlocal shiftwidth=4 tabstop=4 noexpandtab"},
-        {"Filetype", "zig", "setlocal omnifunc=v:lua.vim.lsp.omnifunc"},
         {"Filetype", "zig", "setlocal cpt-=t"},
-        {"Filetype", "zig", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
-        {"Filetype", "zig", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "zig", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
-        {"Filetype", "zig", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
         {"Filetype", "zig", "nmap <silent> <buffer> <F7>       :Make<CR>"},
     },
 })
@@ -461,33 +446,15 @@ nvim_create_augroups({
 -- Javascript {{{
 nvim_create_augroups({
     javascriptbindingslua = {
-        {"Filetype", "javascript", "setlocal shiftwidth=2 tabstop=2 expandtab"},
-        {"Filetype", "javascript", "setlocal omnifunc=v:lua.vim.lsp.omnifunc"},
         {"Filetype", "javascript", "setlocal cpt-=t"},
-        {"Filetype", "javascript", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
-        {"Filetype", "javascript", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "javascript", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
-        {"Filetype", "javascript", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
         {"Filetype", "javascript", "nmap <silent> <buffer> <F7>       :Make<CR>"},
     },
     typescriptbindingslua = {
-        {"Filetype", "typescript", "setlocal shiftwidth=2 tabstop=2 expandtab"},
-        {"Filetype", "typescript", "setlocal omnifunc=v:lua.vim.lsp.omnifunc"},
         {"Filetype", "typescript", "setlocal cpt-=t"},
-        {"Filetype", "typescript", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
-        {"Filetype", "typescript", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "typescript", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
-        {"Filetype", "typescript", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
         {"Filetype", "typescript", "nmap <silent> <buffer> <F7>       :Make<CR>"},
     },
     typescriptreactbindingslua = {
-        {"Filetype", "typescriptreact", "setlocal shiftwidth=2 tabstop=2 expandtab"},
-        {"Filetype", "typescriptreact", "setlocal omnifunc=v:lua.vim.lsp.omnifunc"},
         {"Filetype", "typescriptreact", "setlocal cpt-=t"},
-        {"Filetype", "typescriptreact", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
-        {"Filetype", "typescriptreact", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "typescriptreact", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
-        {"Filetype", "typescriptreact", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
         {"Filetype", "typescriptreact", "nmap <silent> <buffer> <F7>       :Make<CR>"},
     },
 })
@@ -496,13 +463,7 @@ nvim_create_augroups({
 -- Ocaml {{{
 nvim_create_augroups({
     ocamlbindingslua = {
-        {"Filetype", "ocaml", "setlocal shiftwidth=2 tabstop=2 expandtab"},
-        {"Filetype", "ocaml", "setlocal omnifunc=v:lua.vim.lsp.omnifunc"},
         {"Filetype", "ocaml", "setlocal cpt-=t"},
-        {"Filetype", "ocaml", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
-        {"Filetype", "ocaml", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "ocaml", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
-        {"Filetype", "ocaml", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
     },
 })
 -- }}}
@@ -512,14 +473,7 @@ vim.g.cargo_makeprg_params = "check"
 
 nvim_create_augroups({
     rustbindingslua = {
-        {"Filetype", "rust", "setlocal shiftwidth=4 tabstop=4 expandtab"},
-        {"Filetype", "rust", "setlocal omnifunc=v:lua.vim.lsp.omnifunc"},
         {"Filetype", "rust", "setlocal cpt-=t"},
-        {"Filetype", "rust", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
-        {"Filetype", "rust", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "rust", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
-        {"Filetype", "rust", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
-        {"Filetype", "rust", "nmap <silent> <buffer> <Leader>mi <cmd>lua vim.lsp.buf.code_action()<CR>"},
         {"Filetype", "rust", "nmap <silent> <buffer> <F7>       :Make<CR>"},
     },
 })
@@ -528,13 +482,7 @@ nvim_create_augroups({
 -- Nim {{{
 nvim_create_augroups({
     nimtbindingslua = {
-        {"Filetype", "nim", "setlocal shiftwidth=2 tabstop=2 expandtab"},
-        {"Filetype", "nim", "setlocal omnifunc=v:lua.vim.lsp.omnifunc"},
         {"Filetype", "nim", "setlocal cpt-=t"},
-        {"Filetype", "nim", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
-        {"Filetype", "nim", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "nim", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
-        {"Filetype", "nim", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
         {"Filetype", "nim", "nmap <silent> <buffer> <F7>       :Make<CR>"},
         {"Filetype", "nim", "setlocal makeprg=nimble\\ --noColor\\ build"},
     },
@@ -550,12 +498,7 @@ end
 
 nvim_create_augroups({
     dartbindingslua = {
-        {"Filetype", "dart", "setlocal omnifunc=v:lua.vim.lsp.omnifunc"},
         {"Filetype", "dart", "setlocal cpt-=t"},
-        {"Filetype", "dart", "nmap <silent> <buffer> K          <cmd>lua vim.lsp.buf.hover()<CR>"},
-        {"Filetype", "dart", "nmap <silent> <buffer> <c-]>      <cmd>lua vim.lsp.buf.definition()<CR>"},
-        {"Filetype", "dart", "nmap <silent> <buffer> <Leader>mf <cmd>lua vim.lsp.buf.formatting()<CR>"},
-        {"Filetype", "dart", "nmap <silent> <buffer> <Leader>mr <cmd>lua vim.lsp.buf.rename()<CR>"},
         {"Filetype", "dart", "nmap <silent> <buffer> <F7> :lua flutter_hot_reload()<CR>"},
     },
 })
