@@ -79,5 +79,7 @@ xdg-desktop-portal-wlr
 ledger
 libvirt
 virt-manager
+iptables-nft
+dnsmasq
 polkit-gnome
 obs-studio
