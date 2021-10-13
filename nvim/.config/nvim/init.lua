@@ -125,22 +125,6 @@ vim.wo.foldlevel = 0
 -- }}}
 
 -- Package configuration {{{
--- local cmp = require("cmp")
--- cmp.setup({
---     snippet = {},
---     mapping = {
---         ['<C-p>'] = cmp.mapping.select_prev_item(),
---         ['<C-n>'] = cmp.mapping.complete(),
---     },
---     sources = {
---         { name = 'nvim_lsp' },
---         { name = 'path' },
---     },
---     completion = {
---         autocomplete = false,
---     },
--- })
-
 require("lsp_signature").setup({
     bind = true, 
     hint_enable = false,
@@ -190,13 +174,6 @@ let g:fzf_preview_window = ''
 
 vim.cmd [[set background=dark]]
 
--- Tokyonight color scheme {{{
-vim.g.tokyonight_style = "night"
--- vim.g.tokyonight_style = "storm"
--- vim.g.tokyonight_style = "day"
--- vim.cmd[[colorscheme tokyonight]]
--- }}}
-
 -- Other color schemes {{{
 -- vim.cmd('colorscheme embark')
 -- vim.cmd('autocmd ColorScheme * hi! StatusLine guibg=#3E3859')
@@ -211,7 +188,7 @@ vim.g.tokyonight_style = "night"
 -- vim.cmd[[colorscheme solarized-high]]
 -- vim.cmd[[colorscheme solarized8_high]]
 
-vim.g.zenburn_high_Contrast = 1
+-- vim.g.zenburn_high_Contrast = 1
 -- vim.cmd[[colorscheme zenburn]]
 
 vim.cmd[[colorscheme jellybeans-nvim]]
