@@ -31,7 +31,7 @@
         "memory",
         // "cpu",
         // "temperature",
-        "custom/keyboard-layout",
+        // "custom/keyboard-layout",
         "battery",
         "clock#time",
         "clock#date",
