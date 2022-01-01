@@ -48,6 +48,9 @@ ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
 hwclock --systohc
 
+systemctl enable systemd-timesyncd
+timedatectl set-ntp true
+
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen
 echo "KEYMAP=br-abnt2" > /etc/vconsole.conf # keyboard layout

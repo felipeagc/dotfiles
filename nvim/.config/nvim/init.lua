@@ -29,7 +29,7 @@ require('packer').startup(function()
     use {'wbthomason/packer.nvim', opt = true}
 
     use 'junegunn/fzf.vim'
-    use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
+    -- use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
 
     use 'neovim/nvim-lspconfig'
     use 'ray-x/lsp_signature.nvim'
@@ -47,6 +47,12 @@ require('packer').startup(function()
     use 'tpope/vim-unimpaired'
     use 'tpope/vim-dispatch'
 
+    use 'JoosepAlviste/nvim-ts-context-commentstring'
+    -- use "luukvbaal/stabilize.nvim"
+    use 'folke/trouble.nvim'
+
+    use 'kdheepak/lazygit.nvim'
+
     use 'editorconfig/editorconfig-vim'
     use 'derekwyatt/vim-fswitch'
     -- use 'ludovicchabant/vim-gutentags'
@@ -58,12 +64,16 @@ require('packer').startup(function()
     use 'tikhomirov/vim-glsl'
     use 'beyondmarc/hlsl.vim'
     use 'ziglang/zig.vim'
-    use 'zah/nim.vim'
+    use { 'zah/nim.vim', ft = 'nim' }
     use 'DingDean/wgsl.vim'
     use 'peterhoeg/vim-qml'
     use 'rust-lang/rust.vim'
     use 'dart-lang/dart-vim-plugin'
     use 'ledger/vim-ledger'
+    use 'tomlion/vim-solidity'
+    use 'NoahTheDuke/vim-just'
+    use 'rescript-lang/vim-rescript'
+    use 'nathangrigg/vim-beancount'
     use '~/tmp/dusk.vim'
     use '~/tmp/lang.vim'
 
@@ -86,7 +96,7 @@ vim.o.exrc = true
 vim.o.showcmd = true
 vim.o.mouse = 'a'
 
-vim.o.scrolloff = 10
+vim.o.scrolloff = 5
 vim.o.clipboard = 'unnamedplus'
 vim.o.completeopt = 'menuone,noselect'
 
@@ -135,6 +145,14 @@ require("lsp_signature").setup({
     },
 })
 
+vim.diagnostic.config({
+    virtual_text = true,
+    signs = false,
+    underline = true,
+    update_in_insert = false,
+    severity_sort = false,
+})
+
 local lspconfig = require("lspconfig")
 
 local function on_lsp_attach(client, bufnr)
@@ -152,14 +170,39 @@ local function on_lsp_attach(client, bufnr)
     buf_set_keymap('n', '<Leader>mi', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
 end
 
-local servers = { "clangd", "gopls", "zls", "tsserver", "ocamllsp", "rust_analyzer", "nimls", "dartls" }
+local servers = { "clangd", "gopls", "zls", "tsserver", "ocamllsp", "rust_analyzer", "dartls", "nimls" }
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup{
         on_attach = on_lsp_attach,
     }
 end
 
-require("gitsigns").setup{}
+lspconfig["rescriptls"].setup{
+    on_attach = on_lsp_attach,
+    cmd = {
+        'node',
+        vim.fn.stdpath('data')..'/site/pack/packer/start/vim-rescript/server/out/server.js',
+        '--stdio'
+    }
+}
+
+-- require("gitsigns").setup{}
+
+-- require("stabilize").setup{}
+
+require("trouble").setup {
+    position = "bottom", -- position of the list can be: bottom, top, left, right
+    height = 6, -- height of the trouble list when position is top or bottom
+    width = 50, -- width of the list when position is left or right
+    icons = false, -- use devicons for filenames
+    mode = "lsp_workspace_diagnostics",
+    group = false,
+    padding = false,
+    auto_open = false,
+    auto_close = true,
+    auto_preview = false,
+    use_lsp_diagnostic_signs = true,
+}
 
 vim.cmd[[
 let $FZF_DEFAULT_OPTS='--color=gutter:-1 --layout=reverse'
@@ -192,11 +235,11 @@ vim.cmd [[set background=dark]]
 -- vim.cmd[[colorscheme zenburn]]
 
 vim.cmd[[colorscheme jellybeans-nvim]]
-vim.cmd[[
-	autocmd ColorScheme * hi! DiffAdd guibg=#333333 guifg=#d2ebbe ctermbg=none
-	autocmd ColorScheme * hi! DiffChange guibg=#333333 guifg=#dad085 ctermbg=none
-	autocmd ColorScheme * hi! DiffDelete guibg=#333333 guifg=#f0a0c0 ctermbg=none
-]]
+-- vim.cmd[[
+-- 	autocmd ColorScheme * hi! GitSignsAdd guibg=#333333 guifg=#d2ebbe ctermbg=none
+-- 	autocmd ColorScheme * hi! GitSignsChange guibg=#333333 guifg=#dad085 ctermbg=none
+-- 	autocmd ColorScheme * hi! GitSignsDelete guibg=#333333 guifg=#f0a0c0 ctermbg=none
+-- ]]
 -- }}}
 
 -- Keybinds {{{
@@ -227,7 +270,8 @@ vim.api.nvim_set_keymap('n', '<Leader>wb', '<C-w>=', { silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>bd', ':bd<CR>', { silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>bcc', ':%bd|e#<CR>', { silent = true })
 
-vim.api.nvim_set_keymap('n', '<Leader>gs', ':vertical Git<CR>', { silent = true })
+-- vim.api.nvim_set_keymap('n', '<Leader>gs', ':vertical Git<CR>', { silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>gs', ':LazyGit<CR>', { silent = true })
 
 vim.api.nvim_set_keymap('n', '<C-a>', ':FSHere<CR>', { silent = true })
 
@@ -303,6 +347,7 @@ vim.cmd([[
     autocmd FileType typescriptreact setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType rust setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType nim setlocal shiftwidth=2 tabstop=2 expandtab
+    autocmd FileType rescript setlocal shiftwidth=2 tabstop=2 expandtab
 ]])
 -- }}}
 
@@ -316,13 +361,16 @@ require("nvim-treesitter.configs").setup {
   -- ignore_install = { "javascript" }, -- List of parsers to ignore installing
   highlight = {
     enable = true,              -- false will disable the whole extension
-    disable = { "c", "cpp" },  -- list of language that will be disabled
+    disable = { "c", "cpp", "python" },  -- list of language that will be disabled
     -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
     -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
     -- Using this option may slow down your editor, and you may see some duplicate highlights.
     -- Instead of true it can also be a list of languages
     additional_vim_regex_highlighting = false,
   },
+  context_commentstring = {
+      enable = true
+  }
 }
 -- }}}
 
@@ -458,7 +506,7 @@ nvim_create_augroups({
 
 -- Nim {{{
 nvim_create_augroups({
-    nimtbindingslua = {
+    nimbindingslua = {
         {"Filetype", "nim", "setlocal cpt-=t"},
         {"Filetype", "nim", "nmap <silent> <buffer> <F7>       :Make<CR>"},
         {"Filetype", "nim", "setlocal makeprg=nimble\\ --noColor\\ build"},
@@ -477,6 +525,15 @@ nvim_create_augroups({
     dartbindingslua = {
         {"Filetype", "dart", "setlocal cpt-=t"},
         {"Filetype", "dart", "nmap <silent> <buffer> <F7> :lua flutter_hot_reload()<CR>"},
+    },
+})
+-- }}}
+
+-- ReScript {{{
+nvim_create_augroups({
+    rescriptbindingslua = {
+        {"Filetype", "rescript", "setlocal cpt-=t"},
+        {"Filetype", "rescript", "nmap <silent> <buffer> <F7> :RescriptBuild<CR>"},
     },
 })
 -- }}}

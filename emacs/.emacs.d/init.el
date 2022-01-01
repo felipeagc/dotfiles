@@ -253,6 +253,9 @@
 ;; (use-package jbeans-theme
 ;;   :config
 ;;   (load-theme 'jbeans t))
+
+(use-package rainbow-delimiters
+  :hook ((prog-mode . rainbow-delimiters-mode)))
 ;; }}}
 
 ;; Modeline format {{{
@@ -563,6 +566,8 @@
   :init
   (setq zig-format-on-save nil)
   :config
+  (felipe/leader-def 'normal zig-mode-map
+    "mf" 'zig-format-buffer)
   (add-hook 'zig-mode-hook
             (lambda ()
               (felipe/set-compile-command "build.zig" "cd %s && zig build"))))
@@ -651,7 +656,16 @@
 
 (use-package cider
   :defer t
-  :after clojure-mode)
+  :after clojure-mode
+  :config
+  (felipe/leader-def 'normal clojure-mode-map
+    "mf" 'cider-format-buffer)
+  (evil-define-key 'normal clojure-mode-map "K" 'cider-doc))
+;; }}}
+
+;; Common lisp {{{
+(use-package sly
+  :defer t)
 ;; }}}
 
 ;; Other major modes {{{
