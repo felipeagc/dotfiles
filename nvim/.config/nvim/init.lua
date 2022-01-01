@@ -48,8 +48,6 @@ require('packer').startup(function()
     use 'tpope/vim-dispatch'
 
     use 'JoosepAlviste/nvim-ts-context-commentstring'
-    -- use "luukvbaal/stabilize.nvim"
-    use 'folke/trouble.nvim'
 
     use 'kdheepak/lazygit.nvim'
 
@@ -64,7 +62,6 @@ require('packer').startup(function()
     use 'tikhomirov/vim-glsl'
     use 'beyondmarc/hlsl.vim'
     use 'ziglang/zig.vim'
-    use { 'zah/nim.vim', ft = 'nim' }
     use 'DingDean/wgsl.vim'
     use 'peterhoeg/vim-qml'
     use 'rust-lang/rust.vim'
@@ -72,7 +69,6 @@ require('packer').startup(function()
     use 'ledger/vim-ledger'
     use 'tomlion/vim-solidity'
     use 'NoahTheDuke/vim-just'
-    use 'rescript-lang/vim-rescript'
     use 'nathangrigg/vim-beancount'
     use '~/tmp/dusk.vim'
     use '~/tmp/lang.vim'
@@ -170,39 +166,14 @@ local function on_lsp_attach(client, bufnr)
     buf_set_keymap('n', '<Leader>mi', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
 end
 
-local servers = { "clangd", "gopls", "zls", "tsserver", "ocamllsp", "rust_analyzer", "dartls", "nimls" }
+local servers = { "clangd", "gopls", "zls", "tsserver", "ocamllsp", "rust_analyzer", "dartls" }
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup{
         on_attach = on_lsp_attach,
     }
 end
 
-lspconfig["rescriptls"].setup{
-    on_attach = on_lsp_attach,
-    cmd = {
-        'node',
-        vim.fn.stdpath('data')..'/site/pack/packer/start/vim-rescript/server/out/server.js',
-        '--stdio'
-    }
-}
-
 -- require("gitsigns").setup{}
-
--- require("stabilize").setup{}
-
-require("trouble").setup {
-    position = "bottom", -- position of the list can be: bottom, top, left, right
-    height = 6, -- height of the trouble list when position is top or bottom
-    width = 50, -- width of the list when position is left or right
-    icons = false, -- use devicons for filenames
-    mode = "lsp_workspace_diagnostics",
-    group = false,
-    padding = false,
-    auto_open = false,
-    auto_close = true,
-    auto_preview = false,
-    use_lsp_diagnostic_signs = true,
-}
 
 vim.cmd[[
 let $FZF_DEFAULT_OPTS='--color=gutter:-1 --layout=reverse'
@@ -346,8 +317,6 @@ vim.cmd([[
     autocmd FileType typescript setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType typescriptreact setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType rust setlocal shiftwidth=4 tabstop=4 expandtab
-    autocmd FileType nim setlocal shiftwidth=2 tabstop=2 expandtab
-    autocmd FileType rescript setlocal shiftwidth=2 tabstop=2 expandtab
 ]])
 -- }}}
 
@@ -504,16 +473,6 @@ nvim_create_augroups({
 })
 -- }}}
 
--- Nim {{{
-nvim_create_augroups({
-    nimbindingslua = {
-        {"Filetype", "nim", "setlocal cpt-=t"},
-        {"Filetype", "nim", "nmap <silent> <buffer> <F7>       :Make<CR>"},
-        {"Filetype", "nim", "setlocal makeprg=nimble\\ --noColor\\ build"},
-    },
-})
--- }}}
-
 -- Dart {{{
 vim.g.dart_style_guide = "2"
 
@@ -525,15 +484,6 @@ nvim_create_augroups({
     dartbindingslua = {
         {"Filetype", "dart", "setlocal cpt-=t"},
         {"Filetype", "dart", "nmap <silent> <buffer> <F7> :lua flutter_hot_reload()<CR>"},
-    },
-})
--- }}}
-
--- ReScript {{{
-nvim_create_augroups({
-    rescriptbindingslua = {
-        {"Filetype", "rescript", "setlocal cpt-=t"},
-        {"Filetype", "rescript", "nmap <silent> <buffer> <F7> :RescriptBuild<CR>"},
     },
 })
 -- }}}
