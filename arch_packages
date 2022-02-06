@@ -84,3 +84,6 @@ dnsmasq
 polkit-gnome
 obs-studio
 lazygit
+foot
+foot-terminfo
+fuzzel

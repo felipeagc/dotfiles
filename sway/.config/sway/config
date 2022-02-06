@@ -62,12 +62,24 @@ bindsym $mod+Return exec $term
 bindsym $mod+w kill
 
 # Start your launcher
-bindsym $mod+Space exec BEMENU_BACKEND=wayland bemenu-run \
-	-i -p Run \
-	--tf "#ffffff" \
-	--tb "#285577" \
-	--hf "#285577" \
-	-H 30 --fn DejaVu\ Sans\ Mono\ 12
+bindsym $mod+Space exec fuzzel \
+	-f "DejaVu Sans Mono" \
+	-r 0 \
+	-b "222222ff" \
+	-s "444444ff" \
+	-S "ddddddff" \
+	-t "bbbbbbff" \
+	-C "285577ff" \
+	-B 2 \
+	-I \
+	-T foot \
+	-w 80
+# bindsym $mod+Space exec BEMENU_BACKEND=wayland bemenu-run \
+# 	-i -p Run \
+# 	--tf "#ffffff" \
+# 	--tb "#285577" \
+# 	--hf "#285577" \
+# 	-H 30 --fn DejaVu\ Sans\ Mono\ 12
 # bindsym $mod+Space exec rofi -show drun
 # bindsym $mod+Shift+Space exec rofi -show run
 

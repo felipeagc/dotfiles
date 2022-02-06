@@ -47,8 +47,6 @@ require('packer').startup(function()
     use 'tpope/vim-unimpaired'
     use 'tpope/vim-dispatch'
 
-    use 'JoosepAlviste/nvim-ts-context-commentstring'
-
     use 'kdheepak/lazygit.nvim'
 
     use 'editorconfig/editorconfig-vim'
@@ -81,6 +79,8 @@ require('packer').startup(function()
     use 'jnurmine/Zenburn'
     use 'rktjmp/lush.nvim'
     use 'metalelf0/jellybeans-nvim'
+    use 'mcchrish/zenbones.nvim'
+
     -- use 'sainnhe/sonokai'
     -- use 'ayu-theme/ayu-vim'
 end)
@@ -166,7 +166,7 @@ local function on_lsp_attach(client, bufnr)
     buf_set_keymap('n', '<Leader>mi', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
 end
 
-local servers = { "clangd", "gopls", "zls", "tsserver", "ocamllsp", "rust_analyzer", "dartls" }
+local servers = { "clangd", "gopls", "zls", "tsserver", "ocamllsp", "rust_analyzer", "dartls", "hls" }
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup{
         on_attach = on_lsp_attach,
@@ -205,7 +205,9 @@ vim.cmd [[set background=dark]]
 -- vim.g.zenburn_high_Contrast = 1
 -- vim.cmd[[colorscheme zenburn]]
 
-vim.cmd[[colorscheme jellybeans-nvim]]
+-- vim.cmd[[colorscheme jellybeans-nvim]]
+vim.cmd[[colorscheme kanagawabones]]
+-- vim.cmd[[colorscheme zenbones]]
 -- vim.cmd[[
 -- 	autocmd ColorScheme * hi! GitSignsAdd guibg=#333333 guifg=#d2ebbe ctermbg=none
 -- 	autocmd ColorScheme * hi! GitSignsChange guibg=#333333 guifg=#dad085 ctermbg=none
