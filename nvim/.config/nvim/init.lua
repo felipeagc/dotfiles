@@ -28,7 +28,6 @@ require('packer').startup(function()
     -- Packer can manage itself as an optional plugin
     use {'wbthomason/packer.nvim', opt = true}
 
-    use 'junegunn/fzf.vim'
     -- use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
 
     use 'neovim/nvim-lspconfig'
@@ -51,7 +50,6 @@ require('packer').startup(function()
 
     use 'editorconfig/editorconfig-vim'
     use 'derekwyatt/vim-fswitch'
-    -- use 'ludovicchabant/vim-gutentags'
 
     -- use 'bfrg/vim-cpp-modern'
     use 'maxmellon/vim-jsx-pretty'
@@ -71,18 +69,13 @@ require('packer').startup(function()
     use '~/tmp/dusk.vim'
     use '~/tmp/lang.vim'
 
-    -- use { 'embark-theme/vim', as = 'embark' }
-    use 'folke/lsp-colors.nvim'
-    use 'folke/tokyonight.nvim'
-    use 'ishan9299/nvim-solarized-lua'
-    use 'lifepillar/vim-solarized8'
-    use 'jnurmine/Zenburn'
+    use 'nvim-lua/plenary.nvim'
+    use 'nvim-telescope/telescope.nvim'
+
     use 'rktjmp/lush.nvim'
     use 'metalelf0/jellybeans-nvim'
-    use 'mcchrish/zenbones.nvim'
-
-    -- use 'sainnhe/sonokai'
-    -- use 'ayu-theme/ayu-vim'
+    use 'rebelot/kanagawa.nvim'
+    use 'ellisonleao/gruvbox.nvim'
 end)
 
 -- Vim options {{{
@@ -125,7 +118,7 @@ vim.o.cinoptions = vim.o.cinoptions .. 'L0'
 vim.o.cinoptions = vim.o.cinoptions .. 'l1'
 
 vim.wo.number = false
-vim.wo.cursorline = true
+vim.wo.cursorline = false
 vim.wo.foldmethod = 'marker'
 vim.wo.foldlevel = 0
 -- }}}
@@ -146,7 +139,7 @@ vim.diagnostic.config({
     signs = false,
     underline = true,
     update_in_insert = false,
-    severity_sort = false,
+    severity_sort = true,
 })
 
 local lspconfig = require("lspconfig")
@@ -175,20 +168,43 @@ end
 
 -- require("gitsigns").setup{}
 
-vim.cmd[[
-let $FZF_DEFAULT_OPTS='--color=gutter:-1 --layout=reverse'
-
-if executable('ag')
-	let $FZF_DEFAULT_COMMAND = 'ag -g ""'
-endif
-
-let g:fzf_preview_window = ''
-]]
+local actions = require("telescope.actions")
+require('telescope').setup({
+    defaults = {
+        preview = false,
+        -- layout_strategy = 'bottom_pane',
+        -- border = true,
+        -- borderchars = {
+        --     results = { "─", "", "", "", "", "", "", "" },
+        --     prompt = { "", "", "", "", "", "", "", "" },
+        -- },
+        -- layout_config = {
+        --     -- vertical = { width = 0.5 }
+        --     vertical = { width = 0.2 },
+        --     horizontal = { height = 0.2 },
+        --     bottom_pane = {
+        --         height = 8,
+        --     },
+        --     prompt_position = 'bottom',
+        --     -- other layout configuration here
+        -- },
+        mappings = {
+            i = {
+                ["<esc>"] = actions.close
+            },
+        },
+    },
+    -- pickers = {
+    --     find_files = { theme = "ivy" },
+    --     buffers = { theme = "ivy" },
+    --     live_grep = { theme = "ivy" },
+    -- },
+})
 -- }}}
 
+-- Color scheme {{{
 vim.cmd [[set background=dark]]
 
--- Other color schemes {{{
 -- vim.cmd('colorscheme embark')
 -- vim.cmd('autocmd ColorScheme * hi! StatusLine guibg=#3E3859')
 -- vim.cmd('autocmd ColorScheme * hi! StatusLineNC guibg=#100E23 guifg=#6B697E')
@@ -206,21 +222,39 @@ vim.cmd [[set background=dark]]
 -- vim.cmd[[colorscheme zenburn]]
 
 -- vim.cmd[[colorscheme jellybeans-nvim]]
-vim.cmd[[colorscheme kanagawabones]]
+-- vim.cmd[[colorscheme kanagawabones]]
 -- vim.cmd[[colorscheme zenbones]]
 -- vim.cmd[[
 -- 	autocmd ColorScheme * hi! GitSignsAdd guibg=#333333 guifg=#d2ebbe ctermbg=none
 -- 	autocmd ColorScheme * hi! GitSignsChange guibg=#333333 guifg=#dad085 ctermbg=none
 -- 	autocmd ColorScheme * hi! GitSignsDelete guibg=#333333 guifg=#f0a0c0 ctermbg=none
 -- ]]
+
+-- vim.g.gruvbox_italic = 0
+-- vim.g.gruvbox_italicize_comments = 0
+-- vim.g.gruvbox_italicize_strings = 0
+-- vim.g.gruvbox_contrast_dark = 'soft'
+-- vim.cmd[[colorscheme gruvbox]]
+
+-- vim.g.tokyonight_style = "night"
+-- vim.g.tokyonight_italic_comments = false
+-- vim.g.tokyonight_italic_keywords = false
+-- vim.g.tokyonight_sidebars = { "qf", "vista_kind", "terminal", "packer" }
+-- vim.cmd[[colorscheme tokyonight]]
+
+-- vim.cmd[[colorscheme adwaita]]
+vim.cmd[[colorscheme felipe]]
+--
+-- vim.cmd[[colorscheme iceberg]]
+-- vim.cmd[[colorscheme spring-night]]
 -- }}}
 
 -- Keybinds {{{
 vim.g.mapleader = ' '
 
-vim.api.nvim_set_keymap('n', '<C-p>', ':Files<CR>', { silent = true })
-vim.api.nvim_set_keymap('n', '<C-b>', ':Buffers<CR>', { silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>fg', ':Ag<CR>', { silent = true })
+vim.api.nvim_set_keymap('n', '<C-p>', ':Telescope find_files<CR>', { silent = true })
+vim.api.nvim_set_keymap('n', '<C-b>', ':Telescope buffers<CR>', { silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>fg', ':Telescope live_grep<CR>', { silent = true })
 
 vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>w', { noremap = true })
 vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>W', { noremap = true })
@@ -234,6 +268,7 @@ vim.api.nvim_set_keymap('v', '>', '>gv', { noremap = true })
 vim.api.nvim_set_keymap('v', '<s-lt>', '<gv', { noremap = true })
 
 vim.api.nvim_set_keymap('n', '<Leader>fed', ':e ' .. vim.fn.stdpath('config') .. '/init.lua<CR>', { silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>feg', ':e ' .. vim.fn.stdpath('config') .. '/ginit.vim<CR>', { silent = true })
 
 vim.api.nvim_set_keymap('n', '<Leader>w/', ':vsp<CR>', { silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>w-', ':sp<CR>', { silent = true })
@@ -243,8 +278,8 @@ vim.api.nvim_set_keymap('n', '<Leader>wb', '<C-w>=', { silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>bd', ':bd<CR>', { silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>bcc', ':%bd|e#<CR>', { silent = true })
 
--- vim.api.nvim_set_keymap('n', '<Leader>gs', ':vertical Git<CR>', { silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>gs', ':LazyGit<CR>', { silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>gs', ':vertical Git<CR>', { silent = true })
+-- vim.api.nvim_set_keymap('n', '<Leader>gs', ':LazyGit<CR>', { silent = true })
 
 vim.api.nvim_set_keymap('n', '<C-a>', ':FSHere<CR>', { silent = true })
 
@@ -327,22 +362,22 @@ vim.cmd [[inoremap <silent> <C-n> <C-x><C-o>]]
 -- }}}
 
 -- Treesitter {{{
-require("nvim-treesitter.configs").setup {
-  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-  -- ignore_install = { "javascript" }, -- List of parsers to ignore installing
-  highlight = {
-    enable = true,              -- false will disable the whole extension
-    disable = { "c", "cpp", "python" },  -- list of language that will be disabled
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
-    additional_vim_regex_highlighting = false,
-  },
-  context_commentstring = {
-      enable = true
-  }
-}
+    require("nvim-treesitter.configs").setup {
+        ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+        -- ignore_install = { "javascript" }, -- List of parsers to ignore installing
+        highlight = {
+            enable = true,              -- false will disable the whole extension
+            disable = { },  -- list of language that will be disabled
+            -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+            -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+            -- Using this option may slow down your editor, and you may see some duplicate highlights.
+            -- Instead of true it can also be a list of languages
+            additional_vim_regex_highlighting = false,
+        },
+        context_commentstring = {
+            enable = true
+        }
+    }
 -- }}}
 
 -- Markdown {{{
@@ -374,12 +409,10 @@ vim.g.compiler_gcc_ignore_unmatched_lines = 1
 nvim_create_augroups({
     cbindingslua = {
         {"Filetype", "c", "setlocal cpt-=t"},
-        {"Filetype", "c", "nmap <silent> <buffer> <F7>       :Make<CR>"},
         {"Filetype", "c", "lua set_c_makeprg()"},
     },
     cppbindingslua = {
         {"Filetype", "cpp", "setlocal cpt-=t"},
-        {"Filetype", "cpp", "nmap <silent> <buffer> <F7>       :Make<CR>"},
         {"Filetype", "cpp", "lua set_c_makeprg()"},
     },
 })
@@ -421,7 +454,6 @@ nvim_create_augroups({
     gobindingslua = {
         {"Filetype", "go", "setlocal shiftwidth=4 tabstop=4 noexpandtab"},
         {"Filetype", "go", "setlocal cpt-=t"},
-        {"Filetype", "go", "nmap <silent> <buffer> <F7>       :Make<CR>"},
         -- {"BufWritePre", "*.go", "lua vim.lsp.buf.formatting_sync(nil, 1000)"},
         -- {"BufWritePre", "*.go", "lua goimports(1000)"},
     },
@@ -434,7 +466,6 @@ vim.g.zig_fmt_autosave = 0
 nvim_create_augroups({
     zigbindingslua = {
         {"Filetype", "zig", "setlocal cpt-=t"},
-        {"Filetype", "zig", "nmap <silent> <buffer> <F7>       :Make<CR>"},
     },
 })
 -- }}}
@@ -443,15 +474,12 @@ nvim_create_augroups({
 nvim_create_augroups({
     javascriptbindingslua = {
         {"Filetype", "javascript", "setlocal cpt-=t"},
-        {"Filetype", "javascript", "nmap <silent> <buffer> <F7>       :Make<CR>"},
     },
     typescriptbindingslua = {
         {"Filetype", "typescript", "setlocal cpt-=t"},
-        {"Filetype", "typescript", "nmap <silent> <buffer> <F7>       :Make<CR>"},
     },
     typescriptreactbindingslua = {
         {"Filetype", "typescriptreact", "setlocal cpt-=t"},
-        {"Filetype", "typescriptreact", "nmap <silent> <buffer> <F7>       :Make<CR>"},
     },
 })
 -- }}}
@@ -470,7 +498,6 @@ vim.g.cargo_makeprg_params = "check"
 nvim_create_augroups({
     rustbindingslua = {
         {"Filetype", "rust", "setlocal cpt-=t"},
-        {"Filetype", "rust", "nmap <silent> <buffer> <F7>       :Make<CR>"},
     },
 })
 -- }}}

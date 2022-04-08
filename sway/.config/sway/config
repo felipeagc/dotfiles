@@ -170,13 +170,16 @@ bindsym $mod+p exec playerctl -p spotify play-pause
 bindsym $mod+period exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym $mod+comma exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 bindsym $mod+v exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+bindsym XF86AudioPlay exec playerctl -p spotify play-pause
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 bindsym Print exec grim -g "$(slurp)" - | wl-copy
 bindsym Shift+Print exec grim -g "$(slurp)" $HOME/images/$(date +'%F_%Hh%Mm%Ss_grim.png')
 bindsym $mod+Shift+p exec grim -g "$(slurp -p)" -t ppm - | convert - -format '#%[hex:p{0,0}]' info:- | wl-copy
-bindsym $mod+i exec chromium --enable-features=UseOzonePlatform --ozone-platform=wayland
 
-bindsym $mod+s scratchpad show
-bindsym $mod+Shift+s move scratchpad
+# bindsym $mod+s scratchpad show
+# bindsym $mod+Shift+s move scratchpad
 
 assign [class="Spotify"] workspace number 9:misc
 assign [class="discord"] workspace number 9:misc
@@ -211,6 +214,6 @@ exec hash dbus-update-activation-environment 2>/dev/null && \
 
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id waybar
-exec --no-startup-id gammastep
+# exec --no-startup-id gammastep
 exec --no-startup-id brightnessctl s 35%
 exec --no-startup-id mako
