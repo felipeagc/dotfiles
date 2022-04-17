@@ -8,18 +8,14 @@ end
 
 vim.cmd('packadd packer.nvim')
 
-function nvim_create_augroups(definitions)
-    for group_name, definition in pairs(definitions) do
-        vim.api.nvim_command('augroup '..group_name)
-        vim.api.nvim_command('autocmd!')
-        for _, def in ipairs(definition) do
-            -- if type(def) == 'table' and type(def[#def]) == 'function' then
-            -- 	def[#def] = lua_callback(def[#def])
-            -- end
-            local command = table.concat(vim.tbl_flatten{'autocmd', def}, ' ')
-            vim.api.nvim_command(command)
-        end
-        vim.api.nvim_command('augroup END')
+function create_augroup(groupname, filetype, commands)
+    local group = vim.api.nvim_create_augroup(groupname, {})
+    for _, command in ipairs(commands) do
+        vim.api.nvim_create_autocmd({"FileType"}, {
+            pattern = filetype,
+            command = command,
+            group = group,
+        })
     end
 end
 -- }}}
@@ -52,18 +48,12 @@ require('packer').startup(function()
     use 'derekwyatt/vim-fswitch'
 
     -- use 'bfrg/vim-cpp-modern'
-    use 'maxmellon/vim-jsx-pretty'
-    use 'yuezk/vim-js'
     use 'plasticboy/vim-markdown'
-    use 'tikhomirov/vim-glsl'
     use 'beyondmarc/hlsl.vim'
     use 'ziglang/zig.vim'
-    use 'DingDean/wgsl.vim'
-    use 'peterhoeg/vim-qml'
     use 'rust-lang/rust.vim'
     use 'dart-lang/dart-vim-plugin'
     use 'ledger/vim-ledger'
-    use 'tomlion/vim-solidity'
     use 'NoahTheDuke/vim-just'
     use 'nathangrigg/vim-beancount'
     use '~/tmp/dusk.vim'
@@ -123,6 +113,46 @@ vim.wo.foldmethod = 'marker'
 vim.wo.foldlevel = 0
 -- }}}
 
+-- Keybinds {{{
+vim.g.mapleader = " "
+
+vim.keymap.set("n", "<C-p>", ":Telescope find_files<CR>", { silent = true })
+vim.keymap.set("n", "<C-b>", ":Telescope buffers<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>fg", ":Telescope live_grep<CR>", { silent = true })
+
+vim.keymap.set("n", "<C-j>", "<C-w>w", { noremap = true })
+vim.keymap.set("n", "<C-k>", "<C-w>W", { noremap = true })
+
+vim.keymap.set("n", "<C-e>", ":CNext<CR>", { silent = true })
+vim.keymap.set("n", "<C-q>", ":CPrev<CR>", { silent = true })
+
+-- Continuous indentation shift
+vim.keymap.set("v", "<", "<gv", { noremap = true })
+vim.keymap.set("v", ">", ">gv", { noremap = true })
+vim.keymap.set("v", "<s-lt>", "<gv", { noremap = true })
+
+vim.keymap.set("n", "<Leader>fed", ":e " .. vim.fn.stdpath("config") .. "/init.lua<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>feg", ":e " .. vim.fn.stdpath("config") .. "/ginit.vim<CR>", { silent = true })
+
+vim.keymap.set("n", "<Leader>w/", ":vsp<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>w-", ":sp<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>wd", ":q<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>wb", "<C-w>=", { silent = true })
+
+vim.keymap.set("n", "<Leader>bd", ":bd<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>bcc", ":%bd|e#<CR>", { silent = true })
+
+vim.keymap.set("n", "<Leader>gs", ":vertical Git<CR>", { silent = true })
+-- vim.keymap.set("n", "<Leader>gs", ":LazyGit<CR>", { silent = true })
+
+vim.keymap.set("n", "<C-a>", ":FSHere<CR>", { silent = true })
+
+vim.keymap.set("n", "<f7>", ":Make<CR>", { silent = true })
+
+-- Disable ex mode binding
+vim.cmd[[map Q <Nop>]]
+-- }}}
+
 -- Package configuration {{{
 require("lsp_signature").setup({
     bind = true, 
@@ -159,7 +189,7 @@ local function on_lsp_attach(client, bufnr)
     buf_set_keymap('n', '<Leader>mi', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
 end
 
-local servers = { "clangd", "gopls", "zls", "tsserver", "ocamllsp", "rust_analyzer", "dartls", "hls" }
+local servers = { "clangd", "gopls", "zls", "tsserver", "ocamllsp", "rust_analyzer", "dartls", "hls", "kotlin_language_server" }
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup{
         on_attach = on_lsp_attach,
@@ -204,89 +234,7 @@ require('telescope').setup({
 
 -- Color scheme {{{
 vim.cmd [[set background=dark]]
-
--- vim.cmd('colorscheme embark')
--- vim.cmd('autocmd ColorScheme * hi! StatusLine guibg=#3E3859')
--- vim.cmd('autocmd ColorScheme * hi! StatusLineNC guibg=#100E23 guifg=#6B697E')
-
--- vim.g.sonokai_style = 'shusia'
--- vim.cmd('colorscheme sonokai')
-
--- vim.g.ayucolor = "mirage"
--- vim.cmd('colorscheme ayu')
-
--- vim.cmd[[colorscheme solarized-high]]
--- vim.cmd[[colorscheme solarized8_high]]
-
--- vim.g.zenburn_high_Contrast = 1
--- vim.cmd[[colorscheme zenburn]]
-
--- vim.cmd[[colorscheme jellybeans-nvim]]
--- vim.cmd[[colorscheme kanagawabones]]
--- vim.cmd[[colorscheme zenbones]]
--- vim.cmd[[
--- 	autocmd ColorScheme * hi! GitSignsAdd guibg=#333333 guifg=#d2ebbe ctermbg=none
--- 	autocmd ColorScheme * hi! GitSignsChange guibg=#333333 guifg=#dad085 ctermbg=none
--- 	autocmd ColorScheme * hi! GitSignsDelete guibg=#333333 guifg=#f0a0c0 ctermbg=none
--- ]]
-
--- vim.g.gruvbox_italic = 0
--- vim.g.gruvbox_italicize_comments = 0
--- vim.g.gruvbox_italicize_strings = 0
--- vim.g.gruvbox_contrast_dark = 'soft'
--- vim.cmd[[colorscheme gruvbox]]
-
--- vim.g.tokyonight_style = "night"
--- vim.g.tokyonight_italic_comments = false
--- vim.g.tokyonight_italic_keywords = false
--- vim.g.tokyonight_sidebars = { "qf", "vista_kind", "terminal", "packer" }
--- vim.cmd[[colorscheme tokyonight]]
-
--- vim.cmd[[colorscheme adwaita]]
 vim.cmd[[colorscheme felipe]]
---
--- vim.cmd[[colorscheme iceberg]]
--- vim.cmd[[colorscheme spring-night]]
--- }}}
-
--- Keybinds {{{
-vim.g.mapleader = ' '
-
-vim.api.nvim_set_keymap('n', '<C-p>', ':Telescope find_files<CR>', { silent = true })
-vim.api.nvim_set_keymap('n', '<C-b>', ':Telescope buffers<CR>', { silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>fg', ':Telescope live_grep<CR>', { silent = true })
-
-vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>w', { noremap = true })
-vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>W', { noremap = true })
-
-vim.api.nvim_set_keymap('n', '<C-e>', ':CNext<CR>', { silent = true })
-vim.api.nvim_set_keymap('n', '<C-q>', ':CPrev<CR>', { silent = true })
-
--- Continuous indentation shift
-vim.api.nvim_set_keymap('v', '<', '<gv', { noremap = true })
-vim.api.nvim_set_keymap('v', '>', '>gv', { noremap = true })
-vim.api.nvim_set_keymap('v', '<s-lt>', '<gv', { noremap = true })
-
-vim.api.nvim_set_keymap('n', '<Leader>fed', ':e ' .. vim.fn.stdpath('config') .. '/init.lua<CR>', { silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>feg', ':e ' .. vim.fn.stdpath('config') .. '/ginit.vim<CR>', { silent = true })
-
-vim.api.nvim_set_keymap('n', '<Leader>w/', ':vsp<CR>', { silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>w-', ':sp<CR>', { silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>wd', ':q<CR>', { silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>wb', '<C-w>=', { silent = true })
-
-vim.api.nvim_set_keymap('n', '<Leader>bd', ':bd<CR>', { silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>bcc', ':%bd|e#<CR>', { silent = true })
-
-vim.api.nvim_set_keymap('n', '<Leader>gs', ':vertical Git<CR>', { silent = true })
--- vim.api.nvim_set_keymap('n', '<Leader>gs', ':LazyGit<CR>', { silent = true })
-
-vim.api.nvim_set_keymap('n', '<C-a>', ':FSHere<CR>', { silent = true })
-
-vim.api.nvim_set_keymap('n', '<f7>', ':Make<CR>', { silent = true })
-
--- Disable ex mode binding
-vim.cmd[[map Q <Nop>]]
 -- }}}
 
 -- Small quality of life stuff {{{
@@ -337,7 +285,6 @@ vim.cmd [[
     command! CNext try | cnext | catch | clast | catch | endtry
     command! CPrev try | cprev | catch | cfirst | catch | endtry
 ]]
-
 -- }}}
 
 -- Indentation {{{
@@ -363,7 +310,29 @@ vim.cmd [[inoremap <silent> <C-n> <C-x><C-o>]]
 
 -- Treesitter {{{
     require("nvim-treesitter.configs").setup {
-        ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+        ensure_installed = {
+            "c",
+            "cpp",
+            "lua",
+            "python",
+            "javascript",
+            "typescript",
+            "go",
+            "rust",
+            "zig",
+            "ocaml",
+            "haskell",
+            "dart",
+            "latex",
+            "dockerfile",
+            "css",
+            "html",
+            "java",
+            "cmake",
+            "bash",
+            "wgsl",
+            "glsl",
+        }, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
         -- ignore_install = { "javascript" }, -- List of parsers to ignore installing
         highlight = {
             enable = true,              -- false will disable the whole extension
@@ -406,100 +375,41 @@ end
 vim.g.compiler_gcc_ignore_unmatched_lines = 1
 -- vim.g.cpp_no_cpp17 = 1
 
-nvim_create_augroups({
-    cbindingslua = {
-        {"Filetype", "c", "setlocal cpt-=t"},
-        {"Filetype", "c", "lua set_c_makeprg()"},
-    },
-    cppbindingslua = {
-        {"Filetype", "cpp", "setlocal cpt-=t"},
-        {"Filetype", "cpp", "lua set_c_makeprg()"},
-    },
+create_augroup("cbindings", "c", {
+    "setlocal cpt-=t",
+    "lua set_c_makeprg()",
+})
+create_augroup("cppbindings", "cpp", {
+    "setlocal cpt-=t",
+    "lua set_c_makeprg()",
 })
 -- }}}
 
 -- Go {{{
-function goimports(timeoutms)
-    local context = { source = { organizeImports = true } }
-    vim.validate { context = { context, "t", true } }
-
-    local params = vim.lsp.util.make_range_params()
-    params.context = context
-
-    -- See the implementation of the textDocument/codeAction callback
-    -- (lua/vim/lsp/handler.lua) for how to do this properly.
-    local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, timeout_ms)
-    if not result or next(result) == nil then return end
-    if not result[1] then return end
-    local actions = result[1].result
-    if not actions then return end
-    local action = actions[1]
-
-    -- textDocument/codeAction can return either Command[] or CodeAction[]. If it
-    -- is a CodeAction, it can have either an edit, a command or both. Edits
-    -- should be executed first.
-    if action.edit or type(action.command) == "table" then
-        if action.edit then
-            vim.lsp.util.apply_workspace_edit(action.edit)
-        end
-        if type(action.command) == "table" then
-            vim.lsp.buf.execute_command(action.command)
-        end
-    else
-        vim.lsp.buf.execute_command(action)
-    end
-end
-
-nvim_create_augroups({
-    gobindingslua = {
-        {"Filetype", "go", "setlocal shiftwidth=4 tabstop=4 noexpandtab"},
-        {"Filetype", "go", "setlocal cpt-=t"},
-        -- {"BufWritePre", "*.go", "lua vim.lsp.buf.formatting_sync(nil, 1000)"},
-        -- {"BufWritePre", "*.go", "lua goimports(1000)"},
-    },
+create_augroup("gobindings", "go", {
+    "setlocal shiftwidth=4 tabstop=4 noexpandtab",
+    "setlocal cpt-=t",
 })
 -- }}}
 
 -- Zig {{{
 vim.g.zig_fmt_autosave = 0
-
-nvim_create_augroups({
-    zigbindingslua = {
-        {"Filetype", "zig", "setlocal cpt-=t"},
-    },
-})
+create_augroup("zigbindings", "zig", { "setlocal cpt-=t" })
 -- }}}
 
 -- Javascript {{{
-nvim_create_augroups({
-    javascriptbindingslua = {
-        {"Filetype", "javascript", "setlocal cpt-=t"},
-    },
-    typescriptbindingslua = {
-        {"Filetype", "typescript", "setlocal cpt-=t"},
-    },
-    typescriptreactbindingslua = {
-        {"Filetype", "typescriptreact", "setlocal cpt-=t"},
-    },
-})
+create_augroup("javascriptbindings", "javascript", { "setlocal cpt-=t" })
+create_augroup("typescriptbindings", "typescript", { "setlocal cpt-=t" })
+create_augroup("typescriptreactbindings", "typescriptreact", { "setlocal cpt-=t" })
 -- }}}
 
 -- Ocaml {{{
-nvim_create_augroups({
-    ocamlbindingslua = {
-        {"Filetype", "ocaml", "setlocal cpt-=t"},
-    },
-})
+create_augroup("ocamlbindings", "ocaml", { "setlocal cpt-=t" })
 -- }}}
 
 -- Rust {{{
 vim.g.cargo_makeprg_params = "check"
-
-nvim_create_augroups({
-    rustbindingslua = {
-        {"Filetype", "rust", "setlocal cpt-=t"},
-    },
-})
+create_augroup("rustbindings", "rust", { "setlocal cpt-=t" })
 -- }}}
 
 -- Dart {{{
@@ -509,10 +419,22 @@ function flutter_hot_reload()
     vim.cmd [[silent execute '!kill -SIGUSR1 $(pgrep -f "[f]lutter_tool.*run")']]
 end
 
-nvim_create_augroups({
-    dartbindingslua = {
-        {"Filetype", "dart", "setlocal cpt-=t"},
-        {"Filetype", "dart", "nmap <silent> <buffer> <F7> :lua flutter_hot_reload()<CR>"},
-    },
+create_augroup("dartbindings", "dart", {
+    "setlocal cpt-=t",
+    "nmap <silent> <buffer> <F7> :lua flutter_hot_reload()<CR>",
+})
+-- }}}
+
+-- Latex {{{
+function open_pdf_preview()
+    local buffer_path = vim.fn.expand('%')
+    local pdf_path = string.gsub(buffer_path, "%.[^/]+$", ".pdf")
+    print(pdf_path)
+    vim.cmd("silent !zathura " .. pdf_path .. " & disown")
+end
+
+create_augroup("latexbindings", "tex", {
+    "setlocal makeprg=latexmk",
+    "nmap <silent> <buffer> <Leader>mp :lua open_pdf_preview()<CR>",
 })
 -- }}}

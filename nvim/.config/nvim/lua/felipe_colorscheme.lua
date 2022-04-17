@@ -27,7 +27,7 @@ local theme = lush(function()
     -- or leave them commented to apply vims default colouring or linking.
 
     Normal       { bg = hsl("#242424"), fg = hsl("#DEDDDA") }, -- normal text
-    Comment      { fg = hsl("#A1B56C") }, -- any comment
+    Comment      { fg = "#8f8f8f" }, -- any comment
     -- ColorColumn  { }, -- used for the columns set with 'colorcolumn'
     -- Conceal      { }, -- placeholder characters substituted for concealed text (see 'conceallevel')
     Cursor       { bg = Normal.fg, fg = Normal.bg }, -- character under the cursor
@@ -36,7 +36,7 @@ local theme = lush(function()
     -- CursorColumn { }, -- Screen-column at the cursor, when 'cursorcolumn' is set.
     CursorLine   { bg = Normal.bg.lighten(5) }, -- Screen-line at the cursor, when 'cursorline' is set.  Low-priority if foreground (ctermfg OR guifg) is not set.
     Directory    { fg = "#6fbfbf" }, -- directory names (and other special names in listings)
-    DiffAdd      { fg = Comment.fg }, -- diff mode: Added line |diff.txt|
+    DiffAdd      { fg = "#A1B56C" }, -- diff mode: Added line |diff.txt|
     DiffChange   { fg = "#F7CA88" }, -- diff mode: Changed line |diff.txt|
     DiffDelete   { fg = "#FB533A" }, -- diff mode: Deleted line |diff.txt|
     -- DiffText     { }, -- diff mode: Changed text within a changed line |diff.txt|
@@ -94,7 +94,7 @@ local theme = lush(function()
     -- default,
     -- Uncomment and edit if you want more specific syntax highlighting.
 
-    Constant       { fg = "#8EAEA2" }, -- (preferred) any constant
+    Constant       { fg = "#A1B56C" }, -- (preferred) any constant
     -- String         { }, --   a string constant: "this is a string"
     -- Character      { }, --  a character constant: 'c', '\n'
     -- Number         { }, --   a number constant: 234, 0xff
@@ -124,7 +124,7 @@ local theme = lush(function()
     Typedef        { Type }, --  A typedef
 
     Special        { fg = "#E3B8FF" }, -- (preferred) any special symbol
-    -- SpecialChar    { }, --  special character in a constant
+    SpecialChar    { fg = "#F7CA88" }, --  special character in a constant
     -- Tag            { }, --    you can use CTRL-] on this
     Delimiter      { Normal }, --  character that needs attention
     -- SpecialComment { }, -- special things inside a comment
