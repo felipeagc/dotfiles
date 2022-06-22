@@ -240,6 +240,10 @@ local theme = lush(function()
     TSTypeBuiltin        { Type } , -- Built-in types: `i32` in Rust.
     -- TSVariable           { } , -- Variable names that don't fit into other categories.
     TSVariableBuiltin    { Identifier } , -- Variable names defined by the language: `this` or `self` in Javascript.
+
+    IndentBlanklineChar { fg = hsl("#2F2F2F") },
+    IndentBlanklineContextChar { fg = hsl("#3F3F3F") },
+    IndentBlanklineContextStart { bg = hsl("#3C3C3C") },
   }
 end)
 

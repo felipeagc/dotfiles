@@ -24,14 +24,15 @@ require('packer').startup(function()
     -- Packer can manage itself as an optional plugin
     use {'wbthomason/packer.nvim', opt = true}
 
-    -- use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
-
     use 'neovim/nvim-lspconfig'
     use 'ray-x/lsp_signature.nvim'
     use {
         'nvim-treesitter/nvim-treesitter',
         run = ':TSUpdate'
     }
+    use 'mfussenegger/nvim-dap'
+    use 'rcarriga/nvim-dap-ui'
+    use 'leoluz/nvim-dap-go'
 
     use 'tpope/vim-surround'
     use 'tpope/vim-commentary'
@@ -42,30 +43,27 @@ require('packer').startup(function()
     use 'tpope/vim-unimpaired'
     use 'tpope/vim-dispatch'
 
-    use 'kdheepak/lazygit.nvim'
-
     use 'editorconfig/editorconfig-vim'
     use 'derekwyatt/vim-fswitch'
 
-    -- use 'bfrg/vim-cpp-modern'
     use 'plasticboy/vim-markdown'
     use 'beyondmarc/hlsl.vim'
     use 'ziglang/zig.vim'
     use 'rust-lang/rust.vim'
     use 'dart-lang/dart-vim-plugin'
-    use 'ledger/vim-ledger'
     use 'NoahTheDuke/vim-just'
-    use 'nathangrigg/vim-beancount'
+    use 'lakshayg/vim-bazel'
+    use 'LnL7/vim-nix'
     use '~/tmp/dusk.vim'
     use '~/tmp/lang.vim'
 
     use 'nvim-lua/plenary.nvim'
     use 'nvim-telescope/telescope.nvim'
+    use 'nvim-telescope/telescope-dap.nvim'
+
+    use 'lukas-reineke/indent-blankline.nvim'
 
     use 'rktjmp/lush.nvim'
-    use 'metalelf0/jellybeans-nvim'
-    use 'rebelot/kanagawa.nvim'
-    use 'ellisonleao/gruvbox.nvim'
 end)
 
 -- Vim options {{{
@@ -108,7 +106,7 @@ vim.o.cinoptions = vim.o.cinoptions .. 'L0'
 vim.o.cinoptions = vim.o.cinoptions .. 'l1'
 
 vim.wo.number = false
-vim.wo.cursorline = false
+vim.wo.cursorline = true
 vim.wo.foldmethod = 'marker'
 vim.wo.foldlevel = 0
 -- }}}
@@ -149,6 +147,14 @@ vim.keymap.set("n", "<C-a>", ":FSHere<CR>", { silent = true })
 
 vim.keymap.set("n", "<f7>", ":Make<CR>", { silent = true })
 
+vim.keymap.set("n", "<Leader>do", ":lua require('dapui').toggle()<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>dc", ":lua require('dap').continue()<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>db", ":lua require('dap').toggle_breakpoint()<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>ds", ":lua require('dap').step_into()<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>dn", ":lua require('dap').step_over()<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>df", ":lua require('dap').step_out()<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>dq", ":lua require('dap').terminate()<CR>", { silent = true })
+
 -- Disable ex mode binding
 vim.cmd[[map Q <Nop>]]
 -- }}}
@@ -187,14 +193,28 @@ local function on_lsp_attach(client, bufnr)
     buf_set_keymap('n', '<Leader>mf', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
     buf_set_keymap('n', '<Leader>mr', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
     buf_set_keymap('n', '<Leader>mi', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+    buf_set_keymap('n', '<Leader>me', ':Telescope diagnostics<CR>', opts)
 end
 
-local servers = { "clangd", "gopls", "zls", "tsserver", "ocamllsp", "rust_analyzer", "dartls", "hls", "kotlin_language_server" }
+local servers = { "clangd", "gopls", "zls", "tsserver", "ocamllsp", "dartls", "hls", "kotlin_language_server" }
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup{
         on_attach = on_lsp_attach,
     }
 end
+
+lspconfig['rust_analyzer'].setup{
+    on_attach = on_lsp_attach,
+    settings = {
+        ["rust-analyzer"] = {
+            ["cargo"] = {
+                ["buildScripts"] = {
+                    ["enable"] = true,
+                },
+            },
+        },
+    },
+}
 
 -- require("gitsigns").setup{}
 
@@ -230,6 +250,91 @@ require('telescope').setup({
     --     live_grep = { theme = "ivy" },
     -- },
 })
+require('telescope').load_extension('dap')
+
+local dap = require("dap")
+dap.adapters.lldb = {
+    type = 'executable',
+    command = '/usr/bin/lldb-vscode', -- adjust as needed, must be absolute path
+    name = 'lldb'
+}
+
+dap.configurations.cpp = {
+    {
+        name = 'Launch',
+        type = 'lldb',
+        request = 'launch',
+        program = function()
+            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+        end,
+        cwd = '${workspaceFolder}',
+        stopOnEntry = false,
+        args = function()
+            local s = vim.fn.input('Arguments: ', '')
+            local words = {}
+            for word in s:gmatch("%S+") do table.insert(words, word) end
+            return words
+        end,
+    },
+}
+
+dap.configurations.c = dap.configurations.cpp
+dap.configurations.rust = dap.configurations.cpp
+
+require('dap-go').setup()
+require("dapui").setup({
+    icons = { expanded = "▾", collapsed = "▸" },
+    mappings = {
+        -- Use a table to apply multiple mappings
+        expand = { "<CR>", "<2-LeftMouse>" },
+        open = "o",
+        remove = "d",
+        edit = "e",
+        repl = "r",
+        toggle = "t",
+    },
+    -- Expand lines larger than the window
+    -- Requires >= 0.7
+    expand_lines = vim.fn.has("nvim-0.7"),
+    sidebar = {
+        -- You can change the order of elements in the sidebar
+        elements = {
+            -- Provide as ID strings or tables with "id" and "size" keys
+            {
+                id = "scopes",
+                size = 0.25, -- Can be float or integer > 1
+            },
+            { id = "breakpoints", size = 0.25 },
+            { id = "stacks", size = 0.25 },
+            { id = "watches", size = 00.25 },
+        },
+        size = 40,
+        position = "left", -- Can be "left", "right", "top", "bottom"
+    },
+    tray = {
+        elements = { "repl" },
+        size = 10,
+        position = "bottom", -- Can be "left", "right", "top", "bottom"
+    },
+    floating = {
+        max_height = nil, -- These can be integers or a float between 0 and 1.
+        max_width = nil, -- Floats will be treated as percentage of your screen.
+        border = "single", -- Border style. Can be "single", "double" or "rounded"
+        mappings = {
+            close = { "q", "<Esc>" },
+        },
+    },
+    windows = { indent = 1 },
+    render = { 
+        max_type_length = nil, -- Can be integer or nil.
+    }
+})
+
+require("indent_blankline").setup {
+    -- for example, context is off by default, use this to turn it on
+    show_current_context = true,
+    show_current_context_start = true,
+}
 -- }}}
 
 -- Color scheme {{{
@@ -354,6 +459,8 @@ vim.g.vim_markdown_folding_disabled = 1
 -- }}}
 
 -- C/C++ {{{
+vim.g.bazel_make_command = "Make"
+
 function set_c_makeprg()
     if vim.fn.filereadable('meson.build') == 1 then
         vim.api.nvim_buf_set_option(0, 'makeprg', 'ninja -C build')
@@ -369,6 +476,9 @@ function set_c_makeprg()
     end
     if vim.fn.filereadable('platformio.ini') == 1 then
         vim.api.nvim_buf_set_option(0, 'makeprg', 'pio run')
+    end
+    if vim.fn.filereadable('WORKSPACE') == 1 then
+        vim.keymap.set("n", "<f7>", ":Bazel build<CR>", { silent = true, buffer = true })
     end
 end
 
@@ -386,8 +496,17 @@ create_augroup("cppbindings", "cpp", {
 -- }}}
 
 -- Go {{{
+function set_go_makeprg()
+    if vim.fn.filereadable('makefile') == 1 or vim.fn.filereadable('Makefile') == 1 then
+        vim.api.nvim_buf_set_option(0, 'makeprg', 'make')
+    else
+        vim.api.nvim_buf_set_option(0, 'makeprg', 'go build .')
+    end
+end
+
 create_augroup("gobindings", "go", {
     "setlocal shiftwidth=4 tabstop=4 noexpandtab",
+    "lua set_go_makeprg()",
     "setlocal cpt-=t",
 })
 -- }}}

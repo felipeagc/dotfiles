@@ -62,7 +62,7 @@ bindsym $mod+Return exec $term
 bindsym $mod+w kill
 
 # Start your launcher
-bindsym $mod+Space exec fuzzel \
+bindsym $mod+Space exec --no-startup-id fuzzel \
 	-f "DejaVu Sans Mono" \
 	-r 0 \
 	-b "222222ff" \

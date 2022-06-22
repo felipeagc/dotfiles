@@ -133,6 +133,15 @@
   (define-key evil-normal-state-map (kbd "grp") 'string-inflection-camelcase))
 ;; }}}
 
+;; Tree-sitter {{{
+;; (use-package tree-sitter
+;;   :config
+;;   (global-tree-sitter-mode)
+;;   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+;; (use-package tree-sitter-langs
+;;   :after tree-sitter)
+;; }}}
+
 ;; Evil {{{
 (use-package evil
   :init
@@ -409,7 +418,7 @@
   (global-company-mode)
   (setq company-minimum-prefix-length 1
         company-idle-delay nil
-        ;; company-format-margin-function nil ;; disable icons
+        company-format-margin-function nil ;; disable icons
         ))
 ;; }}}
 
@@ -467,6 +476,7 @@
          (c++-mode . lsp-deferred)
          (go-mode . lsp-deferred)
          (zig-mode . lsp-deferred)
+         (rust-mode . lsp-deferred)
          (tuareg-mode . lsp-deferred)
          (typescript-mode . lsp-deferred)
          (web-mode . lsp-deferred))
@@ -608,10 +618,7 @@
   :config
   (add-hook 'rust-mode-hook
             (lambda ()
-              (felipe/set-compile-command "Cargo.toml" "cd %s && cargo build")))
-
-  (felipe/leader-def 'normal rust-mode-map
-    "mf" 'rust-format-buffer))
+              (felipe/set-compile-command "Cargo.toml" "cd %s && cargo build"))))
 ;; }}}
 
 ;; Ocaml {{{

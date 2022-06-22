@@ -22,7 +22,7 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' menu select
 
-eval `keychain -q --eval --agents ssh id_rsa`
+eval `keychain -q --eval --agents ssh id_ed25519`
 
 alias ls='ls --color=auto'
 alias ll="ls -l"
@@ -55,3 +55,7 @@ export DOCKER_BUILDKIT=1
 
 # opam configuration
 test -r $HOME/.opam/opam-init/init.zsh && . $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+
+if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+    export MOZ_ENABLE_WAYLAND=1
+fi
