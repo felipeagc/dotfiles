@@ -54,6 +54,7 @@ require('packer').startup(function()
     use 'NoahTheDuke/vim-just'
     use 'lakshayg/vim-bazel'
     use 'LnL7/vim-nix'
+    use 'whonore/Coqtail'
     use '~/tmp/dusk.vim'
     use '~/tmp/lang.vim'
 
@@ -558,5 +559,17 @@ end
 create_augroup("latexbindings", "tex", {
     "setlocal makeprg=latexmk",
     "nmap <silent> <buffer> <Leader>mp :lua open_pdf_preview()<CR>",
+})
+-- }}}
+
+-- Coq {{{
+vim.g.coqtail_nomap = 1
+vim.g.coqtail_noimap = 1
+
+create_augroup("coqbindings", "coq", {
+    "setlocal cpt-=t",
+    "nmap <silent> <buffer> <M-n> :CoqNext<CR>:CoqJumpToEnd<CR>",
+    "nmap <silent> <buffer> <M-p> :CoqUndo<CR>:CoqJumpToEnd<CR>",
+    "nmap <silent> <buffer> <M-c> :CoqToLine<CR>:CoqJumpToEnd<CR>",
 })
 -- }}}

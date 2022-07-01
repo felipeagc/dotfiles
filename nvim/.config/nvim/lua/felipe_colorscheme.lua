@@ -241,6 +241,9 @@ local theme = lush(function()
     -- TSVariable           { } , -- Variable names that don't fit into other categories.
     TSVariableBuiltin    { Identifier } , -- Variable names defined by the language: `this` or `self` in Javascript.
 
+    CoqtailChecked       { bg = Normal.bg.mix(hsl("#A1DA6C"), 30) },
+    CoqtailSent          { bg = Normal.bg.mix(hsl("#F7CA88"), 30) },
+
     IndentBlanklineChar { fg = hsl("#2F2F2F") },
     IndentBlanklineContextChar { fg = hsl("#3F3F3F") },
     IndentBlanklineContextStart { bg = hsl("#3C3C3C") },
