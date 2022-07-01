@@ -83,6 +83,7 @@ vim.o.shiftwidth = 4
 vim.o.autoindent = true
 vim.o.smartindent = true
 vim.o.smarttab = true
+vim.o.expandtab = true
 
 vim.o.wrap = true
 vim.o.wildignore = vim.o.wildignore .. '*.so,*.swp,*.zip,*.o,*.png,*.jpg,*.jpeg,*/target/*,*/build/*,*/node_modules/*,tags,*.glb,*.gltf,*.hdr'

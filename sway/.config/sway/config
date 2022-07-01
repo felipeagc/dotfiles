@@ -19,8 +19,8 @@ set $term foot
 ### Output configuration
 #
 output * bg #404040 solid_color
-output * bg "~/images/wallpaper.jpg" fill
-output * max_render_time off
+# output * bg "~/images/wallpaper.jpg" fill
+# output * max_render_time off
 
 xwayland force
 
@@ -41,6 +41,7 @@ input "type:pointer" {
 }
 
 input "type:touchpad" {
+    accel_profile flat
     dwt enabled
     tap enabled
     natural_scroll enabled
@@ -63,7 +64,8 @@ bindsym $mod+w kill
 
 # Start your launcher
 bindsym $mod+Space exec --no-startup-id fuzzel \
-	-f "DejaVu Sans Mono" \
+	--dpi-aware=no \
+	-f "IBM Plex Mono:size=12" \
 	-r 0 \
 	-b "222222ff" \
 	-s "444444ff" \
@@ -164,8 +166,9 @@ bindsym $mod+t floating toggle
 # Misc bindings:
 #
 
-bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
-bindsym XF86MonBrightnessUp exec brightnessctl set +5%
+
+bindsym XF86MonBrightnessDown exec light -U 5
+bindsym XF86MonBrightnessUp exec light -A 5
 bindsym $mod+p exec playerctl -p spotify play-pause
 bindsym $mod+period exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym $mod+comma exec pactl set-sink-volume @DEFAULT_SINK@ -5%
@@ -215,5 +218,5 @@ exec hash dbus-update-activation-environment 2>/dev/null && \
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id waybar
 # exec --no-startup-id gammastep
-exec --no-startup-id brightnessctl s 35%
+exec --no-startup-id light -S 35
 exec --no-startup-id mako
