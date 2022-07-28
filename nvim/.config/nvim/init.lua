@@ -571,5 +571,8 @@ create_augroup("coqbindings", "coq", {
     "nmap <silent> <buffer> <M-n> :CoqNext<CR>:CoqJumpToEnd<CR>",
     "nmap <silent> <buffer> <M-p> :CoqUndo<CR>:CoqJumpToEnd<CR>",
     "nmap <silent> <buffer> <M-c> :CoqToLine<CR>:CoqJumpToEnd<CR>",
+    "imap <silent> <buffer> <M-n> <ESC>:CoqNext<CR>:CoqJumpToEnd<CR>a",
+    "imap <silent> <buffer> <M-p> <ESC>:CoqUndo<CR>:CoqJumpToEnd<CR>a",
+    "imap <silent> <buffer> <M-c> <ESC>:CoqToLine<CR>:CoqJumpToEnd<CR>a",
 })
 -- }}}
