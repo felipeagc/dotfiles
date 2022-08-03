@@ -62,9 +62,11 @@ require('packer').startup(function()
     use 'nvim-telescope/telescope.nvim'
     use 'nvim-telescope/telescope-dap.nvim'
 
-    use 'lukas-reineke/indent-blankline.nvim'
+    -- use 'lukas-reineke/indent-blankline.nvim'
 
     use 'rktjmp/lush.nvim'
+    use 'lifepillar/vim-solarized8'
+    use 'lifepillar/vim-gruvbox8'
 end)
 
 -- Vim options {{{
@@ -334,16 +336,19 @@ require("dapui").setup({
     }
 })
 
-require("indent_blankline").setup {
-    -- for example, context is off by default, use this to turn it on
-    show_current_context = true,
-    show_current_context_start = true,
-}
+-- require("indent_blankline").setup {
+--     -- for example, context is off by default, use this to turn it on
+--     show_current_context = true,
+--     show_current_context_start = true,
+-- }
 -- }}}
 
 -- Color scheme {{{
+vim.g.gruvbox_italics = 0
+vim.g.gruvbox_transp_bg = 1
 vim.cmd [[set background=dark]]
-vim.cmd[[colorscheme felipe]]
+vim.cmd[[colorscheme gruvbox8_hard]]
+-- vim.cmd[[colorscheme felipe]]
 -- }}}
 
 -- Small quality of life stuff {{{
@@ -433,14 +438,9 @@ vim.cmd [[inoremap <silent> <C-n> <C-x><C-o>]]
             "haskell",
             "dart",
             "latex",
-            "dockerfile",
             "css",
             "html",
             "java",
-            "cmake",
-            "bash",
-            "wgsl",
-            "glsl",
         }, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
         -- ignore_install = { "javascript" }, -- List of parsers to ignore installing
         highlight = {
@@ -451,6 +451,17 @@ vim.cmd [[inoremap <silent> <C-n> <C-x><C-o>]]
             -- Using this option may slow down your editor, and you may see some duplicate highlights.
             -- Instead of true it can also be a list of languages
             additional_vim_regex_highlighting = false,
+        },
+        indent = {
+            enable = true,
+            disable = {
+                "c",
+                "cpp",
+                "python",
+                "ocaml",
+                "haskell",
+                "latex",
+            },
         },
         context_commentstring = {
             enable = true
