@@ -29,6 +29,10 @@ if type "keychain" > /dev/null; then
     eval `$KEYCHAIN_CMD`
 fi
 
+if type "direnv" > /dev/null; then
+    eval "$(direnv hook zsh)"
+fi
+
 alias ls='ls --color=auto'
 alias ll="ls -l"
 
