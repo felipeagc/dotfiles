@@ -346,7 +346,16 @@ require("dapui").setup({
 -- Color scheme {{{
 vim.g.gruvbox_italics = 0
 vim.g.gruvbox_transp_bg = 1
-vim.cmd [[set background=dark]]
+vim.cmd [[
+    set background=dark
+
+    augroup CoqtailHighlights
+        autocmd!
+        autocmd ColorScheme * hi def CoqtailChecked guibg=#394c32
+        autocmd ColorScheme * hi def CoqtailSent guibg=#664d14
+        autocmd ColorScheme * hi def CoqtailError guibg=#6d1b12
+    augroup END
+]]
 vim.cmd[[colorscheme gruvbox8_hard]]
 -- vim.cmd[[colorscheme felipe]]
 -- }}}
