@@ -166,7 +166,6 @@ bindsym $mod+t floating toggle
 # Misc bindings:
 #
 
-
 bindsym XF86MonBrightnessDown exec light -U 5
 bindsym XF86MonBrightnessUp exec light -A 5
 bindsym $mod+p exec playerctl -p spotify play-pause
@@ -188,32 +187,18 @@ assign [class="Spotify"] workspace number 9:misc
 assign [class="discord"] workspace number 9:misc
 assign [title="Discord"] workspace number 9:misc
 assign [class="Steam"] workspace number 10:games
-for_window [class="bisq.desktop.app.BisqApp"] floating enable
-
-#
-# Status Bar:
-#
-# Read `man 5 sway-bar` for more information about this section.
-#bar {
-#    position top
-#
-#    # When the status_command prints a new line to stdout, swaybar updates.
-#    # The default just shows the current date and time.
-#    status_command dwmstatus
-#
-#    colors {
-#        statusline #ffffff
-#        background #323232
-#    }
-#}
 
 default_border pixel
 smart_borders on
 hide_edge_borders smart
 
+# dbus stuff for arch linux
 exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
 exec hash dbus-update-activation-environment 2>/dev/null && \
      dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
+
+# dbus stuff for nixos
+exec hash dbus-sway-environment 2>/dev/null && dbus-sway-environment
 
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id waybar
