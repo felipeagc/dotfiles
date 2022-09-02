@@ -55,12 +55,11 @@ require('packer').startup(function()
     use 'lakshayg/vim-bazel'
     use 'LnL7/vim-nix'
     use 'whonore/Coqtail'
-    use '~/tmp/dusk.vim'
-    use '~/tmp/lang.vim'
 
     use 'nvim-lua/plenary.nvim'
     use 'nvim-telescope/telescope.nvim'
     use 'nvim-telescope/telescope-dap.nvim'
+    use 'TimUntersberger/neogit'
 
     -- use 'lukas-reineke/indent-blankline.nvim'
 
@@ -144,8 +143,9 @@ vim.keymap.set("n", "<Leader>wb", "<C-w>=", { silent = true })
 vim.keymap.set("n", "<Leader>bd", ":bd<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>bcc", ":%bd|e#<CR>", { silent = true })
 
-vim.keymap.set("n", "<Leader>gs", ":vertical Git<CR>", { silent = true })
+-- vim.keymap.set("n", "<Leader>gs", ":vertical Git<CR>", { silent = true })
 -- vim.keymap.set("n", "<Leader>gs", ":LazyGit<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>gs", ":Neogit<CR>", { silent = true })
 
 vim.keymap.set("n", "<C-a>", ":FSHere<CR>", { silent = true })
 
