@@ -24,7 +24,7 @@ zstyle ':completion:*' menu select
 
 if type "keychain" > /dev/null; then
     KEYCHAIN_CMD=(keychain -q --eval --agents ssh)
-    [[ -e ~/.ssh/id_primary ]] && KEYCHAIN_CMD+=id_primary
+    [[ -e ~/.ssh/id_ed25519 ]] && KEYCHAIN_CMD+=id_ed25519
     [[ -e ~/.ssh/id_secondary ]] && KEYCHAIN_CMD+=id_secondary
     eval `$KEYCHAIN_CMD`
 fi
