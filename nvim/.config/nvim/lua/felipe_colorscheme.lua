@@ -76,7 +76,7 @@ local theme = lush(function()
     -- SpellCap     { }, -- Word that should start with a capital. |spell| Combined with the highlighting used otherwise.
     -- SpellLocal   { }, -- Word that is recognized by the spellchecker as one that is used in another region. |spell| Combined with the highlighting used otherwise.
     -- SpellRare    { }, -- Word that is recognized by the spellchecker as one that is hardly ever used.  |spell| Combined with the highlighting used otherwise.
-    StatusLine   { bg = Normal.bg.lighten(10) }, -- status line of current window
+    -- StatusLine   { bg = Normal.bg.lighten(10) }, -- status line of current window
     StatusLineNC { bg = Normal.bg.lighten(5) }, -- status lines of not-current windows Note: if this is equal to "StatusLine" Vim will use "^^^" in the status line of the current window.
     TabLine      { bg = Normal.bg.lighten(10) }, -- tab pages line, not active tab page label
     TabLineFill  { TabLine }, -- tab pages line, where there are no labels
@@ -156,18 +156,18 @@ local theme = lush(function()
 
     -- See :h diagnostic-highlights, some groups may not be listed, submit a PR fix to lush-template!
     --
-    DiagnosticError            { bg = hsl("#FB533A"), fg = "#282828", gui = "bold" } , -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
-    DiagnosticWarn             { bg = hsl("#F7CA88"), fg = "#282828", gui = "bold" } , -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
-    DiagnosticInfo             { bg = Normal.fg,      fg = "#282828", gui = "bold" } , -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
-    DiagnosticHint             { bg = hsl("#bbaa97"), fg = "#282828", gui = "bold" } , -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
+    DiagnosticError            { bg = Normal.bg.mix(hsl("#FB533A"), 10), fg = hsl("#FB533A"), gui = "italic" } , -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
+    DiagnosticWarn             { bg = Normal.bg.mix(hsl("#F7CA88"), 10), fg = hsl("#F7CA88"), gui = "italic" } , -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
+    DiagnosticInfo             { bg = Normal.bg.mix(Normal.fg, 10), fg = Normal.fg,      gui = "italic" } , -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
+    DiagnosticHint             { bg = Normal.bg.mix(hsl("#bbaa97"), 10), fg = hsl("#bbaa97"), gui = "italic" } , -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
     -- DiagnosticVirtualTextError { } , -- Used for "Error" diagnostic virtual text.
     -- DiagnosticVirtualTextWarn  { } , -- Used for "Warn" diagnostic virtual text.
     -- DiagnosticVirtualTextInfo  { } , -- Used for "Info" diagnostic virtual text.
     -- DiagnosticVirtualTextHint  { } , -- Used for "Hint" diagnostic virtual text.
-    DiagnosticUnderlineError   { bg = Normal.bg.mix(DiagnosticError.bg, 20), gui = "" } , -- Used to underline "Error" diagnostics.
-    DiagnosticUnderlineWarn    { bg = Normal.bg.mix(DiagnosticWarn.bg,  20), gui = "" } , -- Used to underline "Warn" diagnostics.
-    DiagnosticUnderlineInfo    { bg = Normal.bg.mix(DiagnosticInfo.bg,  20), gui = "" } , -- Used to underline "Info" diagnostics.
-    DiagnosticUnderlineHint    { bg = Normal.bg.mix(DiagnosticHint.bg,  20), gui = "" } , -- Used to underline "Hint" diagnostics.
+    DiagnosticUnderlineError   { sp = DiagnosticError.fg, gui = "undercurl" } , -- Used to underline "Error" diagnostics.
+    DiagnosticUnderlineWarn    { sp = DiagnosticWarn.fg, gui = "undercurl" } , -- Used to underline "Warn" diagnostics.
+    DiagnosticUnderlineInfo    { sp = DiagnosticInfo.fg, gui = "undercurl" } , -- Used to underline "Info" diagnostics.
+    DiagnosticUnderlineHint    { sp = DiagnosticHint.fg, gui = "undercurl" } , -- Used to underline "Hint" diagnostics.
     -- DiagnosticFloatingError    { } , -- Used to color "Error" diagnostic messages in diagnostics float. See |vim.diagnostic.open_float()|
     -- DiagnosticFloatingWarn     { } , -- Used to color "Warn" diagnostic messages in diagnostics float.
     -- DiagnosticFloatingInfo     { } , -- Used to color "Info" diagnostic messages in diagnostics float.

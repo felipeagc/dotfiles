@@ -14,13 +14,15 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $term foot
+# set $term foot
+set $term alacritty
 
 ### Output configuration
 #
-output * bg #404040 solid_color
+output * bg #303030 solid_color
 # output * bg "~/images/wallpaper.jpg" fill
-# output * max_render_time off
+# output * max_render_time 4
+output * max_render_time off
 
 xwayland force
 
@@ -74,7 +76,7 @@ bindsym $mod+Space exec --no-startup-id fuzzel \
 	-C "285577ff" \
 	-B 2 \
 	-I \
-	-T foot \
+	-T $term \
 	-w 80
 # bindsym $mod+Space exec BEMENU_BACKEND=wayland bemenu-run \
 # 	-i -p Run \
@@ -205,3 +207,4 @@ exec --no-startup-id waybar
 # exec --no-startup-id gammastep
 exec --no-startup-id light -S 35
 exec --no-startup-id mako
+exec --no-startup-id nextcloud --background

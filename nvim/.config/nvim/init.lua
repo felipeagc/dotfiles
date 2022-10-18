@@ -30,6 +30,7 @@ require('packer').startup(function()
         'nvim-treesitter/nvim-treesitter',
         run = ':TSUpdate'
     }
+    use 'p00f/nvim-ts-rainbow'
     use 'mfussenegger/nvim-dap'
     use 'rcarriga/nvim-dap-ui'
     use 'leoluz/nvim-dap-go'
@@ -55,17 +56,20 @@ require('packer').startup(function()
     use 'lakshayg/vim-bazel'
     use 'LnL7/vim-nix'
     use 'whonore/Coqtail'
+    use 'Olical/conjure'
+    use 'felipeagc/dusk.vim'
 
     use 'nvim-lua/plenary.nvim'
     use 'nvim-telescope/telescope.nvim'
     use 'nvim-telescope/telescope-dap.nvim'
-    use 'TimUntersberger/neogit'
 
     -- use 'lukas-reineke/indent-blankline.nvim'
 
     use 'rktjmp/lush.nvim'
     use 'lifepillar/vim-solarized8'
     use 'lifepillar/vim-gruvbox8'
+    use 'rebelot/kanagawa.nvim'
+    use 'mcchrish/zenbones.nvim'
 end)
 
 -- Vim options {{{
@@ -143,9 +147,9 @@ vim.keymap.set("n", "<Leader>wb", "<C-w>=", { silent = true })
 vim.keymap.set("n", "<Leader>bd", ":bd<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>bcc", ":%bd|e#<CR>", { silent = true })
 
--- vim.keymap.set("n", "<Leader>gs", ":vertical Git<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>gs", ":vertical Git<CR>", { silent = true })
 -- vim.keymap.set("n", "<Leader>gs", ":LazyGit<CR>", { silent = true })
-vim.keymap.set("n", "<Leader>gs", ":Neogit<CR>", { silent = true })
+-- vim.keymap.set("n", "<Leader>gs", ":Neogit<CR>", { silent = true })
 
 vim.keymap.set("n", "<C-a>", ":FSHere<CR>", { silent = true })
 
@@ -175,7 +179,11 @@ require("lsp_signature").setup({
 })
 
 vim.diagnostic.config({
-    virtual_text = true,
+    virtual_text = {
+        severity = {
+            -- min = vim.diagnostic.severity.ERROR,
+        },
+    },
     signs = false,
     underline = true,
     update_in_insert = false,
@@ -194,13 +202,13 @@ local function on_lsp_attach(client, bufnr)
 
     buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
     buf_set_keymap('n', '<c-]>', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-    buf_set_keymap('n', '<Leader>mf', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+    buf_set_keymap('n', '<Leader>mf', '<cmd>lua vim.lsp.buf.format({async = true})<CR>', opts)
     buf_set_keymap('n', '<Leader>mr', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
     buf_set_keymap('n', '<Leader>mi', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
     buf_set_keymap('n', '<Leader>me', ':Telescope diagnostics<CR>', opts)
 end
 
-local servers = { "clangd", "gopls", "zls", "tsserver", "ocamllsp", "dartls", "hls", "kotlin_language_server" }
+local servers = { "clangd", "gopls", "zls", "tsserver", "ocamllsp", "dartls", "hls", "kotlin_language_server", "denols", "clojure_lsp" }
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup{
         on_attach = on_lsp_attach,
@@ -344,8 +352,42 @@ require("dapui").setup({
 -- }}}
 
 -- Color scheme {{{
-vim.g.gruvbox_italics = 0
-vim.g.gruvbox_transp_bg = 1
+-- vim.opt.laststatus = 3
+vim.opt.fillchars:append({
+    horiz = '━',
+    horizup = '┻',
+    horizdown = '┳',
+    vert = '┃',
+    vertleft = '┨',
+    vertright = '┣',
+    verthoriz = '╋',
+})
+local default_colors = require("kanagawa.colors").setup()
+local overrides = {
+    StatusLine = { fg = default_colors.fujiWhite, bg = default_colors.sumiInk0 }
+}
+require('kanagawa').setup({
+    overrides = overrides,
+    undercurl = true,           -- enable undercurls
+    commentStyle = { italic = false },
+    functionStyle = {},
+    keywordStyle = { italic = false },
+    statementStyle = { bold = true },
+    typeStyle = {},
+    variablebuiltinStyle = { italic = false },
+    -- specialReturn = true,       -- special highlight for the return keyword
+    -- specialException = true,    -- special highlight for exception handling keywords
+    transparent = false,        -- do not set background color
+    -- dimInactive = false,        -- dim inactive window `:h hl-NormalNC`
+    -- globalStatus = false,       -- adjust window separators highlight for laststatus=3
+    terminalColors = true,      -- define vim.g.terminal_color_{0,17}
+    colors = {},
+    -- theme = "light"           -- Load "default" theme or the experimental "light" theme
+})
+-- require'kanagawa'.setup({ globalStatus = true, ... })
+--
+-- vim.g.gruvbox_italics = 0
+-- vim.g.gruvbox_transp_bg = 0
 vim.cmd [[
     set background=dark
 
@@ -356,8 +398,11 @@ vim.cmd [[
         autocmd ColorScheme * hi def CoqtailError guibg=#6d1b12
     augroup END
 ]]
-vim.cmd[[colorscheme gruvbox8_hard]]
+-- vim.cmd[[colorscheme gruvbox8_hard]]
 -- vim.cmd[[colorscheme felipe]]
+vim.cmd[[colorscheme kanagawa]]
+-- vim.g.zenbones = { darkness = 'warm' }
+-- vim.cmd[[colorscheme zenbones]]
 -- }}}
 
 -- Small quality of life stuff {{{
@@ -432,50 +477,70 @@ vim.cmd [[inoremap <silent> <C-n> <C-x><C-o>]]
 -- }}}
 
 -- Treesitter {{{
-    require("nvim-treesitter.configs").setup {
-        ensure_installed = {
+local rainbow_enabled_list = {"clojure", "fennel", "commonlisp", "query"}
+local parsers = require("nvim-treesitter.parsers")
+require("nvim-treesitter.configs").setup {
+    ensure_installed = {
+        "c",
+        "cpp",
+        "lua",
+        "python",
+        "javascript",
+        "typescript",
+        "go",
+        "rust",
+        "zig",
+        "ocaml",
+        "haskell",
+        "dart",
+        "latex",
+        "css",
+        "html",
+        "java",
+        "glsl",
+        "hlsl",
+        "clojure",
+    }, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+    -- ignore_install = { "javascript" }, -- List of parsers to ignore installing
+    highlight = {
+        enable = true,              -- false will disable the whole extension
+        disable = { },  -- list of language that will be disabled
+        -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+        -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+        -- Using this option may slow down your editor, and you may see some duplicate highlights.
+        -- Instead of true it can also be a list of languages
+        additional_vim_regex_highlighting = false,
+    },
+    indent = {
+        enable = true,
+        disable = {
             "c",
             "cpp",
-            "lua",
             "python",
-            "javascript",
-            "typescript",
-            "go",
-            "rust",
-            "zig",
             "ocaml",
             "haskell",
-            "dart",
             "latex",
-            "css",
-            "html",
-            "java",
-        }, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-        -- ignore_install = { "javascript" }, -- List of parsers to ignore installing
-        highlight = {
-            enable = true,              -- false will disable the whole extension
-            disable = { },  -- list of language that will be disabled
-            -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-            -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-            -- Using this option may slow down your editor, and you may see some duplicate highlights.
-            -- Instead of true it can also be a list of languages
-            additional_vim_regex_highlighting = false,
         },
-        indent = {
-            enable = true,
-            disable = {
-                "c",
-                "cpp",
-                "python",
-                "ocaml",
-                "haskell",
-                "latex",
-            },
-        },
-        context_commentstring = {
-            enable = true
-        }
+    },
+    context_commentstring = {
+        enable = true
+    },
+    rainbow = {
+        enable = true,
+        disable = vim.tbl_filter(
+            function(p)
+                local disable = true
+                for _, lang in pairs(rainbow_enabled_list) do
+                    if p==lang then disable = false end
+                end
+                return disable
+            end,
+            parsers.available_parsers()
+        ),
+        extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
+        max_file_lines = 2000, -- Do not enable for files with more than n lines, int
     }
+}
 -- }}}
 
 -- Markdown {{{
@@ -547,7 +612,10 @@ create_augroup("typescriptreactbindings", "typescriptreact", { "setlocal cpt-=t"
 -- }}}
 
 -- Ocaml {{{
-create_augroup("ocamlbindings", "ocaml", { "setlocal cpt-=t" })
+create_augroup("ocamlbindings", "ocaml", {
+    "setlocal cpt-=t",
+    "setlocal makeprg=dune\\ build"
+})
 -- }}}
 
 -- Rust {{{
@@ -594,5 +662,14 @@ create_augroup("coqbindings", "coq", {
     "imap <silent> <buffer> <M-n> <ESC>:CoqNext<CR>:CoqJumpToEnd<CR>a",
     "imap <silent> <buffer> <M-p> <ESC>:CoqUndo<CR>:CoqJumpToEnd<CR>a",
     "imap <silent> <buffer> <M-c> <ESC>:CoqToLine<CR>:CoqJumpToEnd<CR>a",
+})
+-- }}}
+
+-- Clojure {{{
+vim.g["conjure#filetypes"] = {"clojure"}
+create_augroup("clojurebindings", "clojure", {
+    "nmap <silent> <buffer> <M-e> :ConjureEvalCurrentForm<CR>",
+    "nnoremap <silent> <buffer> <f7> :ConjureEvalBuf<CR>",
+    "inoremap <silent> <buffer> <f7> :ConjureEvalBuf<CR>",
 })
 -- }}}
