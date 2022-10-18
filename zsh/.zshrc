@@ -77,3 +77,5 @@ fi
 export QT_QPA_PLATFORMTHEME="qt5ct"
 
 bindkey -s ^f "tmux-sessionizer\n"
+
+[[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
