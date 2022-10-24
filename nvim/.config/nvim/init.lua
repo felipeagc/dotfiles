@@ -500,6 +500,7 @@ require("nvim-treesitter.configs").setup {
         "glsl",
         "hlsl",
         "clojure",
+        "wgsl",
     }, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
     -- ignore_install = { "javascript" }, -- List of parsers to ignore installing
     highlight = {
@@ -672,4 +673,13 @@ create_augroup("clojurebindings", "clojure", {
     "nnoremap <silent> <buffer> <f7> :ConjureEvalBuf<CR>",
     "inoremap <silent> <buffer> <f7> :ConjureEvalBuf<CR>",
 })
+-- }}}
+
+-- WGSL {{{
+vim.cmd[[
+augroup wgsl_ft
+  au!
+  autocmd BufNewFile,BufRead *.wgsl   set filetype=wgsl
+augroup END
+]]
 -- }}}
