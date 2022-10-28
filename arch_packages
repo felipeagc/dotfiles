@@ -19,6 +19,8 @@ xorg-xinit
 htop
 tree
 keychain
+iwd
+dhcpcd
 networkmanager
 parted
 ctags
@@ -51,7 +53,6 @@ swaybg
 swaylock
 waybar
 rofi
-bemenu
 playerctl
 ttf-dejavu
 ttf-hack
@@ -87,3 +88,6 @@ lazygit
 foot
 foot-terminfo
 fuzzel
+nextcloud-client
+restic
+obsidian

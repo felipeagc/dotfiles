@@ -39,8 +39,10 @@ arch-chroot /mnt
 
 echo "swapfc_enabled=1" >> /etc/systemd/swap.conf
 systemctl enable systemd-swap
-systemctl enable NetworkManager
+systemctl enable systemd-networkd
 systemctl enable systemd-resolved
+systemctl enable iwd
+systemctl enable dhcpcd
 systemctl enable sshd
 systemctl enable libvirtd
 
