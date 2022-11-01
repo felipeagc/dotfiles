@@ -208,3 +208,4 @@ exec --no-startup-id waybar
 exec --no-startup-id light -S 35
 exec --no-startup-id mako
 exec --no-startup-id nextcloud --background
+exec --no-startup-id hash jellyfin-mpv-shim 2>/dev/null && jellyfin-mpv-shim

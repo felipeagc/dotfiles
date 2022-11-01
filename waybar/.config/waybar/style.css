@@ -65,6 +65,7 @@
 #pulseaudio,
 #temperature,
 #tray {
+    color: #dddddd;
     padding-left: 10px;
     padding-right: 10px;
 }
@@ -190,6 +191,32 @@
 }
 
 #workspaces button:hover {
+	box-shadow: inherit;
+	text-shadow: inherit;
+    background: #383838;
+}
+
+.text-button {
+    border-top: 2px solid transparent;
+    /* To compensate for the top border and still have vertical centering */
+    padding-bottom: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #888888;
+}
+
+.text-button.focused {
+    border-color: #4c7899;
+    color: white;
+    background-color: #285577;
+}
+
+.text-button.urgent {
+    border-color: #c9545d;
+    color: #c9545d;
+}
+
+.text-button:hover {
 	box-shadow: inherit;
 	text-shadow: inherit;
     background: #383838;
