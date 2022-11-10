@@ -488,6 +488,7 @@ require("nvim-treesitter.configs").setup {
         "dart",
         "glsl",
         "go",
+        "graphql",
         "haskell",
         "hlsl",
         "html",
