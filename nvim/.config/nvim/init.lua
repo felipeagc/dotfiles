@@ -208,7 +208,7 @@ local function on_lsp_attach(client, bufnr)
     buf_set_keymap('n', '<Leader>me', ':Telescope diagnostics<CR>', opts)
 end
 
-local servers = { "clangd", "gopls", "zls", "tsserver", "ocamllsp", "dartls", "hls", "kotlin_language_server", "denols", "clojure_lsp" }
+local servers = { "clangd", "gopls", "zls", "tsserver", "ocamllsp", "dartls", "hls", "kotlin_language_server", "denols", "clojure_lsp", "svelte" }
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup{
         on_attach = on_lsp_attach,
@@ -482,25 +482,26 @@ local parsers = require("nvim-treesitter.parsers")
 require("nvim-treesitter.configs").setup {
     ensure_installed = {
         "c",
+        "clojure",
         "cpp",
-        "lua",
-        "python",
-        "javascript",
-        "typescript",
-        "go",
-        "rust",
-        "zig",
-        "ocaml",
-        "haskell",
-        "dart",
-        "latex",
         "css",
+        "dart",
+        "glsl",
+        "go",
+        "haskell",
+        "hlsl",
         "html",
         "java",
-        "glsl",
-        "hlsl",
-        "clojure",
+        "javascript",
+        "latex",
+        "lua",
+        "ocaml",
+        "python",
+        "rust",
+        "svelte",
+        "typescript",
         "wgsl",
+        "zig",
     }, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
     -- ignore_install = { "javascript" }, -- List of parsers to ignore installing
     highlight = {
