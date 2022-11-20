@@ -501,6 +501,7 @@ require("nvim-treesitter.configs").setup {
         "rust",
         "svelte",
         "typescript",
+        "tsx",
         "wgsl",
         "zig",
     }, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
