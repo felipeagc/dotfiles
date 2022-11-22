@@ -208,7 +208,17 @@ local function on_lsp_attach(client, bufnr)
     buf_set_keymap('n', '<Leader>me', ':Telescope diagnostics<CR>', opts)
 end
 
-local servers = { "clangd", "gopls", "zls", "tsserver", "ocamllsp", "dartls", "hls", "kotlin_language_server", "denols", "clojure_lsp", "svelte" }
+local servers = {
+    "clangd",
+    "clojure_lsp",
+    "dartls",
+    "gopls",
+    "hls",
+    "kotlin_language_server",
+    "ocamllsp",
+    "svelte",
+    "zls",
+}
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup{
         on_attach = on_lsp_attach,
@@ -227,7 +237,14 @@ lspconfig['rust_analyzer'].setup{
         },
     },
 }
-
+lspconfig.denols.setup({
+    root_dir = lspconfig.util.root_pattern('deno.json', 'deno.jsonc'),
+    on_attach = on_lsp_attach,
+})
+lspconfig.tsserver.setup({
+    root_dir = lspconfig.util.root_pattern('package.json'),
+    on_attach = on_lsp_attach,
+})
 -- require("gitsigns").setup{}
 
 local actions = require("telescope.actions")
