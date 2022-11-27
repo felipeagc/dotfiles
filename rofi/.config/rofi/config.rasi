@@ -1,0 +1,21 @@
+configuration {
+	modes: "window,drun,run,ssh";
+	font: "IBM Plex Sans 14";
+    timeout {
+        action: "kb-cancel";
+        delay:  0;
+    }
+    filebrowser {
+        directories-first: true;
+        sorting-method:    "name";
+    }
+}
+
+
+@theme "gruvbox-dark"
+
+window {
+    padding: 30px;
+    width: 900px;
+    height: 400px;
+}
