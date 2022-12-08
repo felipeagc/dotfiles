@@ -62,6 +62,7 @@ require('packer').startup(function()
     use 'nvim-lua/plenary.nvim'
     use 'nvim-telescope/telescope.nvim'
     use 'nvim-telescope/telescope-dap.nvim'
+    use 'nvim-telescope/telescope-file-browser.nvim'
 
     -- use 'lukas-reineke/indent-blankline.nvim'
 
@@ -273,6 +274,21 @@ require('telescope').setup({
             },
         },
     },
+    extensions = {
+        file_browser = {
+            theme = "ivy",
+            -- disables netrw and use telescope-file-browser in its place
+            hijack_netrw = true,
+            mappings = {
+                ["i"] = {
+                    -- your custom insert mode mappings
+                },
+                ["n"] = {
+                    -- your custom normal mode mappings
+                },
+            },
+        },
+    },
     -- pickers = {
     --     find_files = { theme = "ivy" },
     --     buffers = { theme = "ivy" },
@@ -280,6 +296,7 @@ require('telescope').setup({
     -- },
 })
 require('telescope').load_extension('dap')
+require('telescope').load_extension('file_browser')
 
 local dap = require("dap")
 dap.adapters.lldb = {
@@ -511,14 +528,15 @@ require("nvim-treesitter.configs").setup {
         "html",
         "java",
         "javascript",
+        "kotlin",
         "latex",
         "lua",
         "ocaml",
         "python",
         "rust",
         "svelte",
-        "typescript",
         "tsx",
+        "typescript",
         "wgsl",
         "zig",
     }, -- one of "all", "maintained" (parsers with maintainers), or a list of languages

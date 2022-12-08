@@ -90,7 +90,7 @@ bindsym $mod+Shift+0 move container to workspace number 10:games
 
 bindsym $mod+b split toggle
 bindsym $mod+r layout toggle tabbed split
-bindsym $mod+Tab focus next sibling
+bindsym $mod+Tab focus next
 
 # bindsym $mod+$left nop layout left
 # bindsym $mod+$right nop layout right
@@ -151,4 +151,5 @@ exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id nextcloud --background
 exec --no-startup-id hash jellyfin-mpv-shim 2>/dev/null && jellyfin-mpv-shim
 exec --no-startup-id picom -b
+exec --no-startup-id dunst
 exec --no-startup-id polybar
