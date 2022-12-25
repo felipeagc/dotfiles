@@ -20,11 +20,11 @@ parted /dev/sda
 	mkpart "home partition" ext4 100GiB 100%
 	quit
 
-e2label /dev/sda2 arch_os # set root label to "arch_os"
-
 mkfs.fat -F32 /dev/sda1 # boot partition
 mkfs.ext4 /dev/sda2 # root partition
 mkfs.ext4 /dev/sda3 # home partition
+
+e2label /dev/sda2 arch_os # set root label to "arch_os"
 
 mkdir -p /mnt/boot
 mkdir -p /mnt/home

@@ -65,25 +65,9 @@ bindsym $mod+Return exec $term
 bindsym $mod+w kill
 
 # Start your launcher
-bindsym $mod+Space exec --no-startup-id fuzzel \
-	--dpi-aware=no \
-	-f "IBM Plex Mono:size=12" \
-	-r 0 \
-	-b "222222ff" \
-	-s "444444ff" \
-	-S "ddddddff" \
-	-t "bbbbbbff" \
-	-C "285577ff" \
-	-B 2 \
-	-I \
-	-T $term \
-	-w 80
-# bindsym $mod+Space exec BEMENU_BACKEND=wayland bemenu-run \
-# 	-i -p Run \
-# 	--tf "#ffffff" \
-# 	--tb "#285577" \
-# 	--hf "#285577" \
-# 	-H 30 --fn DejaVu\ Sans\ Mono\ 12
+bindsym $mod+Space exec --no-startup-id fuzzel
+# bindsym $mod+Space exec wofi --show drun
+
 # bindsym $mod+Space exec rofi -show drun
 # bindsym $mod+Shift+Space exec rofi -show run
 
@@ -189,6 +173,16 @@ assign [class="Spotify"] workspace number 9:misc
 assign [class="discord"] workspace number 9:misc
 assign [title="Discord"] workspace number 9:misc
 assign [class="Steam"] workspace number 10:games
+
+for_window [title="Picture-in-Picture"] {
+  floating enable
+  resize set height 280
+  resize set width  500
+  border none
+  sticky toggle
+  move position 2060 800
+  opacity 0.7
+}
 
 default_border pixel
 smart_borders on

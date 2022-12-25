@@ -1,3 +1,4 @@
+#!/bin/sh
 userresources=$HOME/.Xresources
 usermodmap=$HOME/.Xmodmap
 sysresources=/etc/X11/xinit/.Xresources
@@ -28,8 +29,5 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
 fi
 
 export _JAVA_AWT_WM_NONREPARENTING=1 
-
-xset r rate 230 60
-hsetroot -solid "#333333"
 
 exec i3

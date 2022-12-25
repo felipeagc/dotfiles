@@ -147,9 +147,12 @@ hide_edge_borders smart
 
 font pango:IBM Plex Mono 10
 
+exec --no-startup-id xset r rate 230 60
+exec --no-startup-id hsetroot -solid "#333333"
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id nextcloud --background
 exec --no-startup-id hash jellyfin-mpv-shim 2>/dev/null && jellyfin-mpv-shim
 exec --no-startup-id picom -b
 exec --no-startup-id dunst
 exec --no-startup-id polybar
+
