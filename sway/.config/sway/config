@@ -165,6 +165,7 @@ bindsym XF86AudioMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 bindsym Print exec grim -g "$(slurp)" - | wl-copy
 bindsym Shift+Print exec grim -g "$(slurp)" $HOME/images/$(date +'%F_%Hh%Mm%Ss_grim.png')
 bindsym $mod+Shift+p exec grim -g "$(slurp -p)" -t ppm - | convert - -format '#%[hex:p{0,0}]' info:- | wl-copy
+bindsym $mod+e exec sh -c "BEMOJI_PICKER_CMD='fuzzel --dmenu' bemoji -P -t"
 
 # bindsym $mod+s scratchpad show
 # bindsym $mod+Shift+s move scratchpad

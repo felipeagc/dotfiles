@@ -109,6 +109,11 @@ _G.packer_plugins = {
     path = "/home/felipe/.local/share/nvim/site/pack/packer/start/dart-vim-plugin",
     url = "https://github.com/dart-lang/dart-vim-plugin"
   },
+  ["dressing.nvim"] = {
+    loaded = true,
+    path = "/home/felipe/.local/share/nvim/site/pack/packer/start/dressing.nvim",
+    url = "https://github.com/stevearc/dressing.nvim"
+  },
   ["dusk.vim"] = {
     loaded = true,
     path = "/home/felipe/.local/share/nvim/site/pack/packer/start/dusk.vim",
@@ -123,11 +128,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/felipe/.local/share/nvim/site/pack/packer/start/hlsl.vim",
     url = "https://github.com/beyondmarc/hlsl.vim"
-  },
-  ["lspkind.nvim"] = {
-    loaded = true,
-    path = "/home/felipe/.local/share/nvim/site/pack/packer/start/lspkind.nvim",
-    url = "https://github.com/onsails/lspkind.nvim"
   },
   ["lush.nvim"] = {
     loaded = true,

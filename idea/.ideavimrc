@@ -1,0 +1,11 @@
+let mapleader = " "
+nnoremap <silent> <C-p> :action SearchEverywhere<CR>
+nnoremap <silent> <C-j> <C-w>w
+nnoremap <silent> <C-k> <C-w>W
+nnoremap <silent> <Leader>w/ :vsp<CR>
+nnoremap <silent> <Leader>w- :sp<CR>
+nnoremap <silent> <Leader>wd :q<CR>
+nnoremap <silent> <Leader>bd :bd<CR>
+vnoremap <silent> < <gv
+vnoremap <silent> > >gv
+vnoremap <silent> <s-lt> <gv

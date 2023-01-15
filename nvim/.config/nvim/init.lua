@@ -32,7 +32,8 @@ require('packer').startup(function()
     use 'hrsh7th/cmp-cmdline'
     use 'hrsh7th/cmp-vsnip'
     use 'hrsh7th/vim-vsnip'
-    use 'onsails/lspkind.nvim'
+
+    use 'stevearc/dressing.nvim'
 
     use {
         'nvim-treesitter/nvim-treesitter',
@@ -226,6 +227,14 @@ require('telescope').setup({
     -- },
 })
 require('telescope').load_extension('dap')
+
+require('dressing').setup({
+    input = { enabled = false },
+    select = {
+        enabled = true,
+        backend = { "telescope" },
+    },
+})
 -- }}}
 
 -- LSP {{{
@@ -473,7 +482,6 @@ vim.cmd([[
 -- vim.cmd [[inoremap <silent> <C-n> <C-x><C-o>]]
 
 local cmp = require("cmp")
-local lspkind = require('lspkind')
 cmp.setup {
     preselect = cmp.PreselectMode.None,
     view = {            
