@@ -59,11 +59,12 @@ ttf-hack
 ttf-cascadia-code
 ttf-jetbrains-mono
 ttf-font-awesome
+ttf-opensans
+ttf-ibm-plex
 noto-fonts
 noto-fonts-extra
 noto-fonts-emoji
 noto-fonts-cjk
-ttf-ibm-plex
 adobe-source-code-pro-fonts
 gnome-themes-extra
 lxappearance-gtk3
