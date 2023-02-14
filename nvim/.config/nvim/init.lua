@@ -1,12 +1,16 @@
 -- Package manager setup {{{
-local install_path = vim.fn.stdpath('data')..'/site/pack/packer/opt/packer.nvim'
-
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-    vim.cmd('!git clone https://github.com/wbthomason/packer.nvim '..install_path)
-    vim.cmd('packadd packer.nvim')
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable", -- latest stable release
+        lazypath,
+    })
 end
-
-vim.cmd('packadd packer.nvim')
+vim.opt.rtp:prepend(lazypath)
 
 function create_augroup(groupname, filetype, commands)
     local group = vim.api.nvim_create_augroup(groupname, {})
@@ -20,71 +24,143 @@ function create_augroup(groupname, filetype, commands)
 end
 -- }}}
 
-require('packer').startup(function()
-    -- Packer can manage itself as an optional plugin
-    use {'wbthomason/packer.nvim', opt = true}
+require("lazy").setup({
+    'neovim/nvim-lspconfig',
+    'hrsh7th/nvim-cmp',
+    'hrsh7th/cmp-nvim-lsp',
+    'hrsh7th/cmp-buffer',
+    'hrsh7th/cmp-path',
+    'hrsh7th/cmp-cmdline',
+    'hrsh7th/cmp-vsnip',
+    'hrsh7th/vim-vsnip',
 
-    use 'neovim/nvim-lspconfig'
-    use 'hrsh7th/nvim-cmp'
-    use 'hrsh7th/cmp-nvim-lsp'
-    use 'hrsh7th/cmp-buffer'
-    use 'hrsh7th/cmp-path'
-    use 'hrsh7th/cmp-cmdline'
-    use 'hrsh7th/cmp-vsnip'
-    use 'hrsh7th/vim-vsnip'
+    'nvim-treesitter/nvim-treesitter',
+    'p00f/nvim-ts-rainbow',
+    'JoosepAlviste/nvim-ts-context-commentstring',
+    'numToStr/Comment.nvim',
+    'princejoogie/tailwind-highlight.nvim',
 
-    use 'stevearc/dressing.nvim'
+    'mfussenegger/nvim-dap',
+    'rcarriga/nvim-dap-ui',
+    'leoluz/nvim-dap-go',
 
-    use {
-        'nvim-treesitter/nvim-treesitter',
-        run = ':TSUpdate'
-    }
-    use 'p00f/nvim-ts-rainbow'
+    'tpope/vim-surround',
+    'tpope/vim-endwise',
+    'tpope/vim-repeat',
+    'tpope/vim-fugitive',
+    'tpope/vim-abolish',
+    'tpope/vim-unimpaired',
+    'tpope/vim-dispatch',
 
-    use 'mfussenegger/nvim-dap'
-    use 'rcarriga/nvim-dap-ui'
-    use 'leoluz/nvim-dap-go'
+    'editorconfig/editorconfig-vim',
+    'derekwyatt/vim-fswitch',
 
-    use 'tpope/vim-surround'
-    use 'tpope/vim-commentary'
-    use 'tpope/vim-endwise'
-    use 'tpope/vim-repeat'
-    use 'tpope/vim-fugitive'
-    use 'tpope/vim-abolish'
-    use 'tpope/vim-unimpaired'
-    use 'tpope/vim-dispatch'
+    'plasticboy/vim-markdown',
+    -- 'beyondmarc/hlsl.vim',
+    'ziglang/zig.vim',
+    'rust-lang/rust.vim',
+    'dart-lang/dart-vim-plugin',
+    -- 'NoahTheDuke/vim-just',
+    -- 'lakshayg/vim-bazel',
+    'LnL7/vim-nix',
+    -- 'Olical/conjure',
+    'felipeagc/dusk.vim',
 
-    use 'editorconfig/editorconfig-vim'
-    use 'derekwyatt/vim-fswitch'
+    'nvim-lua/plenary.nvim',
+    'nvim-telescope/telescope.nvim',
+    'nvim-telescope/telescope-dap.nvim',
 
-    use 'plasticboy/vim-markdown'
-    use 'beyondmarc/hlsl.vim'
-    use 'ziglang/zig.vim'
-    use 'rust-lang/rust.vim'
-    use 'dart-lang/dart-vim-plugin'
-    use 'NoahTheDuke/vim-just'
-    use 'lakshayg/vim-bazel'
-    use 'LnL7/vim-nix'
-    use 'Olical/conjure'
-    use 'felipeagc/dusk.vim'
+    -- "lukas-reineke/indent-blankline.nvim",
 
-    use 'nvim-lua/plenary.nvim'
-    use 'nvim-telescope/telescope.nvim'
-    use 'nvim-telescope/telescope-dap.nvim'
-
-    use 'rktjmp/lush.nvim'
-    use 'lifepillar/vim-gruvbox8'
-    use { 
-        'rose-pine/neovim',
-        as = 'rose-pine',
+    {
+        'stevearc/dressing.nvim',
         config = function()
-            require('rose-pine').setup {
-                disable_italics = true,
-            } 
-            vim.cmd('colorscheme rose-pine')
+            require('dressing').setup({
+                input = { enabled = false },
+                select = {
+                    enabled = true,
+                    backend = { "telescope" },
+                },
+            })
         end
-    }
-end)
+    },
+    {
+        "folke/which-key.nvim",
+        config = function()
+            vim.o.timeout = true
+            vim.o.timeoutlen = 300
+            local wk = require("which-key")
+            wk.setup {}
+            wk.register({
+                ["<leader>f"] = { name = "+files" },
+                ["<leader>fe"] = { name = "+edit configs" },
+                ["<leader>fv"] = { name = "+netrw" },
+                ["<leader>g"] = { name = "+git" },
+                ["<leader>w"] = { name = "+window" },
+                ["<leader>b"] = { name = "+buffer" },
+                ["<leader>d"] = { name = "+dap" },
+            })
+        end,
+    },
+    {
+        "folke/zen-mode.nvim",
+        config = function()
+            require("zen-mode").setup {}
+        end
+    },
+
+
+    -- 'rktjmp/lush.nvim',
+    -- 'lifepillar/vim-gruvbox8',
+    -- { 
+    --     'rose-pine/neovim',
+    --     as = 'rose-pine',
+    --     config = function()
+    --         require('rose-pine').setup {
+    --             disable_italics = true,
+    --         } 
+    --         vim.cmd('colorscheme rose-pine')
+    --     end
+    -- },
+    -- {
+    --     'ramojus/mellifluous.nvim',
+    --     dependencies = { 'rktjmp/lush.nvim' },
+    --     config = function()
+    --         require'mellifluous'.setup({ --[[...]] }) -- optional, see configuration section.
+    --         vim.cmd('colorscheme mellifluous')
+    --     end,
+    -- },
+    -- {
+    --     'folke/tokyonight.nvim',
+    --     config = function()
+    --         vim.cmd("colorscheme tokyonight-moon")
+    --     end,
+    -- },
+    { 
+        'rebelot/kanagawa.nvim',
+        config = function()
+            require('kanagawa').setup({
+                undercurl = true,           -- enable undercurls
+                commentStyle = { italic = false },
+                functionStyle = {},
+                keywordStyle = { italic = false },
+                statementStyle = { bold = true },
+                typeStyle = {},
+                variablebuiltinStyle = { italic = false },
+                specialReturn = true,       -- special highlight for the return keyword
+                specialException = true,    -- special highlight for exception handling keywords
+                transparent = false,        -- do not set background color
+                dimInactive = false,        -- dim inactive window `:h hl-NormalNC`
+                globalStatus = false,       -- adjust window separators highlight for laststatus=3
+                terminalColors = true,      -- define vim.g.terminal_color_{0,17}
+                colors = {},
+                overrides = {},
+                theme = "default"           -- Load "default" theme or the experimental "light" theme
+            })
+            vim.cmd('colorscheme kanagawa')
+        end
+    },
+})
 
 -- Vim options {{{
 vim.o.termguicolors = true
@@ -138,8 +214,7 @@ vim.g.mapleader = " "
 vim.keymap.set("n", "<C-p>", ":Telescope find_files<CR>", { silent = true })
 vim.keymap.set("n", "<C-b>", ":Telescope buffers<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>fg", ":Telescope live_grep<CR>", { silent = true })
-
-vim.keymap.set("n", "<Leader>pv", vim.cmd.Ex, { silent = true })
+vim.keymap.set("n", "<Leader>fv", vim.cmd.Ex, { silent = true })
 
 vim.keymap.set("n", "<C-j>", "<C-w>w", { remap = false })
 vim.keymap.set("n", "<C-k>", "<C-w>W", { remap = false })
@@ -189,6 +264,8 @@ vim.keymap.set("n", "<Leader>dn", ":lua require('dap').step_over()<CR>", { silen
 vim.keymap.set("n", "<Leader>df", ":lua require('dap').step_out()<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>dq", ":lua require('dap').terminate()<CR>", { silent = true })
 
+vim.keymap.set("n", "<Leader>zz", ":ZenMode<CR>", { silent = true })
+
 -- Disable ex mode binding
 vim.cmd[[map Q <Nop>]]
 -- }}}
@@ -197,7 +274,7 @@ vim.cmd[[map Q <Nop>]]
 local actions = require("telescope.actions")
 require('telescope').setup({
     defaults = {
-        preview = false,
+        preview = true,
         -- layout_strategy = 'bottom_pane',
         -- border = true,
         -- borderchars = {
@@ -227,14 +304,6 @@ require('telescope').setup({
     -- },
 })
 require('telescope').load_extension('dap')
-
-require('dressing').setup({
-    input = { enabled = false },
-    select = {
-        enabled = true,
-        backend = { "telescope" },
-    },
-})
 -- }}}
 
 -- LSP {{{
@@ -266,13 +335,40 @@ local function on_lsp_attach(client, bufnr)
     vim.keymap.set('n', ']d', function() vim.diagnostic.goto_next() end, opts)
     vim.keymap.set('n', '<C-y>', function() vim.diagnostic.open_float() end, opts)
     vim.keymap.set('i', '<C-h>', function() vim.lsp.buf.signature_help() end, opts)
+
+    local active_clients = vim.lsp.get_active_clients()
+    if client.name == 'denols' then
+        for _, client_ in pairs(active_clients) do
+            -- stop tsserver if denols is already active
+            if client_.name == 'tsserver' then
+                client_.stop()
+            end
+        end
+    elseif client.name == 'tsserver' then
+        for _, client_ in pairs(active_clients) do
+            -- prevent tsserver from starting if denols is already active
+            if client_.name == 'denols' then
+                client.stop()
+            end
+        end
+    end
+
+    if client.name == 'tailwindcss' then
+        require('tailwind-highlight').setup(client, bufnr, {
+            single_column = false,
+            mode = 'background',
+            debounce = 200,
+        })
+    end
 end
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = false
 
 local servers = {
     "clangd",
     "clojure_lsp",
+    "eslint",
     "dartls",
     "gopls",
     "hls",
@@ -280,6 +376,7 @@ local servers = {
     "metals",
     "ocamllsp",
     "svelte",
+    "tailwindcss",
     "zls",
 }
 for _, lsp in ipairs(servers) do
@@ -288,6 +385,20 @@ for _, lsp in ipairs(servers) do
         on_attach = on_lsp_attach,
     }
 end
+
+lspconfig.denols.setup {
+    capabilities = capabilities,
+    on_attach = on_lsp_attach,
+    root_dir = lspconfig.util.root_pattern("deno.json"),
+    init_options = { lint = true },
+}
+
+lspconfig.tsserver.setup {
+    capabilities = capabilities,
+    on_attach = on_lsp_attach,
+    init_options = { lint = true },
+    root_dir = lspconfig.util.root_pattern("package.json"),
+}
 
 lspconfig.rust_analyzer.setup {
     capabilities = capabilities,
@@ -301,16 +412,6 @@ lspconfig.rust_analyzer.setup {
             },
         },
     },
-}
-lspconfig.denols.setup {
-    capabilities = capabilities,
-    root_dir = lspconfig.util.root_pattern('deno.json', 'deno.jsonc'),
-    on_attach = on_lsp_attach,
-}
-lspconfig.tsserver.setup {
-    capabilities = capabilities,
-    root_dir = lspconfig.util.root_pattern('package.json'),
-    on_attach = on_lsp_attach,
 }
 -- }}}
 
@@ -472,8 +573,8 @@ vim.cmd([[
     autocmd FileType dart setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType zig setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType javascript setlocal shiftwidth=4 tabstop=4 expandtab
-    autocmd FileType typescript setlocal shiftwidth=4 tabstop=4 expandtab
-    autocmd FileType typescriptreact setlocal shiftwidth=4 tabstop=4 expandtab
+    autocmd FileType typescript setlocal shiftwidth=2 tabstop=2 expandtab
+    autocmd FileType typescriptreact setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType rust setlocal shiftwidth=4 tabstop=4 expandtab
 ]])
 -- }}}
@@ -672,6 +773,10 @@ require("nvim-treesitter.configs").setup {
         extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
         max_file_lines = 2000, -- Do not enable for files with more than n lines, int
     }
+}
+
+require('Comment').setup{
+    pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
 }
 -- }}}
 
