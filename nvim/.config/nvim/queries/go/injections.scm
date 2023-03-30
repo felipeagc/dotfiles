@@ -1,0 +1,26 @@
+; ((raw_string_literal) @sql (#match? @sql "^.*INSERT"))
+; ((raw_string_literal) @sql (#match? @sql "^.*SELECT"))
+; ((raw_string_literal) @sql (#match? @sql "^.*UPDATE"))
+; ((raw_string_literal) @sql (#match? @sql "^.*CREATE"))
+; ((raw_string_literal) @sql (#match? @sql "^.*DELETE"))
+; ((raw_string_literal) @sql (#match? @sql "^.*REPLACE"))
+; ((raw_string_literal) @sql (#match? @sql "^.*DROP"))
+; ((raw_string_literal) @sql (#match? @sql "^.*ALTER"))
+; ((raw_string_literal) @sql (#match? @sql "^.*EXPLAIN"))
+;
+; ((interpreted_string_literal) @sql (#match? @sql "^.*INSERT"))
+; ((interpreted_string_literal) @sql (#match? @sql "^.*SELECT"))
+; ((interpreted_string_literal) @sql (#match? @sql "^.*UPDATE"))
+; ((interpreted_string_literal) @sql (#match? @sql "^.*CREATE"))
+; ((interpreted_string_literal) @sql (#match? @sql "^.*DELETE"))
+; ((interpreted_string_literal) @sql (#match? @sql "^.*REPLACE"))
+; ((interpreted_string_literal) @sql (#match? @sql "^.*DROP"))
+; ((interpreted_string_literal) @sql (#match? @sql "^.*ALTER"))
+; ((interpreted_string_literal) @sql (#match? @sql "^.*EXPLAIN"))
+
+((raw_string_literal) @sql
+    (#match? @sql "^.*(INSERT|SELECT|UPDATE|CREATE|DELETE|REPLACE|DROP|ALTER|EXPLAIN)")
+    (#offset! @sql 0 1 0 -1))
+((interpreted_string_literal) @sql
+    (#match? @sql "^.*(INSERT|SELECT|UPDATE|CREATE|DELETE|REPLACE|DROP|ALTER|EXPLAIN)")
+    (#offset! @sql 0 1 0 -1))

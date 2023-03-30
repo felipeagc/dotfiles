@@ -175,6 +175,12 @@ assign [class="discord"] workspace number 9:misc
 assign [title="Discord"] workspace number 9:misc
 assign [class="Steam"] workspace number 10:games
 
+for_window [app_id="firefox"] inhibit_idle fullscreen
+for_window [app_id="Firefox"] inhibit_idle fullscreen
+for_window [app_id="discord"] inhibit_idle fullscreen
+for_window [app_id="Discord"] inhibit_idle fullscreen
+for_window [app_id="org.jellyfin.jellyfinmediaplayer"] inhibit_idle fullscreen
+
 for_window [title="Picture-in-Picture"] {
   floating enable
   resize set height 280

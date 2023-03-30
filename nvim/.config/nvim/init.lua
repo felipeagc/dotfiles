@@ -35,6 +35,7 @@ require("lazy").setup({
     'hrsh7th/vim-vsnip',
 
     'nvim-treesitter/nvim-treesitter',
+    'nvim-treesitter/playground',
     'p00f/nvim-ts-rainbow',
     'JoosepAlviste/nvim-ts-context-commentstring',
     'numToStr/Comment.nvim',
@@ -51,6 +52,13 @@ require("lazy").setup({
     'tpope/vim-abolish',
     'tpope/vim-unimpaired',
     'tpope/vim-dispatch',
+    'tpope/vim-vinegar',
+    'tpope/vim-projectionist',
+
+    {
+        'vim-test/vim-test',
+        config = function() vim.g["test#strategy"] = "dispatch" end
+    },
 
     'editorconfig/editorconfig-vim',
     'derekwyatt/vim-fswitch',
@@ -64,8 +72,11 @@ require("lazy").setup({
     -- 'lakshayg/vim-bazel',
     'LnL7/vim-nix',
     -- 'Olical/conjure',
+    'clojure-vim/vim-jack-in',
+    'elixir-editors/vim-elixir',
+    'isobit/vim-caddyfile',
     'felipeagc/dusk.vim',
-
+    
     'nvim-lua/plenary.nvim',
     'nvim-telescope/telescope.nvim',
     'nvim-telescope/telescope-dap.nvim',
@@ -102,13 +113,7 @@ require("lazy").setup({
             })
         end,
     },
-    {
-        "folke/zen-mode.nvim",
-        config = function()
-            require("zen-mode").setup {}
-        end
-    },
-
+    { "folke/zen-mode.nvim", config = function() require("zen-mode").setup {} end },
 
     -- 'rktjmp/lush.nvim',
     -- 'lifepillar/vim-gruvbox8',
@@ -136,28 +141,24 @@ require("lazy").setup({
     --         vim.cmd("colorscheme tokyonight-moon")
     --     end,
     -- },
+    { 'nyoom-engineering/oxocarbon.nvim' },
     { 
         'rebelot/kanagawa.nvim',
         config = function()
             require('kanagawa').setup({
+                compile = false,
                 undercurl = true,           -- enable undercurls
                 commentStyle = { italic = false },
                 functionStyle = {},
                 keywordStyle = { italic = false },
                 statementStyle = { bold = true },
                 typeStyle = {},
-                variablebuiltinStyle = { italic = false },
-                specialReturn = true,       -- special highlight for the return keyword
-                specialException = true,    -- special highlight for exception handling keywords
                 transparent = false,        -- do not set background color
                 dimInactive = false,        -- dim inactive window `:h hl-NormalNC`
-                globalStatus = false,       -- adjust window separators highlight for laststatus=3
                 terminalColors = true,      -- define vim.g.terminal_color_{0,17}
                 colors = {},
-                overrides = {},
-                theme = "default"           -- Load "default" theme or the experimental "light" theme
+                overrides = function(colors) return {} end,
             })
-            vim.cmd('colorscheme kanagawa')
         end
     },
 })
@@ -202,10 +203,10 @@ vim.o.smartcase = true
 vim.o.cinoptions = vim.o.cinoptions .. 'L0'
 vim.o.cinoptions = vim.o.cinoptions .. 'l1'
 
-vim.wo.number = false
+vim.wo.number = true
 vim.wo.cursorline = true
-vim.wo.foldmethod = 'marker'
-vim.wo.foldlevel = 0
+-- vim.wo.foldmethod = 'marker'
+-- vim.wo.foldlevel = 0
 -- }}}
 
 -- Keybinds {{{
@@ -330,6 +331,7 @@ local function on_lsp_attach(client, bufnr)
     vim.keymap.set('n', '<c-]>', function() vim.lsp.buf.definition() end, opts)
     vim.keymap.set('n', '<leader>mf', function() vim.lsp.buf.format({async = true}) end, opts)
     vim.keymap.set('n', '<leader>mr', function() vim.lsp.buf.rename() end, opts)
+    vim.keymap.set('n', '<leader>mR', ":LspRestart<CR>", opts)
     vim.keymap.set('n', '<leader>mi', function() vim.lsp.buf.code_action() end, opts)
     vim.keymap.set('n', '[d', function() vim.diagnostic.goto_prev() end, opts)
     vim.keymap.set('n', ']d', function() vim.diagnostic.goto_next() end, opts)
@@ -366,10 +368,11 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = false
 
 local servers = {
+    "ansiblels",
     "clangd",
     "clojure_lsp",
-    "eslint",
     "dartls",
+    "eslint",
     "gopls",
     "hls",
     "kotlin_language_server",
@@ -386,10 +389,17 @@ for _, lsp in ipairs(servers) do
     }
 end
 
+lspconfig.elixirls.setup {
+    capabilities = capabilities,
+    on_attach = on_lsp_attach,
+    init_options = { lint = true },
+    cmd = { "/usr/bin/elixir-ls" },
+}
+
 lspconfig.denols.setup {
     capabilities = capabilities,
     on_attach = on_lsp_attach,
-    root_dir = lspconfig.util.root_pattern("deno.json"),
+    root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
     init_options = { lint = true },
 }
 
@@ -503,6 +513,7 @@ require("dapui").setup({
 
 -- Color scheme {{{
 vim.cmd [[set background=dark]]
+vim.cmd.colorscheme "kanagawa"
 -- vim.g.gruvbox_italics = 0
 -- vim.g.gruvbox_transp_bg = 0
 -- vim.cmd[[colorscheme gruvbox8_hard]]
@@ -576,6 +587,9 @@ vim.cmd([[
     autocmd FileType typescript setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType typescriptreact setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType rust setlocal shiftwidth=4 tabstop=4 expandtab
+    autocmd FileType svelte setlocal shiftwidth=2 tabstop=2 expandtab
+    autocmd FileType html setlocal shiftwidth=2 tabstop=2 expandtab
+    autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2 expandtab
 ]])
 -- }}}
 
@@ -701,12 +715,15 @@ require("nvim-treesitter.configs").setup {
         "cpp",
         "css",
         "dart",
+        "elixir",
+        "heex",
         "glsl",
         "go",
         "graphql",
         "haskell",
         "hlsl",
         "html",
+        "htmldjango",
         "java",
         "javascript",
         "kotlin",
@@ -740,10 +757,13 @@ require("nvim-treesitter.configs").setup {
         disable = {
             "c",
             "cpp",
-            "python",
-            "ocaml",
+            "elixir",
             "haskell",
             "latex",
+            "ocaml",
+            "python",
+            "html",
+            "htmldjango",
         },
     },
     context_commentstring = {
@@ -903,4 +923,11 @@ augroup wgsl_ft
   autocmd BufNewFile,BufRead *.wgsl   set filetype=wgsl
 augroup END
 ]]
+-- }}}
+
+-- Elixir {{{
+require("felipe_elixir").setup()
+create_augroup("elixirbindings", "elixir", {
+    "compiler exunit"
+})
 -- }}}
