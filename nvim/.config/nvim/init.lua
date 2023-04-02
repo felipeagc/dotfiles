@@ -590,6 +590,8 @@ vim.cmd([[
     autocmd FileType svelte setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType html setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2 expandtab
+    autocmd FileType scala setlocal shiftwidth=2 tabstop=2 expandtab
+    autocmd FileType sbt setlocal shiftwidth=2 tabstop=2 expandtab
 ]])
 -- }}}
 

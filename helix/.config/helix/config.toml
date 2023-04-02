@@ -1,0 +1,27 @@
+theme = "fleet_dark"
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[keys.normal]
+G = "goto_file_end"
+"0" = "goto_line_start"
+"$" = "goto_line_end"
+V = ["select_mode", "extend_line_below"]
+"A-j" = "rotate_view"
+"A-k" = "rotate_view"
+space = { c = ":config-open" }
+
+[keys.insert]
+esc = ["collapse_selection", "normal_mode"]
+
+[keys.select]
+0 = "goto_line_start"
+"$" = "goto_line_end"
+G = "goto_file_end"
+"%" = "match_brackets"
+y = ["yank_main_selection_to_clipboard", "normal_mode", "flip_selections", "collapse_selection"]
+Z = { Z = [":write-quit"] }
+esc = ["collapse_selection", "keep_primary_selection", "normal_mode"]
