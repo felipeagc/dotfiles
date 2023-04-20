@@ -56,6 +56,34 @@ require("lazy").setup({
     'tpope/vim-projectionist',
 
     {
+        'zbirenbaum/copilot.lua',
+        config = function() 
+            require("copilot").setup({
+                suggestion = { 
+                    auto_trigger = true,
+                    keymap = {
+                        accept = "<M-l>",
+                        next = "<M-]>",
+                        prev = "<M-[>",
+                        dismiss = "<M-h>",
+                    },
+                    filetypes = {
+                        go = true,
+                        html = true,
+                        javascript = true,
+                        lua = true,
+                        ocaml = true,
+                        rust = true,
+                        typescript = true,
+                        typescriptreact = true,
+                        ["*"] = false,
+                    },
+                }
+            })
+        end
+    },
+
+    {
         'vim-test/vim-test',
         config = function() vim.g["test#strategy"] = "dispatch" end
     },
@@ -203,7 +231,7 @@ vim.o.smartcase = true
 vim.o.cinoptions = vim.o.cinoptions .. 'L0'
 vim.o.cinoptions = vim.o.cinoptions .. 'l1'
 
-vim.wo.number = true
+vim.wo.number = false
 vim.wo.cursorline = true
 -- vim.wo.foldmethod = 'marker'
 -- vim.wo.foldlevel = 0
