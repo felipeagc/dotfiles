@@ -62,10 +62,10 @@ require("lazy").setup({
                 suggestion = { 
                     auto_trigger = true,
                     keymap = {
-                        accept = "<M-l>",
+                        accept = "<M-a>",
                         next = "<M-]>",
                         prev = "<M-[>",
-                        dismiss = "<M-h>",
+                        dismiss = "<M-d>",
                     },
                     filetypes = {
                         go = true,
