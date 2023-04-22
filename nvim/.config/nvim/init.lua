@@ -129,7 +129,11 @@ require("lazy").setup({
         end
     },
 
-    'rktjmp/lush.nvim',
+    {
+      "felipeagc/fleet-theme-nvim",
+      dependencies = { "rktjmp/lush.nvim" }, -- lush.nvim is required
+      config = function() vim.cmd("colorscheme fleet") end
+    },
     { 
         'rebelot/kanagawa.nvim',
         config = function()
@@ -501,7 +505,6 @@ require("dapui").setup({
 
 -- Color scheme {{{
 vim.cmd [[set background=dark]]
-vim.cmd.colorscheme "fleet"
 -- vim.g.gruvbox_italics = 0
 -- vim.g.gruvbox_transp_bg = 0
 -- vim.cmd[[colorscheme gruvbox8_hard]]
