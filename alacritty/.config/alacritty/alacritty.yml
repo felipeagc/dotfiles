@@ -2,5 +2,7 @@ env:
   TERM: xterm-256color
 font:
   normal:
-    family: IBM Plex Mono
-  size: 11.5
+    family: SF Mono
+  size: 12
+  offset:
+    y: 1

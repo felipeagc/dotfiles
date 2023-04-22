@@ -56,6 +56,11 @@ require("lazy").setup({
     'tpope/vim-projectionist',
 
     {
+        'lewis6991/gitsigns.nvim',
+        config = function() require('gitsigns').setup() end
+    },
+
+    {
         'zbirenbaum/copilot.lua',
         config = function() 
             require("copilot").setup({
@@ -123,53 +128,8 @@ require("lazy").setup({
             })
         end
     },
-    {
-        "folke/which-key.nvim",
-        config = function()
-            vim.o.timeout = true
-            vim.o.timeoutlen = 300
-            local wk = require("which-key")
-            wk.setup {}
-            wk.register({
-                ["<leader>f"] = { name = "+files" },
-                ["<leader>fe"] = { name = "+edit configs" },
-                ["<leader>fv"] = { name = "+netrw" },
-                ["<leader>g"] = { name = "+git" },
-                ["<leader>w"] = { name = "+window" },
-                ["<leader>b"] = { name = "+buffer" },
-                ["<leader>d"] = { name = "+dap" },
-            })
-        end,
-    },
-    { "folke/zen-mode.nvim", config = function() require("zen-mode").setup {} end },
 
-    -- 'rktjmp/lush.nvim',
-    -- 'lifepillar/vim-gruvbox8',
-    -- { 
-    --     'rose-pine/neovim',
-    --     as = 'rose-pine',
-    --     config = function()
-    --         require('rose-pine').setup {
-    --             disable_italics = true,
-    --         } 
-    --         vim.cmd('colorscheme rose-pine')
-    --     end
-    -- },
-    -- {
-    --     'ramojus/mellifluous.nvim',
-    --     dependencies = { 'rktjmp/lush.nvim' },
-    --     config = function()
-    --         require'mellifluous'.setup({ --[[...]] }) -- optional, see configuration section.
-    --         vim.cmd('colorscheme mellifluous')
-    --     end,
-    -- },
-    -- {
-    --     'folke/tokyonight.nvim',
-    --     config = function()
-    --         vim.cmd("colorscheme tokyonight-moon")
-    --     end,
-    -- },
-    { 'nyoom-engineering/oxocarbon.nvim' },
+    'rktjmp/lush.nvim',
     { 
         'rebelot/kanagawa.nvim',
         config = function()
@@ -232,7 +192,7 @@ vim.o.cinoptions = vim.o.cinoptions .. 'L0'
 vim.o.cinoptions = vim.o.cinoptions .. 'l1'
 
 vim.wo.number = false
-vim.wo.cursorline = true
+-- vim.wo.cursorline = true
 -- vim.wo.foldmethod = 'marker'
 -- vim.wo.foldlevel = 0
 -- }}}
@@ -541,7 +501,7 @@ require("dapui").setup({
 
 -- Color scheme {{{
 vim.cmd [[set background=dark]]
-vim.cmd.colorscheme "kanagawa"
+vim.cmd.colorscheme "fleet"
 -- vim.g.gruvbox_italics = 0
 -- vim.g.gruvbox_transp_bg = 0
 -- vim.cmd[[colorscheme gruvbox8_hard]]
