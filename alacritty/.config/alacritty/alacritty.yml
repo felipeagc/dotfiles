@@ -3,6 +3,6 @@ env:
 font:
   normal:
     family: SF Mono
-  size: 12
+  size: 11
   offset:
     y: 1

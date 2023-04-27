@@ -8,6 +8,7 @@
 #
 # Logo key. Use Mod1 for Alt.
 set $mod Mod4
+set $alt Mod1
 # Home row direction keys, like vim
 set $left h
 set $down j
@@ -28,10 +29,9 @@ xwayland force
 
 exec swayidle -w timeout 300 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"'
 
-input "9494:20:CM_Storm_Quickfire_TKL_Nkeys_Consumer_Control" xkb_layout br
-input "9494:20:CM_Storm_Quickfire_TKL_Nkeys_System_Control" xkb_layout br
-input "9494:20:CM_Storm_Quickfire_TKL_Nkeys_Keyboard" xkb_layout br
-input "9494:20:CM_Storm_Quickfire_TKL_Nkeys" xkb_layout br
+input type:keyboard {
+    xkb_layout "us,br"
+}
 
 input "type:keyboard" {
     repeat_delay 230
@@ -166,6 +166,7 @@ bindsym Print exec grim -g "$(slurp)" - | wl-copy
 bindsym Shift+Print exec grim -g "$(slurp)" $HOME/images/$(date +'%F_%Hh%Mm%Ss_grim.png')
 bindsym $mod+Shift+p exec grim -g "$(slurp -p)" -t ppm - | convert - -format '#%[hex:p{0,0}]' info:- | wl-copy
 bindsym $mod+e exec sh -c "BEMOJI_PICKER_CMD='fuzzel --dmenu' bemoji -P -t"
+bindsym $mod+$alt+space exec "swaymsg input type:keyboard xkb_switch_layout next; pkill --signal SIGRTMIN+1 waybar"
 
 # bindsym $mod+s scratchpad show
 # bindsym $mod+Shift+s move scratchpad
