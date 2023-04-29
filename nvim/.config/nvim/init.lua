@@ -36,7 +36,7 @@ require("lazy").setup({
 
     'nvim-treesitter/nvim-treesitter',
     'nvim-treesitter/playground',
-    'p00f/nvim-ts-rainbow',
+    'HiPhish/nvim-ts-rainbow2',
     'JoosepAlviste/nvim-ts-context-commentstring',
     'numToStr/Comment.nvim',
 
@@ -103,7 +103,7 @@ require("lazy").setup({
     -- 'NoahTheDuke/vim-just',
     -- 'lakshayg/vim-bazel',
     'LnL7/vim-nix',
-    -- 'Olical/conjure',
+    'Olical/conjure',
     'clojure-vim/vim-jack-in',
     'elixir-editors/vim-elixir',
     'isobit/vim-caddyfile',
@@ -113,7 +113,7 @@ require("lazy").setup({
     'nvim-telescope/telescope.nvim',
     'nvim-telescope/telescope-dap.nvim',
 
-    -- "lukas-reineke/indent-blankline.nvim",
+    "lukas-reineke/indent-blankline.nvim",
 
     {
         'stevearc/dressing.nvim',
@@ -151,6 +151,7 @@ require("lazy").setup({
 
     {
       "felipeagc/fleet-theme-nvim",
+      -- dir = "~/code/lua/fleet-theme-nvim",
       config = function() vim.cmd("colorscheme fleet") end
     },
     { 
@@ -818,8 +819,8 @@ require("nvim-treesitter.configs").setup {
             end,
             parsers.available_parsers()
         ),
-        extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
-        max_file_lines = 2000, -- Do not enable for files with more than n lines, int
+        strategy = require('ts-rainbow').strategy.global,
+        query = 'rainbow-parens', -- Which query to use for finding delimiters
     }
 }
 
