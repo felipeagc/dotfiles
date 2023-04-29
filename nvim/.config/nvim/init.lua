@@ -39,7 +39,6 @@ require("lazy").setup({
     'p00f/nvim-ts-rainbow',
     'JoosepAlviste/nvim-ts-context-commentstring',
     'numToStr/Comment.nvim',
-    'princejoogie/tailwind-highlight.nvim',
 
     'mfussenegger/nvim-dap',
     'rcarriga/nvim-dap-ui',
@@ -129,9 +128,29 @@ require("lazy").setup({
         end
     },
 
+    -- For visualizing colors
+    {
+        'NvChad/nvim-colorizer.lua',
+        config = function()
+            require('colorizer').setup({
+                user_default_options = {
+                    tailwind = true,
+                }
+            })
+        end
+    },
+    {
+        'roobert/tailwindcss-colorizer-cmp.nvim',
+        -- optionally, override the default options:
+        config = function()
+            require('tailwindcss-colorizer-cmp').setup({
+                color_square_width = 2,
+            })
+        end
+    },
+
     {
       "felipeagc/fleet-theme-nvim",
-      dependencies = { "rktjmp/lush.nvim" }, -- lush.nvim is required
       config = function() vim.cmd("colorscheme fleet") end
     },
     { 
@@ -354,6 +373,17 @@ local function on_lsp_attach(client, bufnr)
             debounce = 200,
         })
     end
+
+    -- workaround to hl semanticTokens
+    -- https://github.com/golang/go/issues/54531#issuecomment-1464982242
+    if client.name == 'gopls' and not client.server_capabilities.semanticTokensProvider then
+        local semantic = client.config.capabilities.textDocument.semanticTokens
+        client.server_capabilities.semanticTokensProvider = {
+            full = true,
+            legend = {tokenModifiers = semantic.tokenModifiers, tokenTypes = semantic.tokenTypes},
+            range = true,
+        }
+    end
 end
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -365,7 +395,6 @@ local servers = {
     "clojure_lsp",
     "dartls",
     "eslint",
-    "gopls",
     "hls",
     "kotlin_language_server",
     "metals",
@@ -407,11 +436,17 @@ lspconfig.rust_analyzer.setup {
     on_attach = on_lsp_attach,
     settings = {
         ["rust-analyzer"] = {
-            ["cargo"] = {
-                ["buildScripts"] = {
-                    ["enable"] = true,
-                },
-            },
+            cargo = { buildScripts = { enable = true } },
+        },
+    },
+}
+
+lspconfig.gopls.setup {
+    capabilities = capabilities,
+    on_attach = on_lsp_attach,
+    settings = {
+        gopls = {
+            semanticTokens = true,
         },
     },
 }
