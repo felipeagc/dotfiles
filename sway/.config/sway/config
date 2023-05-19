@@ -154,9 +154,6 @@ bindsym $mod+t floating toggle
 
 bindsym XF86MonBrightnessDown exec light -U 5
 bindsym XF86MonBrightnessUp exec light -A 5
-bindsym $mod+p exec playerctl -p spotify play-pause
-bindsym $mod+period exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-bindsym $mod+comma exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 bindsym $mod+v exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 bindsym XF86AudioPlay exec playerctl -p spotify play-pause
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
@@ -210,4 +207,3 @@ exec --no-startup-id waybar
 exec --no-startup-id light -S 35
 exec --no-startup-id mako
 exec --no-startup-id nextcloud --background
-exec --no-startup-id hash jellyfin-mpv-shim 2>/dev/null && jellyfin-mpv-shim

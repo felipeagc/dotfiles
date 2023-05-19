@@ -74,10 +74,12 @@ require("lazy").setup({
                     filetypes = {
                         go = true,
                         html = true,
+                        htmldjango = true,
                         javascript = true,
                         lua = true,
                         ocaml = true,
                         rust = true,
+                        svelte = true,
                         typescript = true,
                         typescriptreact = true,
                         ["*"] = false,
@@ -277,8 +279,6 @@ vim.keymap.set("n", "<Leader>dn", ":lua require('dap').step_over()<CR>", { silen
 vim.keymap.set("n", "<Leader>df", ":lua require('dap').step_out()<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>dq", ":lua require('dap').terminate()<CR>", { silent = true })
 
-vim.keymap.set("n", "<Leader>zz", ":ZenMode<CR>", { silent = true })
-
 -- Disable ex mode binding
 vim.cmd[[map Q <Nop>]]
 -- }}}
@@ -367,14 +367,6 @@ local function on_lsp_attach(client, bufnr)
         end
     end
 
-    if client.name == 'tailwindcss' then
-        require('tailwind-highlight').setup(client, bufnr, {
-            single_column = false,
-            mode = 'background',
-            debounce = 200,
-        })
-    end
-
     -- workaround to hl semanticTokens
     -- https://github.com/golang/go/issues/54531#issuecomment-1464982242
     if client.name == 'gopls' and not client.server_capabilities.semanticTokensProvider then
@@ -392,7 +384,6 @@ capabilities.textDocument.completion.completionItem.snippetSupport = false
 
 local servers = {
     "ansiblels",
-    "clangd",
     "clojure_lsp",
     "dartls",
     "eslint",
@@ -450,6 +441,12 @@ lspconfig.gopls.setup {
             semanticTokens = true,
         },
     },
+}
+
+lspconfig.clangd.setup {
+    capabilities = capabilities,
+    on_attach = on_lsp_attach,
+    filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
 }
 -- }}}
 
@@ -610,7 +607,7 @@ vim.cmd([[
     autocmd FileType ocaml setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType dart setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType zig setlocal shiftwidth=4 tabstop=4 expandtab
-    autocmd FileType javascript setlocal shiftwidth=4 tabstop=4 expandtab
+    autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType typescript setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType typescriptreact setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType rust setlocal shiftwidth=4 tabstop=4 expandtab
@@ -752,7 +749,6 @@ require("nvim-treesitter.configs").setup {
         "haskell",
         "hlsl",
         "html",
-        "htmldjango",
         "java",
         "javascript",
         "kotlin",
@@ -827,6 +823,7 @@ require("nvim-treesitter.configs").setup {
 require('Comment').setup{
     pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
 }
+
 -- }}}
 
 -- Markdown {{{
