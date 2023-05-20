@@ -17,7 +17,14 @@ export EDITOR=nvim
 autoload -Uz compinit
 compinit
 
-eval "$(dircolors -b)"
+if type "dircolors" > /dev/null; then
+    eval "$(dircolors -b)"
+fi
+
+if type "gdircolors" > /dev/null; then
+    eval "$(gdircolors -b)"
+fi
+
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' menu select

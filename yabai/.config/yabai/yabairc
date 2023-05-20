@@ -10,11 +10,35 @@
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
 sudo yabai --load-sa
 
+# function setup_space {
+#   local idx="$1"
+#   local name="$2"
+#   local space=
+#   echo "setup space $idx : $name"
+#
+#   space=$(yabai -m query --spaces --space "$idx")
+#   if [ -z "$space" ]; then
+#     yabai -m space --create
+#   fi
+#
+#   yabai -m space "$idx" --label "$name"
+# }
+#
+# setup_space 1 web
+# setup_space 2 code
+# setup_space 3 term
+# setup_space 4 4
+# setup_space 5 5
+# setup_space 5 6
+# setup_space 7 7
+# setup_space 8 8
+# setup_space 9 msg
+# setup_space 10 music
 
 # global settings
 yabai -m config                                 \
     mouse_follows_focus          off            \
-    focus_follows_mouse          on             \
+    focus_follows_mouse          autofocus      \
     window_origin_display        default        \
     window_placement             second_child   \
     window_zoom_persist          on             \
@@ -30,22 +54,41 @@ yabai -m config                                 \
     active_window_border_color   0xff0284C7     \
     normal_window_border_color   0xff1F2937     \
     window_border_width          3              \
-    window_border_radius         08             \
+    window_border_radius         12             \
     window_border_blur           off            \
-    window_border_hidpi          off            \
+    window_border_hidpi          on             \
     window_border                on             \
     split_ratio                  0.50           \
     split_type                   auto           \
     auto_balance                 off            \
-    top_padding                  06             \
-    bottom_padding               06             \
-    left_padding                 06             \
-    right_padding                06             \
+    top_padding                  04             \
+    bottom_padding               04             \
+    left_padding                 04             \
+    right_padding                04             \
     window_gap                   04             \
     layout                       bsp            \
     mouse_modifier               alt            \
     mouse_action1                move           \
     mouse_action2                resize         \
     mouse_drop_action            swap
+
+# float system preferences
+yabai -m rule --add app="^System Settings$" manage=off
+yabai -m rule --add app="Installer$" manage=off
+
+yabai -m rule --add app="^Chrome$" space=1
+yabai -m rule --add app="^Discord$" space=9
+yabai -m rule --add app="^Spotify$" space=10
+
+yabai -m signal --add event=mission_control_exit action='echo "refresh" | nc -U /tmp/yabai-indicator.socket'
+yabai -m signal --add event=display_added action='echo "refresh" | nc -U /tmp/yabai-indicator.socket'
+yabai -m signal --add event=display_removed action='echo "refresh" | nc -U /tmp/yabai-indicator.socket'
+yabai -m signal --add event=window_created action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
+yabai -m signal --add event=window_destroyed action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
+yabai -m signal --add event=window_focused action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
+yabai -m signal --add event=window_moved action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
+yabai -m signal --add event=window_resized action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
+yabai -m signal --add event=window_minimized action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
+yabai -m signal --add event=window_deminimized action='echo "refresh windows" | nc -U /tmp/yabai-indicator.socket'
 
 echo "yabai configuration loaded.."
