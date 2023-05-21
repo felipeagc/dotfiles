@@ -115,7 +115,7 @@ require("lazy").setup({
     'nvim-telescope/telescope.nvim',
     'nvim-telescope/telescope-dap.nvim',
 
-    "lukas-reineke/indent-blankline.nvim",
+    -- "lukas-reineke/indent-blankline.nvim",
 
     {
         'stevearc/dressing.nvim',
