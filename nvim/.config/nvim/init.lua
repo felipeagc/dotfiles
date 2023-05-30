@@ -12,16 +12,17 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-function create_augroup(groupname, filetype, commands)
+local function create_augroup(groupname, filetype, commands)
     local group = vim.api.nvim_create_augroup(groupname, {})
     for _, command in ipairs(commands) do
-        vim.api.nvim_create_autocmd({"FileType"}, {
+        vim.api.nvim_create_autocmd({ "FileType" }, {
             pattern = filetype,
             command = command,
             group = group,
         })
     end
 end
+
 -- }}}
 
 require("lazy").setup({
@@ -61,9 +62,9 @@ require("lazy").setup({
 
     {
         'zbirenbaum/copilot.lua',
-        config = function() 
+        config = function()
             require("copilot").setup({
-                suggestion = { 
+                suggestion = {
                     auto_trigger = true,
                     keymap = {
                         accept = "<M-i>",
@@ -110,7 +111,7 @@ require("lazy").setup({
     'elixir-editors/vim-elixir',
     'isobit/vim-caddyfile',
     'felipeagc/dusk.vim',
-    
+
     'nvim-lua/plenary.nvim',
     'nvim-telescope/telescope.nvim',
     'nvim-telescope/telescope-dap.nvim',
@@ -152,24 +153,24 @@ require("lazy").setup({
     },
 
     {
-      "felipeagc/fleet-theme-nvim",
-      -- dir = "~/code/lua/fleet-theme-nvim",
-      config = function() vim.cmd("colorscheme fleet") end
+        "felipeagc/fleet-theme-nvim",
+        -- dir = "~/code/lua/fleet-theme-nvim",
+        config = function() vim.cmd("colorscheme fleet") end
     },
-    { 
+    {
         'rebelot/kanagawa.nvim',
         config = function()
             require('kanagawa').setup({
                 compile = false,
-                undercurl = true,           -- enable undercurls
+                undercurl = true, -- enable undercurls
                 commentStyle = { italic = false },
                 functionStyle = {},
                 keywordStyle = { italic = false },
                 statementStyle = { bold = true },
                 typeStyle = {},
-                transparent = false,        -- do not set background color
-                dimInactive = false,        -- dim inactive window `:h hl-NormalNC`
-                terminalColors = true,      -- define vim.g.terminal_color_{0,17}
+                transparent = false,   -- do not set background color
+                dimInactive = false,   -- dim inactive window `:h hl-NormalNC`
+                terminalColors = true, -- define vim.g.terminal_color_{0,17}
                 colors = {},
                 overrides = function(colors) return {} end,
             })
@@ -197,14 +198,15 @@ vim.o.smarttab = true
 vim.o.expandtab = true
 
 vim.o.wrap = true
-vim.o.wildignore = vim.o.wildignore .. '*.so,*.swp,*.zip,*.o,*.png,*.jpg,*.jpeg,*/target/*,*/build/*,*/node_modules/*,tags,*.glb,*.gltf,*.hdr'
+vim.o.wildignore = vim.o.wildignore ..
+'*.so,*.swp,*.zip,*.o,*.png,*.jpg,*.jpeg,*/target/*,*/build/*,*/node_modules/*,tags,*.glb,*.gltf,*.hdr'
 vim.o.hidden = true
 vim.o.showmode = false
 vim.o.modeline = true
 vim.o.modelines = 1
 
 vim.o.undofile = true
-vim.o.undodir = vim.fn.stdpath('data')..'/undodir'
+vim.o.undodir = vim.fn.stdpath('data') .. '/undodir'
 
 vim.o.linebreak = true
 
@@ -280,7 +282,7 @@ vim.keymap.set("n", "<Leader>df", ":lua require('dap').step_out()<CR>", { silent
 vim.keymap.set("n", "<Leader>dq", ":lua require('dap').terminate()<CR>", { silent = true })
 
 -- Disable ex mode binding
-vim.cmd[[map Q <Nop>]]
+vim.cmd [[map Q <Nop>]]
 -- }}}
 
 -- Telescope {{{
@@ -337,11 +339,11 @@ local lspconfig = require("lspconfig")
 local function on_lsp_attach(client, bufnr)
     -- buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-    local opts = { remap=false, silent=true, buffer=bufnr }
+    local opts = { remap = false, silent = true, buffer = bufnr }
 
     vim.keymap.set('n', 'K', function() vim.lsp.buf.hover() end, opts)
     vim.keymap.set('n', '<c-]>', function() vim.lsp.buf.definition() end, opts)
-    vim.keymap.set('n', '<leader>mf', function() vim.lsp.buf.format({async = true}) end, opts)
+    vim.keymap.set('n', '<leader>mf', function() vim.lsp.buf.format({ async = true }) end, opts)
     vim.keymap.set('n', '<leader>mr', function() vim.lsp.buf.rename() end, opts)
     vim.keymap.set('n', '<leader>mR', ":LspRestart<CR>", opts)
     vim.keymap.set('n', '<leader>mi', function() vim.lsp.buf.code_action() end, opts)
@@ -373,7 +375,7 @@ local function on_lsp_attach(client, bufnr)
         local semantic = client.config.capabilities.textDocument.semanticTokens
         client.server_capabilities.semanticTokensProvider = {
             full = true,
-            legend = {tokenModifiers = semantic.tokenModifiers, tokenTypes = semantic.tokenTypes},
+            legend = { tokenModifiers = semantic.tokenModifiers, tokenTypes = semantic.tokenTypes },
             range = true,
         }
     end
@@ -396,7 +398,7 @@ local servers = {
     "zls",
 }
 for _, lsp in ipairs(servers) do
-    lspconfig[lsp].setup{
+    lspconfig[lsp].setup {
         capabilities = capabilities,
         on_attach = on_lsp_attach,
     }
@@ -447,6 +449,19 @@ lspconfig.clangd.setup {
     capabilities = capabilities,
     on_attach = on_lsp_attach,
     filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
+}
+
+lspconfig.lua_ls.setup {
+    capabilities = capabilities,
+    on_attach = on_lsp_attach,
+    settings = {
+        Lua = {
+            runtime = { version = 'LuaJIT' },
+            diagnostics = { globals = { 'vim' } },
+            workspace = { library = vim.api.nvim_get_runtime_file("", true) },
+            telemetry = { enable = false },
+        },
+    },
 }
 -- }}}
 
@@ -505,8 +520,8 @@ require("dapui").setup({
                     size = 0.25, -- Can be float or integer > 1
                 },
                 { id = "breakpoints", size = 0.25 },
-                { id = "stacks", size = 0.25 },
-                { id = "watches", size = 00.25 },
+                { id = "stacks",      size = 0.25 },
+                { id = "watches",     size = 00.25 },
             },
             size = 40,
             position = "left", -- Can be "left", "right", "top", "bottom"
@@ -518,15 +533,15 @@ require("dapui").setup({
         },
     },
     floating = {
-        max_height = nil, -- These can be integers or a float between 0 and 1.
-        max_width = nil, -- Floats will be treated as percentage of your screen.
+        max_height = nil,  -- These can be integers or a float between 0 and 1.
+        max_width = nil,   -- Floats will be treated as percentage of your screen.
         border = "single", -- Border style. Can be "single", "double" or "rounded"
         mappings = {
             close = { "q", "<Esc>" },
         },
     },
     windows = { indent = 1 },
-    render = { 
+    render = {
         max_type_length = nil, -- Can be integer or nil.
     }
 })
@@ -625,7 +640,7 @@ vim.cmd([[
 local cmp = require("cmp")
 cmp.setup {
     preselect = cmp.PreselectMode.None,
-    view = {            
+    view = {
         entries = "custom" -- can be "custom", "wildmenu" or "native"
     },
     snippet = {
@@ -722,7 +737,7 @@ cmp.setup.cmdline(':', {
 -- }}}
 
 -- Treesitter {{{
-local rainbow_enabled_list = {"clojure", "fennel", "commonlisp", "query"}
+local rainbow_enabled_list = { "clojure", "fennel", "commonlisp", "query" }
 local parsers = require("nvim-treesitter.parsers")
 require("nvim-treesitter.configs").setup {
     -- Install parsers synchronously (only applied to `ensure_installed`)
@@ -731,7 +746,7 @@ require("nvim-treesitter.configs").setup {
     -- Automatically install missing parsers when entering buffer
     -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
     auto_install = true,
-    
+
     ensure_installed = {
         "bash",
         "c",
@@ -769,8 +784,8 @@ require("nvim-treesitter.configs").setup {
     -- ignore_install = { "javascript" }, -- List of parsers to ignore installing
 
     highlight = {
-        enable = true,              -- false will disable the whole extension
-        disable = { },  -- list of language that will be disabled
+        enable = true, -- false will disable the whole extension
+        disable = {},  -- list of language that will be disabled
         -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
         -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
         -- Using this option may slow down your editor, and you may see some duplicate highlights.
@@ -809,7 +824,7 @@ require("nvim-treesitter.configs").setup {
             function(p)
                 local disable = true
                 for _, lang in pairs(rainbow_enabled_list) do
-                    if p==lang then disable = false end
+                    if p == lang then disable = false end
                 end
                 return disable
             end,
@@ -820,7 +835,7 @@ require("nvim-treesitter.configs").setup {
     }
 }
 
-require('Comment').setup{
+require('Comment').setup {
     pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
 }
 
@@ -868,7 +883,7 @@ create_augroup("cppbindings", "cpp", {
 -- }}}
 
 -- Go {{{
-function set_go_makeprg()
+local function set_go_makeprg()
     if vim.fn.filereadable('makefile') == 1 or vim.fn.filereadable('Makefile') == 1 then
         vim.api.nvim_buf_set_option(0, 'makeprg', 'make')
     else
@@ -934,7 +949,7 @@ create_augroup("latexbindings", "tex", {
 -- }}}
 
 -- Clojure {{{
-vim.g["conjure#filetypes"] = {"clojure"}
+vim.g["conjure#filetypes"] = { "clojure" }
 create_augroup("clojurebindings", "clojure", {
     "nmap <silent> <buffer> <M-e> :ConjureEvalCurrentForm<CR>",
     "nnoremap <silent> <buffer> <f7> :ConjureEvalBuf<CR>",
@@ -943,7 +958,7 @@ create_augroup("clojurebindings", "clojure", {
 -- }}}
 
 -- WGSL {{{
-vim.cmd[[
+vim.cmd [[
 augroup wgsl_ft
   au!
   autocmd BufNewFile,BufRead *.wgsl   set filetype=wgsl

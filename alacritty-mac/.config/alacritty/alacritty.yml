@@ -7,6 +7,55 @@ font:
   offset:
     y: 1
 live_config_reload: true
+# colors:
+#   primary:
+#     background: '#181818'
 colors:
+  # Default colors
   primary:
-    background: '#181818'
+    background: '0x0c0c16'
+    foreground: '0xd8dee9'
+
+  # Normal colors
+  normal:
+    black:   '0x2c2c3d'
+    red:     '0xff6e6e'
+    green:   '0x9ec875'
+    yellow:  '0xffa759'
+    blue:    '0x70a7d4'
+    magenta: '0xd291e0'
+    cyan:    '0x96e0e0'
+    white:   '0xd8dee9'
+
+  # Bright colors
+  bright:
+    black:   '0x414166'
+    red:     '0xff8d8d'
+    green:   '0xb3d987'
+    yellow:  '0xffc57f'
+    blue:    '0x9bb3d3'
+    magenta: '0xffa1ff'
+    cyan:    '0x9cd8d8'
+    white:   '0xffffff'
+
+
+
+
+key_bindings:
+  - { key: Key0, mods: Command, chars: "\x1b0" }
+  - { key: Key1, mods: Command, chars: "\x1b1" }
+  - { key: Key2, mods: Command, chars: "\x1b2" }
+  - { key: Key3, mods: Command, chars: "\x1b3" }
+  - { key: Key4, mods: Command, chars: "\x1b4" }
+  - { key: Key5, mods: Command, chars: "\x1b5" }
+  - { key: Key6, mods: Command, chars: "\x1b6" }
+  - { key: Key7, mods: Command, chars: "\x1b7" }
+  - { key: Key8, mods: Command, chars: "\x1b8" }
+  - { key: Key9, mods: Command, chars: "\x1b9" }
+
+  - { key: J, mods: Command, chars: "\x1bj" }
+  - { key: K, mods: Command, chars: "\x1bk" }
+  - { key: H, mods: Command, chars: "\x1bh" }
+  - { key: L, mods: Command, chars: "\x1bl" }
+
+  - { key: I, mods: Command, chars: "\x1bi" }
