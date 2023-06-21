@@ -83,6 +83,7 @@ require("lazy").setup({
                         svelte = true,
                         typescript = true,
                         typescriptreact = true,
+                        elixir = true,
                         ["*"] = false,
                     },
                 }
@@ -106,8 +107,8 @@ require("lazy").setup({
     -- 'NoahTheDuke/vim-just',
     -- 'lakshayg/vim-bazel',
     'LnL7/vim-nix',
-    'Olical/conjure',
-    'clojure-vim/vim-jack-in',
+    -- 'Olical/conjure',
+    -- 'clojure-vim/vim-jack-in',
     'elixir-editors/vim-elixir',
     'isobit/vim-caddyfile',
     'felipeagc/dusk.vim',
@@ -272,6 +273,7 @@ vim.keymap.set("n", "<C-a>", ":FSHere<CR>", { silent = true })
 vim.keymap.set("n", "<A-p>", "<nop>", { silent = true })
 
 vim.keymap.set("n", "<f7>", ":Make<CR>", { silent = true })
+vim.keymap.set("n", "<A-r>", ":Make<CR>", { silent = true })
 
 vim.keymap.set("n", "<Leader>do", ":lua require('dapui').toggle()<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>dc", ":lua require('dap').continue()<CR>", { silent = true })
@@ -379,6 +381,9 @@ local function on_lsp_attach(client, bufnr)
             range = true,
         }
     end
+
+    -- Disable semantic highlighting
+    client.server_capabilities.semanticTokensProvider = nil
 end
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -408,7 +413,7 @@ lspconfig.elixirls.setup {
     capabilities = capabilities,
     on_attach = on_lsp_attach,
     init_options = { lint = true },
-    cmd = { "/usr/bin/elixir-ls" },
+    cmd = { "elixir-ls" },
 }
 
 lspconfig.denols.setup {
@@ -463,6 +468,10 @@ lspconfig.lua_ls.setup {
         },
     },
 }
+
+if vim.fn.has('macunix') then
+    lspconfig.sourcekit.setup {}
+end
 -- }}}
 
 -- DAP {{{
@@ -883,7 +892,7 @@ create_augroup("cppbindings", "cpp", {
 -- }}}
 
 -- Go {{{
-local function set_go_makeprg()
+function set_go_makeprg()
     if vim.fn.filereadable('makefile') == 1 or vim.fn.filereadable('Makefile') == 1 then
         vim.api.nvim_buf_set_option(0, 'makeprg', 'make')
     else
@@ -949,12 +958,12 @@ create_augroup("latexbindings", "tex", {
 -- }}}
 
 -- Clojure {{{
-vim.g["conjure#filetypes"] = { "clojure" }
-create_augroup("clojurebindings", "clojure", {
-    "nmap <silent> <buffer> <M-e> :ConjureEvalCurrentForm<CR>",
-    "nnoremap <silent> <buffer> <f7> :ConjureEvalBuf<CR>",
-    "inoremap <silent> <buffer> <f7> :ConjureEvalBuf<CR>",
-})
+-- vim.g["conjure#filetypes"] = { "clojure" }
+-- create_augroup("clojurebindings", "clojure", {
+--     "nmap <silent> <buffer> <M-e> :ConjureEvalCurrentForm<CR>",
+--     "nnoremap <silent> <buffer> <f7> :ConjureEvalBuf<CR>",
+--     "inoremap <silent> <buffer> <f7> :ConjureEvalBuf<CR>",
+-- })
 -- }}}
 
 -- WGSL {{{
@@ -970,5 +979,11 @@ augroup END
 require("felipe_elixir").setup()
 create_augroup("elixirbindings", "elixir", {
     "compiler exunit"
+})
+-- }}}
+
+-- Swift {{{
+create_augroup("swiftbindings", "swift", {
+    "setlocal makeprg=xcodebuild"
 })
 -- }}}

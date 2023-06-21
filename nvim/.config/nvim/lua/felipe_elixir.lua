@@ -78,6 +78,14 @@ local config = {
         "end",
       },
     },
+    ["lib/**/controllers/*_html.ex"] = {
+      type = "html",
+      template = {
+        "defmodule {dirname|camelcase|capitalize}.{basename|camelcase|capitalize}HTML do",
+        "  use {dirname|camelcase|capitalize}, :html",
+        "end",
+      },
+    },
     ["lib/**/channels/*_channel.ex"] = {
       type = "channel",
       alternate = "test/{dirname}/channels/{basename}_channel_test.exs",

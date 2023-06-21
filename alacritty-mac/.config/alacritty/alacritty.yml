@@ -59,3 +59,4 @@ key_bindings:
   - { key: L, mods: Command, chars: "\x1bl" }
 
   - { key: I, mods: Command, chars: "\x1bi" }
+  - { key: R, mods: Command, chars: "\x1br" }

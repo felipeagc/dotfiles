@@ -38,7 +38,7 @@
               scroll-down-aggressively 0.01)
 
 ;; Font
-(add-to-list 'default-frame-alist '(font . "IBM Plex Mono-11"))
+(add-to-list 'default-frame-alist '(font . "Menlo-13"))
 
 (setq show-paren-delay 0.0)
 (show-paren-mode 1)
