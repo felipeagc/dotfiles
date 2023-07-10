@@ -84,6 +84,8 @@ if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
 fi
 export QT_QPA_PLATFORMTHEME="qt5ct"
 
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+
 bindkey -s ^f "tmux-sessionizer\n"
 
 [[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return

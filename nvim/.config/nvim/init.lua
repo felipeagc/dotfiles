@@ -65,9 +65,9 @@ require("lazy").setup({
         config = function()
             require("copilot").setup({
                 suggestion = {
-                    auto_trigger = true,
+                    auto_trigger = false,
                     keymap = {
-                        accept = "<M-i>",
+                        accept = "<s-tab>",
                         next = "<M-]>",
                         prev = "<M-[>",
                         dismiss = "<M-d>",
@@ -273,6 +273,7 @@ vim.keymap.set("n", "<C-a>", ":FSHere<CR>", { silent = true })
 vim.keymap.set("n", "<A-p>", "<nop>", { silent = true })
 
 vim.keymap.set("n", "<f7>", ":Make<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>mb", ":Make<CR>", { silent = true })
 vim.keymap.set("n", "<A-r>", ":Make<CR>", { silent = true })
 
 vim.keymap.set("n", "<Leader>do", ":lua require('dapui').toggle()<CR>", { silent = true })
@@ -349,6 +350,7 @@ local function on_lsp_attach(client, bufnr)
     vim.keymap.set('n', '<leader>mr', function() vim.lsp.buf.rename() end, opts)
     vim.keymap.set('n', '<leader>mR', ":LspRestart<CR>", opts)
     vim.keymap.set('n', '<leader>mi', function() vim.lsp.buf.code_action() end, opts)
+    vim.keymap.set('n', '<leader>mc', ":Copilot toggle<CR>", opts)
     vim.keymap.set('n', '[d', function() vim.diagnostic.goto_prev() end, opts)
     vim.keymap.set('n', ']d', function() vim.diagnostic.goto_next() end, opts)
     vim.keymap.set('n', '<C-y>', function() vim.diagnostic.open_float() end, opts)
@@ -391,6 +393,7 @@ capabilities.textDocument.completion.completionItem.snippetSupport = false
 
 local servers = {
     "ansiblels",
+    "csharp_ls",
     "clojure_lsp",
     "dartls",
     "eslint",
@@ -398,6 +401,7 @@ local servers = {
     "kotlin_language_server",
     "metals",
     "ocamllsp",
+    "slint_lsp",
     "svelte",
     "tailwindcss",
     "zls",
@@ -766,11 +770,11 @@ require("nvim-treesitter.configs").setup {
         "css",
         "dart",
         "elixir",
-        "heex",
         "glsl",
         "go",
         "graphql",
         "haskell",
+        "heex",
         "hlsl",
         "html",
         "java",
@@ -783,6 +787,7 @@ require("nvim-treesitter.configs").setup {
         "ocaml",
         "python",
         "rust",
+        "slint",
         "svelte",
         "tsx",
         "typescript",
@@ -986,4 +991,8 @@ create_augroup("elixirbindings", "elixir", {
 create_augroup("swiftbindings", "swift", {
     "setlocal makeprg=xcodebuild"
 })
+-- }}}
+
+-- Slint {{{
+vim.cmd [[ autocmd BufRead,BufNewFile *.slint set filetype=slint ]]
 -- }}}
