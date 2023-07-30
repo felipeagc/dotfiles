@@ -12,6 +12,7 @@
   "editorconfig-vim": { "branch": "master", "commit": "7f4e4dfc58c480d154116614e616d90aac77204d" },
   "fleet-theme-nvim": { "branch": "master", "commit": "bff73748f6acddc3c152ab9f0e79bff045d04c52" },
   "gitsigns.nvim": { "branch": "main", "commit": "5a04466685008f29c71fa5ec25d421deb1c83fea" },
+  "gruvbox.nvim": { "branch": "main", "commit": "df149bccb19a02c5c2b9fa6ec0716f0c0487feb0" },
   "kanagawa.nvim": { "branch": "master", "commit": "1749cea392acb7d1548a946fcee1e6f1304cd3cb" },
   "lazy.nvim": { "branch": "main", "commit": "25beed5e2e935ebc00d7e3eed1dc502df3c40e39" },
   "nvim-cmp": { "branch": "main", "commit": "c4e491a87eeacf0408902c32f031d802c7eafce8" },

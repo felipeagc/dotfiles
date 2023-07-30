@@ -156,7 +156,26 @@ require("lazy").setup({
     {
         "felipeagc/fleet-theme-nvim",
         -- dir = "~/code/lua/fleet-theme-nvim",
-        config = function() vim.cmd("colorscheme fleet") end
+        -- config = function() vim.cmd("colorscheme fleet") end
+    },
+    {
+        "ellisonleao/gruvbox.nvim",
+        config = function()
+            require("gruvbox").setup({
+                contrast = "hard", -- can be "hard", "soft" or empty string
+                overrides = {
+                    SignColumn = { link = "Normal" },
+                    GruvboxGreenSign = { bg = "" },
+                    GruvboxOrangeSign = { bg = "" },
+                    GruvboxPurpleSign = { bg = "" },
+                    GruvboxYellowSign = { bg = "" },
+                    GruvboxRedSign = { bg = "" },
+                    GruvboxBlueSign = { bg = "" },
+                    GruvboxAquaSign = { bg = "" },
+                }
+            })
+            vim.cmd("colorscheme gruvbox")
+        end
     },
     {
         'rebelot/kanagawa.nvim',
@@ -200,7 +219,7 @@ vim.o.expandtab = true
 
 vim.o.wrap = true
 vim.o.wildignore = vim.o.wildignore ..
-'*.so,*.swp,*.zip,*.o,*.png,*.jpg,*.jpeg,*/target/*,*/build/*,*/node_modules/*,tags,*.glb,*.gltf,*.hdr'
+    '*.so,*.swp,*.zip,*.o,*.png,*.jpg,*.jpeg,*/target/*,*/build/*,*/node_modules/*,tags,*.glb,*.gltf,*.hdr'
 vim.o.hidden = true
 vim.o.showmode = false
 vim.o.modeline = true
@@ -404,6 +423,7 @@ local servers = {
     "slint_lsp",
     "svelte",
     "tailwindcss",
+    "wgsl_analyzer",
     "zls",
 }
 for _, lsp in ipairs(servers) do
@@ -509,7 +529,7 @@ dap.configurations.c = dap.configurations.cpp
 dap.configurations.rust = dap.configurations.cpp
 
 require('dap-go').setup()
-require("dapui").setup({
+require('dapui').setup({
     icons = { expanded = "▾", collapsed = "▸" },
     mappings = {
         -- Use a table to apply multiple mappings
@@ -566,13 +586,6 @@ require("dapui").setup({
 
 -- Color scheme {{{
 vim.cmd [[set background=dark]]
--- vim.g.gruvbox_italics = 0
--- vim.g.gruvbox_transp_bg = 0
--- vim.cmd[[colorscheme gruvbox8_hard]]
--- vim.cmd[[colorscheme felipe]]
--- vim.cmd[[colorscheme kanagawa]]
--- vim.g.zenbones = { darkness = 'warm' }
--- vim.cmd[[colorscheme zenbones]]
 -- }}}
 
 -- Small quality of life stuff {{{

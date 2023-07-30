@@ -2,10 +2,9 @@ env:
   TERM: xterm-256color
 window:
   option_as_alt: Both
+  decorations_theme_variant: Dark
 font:
   size: 15
-  offset:
-    y: 1
 live_config_reload: true
 # colors:
 #   primary:

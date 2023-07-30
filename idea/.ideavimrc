@@ -1,11 +1,44 @@
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+set commentary
+set surround
+
+set scrolloff=5
+
 let mapleader = " "
-nnoremap <silent> <C-p> :action SearchEverywhere<CR>
+
+vnoremap < <gv
+vnoremap < >gv
+vnoremap <s-lt> <gv
+vnoremap = =gv
+
+nmap <silent> <leader>vv :e ~/.ideavimrc<CR>
+nmap <silent> <leader>vr :source ~/.ideavimrc<CR>
+
+nmap <silent> <leader>w/ :vsp<CR>
+nmap <silent> <leader>w- :sp<CR>
+nmap <silent> <leader>wd :q<CR>
+nmap <silent> <leader>wb <C-w>=
+
+nnoremap <silent> <C-p> :action GotoFile<CR>
 nnoremap <silent> <C-j> <C-w>w
 nnoremap <silent> <C-k> <C-w>W
-nnoremap <silent> <Leader>w/ :vsp<CR>
-nnoremap <silent> <Leader>w- :sp<CR>
-nnoremap <silent> <Leader>wd :q<CR>
-nnoremap <silent> <Leader>bd :bd<CR>
-vnoremap <silent> < <gv
-vnoremap <silent> > >gv
-vnoremap <silent> <s-lt> <gv
+nmap <leader>fg :action FindInPath<CR>
+
+nnoremap <silent> <C-=> :action EditorIncreaseFontSize<CR>
+nnoremap <silent> <C--> :action EditorDecreaseFontSize<CR>
+
+imap <C-h> <C-o>:action ParameterInfo<CR>
+imap <C-y> <Action>(ShowErrorDescription)
+nmap <C-y> <Action>(ShowErrorDescription)
+imap <C-n> :action CodeCompletion<CR>
+nmap <leader>mr :action RenameElement<CR>
+nmap <leader>mf :action ReformatCode<CR>
+nmap <leader>mi :action OptimizeImports<CR>
+nmap <leader>mb :action CompileProject<CR>
+nmap <leader>mr :action Run<CR>
+
+nnoremap <c-o> :action Back<cr>
+nnoremap <c-i> :action Forward<cr>
