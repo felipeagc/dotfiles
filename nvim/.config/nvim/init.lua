@@ -26,6 +26,8 @@ end
 -- }}}
 
 require("lazy").setup({
+    'equalsraf/neovim-gui-shim',
+
     'neovim/nvim-lspconfig',
     'hrsh7th/nvim-cmp',
     'hrsh7th/cmp-nvim-lsp',
@@ -243,6 +245,11 @@ vim.wo.number = false
 -- vim.wo.cursorline = true
 -- vim.wo.foldmethod = 'marker'
 -- vim.wo.foldlevel = 0
+vim.cmd[[
+if exists('g:nvy')
+	set guifont=Cascadia\ Code:h12
+endif
+]]
 -- }}}
 
 -- Keybinds {{{
@@ -417,7 +424,6 @@ local servers = {
     "dartls",
     "eslint",
     "hls",
-    "kotlin_language_server",
     "metals",
     "ocamllsp",
     "slint_lsp",
@@ -480,18 +486,18 @@ lspconfig.clangd.setup {
     filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
 }
 
-lspconfig.lua_ls.setup {
-    capabilities = capabilities,
-    on_attach = on_lsp_attach,
-    settings = {
-        Lua = {
-            runtime = { version = 'LuaJIT' },
-            diagnostics = { globals = { 'vim' } },
-            workspace = { library = vim.api.nvim_get_runtime_file("", true) },
-            telemetry = { enable = false },
-        },
-    },
-}
+-- lspconfig.lua_ls.setup {
+--     capabilities = capabilities,
+--     on_attach = on_lsp_attach,
+--     settings = {
+--         Lua = {
+--             runtime = { version = 'LuaJIT' },
+--             diagnostics = { globals = { 'vim' } },
+--             workspace = { library = vim.api.nvim_get_runtime_file("", true) },
+--             telemetry = { enable = false },
+--         },
+--     },
+-- }
 
 if vim.fn.has('macunix') then
     lspconfig.sourcekit.setup {}
@@ -792,7 +798,6 @@ require("nvim-treesitter.configs").setup {
         "html",
         "java",
         "javascript",
-        "kotlin",
         "latex",
         "lua",
         "make",

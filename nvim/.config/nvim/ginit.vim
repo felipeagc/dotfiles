@@ -1,5 +1,5 @@
 if exists(':GuiFont')
-	GuiFont! IBM Plex Mono:h11
+	GuiFont! Cascadia Code:h11
 endif
 
 if exists('g:fvim_loaded')
