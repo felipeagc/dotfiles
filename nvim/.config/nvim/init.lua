@@ -97,6 +97,10 @@ require("lazy").setup({
         'vim-test/vim-test',
         config = function() vim.g["test#strategy"] = "dispatch" end
     },
+    {
+        'kdheepak/lazygit.nvim',
+        dependencies = { 'nvim-lua/plenary.nvim' },
+    },
 
     'editorconfig/editorconfig-vim',
     'derekwyatt/vim-fswitch',
@@ -292,7 +296,8 @@ vim.keymap.set("n", "<Leader>wb", "<C-w>=", { silent = true })
 vim.keymap.set("n", "<Leader>bd", ":bd<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>bcc", ":%bd|e#<CR>", { silent = true })
 
-vim.keymap.set("n", "<Leader>gs", ":vertical Git<CR>", { silent = true })
+-- vim.keymap.set("n", "<Leader>gs", ":vertical Git<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>gs", ":LazyGitCurrentFile<CR>", { silent = true })
 
 vim.keymap.set("n", "<C-a>", ":FSHere<CR>", { silent = true })
 
