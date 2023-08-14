@@ -39,7 +39,6 @@ require("lazy").setup({
 
     'nvim-treesitter/nvim-treesitter',
     'nvim-treesitter/playground',
-    'HiPhish/nvim-ts-rainbow2',
     'JoosepAlviste/nvim-ts-context-commentstring',
     'numToStr/Comment.nvim',
 
@@ -118,6 +117,7 @@ require("lazy").setup({
     'elixir-editors/vim-elixir',
     'isobit/vim-caddyfile',
     'felipeagc/dusk.vim',
+    'IndianBoy42/tree-sitter-just',
 
     'nvim-lua/plenary.nvim',
     'nvim-telescope/telescope.nvim',
@@ -159,11 +159,11 @@ require("lazy").setup({
         end
     },
 
-    {
-        "felipeagc/fleet-theme-nvim",
-        -- dir = "~/code/lua/fleet-theme-nvim",
-        -- config = function() vim.cmd("colorscheme fleet") end
-    },
+    -- {
+    --     "felipeagc/fleet-theme-nvim",
+    --     -- dir = "~/code/lua/fleet-theme-nvim",
+    --     -- config = function() vim.cmd("colorscheme fleet") end
+    -- },
     {
         "ellisonleao/gruvbox.nvim",
         config = function()
@@ -183,25 +183,25 @@ require("lazy").setup({
             vim.cmd("colorscheme gruvbox")
         end
     },
-    {
-        'rebelot/kanagawa.nvim',
-        config = function()
-            require('kanagawa').setup({
-                compile = false,
-                undercurl = true, -- enable undercurls
-                commentStyle = { italic = false },
-                functionStyle = {},
-                keywordStyle = { italic = false },
-                statementStyle = { bold = true },
-                typeStyle = {},
-                transparent = false,   -- do not set background color
-                dimInactive = false,   -- dim inactive window `:h hl-NormalNC`
-                terminalColors = true, -- define vim.g.terminal_color_{0,17}
-                colors = {},
-                overrides = function(colors) return {} end,
-            })
-        end
-    },
+    -- {
+    --     'rebelot/kanagawa.nvim',
+    --     config = function()
+    --         require('kanagawa').setup({
+    --             compile = false,
+    --             undercurl = true, -- enable undercurls
+    --             commentStyle = { italic = false },
+    --             functionStyle = {},
+    --             keywordStyle = { italic = false },
+    --             statementStyle = { bold = true },
+    --             typeStyle = {},
+    --             transparent = false,   -- do not set background color
+    --             dimInactive = false,   -- dim inactive window `:h hl-NormalNC`
+    --             terminalColors = true, -- define vim.g.terminal_color_{0,17}
+    --             colors = {},
+    --             overrides = function(colors) return {} end,
+    --         })
+    --     end
+    -- },
 })
 
 -- Vim options {{{
@@ -774,8 +774,18 @@ cmp.setup.cmdline(':', {
 -- }}}
 
 -- Treesitter {{{
-local rainbow_enabled_list = { "clojure", "fennel", "commonlisp", "query" }
 local parsers = require("nvim-treesitter.parsers")
+
+require("nvim-treesitter.parsers").get_parser_configs().just = {
+  install_info = {
+    url = "https://github.com/IndianBoy42/tree-sitter-just", -- local path or git repo
+    files = { "src/parser.c", "src/scanner.cc" },
+    branch = "main",
+    use_makefile = true -- this may be necessary on MacOS (try if you see compiler errors)
+  },
+  maintainers = { "@IndianBoy42" },
+}
+
 require("nvim-treesitter.configs").setup {
     -- Install parsers synchronously (only applied to `ensure_installed`)
     sync_install = false,
@@ -855,27 +865,11 @@ require("nvim-treesitter.configs").setup {
             node_decremental = "<A-p>",
         },
     },
-    rainbow = {
-        enable = true,
-        disable = vim.tbl_filter(
-            function(p)
-                local disable = true
-                for _, lang in pairs(rainbow_enabled_list) do
-                    if p == lang then disable = false end
-                end
-                return disable
-            end,
-            parsers.available_parsers()
-        ),
-        strategy = require('ts-rainbow').strategy.global,
-        query = 'rainbow-parens', -- Which query to use for finding delimiters
-    }
 }
 
 require('Comment').setup {
     pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
 }
-
 -- }}}
 
 -- Markdown {{{
@@ -923,6 +917,8 @@ create_augroup("cppbindings", "cpp", {
 function set_go_makeprg()
     if vim.fn.filereadable('makefile') == 1 or vim.fn.filereadable('Makefile') == 1 then
         vim.api.nvim_buf_set_option(0, 'makeprg', 'make')
+    elseif vim.fn.filereadable('justfile') == 1 or vim.fn.filereadable('Justfile') == 1 then
+        vim.api.nvim_buf_set_option(0, 'makeprg', 'just')
     else
         vim.api.nvim_buf_set_option(0, 'makeprg', 'go build .')
     end
@@ -994,15 +990,6 @@ create_augroup("latexbindings", "tex", {
 -- })
 -- }}}
 
--- WGSL {{{
-vim.cmd [[
-augroup wgsl_ft
-  au!
-  autocmd BufNewFile,BufRead *.wgsl   set filetype=wgsl
-augroup END
-]]
--- }}}
-
 -- Elixir {{{
 require("felipe_elixir").setup()
 create_augroup("elixirbindings", "elixir", {
@@ -1016,6 +1003,11 @@ create_augroup("swiftbindings", "swift", {
 })
 -- }}}
 
--- Slint {{{
-vim.cmd [[ autocmd BufRead,BufNewFile *.slint set filetype=slint ]]
+-- Other filetypes {{{
+vim.cmd [[
+autocmd BufRead,BufNewFile *.wgsl set filetype=wgsl
+autocmd BufRead,BufNewFile *.slint set filetype=slint
+autocmd BufRead,BufNewFile Tiltfile set filetype=starlark 
+autocmd BufRead,BufNewFile Dockerfile.* set filetype=dockerfile
+]]
 -- }}}

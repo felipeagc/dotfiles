@@ -12,3 +12,4 @@ tags
 tags.lock
 tags.temp
 TAGS
+.DS_Store
