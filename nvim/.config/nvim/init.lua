@@ -37,7 +37,7 @@ require("lazy").setup({
     'hrsh7th/cmp-vsnip',
     'hrsh7th/vim-vsnip',
 
-    'nvim-treesitter/nvim-treesitter',
+    { 'nvim-treesitter/nvim-treesitter', build = ":TSUpdate" },
     'nvim-treesitter/playground',
     'JoosepAlviste/nvim-ts-context-commentstring',
     'numToStr/Comment.nvim',
