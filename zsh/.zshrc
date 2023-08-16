@@ -6,14 +6,15 @@ setopt histignorealldups sharehistory hist_ignore_space
 # Use emacs keybindings even if our EDITOR is set to vi
 bindkey -e
 
-# Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
-HISTSIZE=1000
-SAVEHIST=1000
+# Keep 5000 lines of history within the shell and save it to ~/.zsh_history:
+HISTSIZE=5000
+SAVEHIST=5000
 HISTFILE=~/.zsh_history
 
 export EDITOR=nvim
 
 # Use modern completion system
+fpath=(~/.zsh/completion $fpath)
 autoload -Uz compinit
 compinit
 
