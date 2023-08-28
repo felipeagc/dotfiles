@@ -15,8 +15,7 @@ export EDITOR=nvim
 
 # Use modern completion system
 fpath=(~/.zsh/completion $fpath)
-autoload -Uz compinit
-compinit
+autoload -Uz compinit && compinit -i
 
 if type "dircolors" > /dev/null; then
     eval "$(dircolors -b)"
@@ -29,6 +28,8 @@ fi
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' menu select
+zstyle ':completion:*:*:docker:*' option-stacking yes
+zstyle ':completion:*:*:docker-*:*' option-stacking yes
 
 if type "keychain" > /dev/null; then
     KEYCHAIN_CMD=(keychain -q --eval --agents ssh)
