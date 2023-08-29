@@ -96,34 +96,23 @@ require("lazy").setup({
         'vim-test/vim-test',
         config = function() vim.g["test#strategy"] = "dispatch" end
     },
-    {
-        'kdheepak/lazygit.nvim',
-        dependencies = { 'nvim-lua/plenary.nvim' },
-    },
+    { 'kdheepak/lazygit.nvim', dependencies = { 'nvim-lua/plenary.nvim' } },
 
     'editorconfig/editorconfig-vim',
     'derekwyatt/vim-fswitch',
 
     'plasticboy/vim-markdown',
-    -- 'beyondmarc/hlsl.vim',
     'ziglang/zig.vim',
     'rust-lang/rust.vim',
-    'dart-lang/dart-vim-plugin',
-    -- 'NoahTheDuke/vim-just',
-    -- 'lakshayg/vim-bazel',
     'LnL7/vim-nix',
-    -- 'Olical/conjure',
-    -- 'clojure-vim/vim-jack-in',
-    'elixir-editors/vim-elixir',
-    'isobit/vim-caddyfile',
     'felipeagc/dusk.vim',
     'IndianBoy42/tree-sitter-just',
+    'elixir-editors/vim-elixir',
+    'whonore/Coqtail',
 
     'nvim-lua/plenary.nvim',
     'nvim-telescope/telescope.nvim',
     'nvim-telescope/telescope-dap.nvim',
-
-    -- "lukas-reineke/indent-blankline.nvim",
 
     {
         'stevearc/dressing.nvim',
@@ -370,54 +359,58 @@ vim.diagnostic.config {
 
 local lspconfig = require("lspconfig")
 
-local function on_lsp_attach(client, bufnr)
-    -- buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+vim.api.nvim_create_autocmd('LspAttach', {
+    group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+    callback = function(ev)
+        -- buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-    local opts = { remap = false, silent = true, buffer = bufnr }
+        local opts = { remap = false, silent = true, buffer = ev.bufnr }
 
-    vim.keymap.set('n', 'K', function() vim.lsp.buf.hover() end, opts)
-    vim.keymap.set('n', '<c-]>', function() vim.lsp.buf.definition() end, opts)
-    vim.keymap.set('n', '<leader>mf', function() vim.lsp.buf.format({ async = true }) end, opts)
-    vim.keymap.set('n', '<leader>mr', function() vim.lsp.buf.rename() end, opts)
-    vim.keymap.set('n', '<leader>mR', ":LspRestart<CR>", opts)
-    vim.keymap.set('n', '<leader>mi', function() vim.lsp.buf.code_action() end, opts)
-    vim.keymap.set('n', '<leader>mc', ":Copilot toggle<CR>", opts)
-    vim.keymap.set('n', '[d', function() vim.diagnostic.goto_prev() end, opts)
-    vim.keymap.set('n', ']d', function() vim.diagnostic.goto_next() end, opts)
-    vim.keymap.set('n', '<C-y>', function() vim.diagnostic.open_float() end, opts)
-    vim.keymap.set('i', '<C-h>', function() vim.lsp.buf.signature_help() end, opts)
+        vim.keymap.set('n', 'K', function() vim.lsp.buf.hover() end, opts)
+        vim.keymap.set('n', '<c-]>', function() vim.lsp.buf.definition() end, opts)
+        vim.keymap.set('n', '<leader>mf', function() vim.lsp.buf.format({ async = true }) end, opts)
+        vim.keymap.set('n', '<leader>mr', function() vim.lsp.buf.rename() end, opts)
+        vim.keymap.set('n', '<leader>mR', ":LspRestart<CR>", opts)
+        vim.keymap.set('n', '<leader>mi', function() vim.lsp.buf.code_action() end, opts)
+        vim.keymap.set('n', '<leader>mc', ":Copilot toggle<CR>", opts)
+        vim.keymap.set('n', '[d', function() vim.diagnostic.goto_prev() end, opts)
+        vim.keymap.set('n', ']d', function() vim.diagnostic.goto_next() end, opts)
+        vim.keymap.set('n', '<C-y>', function() vim.diagnostic.open_float() end, opts)
+        vim.keymap.set('i', '<C-h>', function() vim.lsp.buf.signature_help() end, opts)
 
-    local active_clients = vim.lsp.get_active_clients()
-    if client.name == 'denols' then
-        for _, client_ in pairs(active_clients) do
-            -- stop tsserver if denols is already active
-            if client_.name == 'tsserver' then
-                client_.stop()
+        local client = vim.lsp.get_client_by_id(ev.data.client_id)
+        local active_clients = vim.lsp.get_active_clients()
+        if client.name == 'denols' then
+            for _, client_ in pairs(active_clients) do
+                -- stop tsserver if denols is already active
+                if client_.name == 'tsserver' then
+                    client_.stop()
+                end
+            end
+        elseif client.name == 'tsserver' then
+            for _, client_ in pairs(active_clients) do
+                -- prevent tsserver from starting if denols is already active
+                if client_.name == 'denols' then
+                    client.stop()
+                end
             end
         end
-    elseif client.name == 'tsserver' then
-        for _, client_ in pairs(active_clients) do
-            -- prevent tsserver from starting if denols is already active
-            if client_.name == 'denols' then
-                client.stop()
-            end
+
+        -- workaround to hl semanticTokens
+        -- https://github.com/golang/go/issues/54531#issuecomment-1464982242
+        if client.name == 'gopls' and not client.server_capabilities.semanticTokensProvider then
+            local semantic = client.config.capabilities.textDocument.semanticTokens
+            client.server_capabilities.semanticTokensProvider = {
+                full = true,
+                legend = { tokenModifiers = semantic.tokenModifiers, tokenTypes = semantic.tokenTypes },
+                range = true,
+            }
         end
-    end
 
-    -- workaround to hl semanticTokens
-    -- https://github.com/golang/go/issues/54531#issuecomment-1464982242
-    if client.name == 'gopls' and not client.server_capabilities.semanticTokensProvider then
-        local semantic = client.config.capabilities.textDocument.semanticTokens
-        client.server_capabilities.semanticTokensProvider = {
-            full = true,
-            legend = { tokenModifiers = semantic.tokenModifiers, tokenTypes = semantic.tokenTypes },
-            range = true,
-        }
+        -- Disable semantic highlighting
+        client.server_capabilities.semanticTokensProvider = nil
     end
-
-    -- Disable semantic highlighting
-    client.server_capabilities.semanticTokensProvider = nil
-end
+})
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = false
@@ -440,34 +433,23 @@ local servers = {
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup {
         capabilities = capabilities,
-        on_attach = on_lsp_attach,
     }
 end
 
-lspconfig.elixirls.setup {
-    capabilities = capabilities,
-    on_attach = on_lsp_attach,
-    init_options = { lint = true },
-    cmd = { "elixir-ls" },
-}
-
 lspconfig.denols.setup {
     capabilities = capabilities,
-    on_attach = on_lsp_attach,
     root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
     init_options = { lint = true },
 }
 
 lspconfig.tsserver.setup {
     capabilities = capabilities,
-    on_attach = on_lsp_attach,
     init_options = { lint = true },
     root_dir = lspconfig.util.root_pattern("package.json"),
 }
 
 lspconfig.rust_analyzer.setup {
     capabilities = capabilities,
-    on_attach = on_lsp_attach,
     settings = {
         ["rust-analyzer"] = {
             cargo = { buildScripts = { enable = true } },
@@ -477,7 +459,6 @@ lspconfig.rust_analyzer.setup {
 
 lspconfig.gopls.setup {
     capabilities = capabilities,
-    on_attach = on_lsp_attach,
     settings = {
         gopls = {
             semanticTokens = true,
@@ -487,13 +468,19 @@ lspconfig.gopls.setup {
 
 lspconfig.clangd.setup {
     capabilities = capabilities,
-    on_attach = on_lsp_attach,
     filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
+}
+
+lspconfig.elixirls.setup {
+    capabilities = capabilities,
+    cmd = { "elixir-ls" },
+    settings = {
+        -- elixirLS = { dialyzerEnabled = false },
+    },
 }
 
 -- lspconfig.lua_ls.setup {
 --     capabilities = capabilities,
---     on_attach = on_lsp_attach,
 --     settings = {
 --         Lua = {
 --             runtime = { version = 'LuaJIT' },
@@ -504,9 +491,28 @@ lspconfig.clangd.setup {
 --     },
 -- }
 
-if vim.fn.has('macunix') then
-    lspconfig.sourcekit.setup {}
-end
+-- Lexical LSP server config
+-- local configs = require("lspconfig.configs")
+-- local lexical_config = {
+--     filetypes = { "elixir", "eelixir", },
+--     cmd = { vim.env.HOME.."/Code/elixir/lexical/_build/dev/package/lexical/bin/start_lexical.sh" },
+--     settings = {},
+-- }
+-- if not configs.lexical then
+--     configs.lexical = {
+--         default_config = {
+--             filetypes = lexical_config.filetypes,
+--             cmd = lexical_config.cmd,
+--             root_dir = function(fname)
+--                 return lspconfig.util.root_pattern("mix.exs", ".git")(fname) or vim.loop.os_homedir()
+--             end,
+--             -- optional settings
+--             settings = lexical_config.settings,
+--         },
+--     }
+-- end
+--
+-- lspconfig.lexical.setup({})
 -- }}}
 
 -- DAP {{{
@@ -844,7 +850,6 @@ require("nvim-treesitter.configs").setup {
         disable = {
             "c",
             "cpp",
-            "elixir",
             "haskell",
             "latex",
             "ocaml",
@@ -1000,6 +1005,18 @@ create_augroup("elixirbindings", "elixir", {
 -- Swift {{{
 create_augroup("swiftbindings", "swift", {
     "setlocal makeprg=xcodebuild"
+})
+-- }}}
+
+-- Coq {{{
+vim.api.nvim_create_autocmd({ "FileType" }, {
+    pattern = "coq",
+    group = vim.api.nvim_create_augroup('CoqBindings', {}),
+    callback = function(ev)
+        vim.keymap.set("n", "<Leader>j", ":CoqNext<CR>", { silent = false })
+        vim.keymap.set("n", "<Leader>k", ":CoqUndo<CR>", { silent = false })
+        vim.keymap.set("n", "<Leader>c", ":CoqToLine<CR>", { silent = false })
+    end,
 })
 -- }}}
 
