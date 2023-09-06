@@ -87,6 +87,8 @@ export QT_QPA_PLATFORMTHEME="qt5ct"
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
+export ERL_AFLAGS="-kernel shell_history enabled"
+
 bindkey -s ^f "tmux-sessionizer\n"
 
 [[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
