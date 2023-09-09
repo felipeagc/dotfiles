@@ -44,6 +44,7 @@ fi
 
 alias ls='ls --color=auto'
 alias ll="ls -l"
+alias lg="lazygit"
 
 alias ga="git add $1"
 alias gc="git commit -m $1"

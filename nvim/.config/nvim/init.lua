@@ -108,7 +108,6 @@ require("lazy").setup({
     'felipeagc/dusk.vim',
     'IndianBoy42/tree-sitter-just',
     'elixir-editors/vim-elixir',
-    'whonore/Coqtail',
 
     'nvim-lua/plenary.nvim',
     'nvim-telescope/telescope.nvim',
@@ -128,25 +127,25 @@ require("lazy").setup({
     },
 
     -- For visualizing colors
-    {
-        'NvChad/nvim-colorizer.lua',
-        config = function()
-            require('colorizer').setup({
-                user_default_options = {
-                    tailwind = true,
-                }
-            })
-        end
-    },
-    {
-        'roobert/tailwindcss-colorizer-cmp.nvim',
-        -- optionally, override the default options:
-        config = function()
-            require('tailwindcss-colorizer-cmp').setup({
-                color_square_width = 2,
-            })
-        end
-    },
+    -- {
+    --     'NvChad/nvim-colorizer.lua',
+    --     config = function()
+    --         require('colorizer').setup({
+    --             user_default_options = {
+    --                 tailwind = true,
+    --             }
+    --         })
+    --     end
+    -- },
+    -- {
+    --     'roobert/tailwindcss-colorizer-cmp.nvim',
+    --     -- optionally, override the default options:
+    --     config = function()
+    --         require('tailwindcss-colorizer-cmp').setup({
+    --             color_square_width = 2,
+    --         })
+    --     end
+    -- },
 
     -- {
     --     "felipeagc/fleet-theme-nvim",
@@ -426,7 +425,7 @@ local servers = {
     "ocamllsp",
     "slint_lsp",
     "svelte",
-    "tailwindcss",
+    -- "tailwindcss",
     "wgsl_analyzer",
     "zls",
 }
@@ -1005,18 +1004,6 @@ create_augroup("elixirbindings", "elixir", {
 -- Swift {{{
 create_augroup("swiftbindings", "swift", {
     "setlocal makeprg=xcodebuild"
-})
--- }}}
-
--- Coq {{{
-vim.api.nvim_create_autocmd({ "FileType" }, {
-    pattern = "coq",
-    group = vim.api.nvim_create_augroup('CoqBindings', {}),
-    callback = function(ev)
-        vim.keymap.set("n", "<Leader>j", ":CoqNext<CR>", { silent = false })
-        vim.keymap.set("n", "<Leader>k", ":CoqUndo<CR>", { silent = false })
-        vim.keymap.set("n", "<Leader>c", ":CoqToLine<CR>", { silent = false })
-    end,
 })
 -- }}}
 
