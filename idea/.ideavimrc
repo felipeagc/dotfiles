@@ -33,7 +33,8 @@ nnoremap <silent> <C--> :action EditorDecreaseFontSize<CR>
 imap <C-h> <C-o>:action ParameterInfo<CR>
 imap <C-y> <Action>(ShowErrorDescription)
 nmap <C-y> <Action>(ShowErrorDescription)
-imap <C-n> :action CodeCompletion<CR>
+imap <C-SPC> :action CodeCompletion<CR>
+
 nmap <leader>mr :action RenameElement<CR>
 nmap <leader>mf :action ReformatCode<CR>
 nmap <leader>mi :action OptimizeImports<CR>

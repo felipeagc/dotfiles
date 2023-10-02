@@ -1,5 +1,7 @@
 (defconst -is-a-mac (eq system-type 'darwin))
 
+(setq vc-follow-symlinks t)
+
 ;; Backups
 (setq
   backup-by-copying t      ; don't clobber symlinks

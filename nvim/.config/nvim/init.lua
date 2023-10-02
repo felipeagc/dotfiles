@@ -127,6 +127,8 @@ require("lazy").setup({
         end
     },
 
+    "someone-stole-my-name/yaml-companion.nvim",
+
     -- For visualizing colors
     -- {
     --     'NvChad/nvim-colorizer.lua',
@@ -494,6 +496,12 @@ lspconfig.elixirls.setup {
 -- end
 --
 -- lspconfig.lexical.setup({})
+-- }}}
+
+-- YAML companion {{{
+require('telescope').load_extension('yaml_schema')
+local yaml_cfg = require("yaml-companion").setup({})
+require("lspconfig")["yamlls"].setup(yaml_cfg)
 -- }}}
 
 -- DAP {{{
@@ -914,6 +922,12 @@ function set_go_makeprg()
 end
 
 create_augroup("gocommands", "go", {
+    "setlocal shiftwidth=4 tabstop=4 noexpandtab",
+    "lua set_go_makeprg()",
+    "setlocal cpt-=t",
+})
+
+create_augroup("sqlbindings", "sql", {
     "setlocal shiftwidth=4 tabstop=4 noexpandtab",
     "lua set_go_makeprg()",
     "setlocal cpt-=t",
