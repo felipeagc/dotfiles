@@ -53,10 +53,10 @@ alias gs="git status"
 alias runemacs="emacs & disown"
 
 # Execute ls every time we cd
-function chpwd() {
-  emulate -L zsh
-  ls
-}
+# function chpwd() {
+#   emulate -L zsh
+#   ls
+# }
 
 mkcd () {
   mkdir -p -- "$1" &&

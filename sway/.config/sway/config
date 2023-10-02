@@ -16,7 +16,7 @@ set $up k
 set $right l
 # Your preferred terminal emulator
 # set $term foot
-set $term alacritty
+set $term kitty
 
 ### Output configuration
 #
@@ -24,6 +24,8 @@ output * bg #303030 solid_color
 # output * bg "~/images/wallpaper.jpg" fill
 # output * max_render_time 4
 output * max_render_time off
+
+output DP-3 mode 1920x1080@144Hz
 
 xwayland force
 
@@ -105,6 +107,18 @@ bindsym $mod+Control+$right resize shrink width 5 ppt
 #
 # Workspaces:
 #
+
+workspace 1:web output DP-3
+workspace 2:editor output DP-3
+workspace 3:term output DP-3
+workspace 4 output DP-3
+workspace 5 output DP-3
+workspace 6 output DP-3
+workspace 7 output DP-3
+workspace 8 output DP-3
+workspace 9:misc output DP-3
+workspace 10:games output DP-3
+workspace 11 output DP-2
 
 # Switch to workspace
 bindsym $mod+1 workspace number 1:web
@@ -194,16 +208,15 @@ smart_borders on
 hide_edge_borders smart
 
 # dbus stuff for arch linux
-exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
-exec hash dbus-update-activation-environment 2>/dev/null && \
-     dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
+# exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
+# exec hash dbus-update-activation-environment 2>/dev/null && \
+#      dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
 
 # dbus stuff for nixos
-exec hash dbus-sway-environment 2>/dev/null && dbus-sway-environment
+# exec hash dbus-sway-environment 2>/dev/null && dbus-sway-environment
 
-exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+# exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id waybar
 # exec --no-startup-id gammastep
-exec --no-startup-id light -S 35
+# exec --no-startup-id light -S 35
 exec --no-startup-id mako
-exec --no-startup-id nextcloud --background
