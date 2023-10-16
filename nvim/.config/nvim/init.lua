@@ -108,6 +108,7 @@ require("lazy").setup({
     'felipeagc/dusk.vim',
     'IndianBoy42/tree-sitter-just',
     'elixir-editors/vim-elixir',
+    'kaarmu/typst.vim',
 
     'nvim-lua/plenary.nvim',
     'nvim-telescope/telescope.nvim',
@@ -171,25 +172,6 @@ require("lazy").setup({
             vim.cmd("colorscheme gruvbox")
         end
     },
-    -- {
-    --     'rebelot/kanagawa.nvim',
-    --     config = function()
-    --         require('kanagawa').setup({
-    --             compile = false,
-    --             undercurl = true, -- enable undercurls
-    --             commentStyle = { italic = false },
-    --             functionStyle = {},
-    --             keywordStyle = { italic = false },
-    --             statementStyle = { bold = true },
-    --             typeStyle = {},
-    --             transparent = false,   -- do not set background color
-    --             dimInactive = false,   -- dim inactive window `:h hl-NormalNC`
-    --             terminalColors = true, -- define vim.g.terminal_color_{0,17}
-    --             colors = {},
-    --             overrides = function(colors) return {} end,
-    --         })
-    --     end
-    -- },
 })
 
 -- Vim options {{{
@@ -837,7 +819,9 @@ require("nvim-treesitter.configs").setup {
 
     highlight = {
         enable = true, -- false will disable the whole extension
-        disable = {},  -- list of language that will be disabled
+        disable = {
+            -- "cpp",
+        },  -- list of language that will be disabled
         -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
         -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
         -- Using this option may slow down your editor, and you may see some duplicate highlights.
@@ -858,7 +842,8 @@ require("nvim-treesitter.configs").setup {
         },
     },
     context_commentstring = {
-        enable = true
+        enable = true,
+        disable = {"wgsl"},
     },
     incremental_selection = {
         enable = true,
@@ -907,11 +892,11 @@ end
 vim.g.compiler_gcc_ignore_unmatched_lines = 1
 -- vim.g.cpp_no_cpp17 = 1
 
-create_augroup("cbindings", "c", {
+create_augroup("ccommands", "c", {
     "setlocal cpt-=t",
     "lua set_c_makeprg()",
 })
-create_augroup("cppbindings", "cpp", {
+create_augroup("cppcommands", "cpp", {
     "setlocal cpt-=t",
     "lua set_c_makeprg()",
 })
@@ -928,7 +913,7 @@ function set_go_makeprg()
     end
 end
 
-create_augroup("gobindings", "go", {
+create_augroup("gocommands", "go", {
     "setlocal shiftwidth=4 tabstop=4 noexpandtab",
     "lua set_go_makeprg()",
     "setlocal cpt-=t",
@@ -937,17 +922,17 @@ create_augroup("gobindings", "go", {
 
 -- Zig {{{
 vim.g.zig_fmt_autosave = 0
-create_augroup("zigbindings", "zig", { "setlocal cpt-=t" })
+create_augroup("zigcommands", "zig", { "setlocal cpt-=t" })
 -- }}}
 
 -- Javascript {{{
-create_augroup("javascriptbindings", "javascript", { "setlocal cpt-=t" })
-create_augroup("typescriptbindings", "typescript", { "setlocal cpt-=t" })
-create_augroup("typescriptreactbindings", "typescriptreact", { "setlocal cpt-=t" })
+create_augroup("javascriptcommands", "javascript", { "setlocal cpt-=t" })
+create_augroup("typescriptcommands", "typescript", { "setlocal cpt-=t" })
+create_augroup("typescriptreactcommands", "typescriptreact", { "setlocal cpt-=t" })
 -- }}}
 
 -- Ocaml {{{
-create_augroup("ocamlbindings", "ocaml", {
+create_augroup("ocamlcommands", "ocaml", {
     "setlocal cpt-=t",
     "setlocal makeprg=dune\\ build"
 })
@@ -955,7 +940,7 @@ create_augroup("ocamlbindings", "ocaml", {
 
 -- Rust {{{
 vim.g.cargo_makeprg_params = "check"
-create_augroup("rustbindings", "rust", { "setlocal cpt-=t" })
+create_augroup("rustcommands", "rust", { "setlocal cpt-=t" })
 -- }}}
 
 -- Dart {{{
@@ -965,7 +950,7 @@ function flutter_hot_reload()
     vim.cmd [[silent execute '!kill -SIGUSR1 $(pgrep -f "[f]lutter_tool.*run")']]
 end
 
-create_augroup("dartbindings", "dart", {
+create_augroup("dartcommands", "dart", {
     "setlocal cpt-=t",
     "nmap <silent> <buffer> <F7> :lua flutter_hot_reload()<CR>",
 })
@@ -979,7 +964,7 @@ function open_pdf_preview()
     vim.cmd("silent !zathura " .. pdf_path .. " & disown")
 end
 
-create_augroup("latexbindings", "tex", {
+create_augroup("latexcommands", "tex", {
     "setlocal makeprg=latexmk",
     "nmap <silent> <buffer> <Leader>mp :lua open_pdf_preview()<CR>",
 })
@@ -996,22 +981,33 @@ create_augroup("latexbindings", "tex", {
 
 -- Elixir {{{
 require("felipe_elixir").setup()
-create_augroup("elixirbindings", "elixir", {
+create_augroup("elixircommands", "elixir", {
     "compiler exunit"
 })
 -- }}}
 
 -- Swift {{{
-create_augroup("swiftbindings", "swift", {
+create_augroup("swiftcommands", "swift", {
     "setlocal makeprg=xcodebuild"
+})
+-- }}}
+
+-- WGSL {{{
+create_augroup("wgslcommands", "wgsl", {
+    "setlocal commentstring=//\\ %s"
 })
 -- }}}
 
 -- Other filetypes {{{
 vim.cmd [[
 autocmd BufRead,BufNewFile *.wgsl set filetype=wgsl
+autocmd BufRead,BufNewFile *.hlsl set filetype=hlsl
 autocmd BufRead,BufNewFile *.slint set filetype=slint
 autocmd BufRead,BufNewFile Tiltfile set filetype=starlark 
 autocmd BufRead,BufNewFile Dockerfile.* set filetype=dockerfile
+autocmd BufRead,BufNewFile *.ixx set filetype=cpp
+autocmd BufRead,BufNewFile *.mxx set filetype=cpp
+autocmd BufRead,BufNewFile *.mpp set filetype=cpp
+autocmd BufRead,BufNewFile *.cppm set filetype=cpp
 ]]
 -- }}}
