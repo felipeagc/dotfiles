@@ -33,9 +33,10 @@ require("lazy").setup({
     'hrsh7th/cmp-nvim-lsp',
     'hrsh7th/cmp-buffer',
     'hrsh7th/cmp-path',
-    'hrsh7th/cmp-cmdline',
     'hrsh7th/cmp-vsnip',
     'hrsh7th/vim-vsnip',
+
+    { 'j-hui/fidget.nvim', opts = { } },
 
     { 'nvim-treesitter/nvim-treesitter', build = ":TSUpdate" },
     'nvim-treesitter/playground',
@@ -61,36 +62,36 @@ require("lazy").setup({
         config = function() require('gitsigns').setup() end
     },
 
-    {
-        'zbirenbaum/copilot.lua',
-        config = function()
-            require("copilot").setup({
-                suggestion = {
-                    auto_trigger = false,
-                    keymap = {
-                        accept = "<s-tab>",
-                        next = "<M-]>",
-                        prev = "<M-[>",
-                        dismiss = "<M-d>",
-                    },
-                    filetypes = {
-                        go = true,
-                        html = true,
-                        htmldjango = true,
-                        javascript = true,
-                        lua = true,
-                        ocaml = true,
-                        rust = true,
-                        svelte = true,
-                        typescript = true,
-                        typescriptreact = true,
-                        elixir = true,
-                        ["*"] = false,
-                    },
-                }
-            })
-        end
-    },
+    -- {
+    --     'zbirenbaum/copilot.lua',
+    --     config = function()
+    --         require("copilot").setup({
+    --             suggestion = {
+    --                 auto_trigger = false,
+    --                 keymap = {
+    --                     accept = "<s-tab>",
+    --                     next = "<M-]>",
+    --                     prev = "<M-[>",
+    --                     dismiss = "<M-d>",
+    --                 },
+    --                 filetypes = {
+    --                     go = true,
+    --                     html = true,
+    --                     htmldjango = true,
+    --                     javascript = true,
+    --                     lua = true,
+    --                     ocaml = true,
+    --                     rust = true,
+    --                     svelte = true,
+    --                     typescript = true,
+    --                     typescriptreact = true,
+    --                     elixir = true,
+    --                     ["*"] = false,
+    --                 },
+    --             }
+    --         })
+    --     end
+    -- },
 
     {
         'vim-test/vim-test',
@@ -109,6 +110,7 @@ require("lazy").setup({
     'IndianBoy42/tree-sitter-just',
     'elixir-editors/vim-elixir',
     'kaarmu/typst.vim',
+    'whonore/Coqtail',
 
     'nvim-lua/plenary.nvim',
     'nvim-telescope/telescope.nvim',
@@ -150,30 +152,30 @@ require("lazy").setup({
     --     end
     -- },
 
-    -- {
-    --     "felipeagc/fleet-theme-nvim",
-    --     -- dir = "~/code/lua/fleet-theme-nvim",
-    --     -- config = function() vim.cmd("colorscheme fleet") end
-    -- },
     {
-        "ellisonleao/gruvbox.nvim",
-        config = function()
-            require("gruvbox").setup({
-                contrast = "hard", -- can be "hard", "soft" or empty string
-                overrides = {
-                    SignColumn = { link = "Normal" },
-                    GruvboxGreenSign = { bg = "" },
-                    GruvboxOrangeSign = { bg = "" },
-                    GruvboxPurpleSign = { bg = "" },
-                    GruvboxYellowSign = { bg = "" },
-                    GruvboxRedSign = { bg = "" },
-                    GruvboxBlueSign = { bg = "" },
-                    GruvboxAquaSign = { bg = "" },
-                }
-            })
-            vim.cmd("colorscheme gruvbox")
-        end
+        "felipeagc/fleet-theme-nvim",
+        -- dir = "~/code/lua/fleet-theme-nvim",
+        config = function() vim.cmd("colorscheme fleet") end
     },
+    -- {
+    --     "ellisonleao/gruvbox.nvim",
+    --     config = function()
+    --         require("gruvbox").setup({
+    --             contrast = "hard", -- can be "hard", "soft" or empty string
+    --             overrides = {
+    --                 SignColumn = { link = "Normal" },
+    --                 GruvboxGreenSign = { bg = "" },
+    --                 GruvboxOrangeSign = { bg = "" },
+    --                 GruvboxPurpleSign = { bg = "" },
+    --                 GruvboxYellowSign = { bg = "" },
+    --                 GruvboxRedSign = { bg = "" },
+    --                 GruvboxBlueSign = { bg = "" },
+    --                 GruvboxAquaSign = { bg = "" },
+    --             }
+    --         })
+    --         vim.cmd("colorscheme gruvbox")
+    --     end
+    -- },
 })
 
 -- Vim options {{{
@@ -396,7 +398,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 })
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
-capabilities.textDocument.completion.completionItem.snippetSupport = false
+-- capabilities.textDocument.completion.completionItem.snippetSupport = false
 
 local servers = {
     "ansiblels",
@@ -436,6 +438,9 @@ lspconfig.rust_analyzer.setup {
     settings = {
         ["rust-analyzer"] = {
             cargo = { buildScripts = { enable = true } },
+            procMacro = { enable = true },
+            files = { watcher = "server" },
+            completion = { fullFunctionSignatures = { enable = true } },
         },
     },
 }
@@ -745,27 +750,6 @@ cmp.setup {
         { { name = 'buffer' } }
     ),
 }
-
-cmp.setup.cmdline('/', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = {
-        { name = 'buffer' }
-    }
-})
-
-cmp.setup.cmdline(':', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = cmp.config.sources({
-        { name = 'path' }
-    }, {
-        {
-            name = 'cmdline',
-            option = {
-                ignore_cmds = { 'Man', '!' }
-            }
-        }
-    })
-})
 -- }}}
 
 -- Treesitter {{{
@@ -1012,6 +996,15 @@ create_augroup("wgslcommands", "wgsl", {
 })
 -- }}}
 
+-- Coq {{{
+vim.g.coqtail_nomap = 1
+create_augroup("coqcommands", "coq", {
+    "nmap <silent> <buffer> <Leader>n :CoqNext<CR>",
+    "nmap <silent> <buffer> <Leader>p :CoqUndo<CR>",
+    "nmap <silent> <buffer> <Leader>l :CoqToLine<CR>"
+})
+-- }}}
+
 -- Other filetypes {{{
 vim.cmd [[
 autocmd BufRead,BufNewFile *.wgsl set filetype=wgsl
@@ -1023,5 +1016,6 @@ autocmd BufRead,BufNewFile *.ixx set filetype=cpp
 autocmd BufRead,BufNewFile *.mxx set filetype=cpp
 autocmd BufRead,BufNewFile *.mpp set filetype=cpp
 autocmd BufRead,BufNewFile *.cppm set filetype=cpp
+autocmd BufRead,BufNewFile *.slang set filetype=hlsl
 ]]
 -- }}}

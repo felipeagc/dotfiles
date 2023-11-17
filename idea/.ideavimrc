@@ -4,13 +4,14 @@ set ignorecase
 set smartcase
 set commentary
 set surround
+set NERDTree
 
 set scrolloff=5
 
 let mapleader = " "
 
 vnoremap < <gv
-vnoremap < >gv
+vnoremap > >gv
 vnoremap <s-lt> <gv
 vnoremap = =gv
 
@@ -30,16 +31,16 @@ nmap <leader>fg :action FindInPath<CR>
 nnoremap <silent> <C-=> :action EditorIncreaseFontSize<CR>
 nnoremap <silent> <C--> :action EditorDecreaseFontSize<CR>
 
-imap <C-h> <C-o>:action ParameterInfo<CR>
-imap <C-y> <Action>(ShowErrorDescription)
+imap <C-h> <Action>(ParameterInfo)
 nmap <C-y> <Action>(ShowErrorDescription)
-imap <C-SPC> :action CodeCompletion<CR>
 
-nmap <leader>mr :action RenameElement<CR>
+nmap <leader>mR :action RenameElement<CR>
 nmap <leader>mf :action ReformatCode<CR>
 nmap <leader>mi :action OptimizeImports<CR>
-nmap <leader>mb :action CompileProject<CR>
+nmap <leader>mb :action Rust.Build<CR>
 nmap <leader>mr :action Run<CR>
 
 nnoremap <c-o> :action Back<cr>
 nnoremap <c-i> :action Forward<cr>
+
+nnoremap - :NERDTreeToggle<CR>
