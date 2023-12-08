@@ -37,6 +37,7 @@ nmap <C-y> <Action>(ShowErrorDescription)
 nmap <leader>mR :action RenameElement<CR>
 nmap <leader>mf :action ReformatCode<CR>
 nmap <leader>mi :action OptimizeImports<CR>
+" nmap <leader>mb :action Build<CR>
 nmap <leader>mb :action Rust.Build<CR>
 nmap <leader>mr :action Run<CR>
 

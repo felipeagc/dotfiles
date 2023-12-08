@@ -13,6 +13,11 @@ HISTFILE=~/.zsh_history
 
 export EDITOR=nvim
 
+if [ -d "$HOME/.asdf" ]; then
+    . "$HOME/.asdf/asdf.sh"
+    fpath=(${ASDF_DIR}/completions $fpath)
+fi
+
 # Use modern completion system
 fpath=(~/.zsh/completion $fpath)
 autoload -Uz compinit && compinit -i
