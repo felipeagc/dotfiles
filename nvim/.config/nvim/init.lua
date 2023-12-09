@@ -30,18 +30,23 @@ require("lazy").setup({
     'williamboman/mason.nvim',
     'williamboman/mason-lspconfig.nvim',
     'neovim/nvim-lspconfig',
-    {
-        'echasnovski/mini.completion',
-        version = false,
-        config = function()
-            require('mini.completion').setup {
-                window = {
-                    info = { height = 8, width = 40, border = 'none' },
-                    signature = { height = 8, width = 40, border = 'none' },
-                },
-            }
-        end
-    },
+    -- {
+    --     'echasnovski/mini.completion',
+    --     version = false,
+    --     config = function()
+    --         require('mini.completion').setup {
+    --             window = {
+    --                 info = { height = 8, width = 40, border = 'none' },
+    --                 signature = { height = 8, width = 40, border = 'none' },
+    --             },
+    --         }
+    --     end
+    -- },
+
+    'hrsh7th/cmp-nvim-lsp',
+    'hrsh7th/nvim-cmp',
+    'hrsh7th/cmp-vsnip',
+    'hrsh7th/vim-vsnip',
 
     {
         'nvimtools/none-ls.nvim',
@@ -68,6 +73,10 @@ require("lazy").setup({
             }
         end
     },
+    {
+        'windwp/nvim-ts-autotag',
+        config = function() require('nvim-ts-autotag').setup() end
+    },
 
     'tpope/vim-surround',
     'tpope/vim-endwise',
@@ -80,6 +89,11 @@ require("lazy").setup({
     'tpope/vim-projectionist',
     'tpope/vim-commentary',
     'ntpeters/vim-better-whitespace', -- highlight trailing whitespace
+    {
+        'windwp/nvim-autopairs',
+        event = "InsertEnter",
+        opts = {} -- this is equalent to setup({}) function
+    },
 
     {
         'lewis6991/gitsigns.nvim',
@@ -94,7 +108,6 @@ require("lazy").setup({
                 return
             end
 
-            -- Completion with tab
             vim.keymap.set('i', '<Tab>', function()
                 if require("copilot.suggestion").is_visible() then
                     require("copilot.suggestion").accept()
@@ -341,9 +354,7 @@ vim.diagnostic.config {
 }
 
 require("mason").setup()
-require("mason-lspconfig").setup({
-    automatic_installation = false,
-})
+require("mason-lspconfig").setup()
 
 local lspconfig = require("lspconfig")
 
@@ -417,6 +428,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
 
 local servers = {
+    ["emmet_language_server"] = {},
     ["lua_ls"] = {},
     ["ansiblels"] = {},
     ["csharp_ls"] = {},
@@ -465,6 +477,40 @@ for lsp, settings in pairs(servers) do
     settings.capabilities = capabilities
     lspconfig[lsp].setup(settings)
 end
+-- }}}
+
+-- Nvim-cmp {{{
+local cmp = require('cmp')
+
+cmp.setup({
+    snippet = {
+        -- REQUIRED - you must specify a snippet engine
+        expand = function(args)
+            vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+            -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+            -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+            -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+        end,
+    },
+    window = {
+        -- completion = cmp.config.window.bordered(),
+        -- documentation = cmp.config.window.bordered(),
+    },
+    mapping = cmp.mapping.preset.insert({
+        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-f>'] = cmp.mapping.scroll_docs(4),
+        ['<C-Space>'] = cmp.mapping.complete(),
+        ['<C-e>'] = cmp.mapping.abort(),
+        ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    }),
+    sources = cmp.config.sources({
+        { name = 'nvim_lsp' },
+        { name = 'vsnip' }, -- For vsnip users.
+        -- { name = 'luasnip' }, -- For luasnip users.
+        -- { name = 'ultisnips' }, -- For ultisnips users.
+        -- { name = 'snippy' }, -- For snippy users.
+    })
+})
 -- }}}
 
 -- YAML companion {{{
@@ -555,12 +601,10 @@ vim.cmd([[
 -- }}}
 
 -- Completion {{{
-vim.cmd [[inoremap <silent> <C-n> <C-x><C-o>]]
+-- vim.cmd [[inoremap <silent> <C-n> <C-x><C-o>]]
 -- }}}
 
 -- Treesitter {{{
-local parsers = require("nvim-treesitter.parsers")
-
 require("nvim-treesitter.parsers").get_parser_configs().just = {
     install_info = {
         url = "https://github.com/IndianBoy42/tree-sitter-just", -- local path or git repo
@@ -635,8 +679,8 @@ require("nvim-treesitter.configs").setup {
             "latex",
             "ocaml",
             "python",
-            "html",
-            "htmldjango",
+            -- "html",
+            -- "htmldjango",
         },
     },
     context_commentstring = {
