@@ -95,6 +95,8 @@ bindkey -s ^f "tmux-sessionizer\n"
 
 [[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
 
+alias s="kitten ssh"
+
 if type "rtx" > /dev/null; then
     eval "$(rtx activate zsh)"
 fi

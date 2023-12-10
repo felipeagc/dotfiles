@@ -12,12 +12,16 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-local function create_augroup(groupname, filetype, commands)
-    local group = vim.api.nvim_create_augroup(groupname, {})
-    for _, command in ipairs(commands) do
+local function create_augroup(filetype, callback)
+    if type(filetype) == "table" then
+        for _, ft in ipairs(filetype) do
+            create_augroup(ft, callback)
+        end
+    else
+        local group = vim.api.nvim_create_augroup(filetype .. "_augroup", {})
         vim.api.nvim_create_autocmd({ "FileType" }, {
             pattern = filetype,
-            command = command,
+            callback = callback,
             group = group,
         })
     end
@@ -30,18 +34,6 @@ require("lazy").setup({
     'williamboman/mason.nvim',
     'williamboman/mason-lspconfig.nvim',
     'neovim/nvim-lspconfig',
-    -- {
-    --     'echasnovski/mini.completion',
-    --     version = false,
-    --     config = function()
-    --         require('mini.completion').setup {
-    --             window = {
-    --                 info = { height = 8, width = 40, border = 'none' },
-    --                 signature = { height = 8, width = 40, border = 'none' },
-    --             },
-    --         }
-    --     end
-    -- },
 
     'hrsh7th/cmp-nvim-lsp',
     'hrsh7th/nvim-cmp',
@@ -484,18 +476,11 @@ local cmp = require('cmp')
 
 cmp.setup({
     snippet = {
-        -- REQUIRED - you must specify a snippet engine
         expand = function(args)
-            vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-            -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-            -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
-            -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+            vim.fn["vsnip#anonymous"](args.body)
         end,
     },
-    window = {
-        -- completion = cmp.config.window.bordered(),
-        -- documentation = cmp.config.window.bordered(),
-    },
+    window = {},
     mapping = cmp.mapping.preset.insert({
         ['<C-b>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
@@ -505,10 +490,7 @@ cmp.setup({
     }),
     sources = cmp.config.sources({
         { name = 'nvim_lsp' },
-        { name = 'vsnip' }, -- For vsnip users.
-        -- { name = 'luasnip' }, -- For luasnip users.
-        -- { name = 'ultisnips' }, -- For ultisnips users.
-        -- { name = 'snippy' }, -- For snippy users.
+        { name = 'vsnip' },
     })
 })
 -- }}}
@@ -705,8 +687,12 @@ vim.g.vim_markdown_folding_disabled = 1
 
 -- C/C++ {{{
 vim.g.bazel_make_command = "Make"
+vim.g.compiler_gcc_ignore_unmatched_lines = 1
+-- vim.g.cpp_no_cpp17 = 1
 
-function set_c_makeprg()
+create_augroup({"c", "cpp"}, function()
+    vim.cmd [[ setlocal cpt-=t ]]
+
     if vim.fn.filereadable('meson.build') == 1 then
         vim.api.nvim_buf_set_option(0, 'makeprg', 'ninja -C build')
     end
@@ -725,23 +711,16 @@ function set_c_makeprg()
     if vim.fn.filereadable('WORKSPACE') == 1 then
         vim.keymap.set("n", "<f7>", ":Bazel build<CR>", { silent = true, buffer = true })
     end
-end
-
-vim.g.compiler_gcc_ignore_unmatched_lines = 1
--- vim.g.cpp_no_cpp17 = 1
-
-create_augroup("ccommands", "c", {
-    "setlocal cpt-=t",
-    "lua set_c_makeprg()",
-})
-create_augroup("cppcommands", "cpp", {
-    "setlocal cpt-=t",
-    "lua set_c_makeprg()",
-})
+end)
 -- }}}
 
 -- Go {{{
-function set_go_makeprg()
+create_augroup({"go", "sql"}, function()
+    vim.opt_local.shiftwidth = 4
+    vim.opt_local.tabstop = 4
+    vim.opt_local.expandtab = false
+    vim.cmd [[ setlocal cpt-=t ]]
+
     if vim.fn.filereadable('makefile') == 1 or vim.fn.filereadable('Makefile') == 1 then
         vim.api.nvim_buf_set_option(0, 'makeprg', 'make')
     elseif vim.fn.filereadable('justfile') == 1 or vim.fn.filereadable('Justfile') == 1 then
@@ -749,45 +728,38 @@ function set_go_makeprg()
     else
         vim.api.nvim_buf_set_option(0, 'makeprg', 'go build .')
     end
-end
-
-create_augroup("gocommands", "go", {
-    "setlocal shiftwidth=4 tabstop=4 noexpandtab",
-    "lua set_go_makeprg()",
-    "setlocal cpt-=t",
-})
-
-create_augroup("sqlbindings", "sql", {
-    "setlocal shiftwidth=4 tabstop=4 noexpandtab",
-    "lua set_go_makeprg()",
-    "setlocal cpt-=t",
-})
+end)
 -- }}}
 
 -- Zig {{{
 vim.g.zig_fmt_autosave = 0
-create_augroup("zigcommands", "zig", { "setlocal cpt-=t" })
+create_augroup("zig", function()
+    vim.cmd [[ setlocal cpt-=t ]]
+end)
 -- }}}
 
 -- Javascript {{{
-create_augroup("javascriptcommands", "javascript", { "setlocal cpt-=t" })
-create_augroup("typescriptcommands", "typescript", { "setlocal cpt-=t" })
-create_augroup("typescriptreactcommands", "typescriptreact", { "setlocal cpt-=t" })
+create_augroup(
+    {"javascript", "typescript", "typescriptreact"},
+    function()
+        vim.cmd [[ setlocal cpt-=t ]]
+    end
+)
 -- }}}
 
 -- Ocaml {{{
-create_augroup("ocamlcommands", "ocaml", {
-    "setlocal cpt-=t",
-    "setlocal makeprg=dune\\ build"
-})
+create_augroup("ocaml", function()
+    vim.cmd [[ setlocal cpt-=t ]]
+    vim.opt_local.makeprg = "dune build"
+end)
 -- }}}
 
 -- Rust {{{
 vim.g.cargo_makeprg_params = "check"
-create_augroup("rustcommands", "rust", {
-    "setlocal cpt-=t",
-    "nmap <silent> <buffer> <leader>mR :CargoReload<CR>",
-})
+create_augroup("rust", function()
+    vim.cmd [[ setlocal cpt-=t ]]
+    vim.keymap.set("n", "<Leader>mR", ":CargoReload<CR>", { buffer = true, silent = false })
+end)
 -- }}}
 
 -- Dart {{{
@@ -797,10 +769,10 @@ function flutter_hot_reload()
     vim.cmd [[silent execute '!kill -SIGUSR1 $(pgrep -f "[f]lutter_tool.*run")']]
 end
 
-create_augroup("dartcommands", "dart", {
-    "setlocal cpt-=t",
-    "nmap <silent> <buffer> <F7> :lua flutter_hot_reload()<CR>",
-})
+create_augroup("dart", function()
+    vim.cmd [[ setlocal cpt-=t ]]
+    vim.keymap.set("n", "<f7>", ":lua flutter_hot_reload()<CR>", { buffer = true, silent = true })
+end)
 -- }}}
 
 -- Latex {{{
@@ -811,47 +783,47 @@ function open_pdf_preview()
     vim.cmd("silent !zathura " .. pdf_path .. " & disown")
 end
 
-create_augroup("latexcommands", "tex", {
-    "setlocal makeprg=latexmk",
-    "nmap <silent> <buffer> <Leader>mp :lua open_pdf_preview()<CR>",
-})
+create_augroup("tex", function()
+    vim.opt_local.makeprg = "latexmk"
+    vim.keymap.set("n", "<Leader>mp", ":lua open_pdf_preview()<CR>", { buffer = true, silent = true })
+end)
 -- }}}
 
 -- Clojure {{{
-create_augroup("clojurebindings", "clojure", {
-    "nmap <silent> <buffer> <C-Return> :ConjureEvalCurrentForm<CR>",
-    "imap <silent> <buffer> <C-Return> <C-o>:ConjureEvalCurrentForm<CR>",
-    "nnoremap <silent> <buffer> <f7> :ConjureEvalBuf<CR>",
-    "inoremap <silent> <buffer> <f7> :ConjureEvalBuf<CR>",
-})
+create_augroup("clojure", function()
+    vim.keymap.set("n", "<C-Return>", ":ConjureEvalCurrentForm<CR>", { buffer = true, silent = true })
+    vim.keymap.set("i", "<C-Return>", "<C-o>:ConjureEvalCurrentForm<CR>", { buffer = true, silent = true })
+    vim.keymap.set("n", "<f7>", ":ConjureEvalBuf<CR>", { buffer = true, silent = true, remap = false })
+    vim.keymap.set("i", "<f7>", ":ConjureEvalBuf<CR>", { buffer = true, silent = true, remap = false })
+end)
 -- }}}
 
 -- Elixir {{{
-require("felipe_elixir").setup()
-create_augroup("elixircommands", "elixir", {
-    "compiler exunit"
-})
+create_augroup("elixir", function()
+    vim.cmd [[ compiler exunit ]]
+end)
 -- }}}
 
 -- Swift {{{
-create_augroup("swiftcommands", "swift", {
-    "setlocal makeprg=xcodebuild"
-})
+create_augroup("swift", function()
+    vim.opt_local.makeprg = "xcodebuild"
+end)
 -- }}}
 
 -- WGSL {{{
-create_augroup("wgslcommands", "wgsl", {
-    "setlocal commentstring=//\\ %s"
-})
+create_augroup("wgsl", function()
+    vim.opt_local.commentstring = "//\\ %s"
+end)
 -- }}}
 
 -- Coq {{{
 vim.g.coqtail_nomap = 1
-create_augroup("coqcommands", "coq", {
-    "nmap <silent> <buffer> <Leader>n :CoqNext<CR>",
-    "nmap <silent> <buffer> <Leader>p :CoqUndo<CR>",
-    "nmap <silent> <buffer> <Leader>l :CoqToLine<CR>"
-})
+
+create_augroup("coq", function()
+    vim.keymap.set("n", "<Leader>n", ":CoqNext<CR>", { buffer = true, silent = true })
+    vim.keymap.set("n", "<Leader>p", ":CoqUndo<CR>", { buffer = true, silent = true })
+    vim.keymap.set("n", "<Leader>l", ":CoqToLine<CR>", { buffer = true, silent = true })
+end)
 -- }}}
 
 -- Other filetypes {{{
