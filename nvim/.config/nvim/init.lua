@@ -87,7 +87,9 @@ require("lazy").setup({
     {
         "windwp/nvim-autopairs",
         event = "InsertEnter",
-        opts = {}, -- this is equalent to setup({}) function
+        opts = {
+            disable_filetype = { "TelescopePrompt" , "vim", "clojure" },
+        }, -- this is equalent to setup({}) function
     },
 
     {
@@ -170,6 +172,7 @@ require("lazy").setup({
             vim.g["conjure#mapping#doc_word"] = false
         end,
     },
+    { "eraserhd/parinfer-rust", build = "cargo build --release" },
 
     "nvim-lua/plenary.nvim",
     "nvim-telescope/telescope.nvim",
@@ -359,6 +362,26 @@ require("mason").setup()
 require("mason-lspconfig").setup()
 
 local lspconfig = require("lspconfig")
+local lsp_configs = require("lspconfig.configs")
+
+if not lsp_configs.lexical then
+    local lexical_config = {
+        filetypes = { "elixir", "eelixir", "heex" },
+        cmd = { vim.fn.expand("$HOME/Code/elixir/lexical/_build/dev/package/lexical/bin/start_lexical.sh") },
+        settings = {},
+    }
+    lsp_configs.lexical = {
+        default_config = {
+            filetypes = lexical_config.filetypes,
+            cmd = lexical_config.cmd,
+            root_dir = function(fname)
+                return lspconfig.util.root_pattern("mix.exs", ".git")(fname) or vim.loop.os_homedir()
+            end,
+            -- optional settings
+            settings = lexical_config.settings,
+        },
+    }
+end
 
 local function format_buffer(bufnr)
     local bufnr = bufnr or 0
@@ -447,6 +470,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 local servers = {
+    ["lexical"] = {},
     ["emmet_language_server"] = {},
     ["ansiblels"] = {},
     ["csharp_ls"] = {},
@@ -482,11 +506,6 @@ local servers = {
     },
     ["clangd"] = {
         filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
-    },
-    ["elixirls"] = {
-        settings = {
-            -- elixirLS = { dialyzerEnabled = false },
-        },
     },
 }
 
