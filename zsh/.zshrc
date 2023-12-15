@@ -100,3 +100,8 @@ alias s="kitten ssh"
 if type "rtx" > /dev/null; then
     eval "$(rtx activate zsh)"
 fi
+
+if type "xc" > /dev/null; then
+    autoload -U +X bashcompinit && bashcompinit
+    complete -o nospace -C /opt/homebrew/bin/xc xc
+fi

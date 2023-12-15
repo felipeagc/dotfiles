@@ -55,6 +55,32 @@ require("lazy").setup({
     },
 
     { "j-hui/fidget.nvim", opts = {} },
+    {
+        "nvim-pack/nvim-spectre",
+        config = function()
+            require("spectre").setup({
+                highlight = {
+                    ui = "String",
+                    search = "DiffDelete",
+                    replace = "DiffAdd",
+                },
+            })
+        end,
+    },
+
+    {
+        "folke/which-key.nvim",
+        event = "VeryLazy",
+        init = function()
+            vim.o.timeout = true
+            vim.o.timeoutlen = 300
+        end,
+        opts = {
+            -- your configuration comes here
+            -- or leave it empty to use the default settings
+            -- refer to the configuration section below
+        },
+    },
 
     { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
     "nvim-treesitter/playground",
@@ -88,7 +114,7 @@ require("lazy").setup({
         "windwp/nvim-autopairs",
         event = "InsertEnter",
         opts = {
-            disable_filetype = { "TelescopePrompt" , "vim", "clojure" },
+            disable_filetype = { "TelescopePrompt", "vim", "clojure" },
         }, -- this is equalent to setup({}) function
     },
 
@@ -288,6 +314,10 @@ vim.keymap.set("n", "<C-b>", ":Telescope buffers<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>fg", ":Telescope live_grep<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>fv", vim.cmd.Ex, { silent = true })
 
+vim.keymap.set("n", "<leader>S", '<cmd>lua require("spectre").toggle()<CR>', {
+    desc = "Toggle Spectre",
+})
+
 vim.keymap.set("n", "<C-j>", "<C-w>w", { remap = false })
 vim.keymap.set("n", "<C-k>", "<C-w>W", { remap = false })
 
@@ -330,6 +360,9 @@ vim.keymap.set("n", "<A-p>", "<nop>", { silent = true })
 vim.keymap.set("n", "<f7>", ":Make<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>mb", ":Make<CR>", { silent = true })
 vim.keymap.set("n", "<A-r>", ":Make<CR>", { silent = true })
+
+vim.keymap.set("n", "<Leader>tt", ":TestSuite<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>tf", ":TestFile<CR>", { silent = true })
 
 -- Disable ex mode binding
 vim.cmd([[map Q <Nop>]])
@@ -470,6 +503,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 local servers = {
+    ["templ"] = {},
     ["lexical"] = {},
     ["emmet_language_server"] = {},
     ["ansiblels"] = {},
@@ -510,6 +544,8 @@ local servers = {
 }
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
+-- Enable file watcher support for LSP
+capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true
 for lsp, settings in pairs(servers) do
     settings.capabilities = capabilities
     lspconfig[lsp].setup(settings)
@@ -678,6 +714,7 @@ require("nvim-treesitter.configs").setup({
         "rust",
         "slint",
         "svelte",
+        "templ",
         "tsx",
         "typescript",
         "wgsl",
@@ -774,6 +811,12 @@ create_augroup({ "go", "sql" }, function()
         vim.api.nvim_buf_set_option(0, "makeprg", "go build .")
     end
 end)
+
+vim.filetype.add({
+    extension = {
+        templ = "templ",
+    },
+})
 -- }}}
 
 -- Zig {{{
