@@ -109,6 +109,44 @@ require("lazy").setup({
     "tpope/vim-vinegar",
     "tpope/vim-projectionist",
     "tpope/vim-commentary",
+    {
+        "kristijanhusak/vim-dadbod-ui",
+        dependencies = {
+            { "tpope/vim-dadbod", lazy = true },
+            { "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql" }, lazy = true },
+        },
+        cmd = {
+            'DBUI',
+            'DBUIToggle',
+            'DBUIAddConnection',
+            'DBUIFindBuffer',
+        },
+        init = function()
+            vim.g.db_ui_disable_mappings = 1
+        end,
+        config = function()
+            vim.cmd[[
+                autocmd FileType sql,mysql,plsql lua require('cmp').setup.buffer({ sources = {{ name = 'vim-dadbod-completion' }} })
+
+                autocmd FileType dbui nmap <buffer> o <Plug>(DBUI_SelectLine)
+                autocmd FileType dbui nmap <buffer> <CR> <Plug>(DBUI_SelectLine)
+                autocmd FileType dbui nmap <buffer> <2-LeftMouse> <Plug>(DBUI_SelectLine)
+
+                autocmd FileType dbui nmap <buffer> S <Plug>(DBUI_SelectLineVsplit)
+                autocmd FileType dbui nmap <buffer> R <Plug>(DBUI_Redraw)
+                autocmd FileType dbui nmap <buffer> d <Plug>(DBUI_DeleteLine)
+                autocmd FileType dbui nmap <buffer> A <Plug>(DBUI_AddConnection)
+                autocmd FileType dbui nmap <buffer> H <Plug>(DBUI_ToggleDetails)
+                autocmd FileType dbui nmap <buffer> r <Plug>(DBUI_RenameLine)
+                autocmd FileType dbui nmap <buffer> q <Plug>(DBUI_Quit)
+
+                autocmd FileType sql nmap <buffer> <Leader>W <Plug>(DBUI_SaveQuery)
+                autocmd FileType sql nmap <buffer> <Leader>E <Plug>(DBUI_EditBindParameters)
+                autocmd FileType sql nmap <buffer> <Leader>S <Plug>(DBUI_ExecuteQuery)
+                autocmd FileType sql vmap <buffer> <Leader>S <Plug>(DBUI_ExecuteQuery)
+            ]]
+        end,
+    },
     "ntpeters/vim-better-whitespace", -- highlight trailing whitespace
     {
         "windwp/nvim-autopairs",
@@ -190,15 +228,37 @@ require("lazy").setup({
     "elixir-editors/vim-elixir",
     "kaarmu/typst.vim",
     "whonore/Coqtail",
+    "PhilT/vim-fsharp",
+    "slint-ui/vim-slint",
+    {
+        "scalameta/nvim-metals",
+        ft = { "scala", "sbt", "java" },
+        config = function(self, metals_config)
+            local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = self.ft,
+                callback = function()
+                    require("metals").initialize_or_attach(metals_config)
+                end,
+                group = nvim_metals_group,
+            })
+        end,
+    },
     {
         "Olical/conjure",
-        config = function()
+        ft = { "clojure" },
+        init = function()
             vim.g["conjure#filetypes"] = { "clojure" }
             vim.g["conjure#mapping#enable_defaults"] = false
             vim.g["conjure#mapping#doc_word"] = false
         end,
+        config = function()
+            require("conjure.main").main()
+            require("conjure.mapping")["on-filetype"]()
+        end,
     },
-    { "eraserhd/parinfer-rust", build = "cargo build --release" },
+    -- { "eraserhd/parinfer-rust", build = "cargo build --release" },
+    { "gpanders/nvim-parinfer" },
 
     "nvim-lua/plenary.nvim",
     "nvim-telescope/telescope.nvim",
@@ -515,6 +575,9 @@ local servers = {
     ["tailwindcss"] = {},
     ["wgsl_analyzer"] = {},
     ["zls"] = {},
+    ["jdtls"] = {},
+    ["fsautocomplete"] = {},
+    ["slint_lsp"] = {},
     ["denols"] = {
         root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
         init_options = { lint = true },
@@ -668,14 +731,15 @@ vim.cmd([[
 -- }}}
 
 -- Treesitter {{{
-require("nvim-treesitter.parsers").get_parser_configs().just = {
+require("nvim-treesitter.parsers").get_parser_configs().fsharp = {
     install_info = {
-        url = "https://github.com/IndianBoy42/tree-sitter-just", -- local path or git repo
-        files = { "src/parser.c", "src/scanner.cc" },
-        branch = "main",
-        use_makefile = true, -- this may be necessary on MacOS (try if you see compiler errors)
+        url = "https://github.com/Nsidorenco/tree-sitter-fsharp",
+        branch = "develop",
+        files = { "src/scanner.cc", "src/parser.c" },
+        generate_requires_npm = true,
+        requires_generate_from_grammar = true,
     },
-    maintainers = { "@IndianBoy42" },
+    filetype = "fsharp",
 }
 
 require("nvim-treesitter.configs").setup({
@@ -696,6 +760,7 @@ require("nvim-treesitter.configs").setup({
         "css",
         "dart",
         "elixir",
+        "fsharp",
         "glsl",
         "go",
         "graphql",
@@ -714,6 +779,7 @@ require("nvim-treesitter.configs").setup({
         "rust",
         "slint",
         "svelte",
+        "scala",
         "templ",
         "tsx",
         "typescript",
@@ -743,6 +809,7 @@ require("nvim-treesitter.configs").setup({
             "latex",
             "ocaml",
             "python",
+            "slint",
             -- "html",
             -- "htmldjango",
         },
@@ -880,6 +947,7 @@ create_augroup("clojure", function()
     vim.keymap.set("i", "<C-Return>", "<C-o>:ConjureEvalCurrentForm<CR>", { buffer = true, silent = true })
     vim.keymap.set("n", "<f7>", ":ConjureEvalBuf<CR>", { buffer = true, silent = true, remap = false })
     vim.keymap.set("i", "<f7>", ":ConjureEvalBuf<CR>", { buffer = true, silent = true, remap = false })
+    vim.keymap.set("n", "<leader>mb", ":ConjureEvalBuf<CR>", { buffer = true, silent = true, remap = false })
 end)
 -- }}}
 
@@ -915,7 +983,6 @@ end)
 vim.cmd([[
 autocmd BufRead,BufNewFile *.wgsl set filetype=wgsl
 autocmd BufRead,BufNewFile *.hlsl set filetype=hlsl
-autocmd BufRead,BufNewFile *.slint set filetype=slint
 autocmd BufRead,BufNewFile Tiltfile set filetype=starlark
 autocmd BufRead,BufNewFile Dockerfile.* set filetype=dockerfile
 autocmd BufRead,BufNewFile *.ixx set filetype=cpp
