@@ -49,6 +49,10 @@ require("lazy").setup({
                 sources = {
                     null_ls.builtins.formatting.biome,
                     null_ls.builtins.formatting.stylua,
+                    null_ls.builtins.formatting.sqlfluff.with({ extra_args = { "--dialect", "postgres" } }),
+                    null_ls.builtins.formatting.swiftformat,
+                    null_ls.builtins.diagnostics.swiftlint,
+                    null_ls.builtins.diagnostics.sqlfluff.with({ extra_args = { "--dialect", "postgres" } }),
                 },
             })
         end,
@@ -116,16 +120,16 @@ require("lazy").setup({
             { "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql" }, lazy = true },
         },
         cmd = {
-            'DBUI',
-            'DBUIToggle',
-            'DBUIAddConnection',
-            'DBUIFindBuffer',
+            "DBUI",
+            "DBUIToggle",
+            "DBUIAddConnection",
+            "DBUIFindBuffer",
         },
         init = function()
             vim.g.db_ui_disable_mappings = 1
         end,
         config = function()
-            vim.cmd[[
+            vim.cmd([[
                 autocmd FileType sql,mysql,plsql lua require('cmp').setup.buffer({ sources = {{ name = 'vim-dadbod-completion' }} })
 
                 autocmd FileType dbui nmap <buffer> o <Plug>(DBUI_SelectLine)
@@ -144,7 +148,7 @@ require("lazy").setup({
                 autocmd FileType sql nmap <buffer> <Leader>E <Plug>(DBUI_EditBindParameters)
                 autocmd FileType sql nmap <buffer> <Leader>S <Plug>(DBUI_ExecuteQuery)
                 autocmd FileType sql vmap <buffer> <Leader>S <Plug>(DBUI_ExecuteQuery)
-            ]]
+            ]])
         end,
     },
     "ntpeters/vim-better-whitespace", -- highlight trailing whitespace
@@ -218,6 +222,67 @@ require("lazy").setup({
 
     "editorconfig/editorconfig-vim",
     "derekwyatt/vim-fswitch",
+    {
+        "nvim-lualine/lualine.nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        config = function()
+            require("lualine").setup({
+                options = {
+                    theme = "gruvbox-material",
+                    component_separators = "|",
+                    section_separators = { left = "", right = "" },
+                },
+                sections = {
+                    lualine_a = {
+                        { "mode", separator = { left = "" }, right_padding = 2 },
+                    },
+                    lualine_b = {
+                        {
+                            "filename",
+                            path = 1,
+                        },
+                        "branch",
+                    },
+                    lualine_c = { "fileformat" },
+                    lualine_x = {},
+                    lualine_y = { "filetype", "progress" },
+                    lualine_z = {
+                        { "location", separator = { right = "" }, left_padding = 2 },
+                    },
+                },
+                inactive_sections = {
+                    lualine_a = { "filename" },
+                    lualine_b = {},
+                    lualine_c = {},
+                    lualine_x = {},
+                    lualine_y = {},
+                    lualine_z = { "location" },
+                },
+                tabline = {},
+                extensions = {},
+            })
+        end,
+    },
+    {
+        "rest-nvim/rest.nvim",
+        dependencies = { { "nvim-lua/plenary.nvim" } },
+        config = function()
+            require("rest-nvim").setup({
+                result = {
+                    formatters = {
+                        json = "jq",
+                        html = function(body)
+                            return vim.fn.system({ "tidy", "-i", "-q", "-" }, body)
+                        end,
+                    },
+                },
+            })
+
+            create_augroup("http", function()
+                vim.keymap.set("n", "<C-Return>", "<Plug>RestNvim", { buffer = true, silent = true })
+            end)
+        end,
+    },
 
     -- Language support
     "plasticboy/vim-markdown",
@@ -230,6 +295,43 @@ require("lazy").setup({
     "whonore/Coqtail",
     "PhilT/vim-fsharp",
     "slint-ui/vim-slint",
+    {
+        "wojciech-kulik/xcodebuild.nvim",
+        dependencies = {
+            "nvim-telescope/telescope.nvim",
+            "MunifTanjim/nui.nvim",
+        },
+        config = function()
+            require("xcodebuild").setup({
+                code_coverage = {
+                    enabled = true,
+                },
+            })
+
+            create_augroup("swift", function()
+                vim.keymap.set("n", "<leader>ml", "<cmd>XcodebuildToggleLogs<cr>", { desc = "Toggle Xcodebuild Logs" })
+                vim.keymap.set("n", "<leader>mb", "<cmd>XcodebuildBuild<cr>", { desc = "Build Project" })
+                vim.keymap.set("n", "<leader>mR", "<cmd>XcodebuildBuildRun<cr>", { desc = "Build & Run Project" })
+                vim.keymap.set("n", "<leader>mt", "<cmd>XcodebuildTest<cr>", { desc = "Run Tests" })
+                vim.keymap.set("n", "<leader>mT", "<cmd>XcodebuildTestClass<cr>", { desc = "Run This Test Class" })
+                vim.keymap.set("n", "<leader>X", "<cmd>XcodebuildPicker<cr>", { desc = "Show All Xcodebuild Actions" })
+                vim.keymap.set("n", "<leader>xd", "<cmd>XcodebuildSelectDevice<cr>", { desc = "Select Device" })
+                vim.keymap.set("n", "<leader>xp", "<cmd>XcodebuildSelectTestPlan<cr>", { desc = "Select Test Plan" })
+                vim.keymap.set(
+                    "n",
+                    "<leader>xc",
+                    "<cmd>XcodebuildToggleCodeCoverage<cr>",
+                    { desc = "Toggle Code Coverage" }
+                )
+                vim.keymap.set(
+                    "n",
+                    "<leader>xC",
+                    "<cmd>XcodebuildShowCodeCoverageReport<cr>",
+                    { desc = "Show Code Coverage Report" }
+                )
+            end)
+        end,
+    },
     {
         "scalameta/nvim-metals",
         ft = { "scala", "sbt", "java" },
@@ -606,6 +708,22 @@ local servers = {
     },
 }
 
+if vim.fn.has("mac") == 1 then
+    servers["sourcekit"] = {
+        capabilities = capabilities,
+        on_attach = on_attach,
+        cmd = {
+            "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
+        },
+        root_dir = function(filename, _)
+            return lspconfig.util.root_pattern("buildServer.json")(filename)
+                or lspconfig.util.root_pattern("*.xcodeproj", "*.xcworkspace")(filename)
+                or lspconfig.util.find_git_ancestor(filename)
+                or lspconfig.util.root_pattern("Package.swift")(filename)
+        end,
+    }
+end
+
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 -- Enable file watcher support for LSP
 capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true
@@ -723,6 +841,7 @@ vim.cmd([[
     autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType scala setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType sbt setlocal shiftwidth=2 tabstop=2 expandtab
+    autocmd FileType sql setlocal shiftwidth=4 tabstop=4 expandtab
 ]])
 -- }}}
 
@@ -768,6 +887,7 @@ require("nvim-treesitter.configs").setup({
         "heex",
         "hlsl",
         "html",
+        "http",
         "java",
         "javascript",
         "latex",
@@ -810,6 +930,7 @@ require("nvim-treesitter.configs").setup({
             "ocaml",
             "python",
             "slint",
+            "sql",
             -- "html",
             -- "htmldjango",
         },
@@ -954,12 +1075,6 @@ end)
 -- Elixir {{{
 create_augroup("elixir", function()
     vim.cmd([[ compiler exunit ]])
-end)
--- }}}
-
--- Swift {{{
-create_augroup("swift", function()
-    vim.opt_local.makeprg = "xcodebuild"
 end)
 -- }}}
 
