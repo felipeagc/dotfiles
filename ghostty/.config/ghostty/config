@@ -10,6 +10,13 @@ font-thicken = true
 cursor-style = block
 cursor-style-blink = false
 
+shell-integration-features = no-cursor
+
+window-padding-x = 5
+window-padding-y = 5
+
+macos-titlebar-tabs = true
+
 palette = 0=34302C
 palette = 1=BD8183
 palette = 2=78997A

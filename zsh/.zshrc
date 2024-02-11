@@ -76,11 +76,6 @@ export DOCKER_BUILDKIT=1
 # opam configuration
 test -r $HOME/.opam/opam-init/init.zsh && . $HOME/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
-# Nix home manager
-export NIX_PATH=$HOME/.nix-defexpr/channels:/nix/var/nix/profiles/per-user/root/channels${NIX_PATH:+:$NIX_PATH}
-test -r $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh && . $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh > /dev/null 2> /dev/null || true
-export XDG_DATA_DIRS=$HOME/.nix-profile/share:$HOME/.share:"${XDG_DATA_DIRS:-/usr/local/share/:/usr/share/}"
-
 if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
     export MOZ_ENABLE_WAYLAND=1
     export QT_QPA_PLATFORM="wayland"
@@ -97,8 +92,8 @@ bindkey -s ^f "tmux-sessionizer\n"
 
 alias s="kitten ssh"
 
-if type "rtx" > /dev/null; then
-    eval "$(rtx activate zsh)"
+if type "mise" > /dev/null; then
+    eval "$(mise activate zsh)"
 fi
 
 if type "xc" > /dev/null; then

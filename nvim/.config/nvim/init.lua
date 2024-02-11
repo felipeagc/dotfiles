@@ -296,6 +296,16 @@ require("lazy").setup({
     "PhilT/vim-fsharp",
     "slint-ui/vim-slint",
     {
+        "akinsho/flutter-tools.nvim",
+        ft = { "dart" },
+        lazy = true,
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "stevearc/dressing.nvim", -- optional for vim.ui.select
+        },
+        config = true,
+    },
+    {
         "wojciech-kulik/xcodebuild.nvim",
         dependencies = {
             "nvim-telescope/telescope.nvim",
@@ -671,7 +681,6 @@ local servers = {
     ["ansiblels"] = {},
     ["csharp_ls"] = {},
     ["clojure_lsp"] = {},
-    ["dartls"] = {},
     ["ocamllsp"] = {},
     ["svelte"] = {},
     ["tailwindcss"] = {},
@@ -1036,16 +1045,19 @@ end)
 -- }}}
 
 -- Dart {{{
-vim.g.dart_style_guide = "2"
+-- vim.g.dart_style_guide = "2"
 
-function flutter_hot_reload()
-    vim.cmd([[silent execute '!kill -SIGUSR1 $(pgrep -f "[f]lutter_tool.*run")']])
-end
+-- function flutter_hot_reload()
+--     vim.cmd([[silent execute '!kill -SIGUSR1 $(pgrep -f "[f]lutter_tool.*run")']])
+-- end
 
-create_augroup("dart", function()
-    vim.cmd([[ setlocal cpt-=t ]])
-    vim.keymap.set("n", "<f7>", ":lua flutter_hot_reload()<CR>", { buffer = true, silent = true })
-end)
+-- create_augroup("dart", function()
+--     vim.cmd([[ setlocal cpt-=t ]])
+--     vim.keymap.set("n", "<Leader>mR", ":lua flutter_hot_reload()<CR>", { buffer = true, silent = true })
+-- end)
+-- vim.cmd([[
+-- autocmd BufWritePost */lib/*.dart :lua flutter_hot_reload()
+-- ]])
 -- }}}
 
 -- Latex {{{
