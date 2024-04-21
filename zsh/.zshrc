@@ -90,6 +90,7 @@ bindkey -s ^f "tmux-sessionizer\n"
 
 [[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
 
+alias j=just
 alias s="kitten ssh"
 
 if type "mise" > /dev/null; then
@@ -100,3 +101,7 @@ if type "xc" > /dev/null; then
     autoload -U +X bashcompinit && bashcompinit
     complete -o nospace -C /opt/homebrew/bin/xc xc
 fi
+
+export LEDGER_DIR="$HOME/Seafile/MyLibrary/Finances"
+export LEDGER_FILE="$LEDGER_DIR/all.journal"
+alias fin="just -d $LEDGER_DIR -f $LEDGER_DIR/justfile"

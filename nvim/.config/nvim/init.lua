@@ -50,7 +50,6 @@ require("lazy").setup({
                     null_ls.builtins.formatting.biome,
                     null_ls.builtins.formatting.stylua,
                     null_ls.builtins.formatting.sqlfluff.with({ extra_args = { "--dialect", "postgres" } }),
-                    null_ls.builtins.formatting.swiftformat,
                     null_ls.builtins.diagnostics.swiftlint,
                     null_ls.builtins.diagnostics.sqlfluff.with({ extra_args = { "--dialect", "postgres" } }),
                 },
@@ -58,7 +57,7 @@ require("lazy").setup({
         end,
     },
 
-    { "j-hui/fidget.nvim", opts = {} },
+    -- { "j-hui/fidget.nvim", opts = {} },
     {
         "nvim-pack/nvim-spectre",
         config = function()
@@ -157,7 +156,7 @@ require("lazy").setup({
         event = "InsertEnter",
         opts = {
             disable_filetype = { "TelescopePrompt", "vim", "clojure" },
-        }, -- this is equalent to setup({}) function
+        },
     },
 
     {
@@ -205,6 +204,7 @@ require("lazy").setup({
                         javascript = true,
                         typescript = true,
                         typescriptreact = true,
+                        markdown = false,
                         ["*"] = true,
                     },
                 },
@@ -222,62 +222,58 @@ require("lazy").setup({
 
     "editorconfig/editorconfig-vim",
     "derekwyatt/vim-fswitch",
+    -- {
+    --     "nvim-lualine/lualine.nvim",
+    --     dependencies = { "nvim-tree/nvim-web-devicons" },
+    --     config = function()
+    --         require("lualine").setup({
+    --             options = {
+    --                 theme = "gruvbox-material",
+    --                 component_separators = "|",
+    --                 section_separators = { left = "", right = "" },
+    --             },
+    --             sections = {
+    --                 lualine_a = {
+    --                     { "mode", separator = { left = "" }, right_padding = 2 },
+    --                 },
+    --                 lualine_b = {
+    --                     {
+    --                         "filename",
+    --                         path = 1,
+    --                     },
+    --                     "branch",
+    --                 },
+    --                 lualine_c = { "fileformat" },
+    --                 lualine_x = {},
+    --                 lualine_y = { "filetype", "progress" },
+    --                 lualine_z = {
+    --                     { "location", separator = { right = "" }, left_padding = 2 },
+    --                 },
+    --             },
+    --             inactive_sections = {
+    --                 lualine_a = { "filename" },
+    --                 lualine_b = {},
+    --                 lualine_c = {},
+    --                 lualine_x = {},
+    --                 lualine_y = {},
+    --                 lualine_z = { "location" },
+    --             },
+    --             tabline = {},
+    --             extensions = {},
+    --         })
+    --     end,
+    -- },
     {
-        "nvim-lualine/lualine.nvim",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        config = function()
-            require("lualine").setup({
-                options = {
-                    theme = "gruvbox-material",
-                    component_separators = "|",
-                    section_separators = { left = "", right = "" },
-                },
-                sections = {
-                    lualine_a = {
-                        { "mode", separator = { left = "" }, right_padding = 2 },
-                    },
-                    lualine_b = {
-                        {
-                            "filename",
-                            path = 1,
-                        },
-                        "branch",
-                    },
-                    lualine_c = { "fileformat" },
-                    lualine_x = {},
-                    lualine_y = { "filetype", "progress" },
-                    lualine_z = {
-                        { "location", separator = { right = "" }, left_padding = 2 },
-                    },
-                },
-                inactive_sections = {
-                    lualine_a = { "filename" },
-                    lualine_b = {},
-                    lualine_c = {},
-                    lualine_x = {},
-                    lualine_y = {},
-                    lualine_z = { "location" },
-                },
-                tabline = {},
-                extensions = {},
-            })
-        end,
+        "vhyrro/luarocks.nvim",
+        priority = 1000,
+        config = true,
     },
     {
         "rest-nvim/rest.nvim",
-        dependencies = { { "nvim-lua/plenary.nvim" } },
+        ft = "http",
+        dependencies = { "luarocks.nvim" },
         config = function()
-            require("rest-nvim").setup({
-                result = {
-                    formatters = {
-                        json = "jq",
-                        html = function(body)
-                            return vim.fn.system({ "tidy", "-i", "-q", "-" }, body)
-                        end,
-                    },
-                },
-            })
-
+            require("rest-nvim").setup()
             create_augroup("http", function()
                 vim.keymap.set("n", "<C-Return>", "<Plug>RestNvim", { buffer = true, silent = true })
             end)
@@ -285,16 +281,16 @@ require("lazy").setup({
     },
 
     -- Language support
-    "plasticboy/vim-markdown",
-    "ziglang/zig.vim",
-    "rust-lang/rust.vim",
-    "felipeagc/dusk.vim",
-    "IndianBoy42/tree-sitter-just",
-    "elixir-editors/vim-elixir",
-    "kaarmu/typst.vim",
-    "whonore/Coqtail",
-    "PhilT/vim-fsharp",
-    "slint-ui/vim-slint",
+    { "alaviss/nim.nvim", ft = { "nim" } },
+    { "plasticboy/vim-markdown", ft = { "markdown" } },
+    { "ziglang/zig.vim", ft = { "zig" } },
+    { "rust-lang/rust.vim", ft = { "rust" } },
+    { "NoahTheDuke/vim-just", ft = { "just" } },
+    { "elixir-editors/vim-elixir", ft = { "elixir" } },
+    { "kaarmu/typst.vim", ft = { "typst" } },
+    { "whonore/Coqtail", ft = { "coq" } },
+    { "PhilT/vim-fsharp", ft = { "fsharp" } },
+    { "slint-ui/vim-slint", ft = { "slint" } },
     {
         "akinsho/flutter-tools.nvim",
         ft = { "dart" },
@@ -304,57 +300,6 @@ require("lazy").setup({
             "stevearc/dressing.nvim", -- optional for vim.ui.select
         },
         config = true,
-    },
-    {
-        "wojciech-kulik/xcodebuild.nvim",
-        dependencies = {
-            "nvim-telescope/telescope.nvim",
-            "MunifTanjim/nui.nvim",
-        },
-        config = function()
-            require("xcodebuild").setup({
-                code_coverage = {
-                    enabled = true,
-                },
-            })
-
-            create_augroup("swift", function()
-                vim.keymap.set("n", "<leader>ml", "<cmd>XcodebuildToggleLogs<cr>", { desc = "Toggle Xcodebuild Logs" })
-                vim.keymap.set("n", "<leader>mb", "<cmd>XcodebuildBuild<cr>", { desc = "Build Project" })
-                vim.keymap.set("n", "<leader>mR", "<cmd>XcodebuildBuildRun<cr>", { desc = "Build & Run Project" })
-                vim.keymap.set("n", "<leader>mt", "<cmd>XcodebuildTest<cr>", { desc = "Run Tests" })
-                vim.keymap.set("n", "<leader>mT", "<cmd>XcodebuildTestClass<cr>", { desc = "Run This Test Class" })
-                vim.keymap.set("n", "<leader>X", "<cmd>XcodebuildPicker<cr>", { desc = "Show All Xcodebuild Actions" })
-                vim.keymap.set("n", "<leader>xd", "<cmd>XcodebuildSelectDevice<cr>", { desc = "Select Device" })
-                vim.keymap.set("n", "<leader>xp", "<cmd>XcodebuildSelectTestPlan<cr>", { desc = "Select Test Plan" })
-                vim.keymap.set(
-                    "n",
-                    "<leader>xc",
-                    "<cmd>XcodebuildToggleCodeCoverage<cr>",
-                    { desc = "Toggle Code Coverage" }
-                )
-                vim.keymap.set(
-                    "n",
-                    "<leader>xC",
-                    "<cmd>XcodebuildShowCodeCoverageReport<cr>",
-                    { desc = "Show Code Coverage Report" }
-                )
-            end)
-        end,
-    },
-    {
-        "scalameta/nvim-metals",
-        ft = { "scala", "sbt", "java" },
-        config = function(self, metals_config)
-            local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = self.ft,
-                callback = function()
-                    require("metals").initialize_or_attach(metals_config)
-                end,
-                group = nvim_metals_group,
-            })
-        end,
     },
     {
         "Olical/conjure",
@@ -395,11 +340,17 @@ require("lazy").setup({
         -- dir = "~/code/lua/fleet-theme-nvim",
         -- config = function() vim.cmd("colorscheme fleet") end
     },
+    -- {
+    --     "savq/melange-nvim",
+    --     config = function()
+    --         vim.cmd("colorscheme melange")
+    --     end,
+    -- },
     {
-        "savq/melange-nvim",
+        "lunacookies/vim-colors-xcode",
         config = function()
-            vim.cmd("colorscheme melange")
-        end,
+            vim.cmd("colorscheme xcodehc")
+        end
     },
     {
         "ellisonleao/gruvbox.nvim",
@@ -675,6 +626,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 local servers = {
+    ["nim_langserver"] = {},
     ["templ"] = {},
     ["lexical"] = {},
     ["emmet_language_server"] = {},
@@ -716,22 +668,6 @@ local servers = {
         filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
     },
 }
-
-if vim.fn.has("mac") == 1 then
-    servers["sourcekit"] = {
-        capabilities = capabilities,
-        on_attach = on_attach,
-        cmd = {
-            "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
-        },
-        root_dir = function(filename, _)
-            return lspconfig.util.root_pattern("buildServer.json")(filename)
-                or lspconfig.util.root_pattern("*.xcodeproj", "*.xcworkspace")(filename)
-                or lspconfig.util.find_git_ancestor(filename)
-                or lspconfig.util.root_pattern("Package.swift")(filename)
-        end,
-    }
-end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 -- Enable file watcher support for LSP
@@ -900,6 +836,7 @@ require("nvim-treesitter.configs").setup({
         "java",
         "javascript",
         "latex",
+        "ledger",
         "lua",
         "make",
         "markdown",
