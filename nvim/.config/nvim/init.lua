@@ -222,47 +222,48 @@ require("lazy").setup({
 
     "editorconfig/editorconfig-vim",
     "derekwyatt/vim-fswitch",
-    -- {
-    --     "nvim-lualine/lualine.nvim",
-    --     dependencies = { "nvim-tree/nvim-web-devicons" },
-    --     config = function()
-    --         require("lualine").setup({
-    --             options = {
-    --                 theme = "gruvbox-material",
-    --                 component_separators = "|",
-    --                 section_separators = { left = "", right = "" },
-    --             },
-    --             sections = {
-    --                 lualine_a = {
-    --                     { "mode", separator = { left = "" }, right_padding = 2 },
-    --                 },
-    --                 lualine_b = {
-    --                     {
-    --                         "filename",
-    --                         path = 1,
-    --                     },
-    --                     "branch",
-    --                 },
-    --                 lualine_c = { "fileformat" },
-    --                 lualine_x = {},
-    --                 lualine_y = { "filetype", "progress" },
-    --                 lualine_z = {
-    --                     { "location", separator = { right = "" }, left_padding = 2 },
-    --                 },
-    --             },
-    --             inactive_sections = {
-    --                 lualine_a = { "filename" },
-    --                 lualine_b = {},
-    --                 lualine_c = {},
-    --                 lualine_x = {},
-    --                 lualine_y = {},
-    --                 lualine_z = { "location" },
-    --             },
-    --             tabline = {},
-    --             extensions = {},
-    --         })
-    --     end,
-    -- },
+    {
+        "nvim-lualine/lualine.nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        config = function()
+            require("lualine").setup({
+                options = {
+                    theme = "nightfly",
+                    -- component_separators = { left = '', right = '' },
+                    component_separators = { left = '', right = '' },
+                    section_separators = { left = "", right = "" },
+                },
+                -- sections = {
+                --     lualine_a = {
+                --         { "mode", separator = { left = "" }, right_padding = 2 },
+                --     },
+                --     lualine_b = {
+                --         {
+                --             "filename",
+                --             path = 1,
+                --         },
+                --         "branch",
+                --     },
+                --     lualine_c = { "fileformat" },
+                --     lualine_x = {},
+                --     lualine_y = { "filetype", "progress" },
+                --     lualine_z = {
+                --         { "location", separator = { right = "" }, left_padding = 2 },
+                --     },
+                -- },
+                -- inactive_sections = {
+                --     lualine_a = { "filename" },
+                --     lualine_b = {},
+                --     lualine_c = {},
+                --     lualine_x = {},
+                --     lualine_y = {},
+                --     lualine_z = { "location" },
+                -- },
+                -- tabline = {},
+                -- extensions = {},
+            })
+        end,
+    },
     {
         "vhyrro/luarocks.nvim",
         priority = 1000,
@@ -282,15 +283,14 @@ require("lazy").setup({
 
     -- Language support
     { "alaviss/nim.nvim", ft = { "nim" } },
-    { "plasticboy/vim-markdown", ft = { "markdown" } },
+    -- { "plasticboy/vim-markdown", ft = { "markdown" } },
     { "ziglang/zig.vim", ft = { "zig" } },
     { "rust-lang/rust.vim", ft = { "rust" } },
+    { "apple/pkl-neovim" },
     { "NoahTheDuke/vim-just", ft = { "just" } },
     { "elixir-editors/vim-elixir", ft = { "elixir" } },
     { "kaarmu/typst.vim", ft = { "typst" } },
     { "whonore/Coqtail", ft = { "coq" } },
-    { "PhilT/vim-fsharp", ft = { "fsharp" } },
-    { "slint-ui/vim-slint", ft = { "slint" } },
     {
         "akinsho/flutter-tools.nvim",
         ft = { "dart" },
@@ -350,7 +350,7 @@ require("lazy").setup({
         "lunacookies/vim-colors-xcode",
         config = function()
             vim.cmd("colorscheme xcodehc")
-        end
+        end,
     },
     {
         "ellisonleao/gruvbox.nvim",
@@ -486,6 +486,9 @@ vim.keymap.set("n", "<A-r>", ":Make<CR>", { silent = true })
 
 vim.keymap.set("n", "<Leader>tt", ":TestSuite<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>tf", ":TestFile<CR>", { silent = true })
+
+vim.keymap.set("n", "<Leader>en", vim.diagnostic.goto_next, { silent = true })
+vim.keymap.set("n", "<Leader>ep", vim.diagnostic.goto_prev, { silent = true })
 
 -- Disable ex mode binding
 vim.cmd([[map Q <Nop>]])
@@ -640,7 +643,6 @@ local servers = {
     ["zls"] = {},
     ["jdtls"] = {},
     ["fsautocomplete"] = {},
-    ["slint_lsp"] = {},
     ["denols"] = {
         root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
         init_options = { lint = true },
@@ -771,22 +773,23 @@ vim.cmd([[
 vim.cmd([[
     autocmd FileType c setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType cpp setlocal shiftwidth=4 tabstop=4 expandtab
-    autocmd FileType lua setlocal shiftwidth=4 tabstop=4 expandtab
+    autocmd FileType dart setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType glsl setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType haskell setlocal shiftwidth=2 tabstop=2 expandtab
-    autocmd FileType ocaml setlocal shiftwidth=2 tabstop=2 expandtab
-    autocmd FileType dart setlocal shiftwidth=2 tabstop=2 expandtab
-    autocmd FileType zig setlocal shiftwidth=4 tabstop=4 expandtab
-    autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 expandtab
-    autocmd FileType typescript setlocal shiftwidth=2 tabstop=2 expandtab
-    autocmd FileType typescriptreact setlocal shiftwidth=2 tabstop=2 expandtab
-    autocmd FileType rust setlocal shiftwidth=4 tabstop=4 expandtab
-    autocmd FileType svelte setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType html setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2 expandtab
-    autocmd FileType scala setlocal shiftwidth=2 tabstop=2 expandtab
+    autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 expandtab
+    autocmd FileType lua setlocal shiftwidth=4 tabstop=4 expandtab
+    autocmd FileType ocaml setlocal shiftwidth=2 tabstop=2 expandtab
+    autocmd FileType pkl setlocal shiftwidth=2 tabstop=2 expandtab
+    autocmd FileType rust setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType sbt setlocal shiftwidth=2 tabstop=2 expandtab
+    autocmd FileType scala setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType sql setlocal shiftwidth=4 tabstop=4 expandtab
+    autocmd FileType svelte setlocal shiftwidth=2 tabstop=2 expandtab
+    autocmd FileType typescript setlocal shiftwidth=2 tabstop=2 expandtab
+    autocmd FileType typescriptreact setlocal shiftwidth=2 tabstop=2 expandtab
+    autocmd FileType zig setlocal shiftwidth=4 tabstop=4 expandtab
 ]])
 -- }}}
 
@@ -795,17 +798,6 @@ vim.cmd([[
 -- }}}
 
 -- Treesitter {{{
-require("nvim-treesitter.parsers").get_parser_configs().fsharp = {
-    install_info = {
-        url = "https://github.com/Nsidorenco/tree-sitter-fsharp",
-        branch = "develop",
-        files = { "src/scanner.cc", "src/parser.c" },
-        generate_requires_npm = true,
-        requires_generate_from_grammar = true,
-    },
-    filetype = "fsharp",
-}
-
 require("nvim-treesitter.configs").setup({
     -- Install parsers synchronously (only applied to `ensure_installed`)
     sync_install = false,
@@ -824,7 +816,6 @@ require("nvim-treesitter.configs").setup({
         "css",
         "dart",
         "elixir",
-        "fsharp",
         "glsl",
         "go",
         "graphql",
@@ -841,11 +832,11 @@ require("nvim-treesitter.configs").setup({
         "make",
         "markdown",
         "ocaml",
+        "pkl",
         "python",
         "rust",
-        "slint",
-        "svelte",
         "scala",
+        "svelte",
         "templ",
         "tsx",
         "typescript",
@@ -875,7 +866,6 @@ require("nvim-treesitter.configs").setup({
             "latex",
             "ocaml",
             "python",
-            "slint",
             "sql",
             -- "html",
             -- "htmldjango",
@@ -898,7 +888,7 @@ require("nvim-treesitter.configs").setup({
 -- }}}
 
 -- Markdown {{{
-vim.g.vim_markdown_folding_disabled = 1
+-- vim.g.vim_markdown_folding_disabled = 1
 -- }}}
 
 -- C/C++ {{{
