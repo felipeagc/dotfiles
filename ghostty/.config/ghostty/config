@@ -1,6 +1,3 @@
-background = 292522
-foreground = ECE1D7
-
 window-theme = "dark"
 
 font-family = IBM Plex Mono
@@ -12,6 +9,7 @@ cursor-style-blink = false
 
 keybind = super+k=goto_split:previous
 keybind = super+j=goto_split:next
+keybind = super+enter=new_split:right
 
 shell-integration-features = no-cursor
 
@@ -19,20 +17,31 @@ window-padding-x = 5
 window-padding-y = 5
 
 macos-titlebar-tabs = true
+window-vsync = true
 
-palette = 0=34302C
-palette = 1=BD8183
-palette = 2=78997A
-palette = 3=E49B5D
-palette = 4=7F91B2
-palette = 5=B380B0
-palette = 6=7B9695
-palette = 7=C1A78E
-palette = 8=867462
-palette = 9=D47766
-palette = 10=85B695
-palette = 11=EBC06D
-palette = 12=A3A9CE
-palette = 13=CF9BC2
-palette = 14=89B3B6
-palette = 15=ECE1D7
+background = 161617
+foreground = c9c7cd
+
+palette = 0=27272a
+palette = 8=353539
+
+palette = 1=f5a191
+palette = 9=ffae9f
+
+palette = 2=90b99f
+palette = 10=9dc6ac
+
+palette = 3=e6b99d
+palette = 11=f0c5a9
+
+palette = 4=aca1cf
+palette = 12=b9aeda
+
+palette = 5=e29eca
+palette = 13=ecaad6
+
+palette = 6=ea83a5
+palette = 14=f591b2
+
+palette = 7=c1c0d4
+palette = 15=cac9dd

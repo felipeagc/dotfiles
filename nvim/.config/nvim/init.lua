@@ -78,11 +78,6 @@ require("lazy").setup({
             vim.o.timeout = true
             vim.o.timeoutlen = 300
         end,
-        opts = {
-            -- your configuration comes here
-            -- or leave it empty to use the default settings
-            -- refer to the configuration section below
-        },
     },
 
     { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
@@ -228,56 +223,10 @@ require("lazy").setup({
         config = function()
             require("lualine").setup({
                 options = {
-                    theme = "nightfly",
-                    -- component_separators = { left = '', right = '' },
-                    component_separators = { left = '', right = '' },
+                    component_separators = { left = "", right = "" },
                     section_separators = { left = "", right = "" },
                 },
-                -- sections = {
-                --     lualine_a = {
-                --         { "mode", separator = { left = "" }, right_padding = 2 },
-                --     },
-                --     lualine_b = {
-                --         {
-                --             "filename",
-                --             path = 1,
-                --         },
-                --         "branch",
-                --     },
-                --     lualine_c = { "fileformat" },
-                --     lualine_x = {},
-                --     lualine_y = { "filetype", "progress" },
-                --     lualine_z = {
-                --         { "location", separator = { right = "" }, left_padding = 2 },
-                --     },
-                -- },
-                -- inactive_sections = {
-                --     lualine_a = { "filename" },
-                --     lualine_b = {},
-                --     lualine_c = {},
-                --     lualine_x = {},
-                --     lualine_y = {},
-                --     lualine_z = { "location" },
-                -- },
-                -- tabline = {},
-                -- extensions = {},
             })
-        end,
-    },
-    {
-        "vhyrro/luarocks.nvim",
-        priority = 1000,
-        config = true,
-    },
-    {
-        "rest-nvim/rest.nvim",
-        ft = "http",
-        dependencies = { "luarocks.nvim" },
-        config = function()
-            require("rest-nvim").setup()
-            create_augroup("http", function()
-                vim.keymap.set("n", "<C-Return>", "<Plug>RestNvim", { buffer = true, silent = true })
-            end)
         end,
     },
 
@@ -292,16 +241,6 @@ require("lazy").setup({
     { "kaarmu/typst.vim", ft = { "typst" } },
     { "whonore/Coqtail", ft = { "coq" } },
     {
-        "akinsho/flutter-tools.nvim",
-        ft = { "dart" },
-        lazy = true,
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "stevearc/dressing.nvim", -- optional for vim.ui.select
-        },
-        config = true,
-    },
-    {
         "Olical/conjure",
         ft = { "clojure" },
         init = function()
@@ -314,8 +253,6 @@ require("lazy").setup({
             require("conjure.mapping")["on-filetype"]()
         end,
     },
-    -- { "eraserhd/parinfer-rust", build = "cargo build --release" },
-    { "gpanders/nvim-parinfer" },
 
     "nvim-lua/plenary.nvim",
     "nvim-telescope/telescope.nvim",
@@ -336,40 +273,10 @@ require("lazy").setup({
     "someone-stole-my-name/yaml-companion.nvim",
 
     {
-        "felipeagc/fleet-theme-nvim",
-        -- dir = "~/code/lua/fleet-theme-nvim",
-        -- config = function() vim.cmd("colorscheme fleet") end
-    },
-    -- {
-    --     "savq/melange-nvim",
-    --     config = function()
-    --         vim.cmd("colorscheme melange")
-    --     end,
-    -- },
-    {
-        "lunacookies/vim-colors-xcode",
+        "mellow-theme/mellow.nvim",
         config = function()
-            vim.cmd("colorscheme xcodehc")
+            vim.cmd("colorscheme mellow")
         end,
-    },
-    {
-        "ellisonleao/gruvbox.nvim",
-        -- config = function()
-        --     require("gruvbox").setup({
-        --         contrast = "soft", -- can be "hard", "soft" or empty string
-        --         overrides = {
-        --             SignColumn = { link = "Normal" },
-        --             GruvboxGreenSign = { bg = "" },
-        --             GruvboxOrangeSign = { bg = "" },
-        --             GruvboxPurpleSign = { bg = "" },
-        --             GruvboxYellowSign = { bg = "" },
-        --             GruvboxRedSign = { bg = "" },
-        --             GruvboxBlueSign = { bg = "" },
-        --             GruvboxAquaSign = { bg = "" },
-        --         }
-        --     })
-        --     vim.cmd("colorscheme gruvbox")
-        -- end
     },
 })
 
@@ -421,12 +328,6 @@ vim.wo.number = false
 -- vim.wo.cursorline = true
 -- vim.wo.foldmethod = 'marker'
 -- vim.wo.foldlevel = 0
-
-vim.cmd([[
-if exists('g:nvy')
-	set guifont=Cascadia\ Code:h12
-endif
-]])
 -- }}}
 
 -- Keybinds {{{
@@ -523,25 +424,6 @@ require("mason-lspconfig").setup()
 local lspconfig = require("lspconfig")
 local lsp_configs = require("lspconfig.configs")
 
-if not lsp_configs.lexical then
-    local lexical_config = {
-        filetypes = { "elixir", "eelixir", "heex" },
-        cmd = { vim.fn.expand("$HOME/Code/elixir/lexical/_build/dev/package/lexical/bin/start_lexical.sh") },
-        settings = {},
-    }
-    lsp_configs.lexical = {
-        default_config = {
-            filetypes = lexical_config.filetypes,
-            cmd = lexical_config.cmd,
-            root_dir = function(fname)
-                return lspconfig.util.root_pattern("mix.exs", ".git")(fname) or vim.loop.os_homedir()
-            end,
-            -- optional settings
-            settings = lexical_config.settings,
-        },
-    }
-end
-
 local function format_buffer(bufnr)
     local bufnr = bufnr or 0
     vim.lsp.buf.format({
@@ -631,18 +513,15 @@ vim.api.nvim_create_autocmd("LspAttach", {
 local servers = {
     ["nim_langserver"] = {},
     ["templ"] = {},
-    ["lexical"] = {},
+    ["lexical"] = { cmd = { "lexical" } },
     ["emmet_language_server"] = {},
     ["ansiblels"] = {},
     ["csharp_ls"] = {},
     ["clojure_lsp"] = {},
-    ["ocamllsp"] = {},
     ["svelte"] = {},
     ["tailwindcss"] = {},
-    ["wgsl_analyzer"] = {},
     ["zls"] = {},
     ["jdtls"] = {},
-    ["fsautocomplete"] = {},
     ["denols"] = {
         root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
         init_options = { lint = true },
