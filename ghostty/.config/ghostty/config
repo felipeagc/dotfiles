@@ -1,6 +1,6 @@
 window-theme = "dark"
 
-font-family = IBM Plex Mono
+font-family = BlexMono Nerd Font
 font-size = 15
 font-thicken = true
 
@@ -19,29 +19,29 @@ window-padding-y = 5
 macos-titlebar-tabs = true
 window-vsync = true
 
-background = 161617
-foreground = c9c7cd
+background=282828
+foreground=d4be98
 
-palette = 0=27272a
-palette = 8=353539
+palette = 0=3c3836
+palette = 8=3c3836
 
-palette = 1=f5a191
-palette = 9=ffae9f
+palette = 1=ea6962
+palette = 9=ea6962
 
-palette = 2=90b99f
-palette = 10=9dc6ac
+palette = 2=a9b665
+palette = 10=a9b665
 
-palette = 3=e6b99d
-palette = 11=f0c5a9
+palette = 3=d8a657
+palette = 11=d8a657
 
-palette = 4=aca1cf
-palette = 12=b9aeda
+palette = 4=7daea3
+palette = 12=7daea3
 
-palette = 5=e29eca
-palette = 13=ecaad6
+palette = 5=d3869b
+palette = 13=d3869b
 
-palette = 6=ea83a5
-palette = 14=f591b2
+palette = 6=89b482
+palette = 14=89b482
 
-palette = 7=c1c0d4
-palette = 15=cac9dd
+palette = 7=d4be98
+palette = 15=d4be98

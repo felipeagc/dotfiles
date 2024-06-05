@@ -1,5 +1,11 @@
 # Set up the prompt
-export PS1=$'%F{cyan}[%F{reset}%B%n@%M%b %F{yellow}%~%F{cyan}]%F{green}$%F{reset} '
+export PROMPT=$'%F{green}[%F{reset}%B%n@%M%b%F{green}] %F{cyan}%~ %F{red}$vcs_info_msg_0_%f\n%F{yellow}$%F{reset} '
+# Print new line before every prompt except the first one
+precmd() {
+    precmd() {
+        echo
+    }
+}
 
 setopt histignorealldups sharehistory hist_ignore_space
 
@@ -17,6 +23,21 @@ export EDITOR=nvim
 # Use modern completion system
 fpath=(~/.zsh/completion $fpath)
 autoload -Uz compinit && compinit -i
+
+# Load git plugin
+autoload -Uz add-zsh-hook vcs_info
+setopt prompt_subst
+add-zsh-hook precmd vcs_info
+# Style the vcs_info message
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:git*' formats '⎇ %b%u%c'
+# Format when the repo is in an action (merge, rebase, etc)
+zstyle ':vcs_info:git*' actionformats '%F{14}⏱ %*%f'
+zstyle ':vcs_info:git*' unstagedstr '*'
+zstyle ':vcs_info:git*' stagedstr '+'
+# This enables %u and %c (unstaged/staged changes) to work,
+# but can be slow on large repos
+zstyle ':vcs_info:*:*' check-for-changes true
 
 if type "dircolors" > /dev/null; then
     eval "$(dircolors -b)"

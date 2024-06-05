@@ -35,10 +35,54 @@ require("lazy").setup({
     "williamboman/mason-lspconfig.nvim",
     "neovim/nvim-lspconfig",
 
-    "hrsh7th/cmp-nvim-lsp",
-    "hrsh7th/nvim-cmp",
-    "hrsh7th/cmp-vsnip",
-    "hrsh7th/vim-vsnip",
+    {
+        "hrsh7th/nvim-cmp",
+        dependencies = {
+            "hrsh7th/cmp-nvim-lsp",
+            "hrsh7th/cmp-vsnip",
+            "hrsh7th/vim-vsnip",
+            "onsails/lspkind.nvim",
+        },
+        config = function()
+            local cmp = require("cmp")
+            local lspkind = require("lspkind")
+            cmp.setup({
+                snippet = {
+                    expand = function(args)
+                        vim.fn["vsnip#anonymous"](args.body)
+                    end,
+                },
+                window = {},
+                mapping = cmp.mapping.preset.insert({
+                    ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+                    ["<C-f>"] = cmp.mapping.scroll_docs(4),
+                    ["<C-Space>"] = cmp.mapping.complete(),
+                    ["<C-e>"] = cmp.mapping.abort(),
+                    ["<CR>"] = cmp.mapping.confirm({ select = true }),
+                }),
+                sources = cmp.config.sources({
+                    { name = "nvim_lsp" },
+                    { name = "vsnip" },
+                }),
+                formatting = {
+                    format = lspkind.cmp_format({
+                        mode = "symbol", -- show only symbol annotations
+                        maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+                        -- can also be a function to dynamically calculate max width such as
+                        -- maxwidth = function() return math.floor(0.45 * vim.o.columns) end,
+                        ellipsis_char = "...", -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
+                        show_labelDetails = true, -- show labelDetails in menu. Disabled by default
+
+                        -- The function below will be called before any actual modifications from lspkind
+                        -- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
+                        before = function(entry, vim_item)
+                            return vim_item
+                        end,
+                    }),
+                },
+            })
+        end,
+    },
 
     {
         "nvimtools/none-ls.nvim",
@@ -104,7 +148,7 @@ require("lazy").setup({
     "tpope/vim-abolish",
     "tpope/vim-unimpaired",
     "tpope/vim-dispatch",
-    "tpope/vim-vinegar",
+    -- "tpope/vim-vinegar",
     "tpope/vim-projectionist",
     "tpope/vim-commentary",
     {
@@ -152,6 +196,17 @@ require("lazy").setup({
         opts = {
             disable_filetype = { "TelescopePrompt", "vim", "clojure" },
         },
+    },
+
+    {
+        "stevearc/oil.nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        config = function()
+            vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+            require("oil").setup({
+                default_file_explorer = true,
+            })
+        end,
     },
 
     {
@@ -240,6 +295,7 @@ require("lazy").setup({
     { "elixir-editors/vim-elixir", ft = { "elixir" } },
     { "kaarmu/typst.vim", ft = { "typst" } },
     { "whonore/Coqtail", ft = { "coq" } },
+    { "dcharbon/vim-flatbuffers", ft = { "fbs" } },
     {
         "Olical/conjure",
         ft = { "clojure" },
@@ -255,7 +311,27 @@ require("lazy").setup({
     },
 
     "nvim-lua/plenary.nvim",
-    "nvim-telescope/telescope.nvim",
+    {
+        "nvim-telescope/telescope.nvim",
+        config = function()
+            local actions = require("telescope.actions")
+            require("telescope").setup({
+                defaults = {
+                    preview = true,
+                    mappings = {
+                        i = {
+                            ["<esc>"] = actions.close,
+                        },
+                    },
+                    layout_strategy = "horizontal",
+                    layout_config = {
+                        height = { padding = 0 },
+                        width = { padding = 0 },
+                    },
+                },
+            })
+        end,
+    },
 
     {
         "stevearc/dressing.nvim",
@@ -273,9 +349,13 @@ require("lazy").setup({
     "someone-stole-my-name/yaml-companion.nvim",
 
     {
-        "mellow-theme/mellow.nvim",
+        "sainnhe/gruvbox-material",
+        lazy = false,
+        priority = 1000,
         config = function()
-            vim.cmd("colorscheme mellow")
+            vim.g.gruvbox_material_enable_italic = false
+            vim.g.gruvbox_material_enable_bold = true
+            vim.cmd.colorscheme("gruvbox-material")
         end,
     },
 })
@@ -393,20 +473,6 @@ vim.keymap.set("n", "<Leader>ep", vim.diagnostic.goto_prev, { silent = true })
 
 -- Disable ex mode binding
 vim.cmd([[map Q <Nop>]])
--- }}}
-
--- Telescope {{{
-local actions = require("telescope.actions")
-require("telescope").setup({
-    defaults = {
-        preview = true,
-        mappings = {
-            i = {
-                ["<esc>"] = actions.close,
-            },
-        },
-    },
-})
 -- }}}
 
 -- LSP {{{
@@ -560,27 +626,6 @@ end
 -- }}}
 
 -- Nvim-cmp {{{
-local cmp = require("cmp")
-
-cmp.setup({
-    snippet = {
-        expand = function(args)
-            vim.fn["vsnip#anonymous"](args.body)
-        end,
-    },
-    window = {},
-    mapping = cmp.mapping.preset.insert({
-        ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-        ["<C-f>"] = cmp.mapping.scroll_docs(4),
-        ["<C-Space>"] = cmp.mapping.complete(),
-        ["<C-e>"] = cmp.mapping.abort(),
-        ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-    }),
-    sources = cmp.config.sources({
-        { name = "nvim_lsp" },
-        { name = "vsnip" },
-    }),
-})
 -- }}}
 
 -- YAML companion {{{
