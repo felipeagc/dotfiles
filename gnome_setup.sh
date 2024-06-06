@@ -54,8 +54,11 @@ gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-8 "['<Shift><Su
 gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-9 "['<Shift><Super>9']"
 gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-10 "['<Shift><Super>0']"
 
-gsettings set org.gnome.settings-daemon.plugins.media-keys volume-step 1
+gsettings set org.gnome.settings-daemon.plugins.media-keys volume-step 2
 
 gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 20
 gsettings set org.gnome.desktop.peripherals.keyboard delay 230
 gsettings set org.gnome.desktop.peripherals.mouse accel-profile flat
+gsettings set org.gnome.desktop.peripherals.mouse speed -0.35
+
+gsettings set org.gnome.desktop.interface text-scaling-factor 0.9
