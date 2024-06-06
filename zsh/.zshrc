@@ -30,7 +30,7 @@ setopt prompt_subst
 add-zsh-hook precmd vcs_info
 # Style the vcs_info message
 zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:git*' formats '⎇ %b%u%c'
+zstyle ':vcs_info:git*' formats ' %b%u%c'
 # Format when the repo is in an action (merge, rebase, etc)
 zstyle ':vcs_info:git*' actionformats '%F{14}⏱ %*%f'
 zstyle ':vcs_info:git*' unstagedstr '*'
