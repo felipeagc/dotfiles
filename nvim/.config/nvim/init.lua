@@ -148,7 +148,6 @@ require("lazy").setup({
     "tpope/vim-abolish",
     "tpope/vim-unimpaired",
     "tpope/vim-dispatch",
-    -- "tpope/vim-vinegar",
     "tpope/vim-projectionist",
     "tpope/vim-commentary",
     {
@@ -271,7 +270,6 @@ require("lazy").setup({
     { "kdheepak/lazygit.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
 
     "editorconfig/editorconfig-vim",
-    "derekwyatt/vim-fswitch",
     {
         "nvim-lualine/lualine.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -348,16 +346,35 @@ require("lazy").setup({
 
     "someone-stole-my-name/yaml-companion.nvim",
 
+    -- {
+    --     "sainnhe/gruvbox-material",
+    --     lazy = false,
+    --     priority = 1000,
+    --     config = function()
+    --         vim.g.gruvbox_material_enable_italic = false
+    --         vim.g.gruvbox_material_enable_bold = true
+    --         vim.cmd.colorscheme("gruvbox-material")
+    --     end,
+    -- },
+    -- {
+    --     "dgox16/oldworld.nvim",
+    --     lazy = false,
+    --     priority = 1000,
+    --     config = function() vim.cmd.colorscheme("oldworld") end
+    -- },
     {
-        "sainnhe/gruvbox-material",
+        "neanias/everforest-nvim",
+        version = false,
         lazy = false,
-        priority = 1000,
+        priority = 1000, -- make sure to load this before all the other start plugins
+        -- Optional; default configuration will be used if setup isn't called.
         config = function()
-            vim.g.gruvbox_material_enable_italic = false
-            vim.g.gruvbox_material_enable_bold = true
-            vim.cmd.colorscheme("gruvbox-material")
+            require("everforest").setup({
+                background = "hard"
+            })
+            vim.cmd.colorscheme("everforest")
         end,
-    },
+    }
 })
 
 -- Vim options {{{
@@ -406,7 +423,7 @@ vim.o.signcolumn = "yes:1" -- Configure minimum gutter width
 
 vim.wo.number = false
 -- vim.wo.cursorline = true
--- vim.wo.foldmethod = 'marker'
+vim.wo.foldmethod = 'marker'
 -- vim.wo.foldlevel = 0
 -- }}}
 
@@ -457,7 +474,7 @@ vim.keymap.set("n", "<Leader>bcc", ":%bd|e#<CR>", { silent = true })
 -- vim.keymap.set("n", "<Leader>gs", ":vertical Git<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>gs", ":LazyGitCurrentFile<CR>", { silent = true })
 
-vim.keymap.set("n", "<C-a>", ":FSHere<CR>", { silent = true })
+vim.keymap.set("n", "<C-a>", ":A<CR>", { silent = true })
 
 vim.keymap.set("n", "<A-p>", "<nop>", { silent = true })
 
@@ -543,6 +560,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
         end, opts)
 
         local client = vim.lsp.get_client_by_id(ev.data.client_id)
+
+        -- Toggle inlay hints
+        local filter = { bufnr = ev.bufnr }
+        vim.lsp.inlay_hint.enable(false, filter)
+        vim.keymap.set("n", "<C-/>", function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(filter), filter)
+        end, opts)
+
         local active_clients = vim.lsp.get_active_clients()
         if client.name == "denols" then
             for _, client_ in pairs(active_clients) do
@@ -585,7 +610,7 @@ local servers = {
     ["csharp_ls"] = {},
     ["clojure_lsp"] = {},
     ["svelte"] = {},
-    ["tailwindcss"] = {},
+    -- ["tailwindcss"] = {},
     ["zls"] = {},
     ["jdtls"] = {},
     ["denols"] = {
@@ -659,20 +684,17 @@ vim.cmd([[
 ]])
 
 -- Create non-existing directories before writing buffer
-vim.cmd([[
-    function! Mkdir()
-        let dir = expand('%:p:h')
-
-        if !isdirectory(dir)
-            call mkdir(dir, 'p')
-            echo 'Created non-existing directory: '.dir
-        endif
-    endfunction
-
-    augroup on_buffer_write
-        autocmd BufWritePre * call Mkdir()
-    augroup END
-]])
+vim.api.nvim_create_autocmd("BufWritePre", {
+    callback = function()
+        if vim.tbl_contains({ "oil" }, vim.bo.ft) then
+            return
+        end
+        local dir = vim.fn.expand("<afile>:p:h")
+        if vim.fn.isdirectory(dir) == 0 then
+            vim.fn.mkdir(dir, "p")
+        end
+    end,
+})
 
 -- Open help vertically
 vim.cmd([[
@@ -797,7 +819,7 @@ require("nvim-treesitter.configs").setup({
     },
     context_commentstring = {
         enable = true,
-        disable = { "wgsl" },
+        disable = { "wgsl", "cpp", "c", "hlsl" },
     },
     incremental_selection = {
         enable = true,
@@ -821,7 +843,8 @@ vim.g.compiler_gcc_ignore_unmatched_lines = 1
 -- vim.g.cpp_no_cpp17 = 1
 
 create_augroup({ "c", "cpp" }, function()
-    vim.cmd([[ setlocal cpt-=t ]])
+    vim.cmd("setlocal cpt-=t")
+    vim.cmd("setlocal commentstring=//\\ %s")
 
     if vim.fn.filereadable("meson.build") == 1 then
         vim.api.nvim_buf_set_option(0, "makeprg", "ninja -C build")
@@ -841,6 +864,8 @@ create_augroup({ "c", "cpp" }, function()
     if vim.fn.filereadable("WORKSPACE") == 1 then
         vim.keymap.set("n", "<f7>", ":Bazel build<CR>", { silent = true, buffer = true })
     end
+
+    vim.keymap.set("n", "<C-a>", ":ClangdSwitchSourceHeader<CR>", { silent = true, buffer = true })
 end)
 -- }}}
 
@@ -968,5 +993,7 @@ autocmd BufRead,BufNewFile *.mxx set filetype=cpp
 autocmd BufRead,BufNewFile *.mpp set filetype=cpp
 autocmd BufRead,BufNewFile *.cppm set filetype=cpp
 autocmd BufRead,BufNewFile *.slang set filetype=hlsl
+
 ]])
+vim.cmd("autocmd FileType hlsl setlocal commentstring=//\\ %s")
 -- }}}
