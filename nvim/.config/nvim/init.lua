@@ -385,7 +385,7 @@ vim.o.showcmd = true
 vim.o.mouse = "a"
 
 vim.o.scrolloff = 5
-vim.o.clipboard = "unnamedplus"
+-- vim.o.clipboard = "unnamedplus"
 vim.o.completeopt = "menu,menuone,noselect"
 
 vim.o.tabstop = 4
@@ -639,6 +639,9 @@ local servers = {
     ["clangd"] = {
         filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
     },
+    ["slangd"] = {
+        filetypes = { "slang" },
+    }
 }
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -819,7 +822,7 @@ require("nvim-treesitter.configs").setup({
     },
     context_commentstring = {
         enable = true,
-        disable = { "wgsl", "cpp", "c", "hlsl" },
+        disable = { "wgsl", "cpp", "c", "hlsl", "slang" },
     },
     incremental_selection = {
         enable = true,
@@ -992,8 +995,9 @@ autocmd BufRead,BufNewFile *.ixx set filetype=cpp
 autocmd BufRead,BufNewFile *.mxx set filetype=cpp
 autocmd BufRead,BufNewFile *.mpp set filetype=cpp
 autocmd BufRead,BufNewFile *.cppm set filetype=cpp
-autocmd BufRead,BufNewFile *.slang set filetype=hlsl
-
+autocmd BufRead,BufNewFile *.slang set filetype=slang
 ]])
+
 vim.cmd("autocmd FileType hlsl setlocal commentstring=//\\ %s")
+vim.cmd("autocmd FileType slang setlocal commentstring=//\\ %s")
 -- }}}
