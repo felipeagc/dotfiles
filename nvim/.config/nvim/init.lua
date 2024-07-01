@@ -385,7 +385,7 @@ vim.o.showcmd = true
 vim.o.mouse = "a"
 
 vim.o.scrolloff = 5
--- vim.o.clipboard = "unnamedplus"
+vim.o.clipboard = "unnamedplus"
 vim.o.completeopt = "menu,menuone,noselect"
 
 vim.o.tabstop = 4
