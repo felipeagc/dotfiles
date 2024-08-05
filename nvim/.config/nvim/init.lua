@@ -91,25 +91,10 @@ require("lazy").setup({
             local null_ls = require("null-ls")
             null_ls.setup({
                 sources = {
-                    null_ls.builtins.formatting.biome,
                     null_ls.builtins.formatting.stylua,
                     null_ls.builtins.formatting.sqlfluff.with({ extra_args = { "--dialect", "postgres" } }),
                     null_ls.builtins.diagnostics.swiftlint,
                     null_ls.builtins.diagnostics.sqlfluff.with({ extra_args = { "--dialect", "postgres" } }),
-                },
-            })
-        end,
-    },
-
-    -- { "j-hui/fidget.nvim", opts = {} },
-    {
-        "nvim-pack/nvim-spectre",
-        config = function()
-            require("spectre").setup({
-                highlight = {
-                    ui = "String",
-                    search = "DiffDelete",
-                    replace = "DiffAdd",
                 },
             })
         end,
@@ -124,7 +109,99 @@ require("lazy").setup({
         end,
     },
 
-    { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+    {
+        "nvim-treesitter/nvim-treesitter",
+        build = ":TSUpdate",
+        config = function()
+            require("nvim-treesitter.configs").setup({
+                -- Install parsers synchronously (only applied to `ensure_installed`)
+                sync_install = false,
+
+                -- Automatically install missing parsers when entering buffer
+                -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
+                auto_install = true,
+
+                ensure_installed = {
+                    "bash",
+                    "c",
+                    "c_sharp",
+                    "clojure",
+                    "cmake",
+                    "cpp",
+                    "css",
+                    "dart",
+                    "elixir",
+                    "glsl",
+                    "go",
+                    "graphql",
+                    "haskell",
+                    "heex",
+                    "hlsl",
+                    "html",
+                    "http",
+                    "java",
+                    "javascript",
+                    "latex",
+                    "ledger",
+                    "lua",
+                    "make",
+                    "markdown",
+                    "ocaml",
+                    "pkl",
+                    "python",
+                    "rust",
+                    "scala",
+                    "svelte",
+                    "templ",
+                    "tsx",
+                    "typescript",
+                    "wgsl",
+                    "yaml",
+                    "zig",
+                },
+                -- ignore_install = { "javascript" }, -- List of parsers to ignore installing
+
+                highlight = {
+                    enable = true, -- false will disable the whole extension
+                    disable = {
+                        -- "cpp",
+                    }, -- list of language that will be disabled
+                    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+                    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+                    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+                    -- Instead of true it can also be a list of languages
+                    additional_vim_regex_highlighting = false,
+                },
+                indent = {
+                    enable = true,
+                    disable = {
+                        "c",
+                        "cpp",
+                        "haskell",
+                        "latex",
+                        "ocaml",
+                        "python",
+                        "sql",
+                        -- "html",
+                        -- "htmldjango",
+                    },
+                },
+                context_commentstring = {
+                    enable = true,
+                    disable = { "wgsl", "cpp", "c", "hlsl", "slang" },
+                },
+                incremental_selection = {
+                    enable = true,
+                    keymaps = {
+                        init_selection = "<A-n>", -- set to `false` to disable one of the mappings
+                        node_incremental = "<A-n>",
+                        -- scope_incremental = "grc",
+                        node_decremental = "<A-p>",
+                    },
+                },
+            })
+        end,
+    },
     { "nvim-treesitter/nvim-treesitter-context" },
     "nvim-treesitter/playground",
     {
@@ -140,6 +217,35 @@ require("lazy").setup({
         config = function()
             require("nvim-ts-autotag").setup()
         end,
+    },
+    {
+        "jellydn/hurl.nvim",
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
+        },
+        ft = "hurl",
+        opts = {
+            debug = false,
+            show_notification = true,
+            auto_close = false,
+            mode = "split",
+            -- Default formatter
+            formatters = {
+                json = { "jq" }, -- Make sure you have install jq in your system, e.g: brew install jq
+            },
+        },
+        keys = {
+            -- Run API request
+            -- { "<leader>A", "<cmd>HurlRunner<CR>", desc = "Run All requests" },
+            { "<C-Return>", "<cmd>HurlRunnerAt<CR>", desc = "Run Api request" },
+            -- { "<leader>te", "<cmd>HurlRunnerToEntry<CR>", desc = "Run Api request to entry" },
+            -- { "<leader>tm", "<cmd>HurlToggleMode<CR>", desc = "Hurl Toggle Mode" },
+            -- { "<leader>tv", "<cmd>HurlVerbose<CR>", desc = "Run Api in verbose mode" },
+            -- Run Hurl request in visual mode
+            -- { "<leader>h", ":HurlRunner<CR>", desc = "Hurl Runner", mode = "v" },
+        },
     },
 
     "tpope/vim-surround",
@@ -197,6 +303,20 @@ require("lazy").setup({
             disable_filetype = { "TelescopePrompt", "vim", "clojure" },
         },
     },
+    {
+        "NvChad/nvim-colorizer.lua",
+        opts = {
+            filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact", "css", "html" },
+            user_default_options = {
+                names = true, -- "Name" codes like Blue or blue
+                css = true, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
+                mode = "background", -- Set the display mode.
+                tailwind = true, -- Enable tailwind colors
+                virtualtext = "■",
+                always_update = false,
+            },
+        },
+    },
 
     {
         "stevearc/oil.nvim",
@@ -252,6 +372,7 @@ require("lazy").setup({
                         clojure = true,
                         svelte = true,
                         javascript = true,
+                        javascriptreact = true,
                         typescript = true,
                         typescriptreact = true,
                         markdown = false,
@@ -286,7 +407,6 @@ require("lazy").setup({
 
     -- Language support
     { "alaviss/nim.nvim", ft = { "nim" } },
-    -- { "plasticboy/vim-markdown", ft = { "markdown" } },
     { "ziglang/zig.vim", ft = { "zig" } },
     { "rust-lang/rust.vim", ft = { "rust" } },
     { "apple/pkl-neovim" },
@@ -334,48 +454,43 @@ require("lazy").setup({
 
     {
         "stevearc/dressing.nvim",
+        opts = {
+            input = { enabled = false },
+            select = {
+                enabled = true,
+                backend = { "telescope" },
+            },
+        },
+    },
+
+    {
+        "someone-stole-my-name/yaml-companion.nvim",
+        dependencies = { "nvim-telescope/telescope.nvim" },
         config = function()
-            require("dressing").setup({
-                input = { enabled = false },
-                select = {
-                    enabled = true,
-                    backend = { "telescope" },
+            require("telescope").load_extension("yaml_schema")
+            local yaml_cfg = require("yaml-companion").setup({
+                builtin_matchers = {
+                    kubernetes = { enabled = false },
+                    cloud_init = { enabled = false },
                 },
             })
+            require("lspconfig")["yamlls"].setup(yaml_cfg)
         end,
     },
 
-    "someone-stole-my-name/yaml-companion.nvim",
-
-    -- {
-    --     "sainnhe/gruvbox-material",
-    --     lazy = false,
-    --     priority = 1000,
-    --     config = function()
-    --         vim.g.gruvbox_material_enable_italic = false
-    --         vim.g.gruvbox_material_enable_bold = true
-    --         vim.cmd.colorscheme("gruvbox-material")
-    --     end,
-    -- },
-    -- {
-    --     "dgox16/oldworld.nvim",
-    --     lazy = false,
-    --     priority = 1000,
-    --     config = function() vim.cmd.colorscheme("oldworld") end
-    -- },
     {
         "neanias/everforest-nvim",
         version = false,
         lazy = false,
-        priority = 1000, -- make sure to load this before all the other start plugins
-        -- Optional; default configuration will be used if setup isn't called.
+        priority = 1000,
         config = function()
             require("everforest").setup({
-                background = "hard"
+                transparent_background_level = 1,
+                background = "hard",
             })
             vim.cmd.colorscheme("everforest")
         end,
-    }
+    },
 })
 
 -- Vim options {{{
@@ -424,7 +539,7 @@ vim.o.signcolumn = "yes:1" -- Configure minimum gutter width
 
 vim.wo.number = false
 -- vim.wo.cursorline = true
-vim.wo.foldmethod = 'marker'
+vim.wo.foldmethod = "marker"
 -- vim.wo.foldlevel = 0
 -- }}}
 
@@ -517,6 +632,10 @@ local function format_buffer(bufnr)
                 -- If null-ls is active, don't format with other clients
                 return client.name == "null-ls"
             end
+            if #vim.lsp.get_active_clients({ bufnr = bufnr, name = "biome" }) >= 1 then
+                -- If null-ls is active, don't format with other clients
+                return client.name == "biome"
+            end
             return true
         end,
     })
@@ -603,15 +722,18 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 local servers = {
-    ["nim_langserver"] = {},
+    -- ["nim_langserver"] = {},
     ["templ"] = {},
-    ["lexical"] = { cmd = { "lexical" } },
+    -- ["lexical"] = { cmd = { "lexical" } },
     ["emmet_language_server"] = {},
     ["ansiblels"] = {},
-    ["csharp_ls"] = {},
+    -- ["csharp_ls"] = {},
     ["clojure_lsp"] = {},
     ["svelte"] = {},
-    -- ["tailwindcss"] = {},
+    ["tailwindcss"] = {
+        filetypes = { "html", "typescriptreact", "javascriptreact" },
+    },
+    ["biome"] = {},
     ["zls"] = {},
     ["jdtls"] = {},
     ["denols"] = {
@@ -642,7 +764,7 @@ local servers = {
     },
     ["slangd"] = {
         filetypes = { "slang" },
-    }
+    },
 }
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -652,20 +774,6 @@ for lsp, settings in pairs(servers) do
     settings.capabilities = capabilities
     lspconfig[lsp].setup(settings)
 end
--- }}}
-
--- Nvim-cmp {{{
--- }}}
-
--- YAML companion {{{
-require("telescope").load_extension("yaml_schema")
-local yaml_cfg = require("yaml-companion").setup({
-    builtin_matchers = {
-        kubernetes = { enabled = false },
-        cloud_init = { enabled = false },
-    },
-})
-require("lspconfig")["yamlls"].setup(yaml_cfg)
 -- }}}
 
 -- Color scheme {{{
@@ -728,7 +836,6 @@ vim.cmd([[
     autocmd FileType haskell setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType html setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2 expandtab
-    autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType lua setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType ocaml setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType pkl setlocal shiftwidth=2 tabstop=2 expandtab
@@ -737,108 +844,12 @@ vim.cmd([[
     autocmd FileType scala setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType sql setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType svelte setlocal shiftwidth=2 tabstop=2 expandtab
+    autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 expandtab
+    autocmd FileType javascriptreact setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType typescript setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType typescriptreact setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType zig setlocal shiftwidth=4 tabstop=4 expandtab
 ]])
--- }}}
-
--- Completion {{{
--- vim.cmd [[inoremap <silent> <C-n> <C-x><C-o>]]
--- }}}
-
--- Treesitter {{{
-require("nvim-treesitter.configs").setup({
-    -- Install parsers synchronously (only applied to `ensure_installed`)
-    sync_install = false,
-
-    -- Automatically install missing parsers when entering buffer
-    -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
-    auto_install = true,
-
-    ensure_installed = {
-        "bash",
-        "c",
-        "c_sharp",
-        "clojure",
-        "cmake",
-        "cpp",
-        "css",
-        "dart",
-        "elixir",
-        "glsl",
-        "go",
-        "graphql",
-        "haskell",
-        "heex",
-        "hlsl",
-        "html",
-        "http",
-        "java",
-        "javascript",
-        "latex",
-        "ledger",
-        "lua",
-        "make",
-        "markdown",
-        "ocaml",
-        "pkl",
-        "python",
-        "rust",
-        "scala",
-        "svelte",
-        "templ",
-        "tsx",
-        "typescript",
-        "wgsl",
-        "yaml",
-        "zig",
-    },
-    -- ignore_install = { "javascript" }, -- List of parsers to ignore installing
-
-    highlight = {
-        enable = true, -- false will disable the whole extension
-        disable = {
-            -- "cpp",
-        }, -- list of language that will be disabled
-        -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-        -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-        -- Using this option may slow down your editor, and you may see some duplicate highlights.
-        -- Instead of true it can also be a list of languages
-        additional_vim_regex_highlighting = false,
-    },
-    indent = {
-        enable = true,
-        disable = {
-            "c",
-            "cpp",
-            "haskell",
-            "latex",
-            "ocaml",
-            "python",
-            "sql",
-            -- "html",
-            -- "htmldjango",
-        },
-    },
-    context_commentstring = {
-        enable = true,
-        disable = { "wgsl", "cpp", "c", "hlsl", "slang" },
-    },
-    incremental_selection = {
-        enable = true,
-        keymaps = {
-            init_selection = "<A-n>", -- set to `false` to disable one of the mappings
-            node_incremental = "<A-n>",
-            -- scope_incremental = "grc",
-            node_decremental = "<A-p>",
-        },
-    },
-})
--- }}}
-
--- Markdown {{{
--- vim.g.vim_markdown_folding_disabled = 1
 -- }}}
 
 -- C/C++ {{{
@@ -922,22 +933,6 @@ create_augroup("rust", function()
     vim.cmd([[ setlocal cpt-=t ]])
     vim.keymap.set("n", "<Leader>mR", ":CargoReload<CR>", { buffer = true, silent = false })
 end)
--- }}}
-
--- Dart {{{
--- vim.g.dart_style_guide = "2"
-
--- function flutter_hot_reload()
---     vim.cmd([[silent execute '!kill -SIGUSR1 $(pgrep -f "[f]lutter_tool.*run")']])
--- end
-
--- create_augroup("dart", function()
---     vim.cmd([[ setlocal cpt-=t ]])
---     vim.keymap.set("n", "<Leader>mR", ":lua flutter_hot_reload()<CR>", { buffer = true, silent = true })
--- end)
--- vim.cmd([[
--- autocmd BufWritePost */lib/*.dart :lua flutter_hot_reload()
--- ]])
 -- }}}
 
 -- Latex {{{
