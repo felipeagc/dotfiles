@@ -77,3 +77,4 @@ hypridle
 hyprlock
 hyprpaper
 xdg-desktop-portal-hyprland
+jq
