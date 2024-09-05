@@ -147,7 +147,6 @@ require("lazy").setup({
                     "make",
                     "markdown",
                     "ocaml",
-                    "pkl",
                     "python",
                     "rust",
                     "scala",
@@ -409,7 +408,6 @@ require("lazy").setup({
     { "alaviss/nim.nvim", ft = { "nim" } },
     { "ziglang/zig.vim", ft = { "zig" } },
     { "rust-lang/rust.vim", ft = { "rust" } },
-    { "apple/pkl-neovim" },
     { "NoahTheDuke/vim-just", ft = { "just" } },
     { "elixir-editors/vim-elixir", ft = { "elixir" } },
     { "kaarmu/typst.vim", ft = { "typst" } },
@@ -838,7 +836,6 @@ vim.cmd([[
     autocmd FileType htmldjango setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType lua setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType ocaml setlocal shiftwidth=2 tabstop=2 expandtab
-    autocmd FileType pkl setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType rust setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType sbt setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType scala setlocal shiftwidth=2 tabstop=2 expandtab

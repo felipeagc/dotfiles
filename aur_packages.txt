@@ -4,4 +4,3 @@ cryptomator-bin
 onedrive-abraunegg
 onedrivegui
 vesktop-bin
-zen-browser-avx2-bin
