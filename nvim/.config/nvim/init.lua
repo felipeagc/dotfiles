@@ -391,18 +391,6 @@ require("lazy").setup({
     { "kdheepak/lazygit.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
 
     "editorconfig/editorconfig-vim",
-    {
-        "nvim-lualine/lualine.nvim",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        config = function()
-            require("lualine").setup({
-                options = {
-                    component_separators = { left = "", right = "" },
-                    section_separators = { left = "", right = "" },
-                },
-            })
-        end,
-    },
 
     -- Language support
     { "alaviss/nim.nvim", ft = { "nim" } },
@@ -476,17 +464,45 @@ require("lazy").setup({
         end,
     },
 
+    -- {
+    --     "neanias/everforest-nvim",
+    --     version = false,
+    --     lazy = false,
+    --     priority = 1000,
+    --     config = function()
+    --         require("everforest").setup({
+    --             transparent_background_level = 1,
+    --             background = "hard",
+    --         })
+    --         vim.cmd.colorscheme("everforest")
+    --     end,
+    -- },
     {
-        "neanias/everforest-nvim",
+        "catppuccin/nvim",
+        name = "catppuccin",
         version = false,
         lazy = false,
         priority = 1000,
         config = function()
-            require("everforest").setup({
-                transparent_background_level = 1,
-                background = "hard",
+            require("catppuccin").setup({
+                flavour = "mocha",
+                -- transparent_background = true,
             })
-            vim.cmd.colorscheme("everforest")
+            vim.cmd.colorscheme("catppuccin")
+        end,
+    },
+    {
+        "nvim-lualine/lualine.nvim",
+        priority = 1000,
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        config = function()
+            require("lualine").setup({
+                theme = "catppuccin",
+                options = {
+                    component_separators = { left = "", right = "" },
+                    section_separators = { left = "", right = "" },
+                },
+            })
         end,
     },
 })
