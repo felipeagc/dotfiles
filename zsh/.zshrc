@@ -122,7 +122,3 @@ if type "xc" > /dev/null; then
     autoload -U +X bashcompinit && bashcompinit
     complete -o nospace -C /opt/homebrew/bin/xc xc
 fi
-
-export LEDGER_DIR="$HOME/Seafile/MyLibrary/Finances"
-export LEDGER_FILE="$LEDGER_DIR/all.journal"
-alias fin="just -d $LEDGER_DIR -f $LEDGER_DIR/justfile"
