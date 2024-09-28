@@ -706,7 +706,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
         if client.name == "denols" then
             for _, client_ in pairs(active_clients) do
                 -- stop tsserver if denols is already active
-                if client_.name == "tsserver" then
+                if client_.name == "ts_ls" then
                     client_.stop()
                 end
             end
@@ -754,7 +754,7 @@ local servers = {
         root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
         init_options = { lint = true },
     },
-    ["tsserver"] = {
+    ["ts_ls"] = {
         root_dir = lspconfig.util.root_pattern("package.json"),
         init_options = { lint = true },
     },
