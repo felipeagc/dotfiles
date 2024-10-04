@@ -779,6 +779,7 @@ local servers = {
     ["slangd"] = {
         filetypes = { "slang" },
     },
+    ["pyright"] = {},
 }
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -862,6 +863,7 @@ vim.cmd([[
     autocmd FileType typescript setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType typescriptreact setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType zig setlocal shiftwidth=4 tabstop=4 expandtab
+    autocmd FileType sql setlocal shiftwidth=4 tabstop=4 expandtab
 ]])
 -- }}}
 
