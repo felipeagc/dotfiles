@@ -101,15 +101,6 @@ require("lazy").setup({
     },
 
     {
-        "folke/which-key.nvim",
-        event = "VeryLazy",
-        init = function()
-            vim.o.timeout = true
-            vim.o.timeoutlen = 300
-        end,
-    },
-
-    {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
         config = function()
@@ -141,8 +132,6 @@ require("lazy").setup({
                     "http",
                     "java",
                     "javascript",
-                    "latex",
-                    "ledger",
                     "lua",
                     "make",
                     "markdown",
@@ -151,7 +140,6 @@ require("lazy").setup({
                     "rust",
                     "scala",
                     "svelte",
-                    "templ",
                     "tsx",
                     "typescript",
                     "wgsl",
@@ -177,7 +165,6 @@ require("lazy").setup({
                         "c",
                         "cpp",
                         "haskell",
-                        "latex",
                         "ocaml",
                         "python",
                         "sql",
@@ -201,50 +188,12 @@ require("lazy").setup({
             })
         end,
     },
-    { "nvim-treesitter/nvim-treesitter-context" },
     "nvim-treesitter/playground",
-    {
-        "HiPhish/rainbow-delimiters.nvim",
-        config = function()
-            require("rainbow-delimiters.setup").setup({
-                whitelist = { "clojure" },
-            })
-        end,
-    },
     {
         "windwp/nvim-ts-autotag",
         config = function()
             require("nvim-ts-autotag").setup()
         end,
-    },
-    {
-        "jellydn/hurl.nvim",
-        dependencies = {
-            "MunifTanjim/nui.nvim",
-            "nvim-lua/plenary.nvim",
-            "nvim-treesitter/nvim-treesitter",
-        },
-        ft = "hurl",
-        opts = {
-            debug = false,
-            show_notification = true,
-            auto_close = false,
-            mode = "split",
-            -- Default formatter
-            formatters = {
-                json = { "jq" }, -- Make sure you have install jq in your system, e.g: brew install jq
-            },
-        },
-        keys = {
-            -- Run API request
-            -- { "<leader>A", "<cmd>HurlRunner<CR>", desc = "Run All requests" },
-            { "<C-Return>", "<cmd>HurlRunnerAt<CR>", desc = "Run Api request" },
-            -- { "<leader>te", "<cmd>HurlRunnerToEntry<CR>", desc = "Run Api request to entry" },
-            -- { "<leader>tm", "<cmd>HurlToggleMode<CR>", desc = "Hurl Toggle Mode" },
-            -- { "<leader>tv", "<cmd>HurlVerbose<CR>", desc = "Run Api in verbose mode" },
-            -- Run Hurl request in visual mode
-            -- { "<leader>h", ":HurlRunner<CR>", desc = "Hurl Runner", mode = "v" },
-        },
     },
 
     "tpope/vim-surround",
@@ -256,44 +205,6 @@ require("lazy").setup({
     "tpope/vim-dispatch",
     "tpope/vim-projectionist",
     "tpope/vim-commentary",
-    {
-        "kristijanhusak/vim-dadbod-ui",
-        dependencies = {
-            { "tpope/vim-dadbod", lazy = true },
-            { "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql" }, lazy = true },
-        },
-        cmd = {
-            "DBUI",
-            "DBUIToggle",
-            "DBUIAddConnection",
-            "DBUIFindBuffer",
-        },
-        init = function()
-            vim.g.db_ui_disable_mappings = 1
-        end,
-        config = function()
-            vim.cmd([[
-                autocmd FileType sql,mysql,plsql lua require('cmp').setup.buffer({ sources = {{ name = 'vim-dadbod-completion' }} })
-
-                autocmd FileType dbui nmap <buffer> o <Plug>(DBUI_SelectLine)
-                autocmd FileType dbui nmap <buffer> <CR> <Plug>(DBUI_SelectLine)
-                autocmd FileType dbui nmap <buffer> <2-LeftMouse> <Plug>(DBUI_SelectLine)
-
-                autocmd FileType dbui nmap <buffer> S <Plug>(DBUI_SelectLineVsplit)
-                autocmd FileType dbui nmap <buffer> R <Plug>(DBUI_Redraw)
-                autocmd FileType dbui nmap <buffer> d <Plug>(DBUI_DeleteLine)
-                autocmd FileType dbui nmap <buffer> A <Plug>(DBUI_AddConnection)
-                autocmd FileType dbui nmap <buffer> H <Plug>(DBUI_ToggleDetails)
-                autocmd FileType dbui nmap <buffer> r <Plug>(DBUI_RenameLine)
-                autocmd FileType dbui nmap <buffer> q <Plug>(DBUI_Quit)
-
-                autocmd FileType sql nmap <buffer> <Leader>W <Plug>(DBUI_SaveQuery)
-                autocmd FileType sql nmap <buffer> <Leader>E <Plug>(DBUI_EditBindParameters)
-                autocmd FileType sql nmap <buffer> <Leader>S <Plug>(DBUI_ExecuteQuery)
-                autocmd FileType sql vmap <buffer> <Leader>S <Plug>(DBUI_ExecuteQuery)
-            ]])
-        end,
-    },
     "ntpeters/vim-better-whitespace", -- highlight trailing whitespace
     {
         "windwp/nvim-autopairs",
@@ -399,21 +310,7 @@ require("lazy").setup({
     { "NoahTheDuke/vim-just", ft = { "just" } },
     { "elixir-editors/vim-elixir", ft = { "elixir" } },
     { "kaarmu/typst.vim", ft = { "typst" } },
-    { "whonore/Coqtail", ft = { "coq" } },
     { "dcharbon/vim-flatbuffers", ft = { "fbs" } },
-    {
-        "Olical/conjure",
-        ft = { "clojure" },
-        init = function()
-            vim.g["conjure#filetypes"] = { "clojure" }
-            vim.g["conjure#mapping#enable_defaults"] = false
-            vim.g["conjure#mapping#doc_word"] = false
-        end,
-        config = function()
-            require("conjure.main").main()
-            require("conjure.mapping")["on-filetype"]()
-        end,
-    },
 
     "nvim-lua/plenary.nvim",
     {
@@ -856,7 +753,6 @@ vim.cmd([[
     autocmd FileType rust setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType sbt setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType scala setlocal shiftwidth=2 tabstop=2 expandtab
-    autocmd FileType sql setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType svelte setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType javascriptreact setlocal shiftwidth=2 tabstop=2 expandtab
@@ -950,30 +846,6 @@ create_augroup("rust", function()
 end)
 -- }}}
 
--- Latex {{{
-function open_pdf_preview()
-    local buffer_path = vim.fn.expand("%")
-    local pdf_path = string.gsub(buffer_path, "%.[^/]+$", ".pdf")
-    print(pdf_path)
-    vim.cmd("silent !zathura " .. pdf_path .. " & disown")
-end
-
-create_augroup("tex", function()
-    vim.opt_local.makeprg = "latexmk"
-    vim.keymap.set("n", "<Leader>mp", ":lua open_pdf_preview()<CR>", { buffer = true, silent = true })
-end)
--- }}}
-
--- Clojure {{{
-create_augroup("clojure", function()
-    vim.keymap.set("n", "<C-Return>", ":ConjureEvalCurrentForm<CR>", { buffer = true, silent = true })
-    vim.keymap.set("i", "<C-Return>", "<C-o>:ConjureEvalCurrentForm<CR>", { buffer = true, silent = true })
-    vim.keymap.set("n", "<f7>", ":ConjureEvalBuf<CR>", { buffer = true, silent = true, remap = false })
-    vim.keymap.set("i", "<f7>", ":ConjureEvalBuf<CR>", { buffer = true, silent = true, remap = false })
-    vim.keymap.set("n", "<leader>mb", ":ConjureEvalBuf<CR>", { buffer = true, silent = true, remap = false })
-end)
--- }}}
-
 -- Elixir {{{
 create_augroup("elixir", function()
     vim.cmd([[ compiler exunit ]])
@@ -983,16 +855,6 @@ end)
 -- WGSL {{{
 create_augroup("wgsl", function()
     vim.opt_local.commentstring = "//\\ %s"
-end)
--- }}}
-
--- Coq {{{
-vim.g.coqtail_nomap = 1
-
-create_augroup("coq", function()
-    vim.keymap.set("n", "<Leader>n", ":CoqNext<CR>", { buffer = true, silent = true })
-    vim.keymap.set("n", "<Leader>p", ":CoqUndo<CR>", { buffer = true, silent = true })
-    vim.keymap.set("n", "<Leader>l", ":CoqToLine<CR>", { buffer = true, silent = true })
 end)
 -- }}}
 
