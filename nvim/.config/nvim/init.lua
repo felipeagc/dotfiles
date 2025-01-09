@@ -36,53 +36,86 @@ require("lazy").setup({
     "neovim/nvim-lspconfig",
 
     {
-        "hrsh7th/nvim-cmp",
-        dependencies = {
-            "hrsh7th/cmp-nvim-lsp",
-            "hrsh7th/cmp-vsnip",
-            "hrsh7th/vim-vsnip",
-            "onsails/lspkind.nvim",
-        },
-        config = function()
-            local cmp = require("cmp")
-            local lspkind = require("lspkind")
-            cmp.setup({
-                snippet = {
-                    expand = function(args)
-                        vim.fn["vsnip#anonymous"](args.body)
-                    end,
-                },
-                window = {},
-                mapping = cmp.mapping.preset.insert({
-                    ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-                    ["<C-f>"] = cmp.mapping.scroll_docs(4),
-                    ["<C-Space>"] = cmp.mapping.complete(),
-                    ["<C-e>"] = cmp.mapping.abort(),
-                    ["<CR>"] = cmp.mapping.confirm({ select = true }),
-                }),
-                sources = cmp.config.sources({
-                    { name = "nvim_lsp" },
-                    { name = "vsnip" },
-                }),
-                formatting = {
-                    format = lspkind.cmp_format({
-                        mode = "symbol", -- show only symbol annotations
-                        maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
-                        -- can also be a function to dynamically calculate max width such as
-                        -- maxwidth = function() return math.floor(0.45 * vim.o.columns) end,
-                        ellipsis_char = "...", -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
-                        show_labelDetails = true, -- show labelDetails in menu. Disabled by default
+        "saghen/blink.cmp",
+        version = "v0.9.0",
+        opts = {
+            keymap = {
+                preset = "enter",
+                ["<C-n>"] = { "show", "select_next" },
+            },
 
-                        -- The function below will be called before any actual modifications from lspkind
-                        -- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
-                        before = function(entry, vim_item)
-                            return vim_item
-                        end,
-                    }),
+            appearance = {
+                use_nvim_cmp_as_default = true,
+                nerd_font_variant = "mono",
+            },
+            sources = {
+                default = { "lsp", "path", "snippets", "buffer" },
+            },
+            completion = {
+                list = { selection = "auto_insert" },
+                trigger = {
+                    show_on_keyword = false,
+                    show_on_trigger_character = false,
+                    show_on_insert_on_trigger_character = false,
+                    show_on_accept_on_trigger_character = false,
                 },
-            })
-        end,
+                menu = {
+                    auto_show = false,
+                    draw = { treesitter = { "lsp" } },
+                },
+            },
+        },
+        opts_extend = { "sources.default" },
     },
+
+    -- {
+    --     "hrsh7th/nvim-cmp",
+    --     dependencies = {
+    --         "hrsh7th/cmp-nvim-lsp",
+    --         "hrsh7th/cmp-vsnip",
+    --         "hrsh7th/vim-vsnip",
+    --         "onsails/lspkind.nvim",
+    --     },
+    --     config = function()
+    --         local cmp = require("cmp")
+    --         local lspkind = require("lspkind")
+    --         cmp.setup({
+    --             snippet = {
+    --                 expand = function(args)
+    --                     vim.fn["vsnip#anonymous"](args.body)
+    --                 end,
+    --             },
+    --             window = {},
+    --             mapping = cmp.mapping.preset.insert({
+    --                 ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+    --                 ["<C-f>"] = cmp.mapping.scroll_docs(4),
+    --                 ["<C-Space>"] = cmp.mapping.complete(),
+    --                 ["<C-e>"] = cmp.mapping.abort(),
+    --                 ["<CR>"] = cmp.mapping.confirm({ select = true }),
+    --             }),
+    --             sources = cmp.config.sources({
+    --                 { name = "nvim_lsp" },
+    --                 { name = "vsnip" },
+    --             }),
+    --             formatting = {
+    --                 format = lspkind.cmp_format({
+    --                     mode = "symbol", -- show only symbol annotations
+    --                     maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+    --                     -- can also be a function to dynamically calculate max width such as
+    --                     -- maxwidth = function() return math.floor(0.45 * vim.o.columns) end,
+    --                     ellipsis_char = "...", -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
+    --                     show_labelDetails = true, -- show labelDetails in menu. Disabled by default
+
+    --                     -- The function below will be called before any actual modifications from lspkind
+    --                     -- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
+    --                     before = function(entry, vim_item)
+    --                         return vim_item
+    --                     end,
+    --                 }),
+    --             },
+    --         })
+    --     end,
+    -- },
 
     {
         "nvimtools/none-ls.nvim",
@@ -361,32 +394,11 @@ require("lazy").setup({
         end,
     },
 
-    -- {
-    --     "neanias/everforest-nvim",
-    --     version = false,
-    --     lazy = false,
-    --     priority = 1000,
-    --     config = function()
-    --         require("everforest").setup({
-    --             transparent_background_level = 1,
-    --             background = "hard",
-    --         })
-    --         vim.cmd.colorscheme("everforest")
-    --     end,
-    -- },
     {
-        "catppuccin/nvim",
-        name = "catppuccin",
-        version = false,
-        lazy = false,
-        priority = 1000,
+        "savq/melange-nvim",
         config = function()
-            require("catppuccin").setup({
-                flavour = "mocha",
-                -- transparent_background = true,
-            })
-            vim.cmd.colorscheme("catppuccin")
-        end,
+            vim.cmd.colorscheme("melange")
+        end
     },
     {
         "nvim-lualine/lualine.nvim",
@@ -394,7 +406,7 @@ require("lazy").setup({
         dependencies = { "nvim-tree/nvim-web-devicons" },
         config = function()
             require("lualine").setup({
-                theme = "catppuccin",
+                -- theme = "catppuccin",
                 options = {
                     component_separators = { left = "", right = "" },
                     section_separators = { left = "", right = "" },
@@ -543,10 +555,6 @@ local function format_buffer(bufnr)
                 -- If null-ls is active, don't format with other clients
                 return client.name == "null-ls"
             end
-            if #vim.lsp.get_active_clients({ bufnr = bufnr, name = "biome" }) >= 1 then
-                -- If null-ls is active, don't format with other clients
-                return client.name == "biome"
-            end
             return true
         end,
     })
@@ -559,36 +567,18 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
         local opts = { remap = false, silent = true, buffer = ev.bufnr }
 
-        vim.keymap.set("n", "K", function()
-            vim.lsp.buf.hover()
-        end, opts)
-        vim.keymap.set("n", "<c-]>", function()
-            vim.lsp.buf.definition()
-        end, opts)
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+        vim.keymap.set("n", "<c-]>", vim.lsp.buf.definition, opts)
         vim.keymap.set("n", "<leader>mf", format_buffer, opts)
-        vim.keymap.set("n", "<leader>mr", function()
-            vim.lsp.buf.rename()
-        end, opts)
+        vim.keymap.set("n", "<leader>mr", vim.lsp.buf.rename, opts)
         vim.keymap.set("n", "<leader>mR", ":LspRestart<CR>", opts)
-        vim.keymap.set("n", "<M-CR>", function()
-            vim.lsp.buf.code_action()
-        end, opts)
-        vim.keymap.set("i", "<M-CR>", function()
-            vim.lsp.buf.code_action()
-        end, opts)
+        vim.keymap.set("n", "<M-CR>", vim.lsp.buf.code_action, opts)
+        vim.keymap.set("i", "<M-CR>", vim.lsp.buf.code_action, opts)
         vim.keymap.set("n", "<leader>mc", ":Copilot toggle<CR>", opts)
-        vim.keymap.set("n", "[d", function()
-            vim.diagnostic.goto_prev()
-        end, opts)
-        vim.keymap.set("n", "]d", function()
-            vim.diagnostic.goto_next()
-        end, opts)
-        vim.keymap.set("n", "<C-y>", function()
-            vim.diagnostic.open_float()
-        end, opts)
-        vim.keymap.set("i", "<C-h>", function()
-            vim.lsp.buf.signature_help()
-        end, opts)
+        vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
+        vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
+        vim.keymap.set("n", "<C-y>", vim.diagnostic.open_float, opts)
+        vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
 
         local client = vim.lsp.get_client_by_id(ev.data.client_id)
 
@@ -598,23 +588,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
         vim.keymap.set("n", "<C-/>", function()
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(filter), filter)
         end, opts)
-
-        local active_clients = vim.lsp.get_active_clients()
-        if client.name == "denols" then
-            for _, client_ in pairs(active_clients) do
-                -- stop tsserver if denols is already active
-                if client_.name == "ts_ls" then
-                    client_.stop()
-                end
-            end
-        elseif client.name == "tsserver" then
-            for _, client_ in pairs(active_clients) do
-                -- prevent tsserver from starting if denols is already active
-                if client_.name == "denols" then
-                    client.stop()
-                end
-            end
-        end
 
         -- workaround to hl semanticTokens
         -- https://github.com/golang/go/issues/54531#issuecomment-1464982242
@@ -633,24 +606,15 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 local servers = {
-    -- ["nim_langserver"] = {},
-    ["templ"] = {},
-    -- ["lexical"] = { cmd = { "lexical" } },
     ["emmet_language_server"] = {},
     ["ansiblels"] = {},
     -- ["csharp_ls"] = {},
-    ["clojure_lsp"] = {},
     ["svelte"] = {},
     ["tailwindcss"] = {
         filetypes = { "html", "typescriptreact", "javascriptreact" },
     },
-    ["biome"] = {},
     ["zls"] = {},
     ["jdtls"] = {},
-    ["denols"] = {
-        root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
-        init_options = { lint = true },
-    },
     ["ts_ls"] = {
         root_dir = lspconfig.util.root_pattern("package.json"),
         init_options = { lint = true },
@@ -670,18 +634,14 @@ local servers = {
             },
         },
     },
-    ["clangd"] = {
-        filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
-    },
-    ["slangd"] = {
-        filetypes = { "slang" },
-    },
+    ["clangd"] = { filetypes = { "c", "cpp", "objc", "objcpp", "cuda" } },
+    ["slangd"] = { filetypes = { "slang" } },
     ["pyright"] = {},
 }
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
--- Enable file watcher support for LSP
-capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true
+capabilities = require("blink.cmp").get_lsp_capabilities(capabilities) -- Add blink.cmp capabilities
+capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true -- Enable file watcher support for LSP
 for lsp, settings in pairs(servers) do
     settings.capabilities = capabilities
     lspconfig[lsp].setup(settings)
