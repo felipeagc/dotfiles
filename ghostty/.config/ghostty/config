@@ -1,5 +1,6 @@
 window-theme = "dark"
-theme = "catppuccin-mocha"
+# theme = "catppuccin-mocha"
+theme = "gruvbox-material"
 
 font-family = BlexMono Nerd Font
 font-size = 15
@@ -8,14 +9,22 @@ font-thicken = true
 cursor-style = block
 cursor-style-blink = false
 
-keybind = super+k=goto_split:previous
-keybind = super+j=goto_split:next
-keybind = super+enter=new_split:right
-
 shell-integration-features = no-cursor
 
 window-padding-x = 5
 window-padding-y = 5
 
 macos-titlebar-style = tabs
+macos-option-as-alt = false
 window-vsync = true
+
+# keybind = super+physical:one=unbind
+# keybind = super+physical:two=unbind
+# keybind = super+physical:three=unbind
+# keybind = super+physical:four=unbind
+# keybind = super+physical:five=unbind
+# keybind = super+physical:six=unbind
+# keybind = super+physical:seven=unbind
+# keybind = super+physical:eight=unbind
+# keybind = super+physical:nine=unbind
+# keybind = super+physical:zero=unbind
