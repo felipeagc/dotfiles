@@ -54,13 +54,13 @@ require("lazy").setup({
             completion = {
                 list = { selection = "auto_insert" },
                 trigger = {
-                    show_on_keyword = false,
-                    show_on_trigger_character = false,
-                    show_on_insert_on_trigger_character = false,
-                    show_on_accept_on_trigger_character = false,
+                    show_on_keyword = true,
+                    show_on_trigger_character = true,
+                    show_on_insert_on_trigger_character = true,
+                    show_on_accept_on_trigger_character = true,
                 },
                 menu = {
-                    auto_show = false,
+                    auto_show = true,
                     draw = { treesitter = { "lsp" } },
                 },
             },
@@ -125,9 +125,9 @@ require("lazy").setup({
             null_ls.setup({
                 sources = {
                     null_ls.builtins.formatting.stylua,
-                    null_ls.builtins.formatting.sqlfluff.with({ extra_args = { "--dialect", "postgres" } }),
+                    -- null_ls.builtins.formatting.sqlfluff.with({ extra_args = { "--dialect", "postgres" } }),
                     null_ls.builtins.diagnostics.swiftlint,
-                    null_ls.builtins.diagnostics.sqlfluff.with({ extra_args = { "--dialect", "postgres" } }),
+                    -- null_ls.builtins.diagnostics.sqlfluff.with({ extra_args = { "--dialect", "postgres" } }),
                 },
             })
         end,
@@ -606,14 +606,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 local servers = {
-    ["emmet_language_server"] = {},
-    ["ansiblels"] = {},
     -- ["csharp_ls"] = {},
     ["svelte"] = {},
     ["tailwindcss"] = {
         filetypes = { "html", "typescriptreact", "javascriptreact" },
     },
     ["zls"] = {},
+    ["terraformls"] = {},
     ["jdtls"] = {},
     ["ts_ls"] = {
         root_dir = lspconfig.util.root_pattern("package.json"),
@@ -720,6 +719,7 @@ vim.cmd([[
     autocmd FileType typescriptreact setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType zig setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType sql setlocal shiftwidth=4 tabstop=4 expandtab
+    autocmd FileType terraform setlocal shiftwidth=2 tabstop=2 expandtab
 ]])
 -- }}}
 
@@ -829,6 +829,7 @@ autocmd BufRead,BufNewFile *.mxx set filetype=cpp
 autocmd BufRead,BufNewFile *.mpp set filetype=cpp
 autocmd BufRead,BufNewFile *.cppm set filetype=cpp
 autocmd BufRead,BufNewFile *.slang set filetype=slang
+autocmd BufRead,BufNewFile *.tofu set filetype=terraform
 ]])
 
 vim.cmd("autocmd FileType hlsl setlocal commentstring=//\\ %s")
