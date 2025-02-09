@@ -749,8 +749,8 @@ autocmd BufRead,BufNewFile *.mpp set filetype=cpp
 autocmd BufRead,BufNewFile *.cppm set filetype=cpp
 autocmd BufRead,BufNewFile *.slang set filetype=slang
 autocmd BufRead,BufNewFile *.tofu set filetype=terraform
-]])
 
-vim.cmd("autocmd FileType hlsl setlocal commentstring=//\\ %s")
-vim.cmd("autocmd FileType slang setlocal commentstring=//\\ %s")
+autocmd FileType hlsl setlocal commentstring=//\\ %s
+autocmd FileType slang setlocal commentstring=//\\ %s
+]])
 -- }}}
