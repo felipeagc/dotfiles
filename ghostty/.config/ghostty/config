@@ -1,6 +1,6 @@
 window-theme = "dark"
 # theme = "catppuccin-mocha"
-theme = "gruvbox-material"
+theme = "0x96f"
 
 font-family = BlexMono Nerd Font
 font-size = 15

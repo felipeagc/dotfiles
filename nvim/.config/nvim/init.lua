@@ -395,9 +395,11 @@ require("lazy").setup({
     },
 
     {
-        "savq/melange-nvim",
+        "sainnhe/sonokai",
         config = function()
-            vim.cmd.colorscheme("melange")
+            vim.g.sonokai_style = 'shusia'
+            vim.g.sonokai_enable_italic = false
+            vim.cmd.colorscheme("sonokai")
         end
     },
     {
@@ -544,7 +546,37 @@ require("mason").setup()
 require("mason-lspconfig").setup()
 
 local lspconfig = require("lspconfig")
-local lsp_configs = require("lspconfig.configs")
+
+local lsp_capabilities = vim.lsp.protocol.make_client_capabilities()
+lsp_capabilities = require("blink.cmp").get_lsp_capabilities(lsp_capabilities) -- Add blink.cmp capabilities
+lsp_capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true -- Enable file watcher support for LSP
+
+require("mason-lspconfig").setup_handlers {
+    function (server_name)
+        lspconfig[server_name].setup {
+            capabilities = lsp_capabilities
+        }
+    end,
+
+    ["ts_ls"] = function(server_name)
+        lspconfig[server_name].setup {
+            capabilities = lsp_capabilities,
+            root_dir = lspconfig.util.root_pattern("package.json"),
+            init_options = { lint = true },
+        }
+    end,
+    ["rust_analyzer"] = function(server_name)
+        lspconfig[server_name].setup {
+            capabilities = lsp_capabilities,
+            settings = {
+                ["rust-analyzer"] = {
+                    completion = { fullFunctionSignatures = { enable = true } },
+                    cachePriming = { enable = false },
+                },
+            },
+        }
+    end,
+}
 
 local function format_buffer(bufnr)
     local bufnr = bufnr or 0
@@ -604,47 +636,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
         client.server_capabilities.semanticTokensProvider = nil
     end,
 })
-
-local servers = {
-    -- ["csharp_ls"] = {},
-    ["svelte"] = {},
-    ["tailwindcss"] = {
-        filetypes = { "html", "typescriptreact", "javascriptreact" },
-    },
-    ["zls"] = {},
-    ["terraformls"] = {},
-    ["jdtls"] = {},
-    ["ts_ls"] = {
-        root_dir = lspconfig.util.root_pattern("package.json"),
-        init_options = { lint = true },
-    },
-    ["rust_analyzer"] = {
-        settings = {
-            ["rust-analyzer"] = {
-                completion = { fullFunctionSignatures = { enable = true } },
-                cachePriming = { enable = false },
-            },
-        },
-    },
-    ["gopls"] = {
-        settings = {
-            gopls = {
-                semanticTokens = true,
-            },
-        },
-    },
-    ["clangd"] = { filetypes = { "c", "cpp", "objc", "objcpp", "cuda" } },
-    ["slangd"] = { filetypes = { "slang" } },
-    ["pyright"] = {},
-}
-
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require("blink.cmp").get_lsp_capabilities(capabilities) -- Add blink.cmp capabilities
-capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true -- Enable file watcher support for LSP
-for lsp, settings in pairs(servers) do
-    settings.capabilities = capabilities
-    lspconfig[lsp].setup(settings)
-end
 -- }}}
 
 -- Color scheme {{{
@@ -795,6 +786,19 @@ end)
 create_augroup("ocaml", function()
     vim.cmd([[ setlocal cpt-=t ]])
     vim.opt_local.makeprg = "dune build"
+end)
+-- }}}
+
+-- Odin {{{
+create_augroup("odin", function()
+    if vim.fn.filereadable("build.sh") == 1 and vim.fn.has("unix") then
+        print("hello odin")
+        vim.api.nvim_buf_set_option(0, "makeprg", "sh ./build.sh")
+    elseif vim.fn.filereadable("build.bat") == 1 and not vim.fn.has("unix") then
+        vim.api.nvim_buf_set_option(0, "makeprg", "./build.bat")
+    else
+        vim.api.nvim_buf_set_option(0, "makeprg", "odin build .")
+    end
 end)
 -- }}}
 

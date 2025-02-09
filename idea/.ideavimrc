@@ -8,6 +8,8 @@ set NERDTree
 
 set scrolloff=5
 
+set clipboard+=unnamed
+
 let mapleader = " "
 
 vnoremap < <gv
@@ -34,12 +36,11 @@ nnoremap <silent> <C--> :action EditorDecreaseFontSize<CR>
 imap <C-h> <Action>(ParameterInfo)
 nmap <C-y> <Action>(ShowErrorDescription)
 
-nmap <leader>mR :action RenameElement<CR>
+nmap <leader>mr :action RenameElement<CR>
 nmap <leader>mf :action ReformatCode<CR>
 nmap <leader>mi :action OptimizeImports<CR>
-" nmap <leader>mb :action Build<CR>
-nmap <leader>mb :action Rust.Build<CR>
-nmap <leader>mr :action Run<CR>
+nmap <leader>pb :action Build<CR>
+nmap <leader>pr :action Run<CR>
 
 nnoremap <c-o> :action Back<cr>
 nnoremap <c-i> :action Forward<cr>

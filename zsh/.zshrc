@@ -122,3 +122,5 @@ if type "xc" > /dev/null; then
     autoload -U +X bashcompinit && bashcompinit
     complete -o nospace -C /opt/homebrew/bin/xc xc
 fi
+
+test -r /opt/homebrew/opt/dotnet/libexec && export DOTNET_ROOT="/opt/homebrew/opt/dotnet/libexec"
