@@ -37,7 +37,7 @@ require("lazy").setup({
 
     {
         "saghen/blink.cmp",
-        version = "v0.9.0",
+        version = "v0.12.3",
         opts = {
             keymap = {
                 preset = "enter",
@@ -51,8 +51,14 @@ require("lazy").setup({
             sources = {
                 default = { "lsp", "path", "snippets" },
             },
+            cmdline = {
+                sources = {},
+                enabled = false,
+            },
             completion = {
-                list = { selection = "auto_insert" },
+                list = {
+                    selection = { auto_insert = true },
+                },
                 trigger = {
                     show_on_keyword = true,
                     show_on_trigger_character = true,
@@ -60,8 +66,15 @@ require("lazy").setup({
                     show_on_accept_on_trigger_character = true,
                 },
                 menu = {
+                    auto_show = false,
+                    draw = {
+                        treesitter = { "lsp" },
+                        columns = { { "label", "label_description", gap = 1 }, { "kind_icon", "kind" } },
+                    },
+                },
+                documentation = {
                     auto_show = true,
-                    draw = { treesitter = { "lsp" } },
+                    auto_show_delay_ms = 500,
                 },
             },
         },

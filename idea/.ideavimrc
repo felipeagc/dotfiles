@@ -45,4 +45,5 @@ nmap <leader>pr :action Run<CR>
 nnoremap <c-o> :action Back<cr>
 nnoremap <c-i> :action Forward<cr>
 
-nnoremap - :NERDTreeToggle<CR>
+nnoremap ]d :action GotoNextError<CR>
+nnoremap [d :action GotoPreviousError<CR>
