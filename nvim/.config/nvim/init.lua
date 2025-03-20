@@ -82,16 +82,20 @@ require("lazy").setup({
     },
 
     {
-        "nvimtools/none-ls.nvim",
-        dependencies = { "nvim-lua/plenary.nvim" },
-        config = function()
-            local null_ls = require("null-ls")
-            null_ls.setup({
-                sources = {
-                    null_ls.builtins.formatting.stylua,
+        "stevearc/conform.nvim",
+        opts = {
+            formatters_by_ft = {
+                budget = { "budget_fmt" },
+                go = { "goimports", lsp_format = "last" },
+            },
+            formatters = {
+                budget_fmt = {
+                    command = "pbudget",
+                    args = { "fmt", "--stdin" },
+                    stdin = true,
                 },
-            })
-        end,
+            },
+        },
     },
 
     {
@@ -192,7 +196,7 @@ require("lazy").setup({
         },
     },
     {
-        "NvChad/nvim-colorizer.lua",
+        "catgoose/nvim-colorizer.lua",
         opts = {
             filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact", "css", "html" },
             user_default_options = {
@@ -326,10 +330,10 @@ require("lazy").setup({
     {
         "sainnhe/sonokai",
         config = function()
-            vim.g.sonokai_style = 'shusia'
+            vim.g.sonokai_style = "shusia"
             vim.g.sonokai_enable_italic = false
             vim.cmd.colorscheme("sonokai")
-        end
+        end,
     },
     {
         "nvim-lualine/lualine.nvim",
@@ -479,22 +483,22 @@ local lsp_capabilities = vim.lsp.protocol.make_client_capabilities()
 lsp_capabilities = require("blink.cmp").get_lsp_capabilities(lsp_capabilities) -- Add blink.cmp capabilities
 lsp_capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true -- Enable file watcher support for LSP
 
-require("mason-lspconfig").setup_handlers {
-    function (server_name)
-        lspconfig[server_name].setup {
-            capabilities = lsp_capabilities
-        }
+require("mason-lspconfig").setup_handlers({
+    function(server_name)
+        lspconfig[server_name].setup({
+            capabilities = lsp_capabilities,
+        })
     end,
 
     ["ts_ls"] = function(server_name)
-        lspconfig[server_name].setup {
+        lspconfig[server_name].setup({
             capabilities = lsp_capabilities,
             root_dir = lspconfig.util.root_pattern("package.json"),
             init_options = { lint = true },
-        }
+        })
     end,
     ["rust_analyzer"] = function(server_name)
-        lspconfig[server_name].setup {
+        lspconfig[server_name].setup({
             capabilities = lsp_capabilities,
             settings = {
                 ["rust-analyzer"] = {
@@ -502,24 +506,11 @@ require("mason-lspconfig").setup_handlers {
                     cachePriming = { enable = false },
                 },
             },
-        }
+        })
     end,
-}
+})
 
-local function format_buffer(bufnr)
-    local bufnr = bufnr or 0
-    vim.lsp.buf.format({
-        async = true,
-        filter = function(client)
-            if #vim.lsp.get_active_clients({ bufnr = bufnr, name = "null-ls" }) >= 1 then
-                -- If null-ls is active, don't format with other clients
-                return client.name == "null-ls"
-            end
-            return true
-        end,
-    })
-end
-
+local conform = require("conform")
 vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("UserLspConfig", {}),
     callback = function(ev)
@@ -529,7 +520,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
         vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
         vim.keymap.set("n", "<c-]>", vim.lsp.buf.definition, opts)
-        vim.keymap.set("n", "<leader>mf", format_buffer, opts)
+        vim.keymap.set("n", "<leader>mf", conform.format, opts)
         vim.keymap.set("n", "<leader>mr", vim.lsp.buf.rename, opts)
         vim.keymap.set("n", "<leader>mR", ":LspRestart<CR>", opts)
         vim.keymap.set("n", "<M-CR>", vim.lsp.buf.code_action, opts)
