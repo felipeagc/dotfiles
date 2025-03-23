@@ -292,6 +292,11 @@ require("lazy").setup({
     { "NoahTheDuke/vim-just", ft = { "just" } },
     { "elixir-editors/vim-elixir", ft = { "elixir" } },
     { "kaarmu/typst.vim", ft = { "typst" } },
+    {
+        "seblyng/roslyn.nvim",
+        ft = "cs",
+        opts = {}
+    },
 
     "nvim-lua/plenary.nvim",
     {
