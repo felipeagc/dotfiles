@@ -37,7 +37,7 @@ require("lazy").setup({
 
     {
         "saghen/blink.cmp",
-        version = "v0.12.3",
+        version = "v1.0.0",
         opts = {
             keymap = {
                 preset = "enter",
@@ -93,7 +93,7 @@ require("lazy").setup({
             },
             formatters = {
                 budget_fmt = {
-                    command = "pbudget",
+                    command = "peanuts",
                     args = { "fmt", "--stdin" },
                     stdin = true,
                 },
@@ -336,11 +336,10 @@ require("lazy").setup({
     },
 
     {
-        "sainnhe/sonokai",
+        "nuvic/flexoki-nvim",
+        name = "flexoki",
         config = function()
-            vim.g.sonokai_style = "shusia"
-            vim.g.sonokai_enable_italic = false
-            vim.cmd.colorscheme("sonokai")
+            vim.cmd.colorscheme("flexoki")
         end,
     },
     {

@@ -74,6 +74,8 @@ alias gp="git push $1 $2"
 alias gs="git status"
 alias runemacs="emacs & disown"
 
+alias pn="peanuts"
+
 # Execute ls every time we cd
 # function chpwd() {
 #   emulate -L zsh
