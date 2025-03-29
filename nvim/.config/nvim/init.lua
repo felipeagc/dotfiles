@@ -43,17 +43,11 @@ require("lazy").setup({
                 preset = "enter",
                 ["<C-n>"] = { "show", "select_next" },
             },
-
-            appearance = {
-                use_nvim_cmp_as_default = true,
-                nerd_font_variant = "mono",
-            },
             sources = {
                 default = { "lsp", "path", "snippets" },
             },
             cmdline = {
-                sources = {},
-                enabled = false,
+                enabled = true,
             },
             completion = {
                 list = {
@@ -88,11 +82,11 @@ require("lazy").setup({
                 lsp_format = "fallback",
             },
             formatters_by_ft = {
-                budget = { "budget_fmt" },
+                peanuts = { "peanuts_fmt" },
                 go = { "goimports", lsp_format = "last" },
             },
             formatters = {
-                budget_fmt = {
+                peanuts_fmt = {
                     command = "peanuts",
                     args = { "fmt", "--stdin" },
                     stdin = true,
@@ -106,13 +100,8 @@ require("lazy").setup({
         build = ":TSUpdate",
         config = function()
             require("nvim-treesitter.configs").setup({
-                -- Install parsers synchronously (only applied to `ensure_installed`)
                 sync_install = false,
-
-                -- Automatically install missing parsers when entering buffer
-                -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
                 auto_install = true,
-
                 ensure_installed = {
                     "bash",
                     "c",
@@ -131,17 +120,11 @@ require("lazy").setup({
                     "yaml",
                     "zig",
                 },
-                -- ignore_install = { "javascript" }, -- List of parsers to ignore installing
-
                 highlight = {
                     enable = true, -- false will disable the whole extension
                     disable = {
-                        -- "cpp",
+                        -- "cpp"
                     }, -- list of language that will be disabled
-                    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-                    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-                    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-                    -- Instead of true it can also be a list of languages
                     additional_vim_regex_highlighting = false,
                 },
                 indent = {
@@ -153,21 +136,6 @@ require("lazy").setup({
                         "ocaml",
                         "python",
                         "sql",
-                        -- "html",
-                        -- "htmldjango",
-                    },
-                },
-                context_commentstring = {
-                    enable = true,
-                    disable = { "wgsl", "cpp", "c", "hlsl", "slang" },
-                },
-                incremental_selection = {
-                    enable = true,
-                    keymaps = {
-                        init_selection = "<A-n>", -- set to `false` to disable one of the mappings
-                        node_incremental = "<A-n>",
-                        -- scope_incremental = "grc",
-                        node_decremental = "<A-p>",
                     },
                 },
             })
@@ -232,49 +200,53 @@ require("lazy").setup({
     },
 
     {
-        "zbirenbaum/copilot.lua",
+        'milanglacier/minuet-ai.nvim',
         config = function()
-            if vim.fn.executable("node") == nil then
-                -- Don't load copilot if node is not installed
-                return
-            end
+            require('minuet').setup({
+                provider = 'codestral',
+                virtualtext = {
+                    auto_trigger_ft = {
+                        "go",
+                        "python",
+                        "lua",
+                        "rust",
+                        "typescript",
+                        "typescriptreact",
+                        "javascript",
+                        "javascriptreact",
+                        "html",
+                    },
+                    keymap = {
+                        -- Cycle to prev completion item, or manually invoke completion
+                        prev = '<A-[>',
+                        -- Cycle to next completion item, or manually invoke completion
+                        next = '<A-]>',
+                        dismiss = '<A-e>',
+                    },
+                },
+                context_window = 16000,
+                n_completions = 3,
+                provider_options = {
+                    codestral = {
+                        model = 'codestral-latest',
+                        end_point = 'https://codestral.mistral.ai/v1/fim/completions',
+                        api_key = 'CODESTRAL_API_KEY',
+                        stream = true,
+                        optional = {
+                            max_tokens = 1024,
+                            stop = { '\n\n' },
+                        },
+                    },
+                },
+            })
 
             vim.keymap.set("i", "<Tab>", function()
-                if require("copilot.suggestion").is_visible() then
-                    require("copilot.suggestion").accept()
+                if require('minuet.virtualtext').action.is_visible() then
+                    require('minuet.virtualtext').action.accept()
                 else
                     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Tab>", true, false, true), "n", false)
                 end
             end, { desc = "Super Tab" })
-
-            require("copilot").setup({
-                suggestion = {
-                    auto_trigger = true,
-                    keymap = {
-                        accept = "<s-tab>",
-                        next = "<M-]>",
-                        prev = "<M-[>",
-                        dismiss = "<M-d>",
-                    },
-                    filetypes = {
-                        go = true,
-                        html = true,
-                        htmldjango = true,
-                        lua = true,
-                        ocaml = true,
-                        rust = true,
-                        elixir = true,
-                        clojure = true,
-                        svelte = true,
-                        javascript = true,
-                        javascriptreact = true,
-                        typescript = true,
-                        typescriptreact = true,
-                        markdown = false,
-                        ["*"] = true,
-                    },
-                },
-            })
         end,
     },
 
@@ -295,11 +267,7 @@ require("lazy").setup({
     { "NoahTheDuke/vim-just", ft = { "just" } },
     { "elixir-editors/vim-elixir", ft = { "elixir" } },
     { "kaarmu/typst.vim", ft = { "typst" } },
-    {
-        "seblyng/roslyn.nvim",
-        ft = "cs",
-        opts = {}
-    },
+    { "seblyng/roslyn.nvim", ft = { "cs" } },
 
     "nvim-lua/plenary.nvim",
     {
@@ -316,8 +284,8 @@ require("lazy").setup({
                     },
                     layout_strategy = "horizontal",
                     layout_config = {
-                        height = { padding = 0 },
-                        width = { padding = 0 },
+                        height = { padding = 4 },
+                        width = { padding = 4 },
                     },
                 },
             })
@@ -415,10 +383,6 @@ vim.keymap.set("n", "<C-b>", ":Telescope buffers<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>fg", ":Telescope live_grep<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>fv", vim.cmd.Ex, { silent = true })
 
-vim.keymap.set("n", "<leader>S", '<cmd>lua require("spectre").toggle()<CR>', {
-    desc = "Toggle Spectre",
-})
-
 vim.keymap.set("n", "<C-j>", "<C-w>w", { remap = false })
 vim.keymap.set("n", "<C-k>", "<C-w>W", { remap = false })
 
@@ -451,7 +415,6 @@ vim.keymap.set("n", "<Leader>wb", "<C-w>=", { silent = true })
 vim.keymap.set("n", "<Leader>bd", ":bd<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>bcc", ":%bd|e#<CR>", { silent = true })
 
--- vim.keymap.set("n", "<Leader>gs", ":vertical Git<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>gs", ":LazyGitCurrentFile<CR>", { silent = true })
 
 vim.keymap.set("n", "<C-a>", ":A<CR>", { silent = true })
@@ -521,24 +484,20 @@ local conform = require("conform")
 vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("UserLspConfig", {}),
     callback = function(ev)
-        -- buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
         local opts = { remap = false, silent = true, buffer = ev.bufnr }
 
-        vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-        vim.keymap.set("n", "<c-]>", vim.lsp.buf.definition, opts)
+        vim.keymap.set("n", "<leader>mu", vim.lsp.buf.references, opts)
         vim.keymap.set("n", "<leader>mf", conform.format, opts)
         vim.keymap.set("n", "<leader>mr", vim.lsp.buf.rename, opts)
         vim.keymap.set("n", "<leader>mR", ":LspRestart<CR>", opts)
         vim.keymap.set("n", "<M-CR>", vim.lsp.buf.code_action, opts)
         vim.keymap.set("i", "<M-CR>", vim.lsp.buf.code_action, opts)
-        vim.keymap.set("n", "<leader>mc", ":Copilot toggle<CR>", opts)
         vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
         vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
         vim.keymap.set("n", "<C-y>", vim.diagnostic.open_float, opts)
         vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
 
-        local client = vim.lsp.get_client_by_id(ev.data.client_id)
+        -- local client = vim.lsp.get_client_by_id(ev.data.client_id)
 
         -- Toggle inlay hints
         local filter = { bufnr = ev.bufnr }
@@ -546,20 +505,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
         vim.keymap.set("n", "<C-/>", function()
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(filter), filter)
         end, opts)
-
-        -- workaround to hl semanticTokens
-        -- https://github.com/golang/go/issues/54531#issuecomment-1464982242
-        if client.name == "gopls" and not client.server_capabilities.semanticTokensProvider then
-            local semantic = client.config.capabilities.textDocument.semanticTokens
-            client.server_capabilities.semanticTokensProvider = {
-                full = true,
-                legend = { tokenModifiers = semantic.tokenModifiers, tokenTypes = semantic.tokenTypes },
-                range = true,
-            }
-        end
-
-        -- Disable semantic highlighting
-        client.server_capabilities.semanticTokensProvider = nil
     end,
 })
 -- }}}
