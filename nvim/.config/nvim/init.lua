@@ -122,9 +122,7 @@ require("lazy").setup({
                 },
                 highlight = {
                     enable = true, -- false will disable the whole extension
-                    disable = {
-                        -- "cpp"
-                    }, -- list of language that will be disabled
+                    disable = {},
                     additional_vim_regex_highlighting = false,
                 },
                 indent = {
@@ -171,10 +169,10 @@ require("lazy").setup({
         opts = {
             filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact", "css", "html" },
             user_default_options = {
-                names = true, -- "Name" codes like Blue or blue
-                css = true, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
+                names = true,        -- "Name" codes like Blue or blue
+                css = true,          -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
                 mode = "background", -- Set the display mode.
-                tailwind = true, -- Enable tailwind colors
+                tailwind = true,     -- Enable tailwind colors
                 virtualtext = "■",
                 always_update = false,
             },
@@ -256,18 +254,18 @@ require("lazy").setup({
             vim.g["test#strategy"] = "dispatch"
         end,
     },
-    { "kdheepak/lazygit.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
+    { "kdheepak/lazygit.nvim",     dependencies = { "nvim-lua/plenary.nvim" } },
 
     "editorconfig/editorconfig-vim",
 
     -- Language support
-    { "alaviss/nim.nvim", ft = { "nim" } },
-    { "ziglang/zig.vim", ft = { "zig" } },
-    { "rust-lang/rust.vim", ft = { "rust" } },
-    { "NoahTheDuke/vim-just", ft = { "just" } },
+    { "alaviss/nim.nvim",          ft = { "nim" } },
+    { "ziglang/zig.vim",           ft = { "zig" } },
+    { "rust-lang/rust.vim",        ft = { "rust" } },
+    { "NoahTheDuke/vim-just",      ft = { "just" } },
     { "elixir-editors/vim-elixir", ft = { "elixir" } },
-    { "kaarmu/typst.vim", ft = { "typst" } },
-    { "seblyng/roslyn.nvim", ft = { "cs" } },
+    { "kaarmu/typst.vim",          ft = { "typst" } },
+    { "seblyng/roslyn.nvim",       ft = { "cs" } },
 
     "nvim-lua/plenary.nvim",
     {
@@ -308,19 +306,6 @@ require("lazy").setup({
         name = "flexoki",
         config = function()
             vim.cmd.colorscheme("flexoki")
-        end,
-    },
-    {
-        "nvim-lualine/lualine.nvim",
-        priority = 1000,
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        config = function()
-            require("lualine").setup({
-                options = {
-                    component_separators = { left = "", right = "" },
-                    section_separators = { left = "", right = "" },
-                },
-            })
         end,
     },
 })
@@ -366,7 +351,7 @@ vim.o.smartcase = true
 vim.o.cinoptions = vim.o.cinoptions .. "L0"
 vim.o.cinoptions = vim.o.cinoptions .. "l1"
 
-vim.o.pumheight = 8 -- Completion menu height
+vim.o.pumheight = 8        -- Completion menu height
 vim.o.signcolumn = "yes:1" -- Configure minimum gutter width
 
 vim.wo.number = false
@@ -428,16 +413,13 @@ vim.keymap.set("n", "<A-r>", ":Make<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>tt", ":TestSuite<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>tf", ":TestFile<CR>", { silent = true })
 
-vim.keymap.set("n", "<Leader>en", vim.diagnostic.goto_next, { silent = true })
-vim.keymap.set("n", "<Leader>ep", vim.diagnostic.goto_prev, { silent = true })
-
 -- Disable ex mode binding
 vim.cmd([[map Q <Nop>]])
 -- }}}
 
 -- LSP {{{
 vim.diagnostic.config({
-    virtual_text = false,
+    virtual_text = true,
     signs = false,
     underline = true,
     update_in_insert = false,
@@ -451,7 +433,7 @@ local lspconfig = require("lspconfig")
 
 local lsp_capabilities = vim.lsp.protocol.make_client_capabilities()
 lsp_capabilities = require("blink.cmp").get_lsp_capabilities(lsp_capabilities) -- Add blink.cmp capabilities
-lsp_capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true -- Enable file watcher support for LSP
+lsp_capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true    -- Enable file watcher support for LSP
 
 require("mason-lspconfig").setup_handlers({
     function(server_name)
@@ -486,16 +468,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(ev)
         local opts = { remap = false, silent = true, buffer = ev.bufnr }
 
-        vim.keymap.set("n", "<leader>mu", vim.lsp.buf.references, opts)
         vim.keymap.set("n", "<leader>mf", conform.format, opts)
-        vim.keymap.set("n", "<leader>mr", vim.lsp.buf.rename, opts)
-        vim.keymap.set("n", "<leader>mR", ":LspRestart<CR>", opts)
-        vim.keymap.set("n", "<M-CR>", vim.lsp.buf.code_action, opts)
-        vim.keymap.set("i", "<M-CR>", vim.lsp.buf.code_action, opts)
-        vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
-        vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
+        -- vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
+        -- vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
         vim.keymap.set("n", "<C-y>", vim.diagnostic.open_float, opts)
-        vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
 
         -- local client = vim.lsp.get_client_by_id(ev.data.client_id)
 
