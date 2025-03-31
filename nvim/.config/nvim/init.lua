@@ -406,6 +406,7 @@ vim.keymap.set("n", "<C-a>", ":A<CR>", { silent = true })
 
 vim.keymap.set("n", "<A-p>", "<nop>", { silent = true })
 
+vim.keymap.set("n", "<Leader>mf", require("conform").format, { silent = true })
 vim.keymap.set("n", "<f7>", ":Make<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>mb", ":Make<CR>", { silent = true })
 vim.keymap.set("n", "<A-r>", ":Make<CR>", { silent = true })
@@ -462,13 +463,11 @@ require("mason-lspconfig").setup_handlers({
     end,
 })
 
-local conform = require("conform")
 vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("UserLspConfig", {}),
     callback = function(ev)
         local opts = { remap = false, silent = true, buffer = ev.bufnr }
 
-        vim.keymap.set("n", "<leader>mf", conform.format, opts)
         -- vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
         -- vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
         vim.keymap.set("n", "<C-y>", vim.diagnostic.open_float, opts)
