@@ -8,6 +8,7 @@ let b:current_syntax = "peanuts"
 syn keyword peanutsKeyword
             \ to from note category id
 			\ month importer account balance
+            \ import payee
 
 syn match peanutsComment "\v;.*$"
 

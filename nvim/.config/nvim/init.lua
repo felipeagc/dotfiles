@@ -31,13 +31,32 @@ end
 require("lazy").setup({
     "equalsraf/neovim-gui-shim",
 
-    "williamboman/mason.nvim",
-    "williamboman/mason-lspconfig.nvim",
     "neovim/nvim-lspconfig",
+    { "williamboman/mason.nvim", opts = {} },
+    { "williamboman/mason-lspconfig.nvim", opts = {} },
+
+    {
+        "echasnovski/mini.icons",
+        opts = {},
+        lazy = true,
+        specs = {
+            {
+                "nvim-tree/nvim-web-devicons",
+                enabled = false,
+                optional = true,
+            },
+        },
+        init = function()
+            package.preload["nvim-web-devicons"] = function()
+                require("mini.icons").mock_nvim_web_devicons()
+                return package.loaded["nvim-web-devicons"]
+            end
+        end,
+    },
 
     {
         "saghen/blink.cmp",
-        version = "v1.0.0",
+        version = "v1.2.0",
         opts = {
             keymap = {
                 preset = "enter",
@@ -181,12 +200,12 @@ require("lazy").setup({
 
     {
         "stevearc/oil.nvim",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
         config = function()
-            vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
             require("oil").setup({
                 default_file_explorer = true,
+                keymaps = { ["<C-p>"] = false },
             })
+            vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
         end,
     },
 
@@ -223,6 +242,7 @@ require("lazy").setup({
                     },
                 },
                 context_window = 16000,
+                debounce = 1000,
                 n_completions = 3,
                 provider_options = {
                     codestral = {
@@ -254,7 +274,7 @@ require("lazy").setup({
             vim.g["test#strategy"] = "dispatch"
         end,
     },
-    { "kdheepak/lazygit.nvim",     dependencies = { "nvim-lua/plenary.nvim" } },
+    { "kdheepak/lazygit.nvim",  dependencies = { "nvim-lua/plenary.nvim" } },
 
     "editorconfig/editorconfig-vim",
 
@@ -302,10 +322,13 @@ require("lazy").setup({
     },
 
     {
-        "nuvic/flexoki-nvim",
-        name = "flexoki",
+        "neanias/everforest-nvim",
+        opts = {
+            background = "hard",
+            disable_italic_comments = true,
+        },
         config = function()
-            vim.cmd.colorscheme("flexoki")
+            vim.cmd.colorscheme("everforest")
         end,
     },
 })
@@ -427,40 +450,12 @@ vim.diagnostic.config({
     severity_sort = true,
 })
 
-require("mason").setup()
-require("mason-lspconfig").setup()
-
-local lspconfig = require("lspconfig")
-
 local lsp_capabilities = vim.lsp.protocol.make_client_capabilities()
 lsp_capabilities = require("blink.cmp").get_lsp_capabilities(lsp_capabilities) -- Add blink.cmp capabilities
 lsp_capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true    -- Enable file watcher support for LSP
 
-require("mason-lspconfig").setup_handlers({
-    function(server_name)
-        lspconfig[server_name].setup({
-            capabilities = lsp_capabilities,
-        })
-    end,
-
-    ["ts_ls"] = function(server_name)
-        lspconfig[server_name].setup({
-            capabilities = lsp_capabilities,
-            root_dir = lspconfig.util.root_pattern("package.json"),
-            init_options = { lint = true },
-        })
-    end,
-    ["rust_analyzer"] = function(server_name)
-        lspconfig[server_name].setup({
-            capabilities = lsp_capabilities,
-            settings = {
-                ["rust-analyzer"] = {
-                    completion = { fullFunctionSignatures = { enable = true } },
-                    cachePriming = { enable = false },
-                },
-            },
-        })
-    end,
+vim.lsp.config("*", {
+    capabilities = lsp_capabilities,
 })
 
 vim.api.nvim_create_autocmd("LspAttach", {
