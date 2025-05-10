@@ -1,6 +1,7 @@
 window-theme = "dark"
 # theme = "catppuccin-mocha"
-theme = "flexoki-dark"
+# theme = "flexoki-dark"
+theme = "0x96f"
 
 font-family = BlexMono Nerd Font
 font-size = 15
@@ -11,9 +12,7 @@ cursor-style-blink = false
 
 shell-integration-features = no-cursor
 
-window-padding-x = 5
-window-padding-y = 5
-
+# macos-titlebar-style = native
 macos-titlebar-style = tabs
 macos-option-as-alt = false
 window-vsync = true
@@ -25,6 +24,8 @@ keybind = cmd+k=goto_split:previous
 
 keybind = cmd+w=close_surface
 keybind = cmd+o=new_split:auto
+
+keybind = super+enter=new_split:auto
 
 # keybind = super+physical:one=unbind
 # keybind = super+physical:two=unbind
