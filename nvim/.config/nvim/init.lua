@@ -217,58 +217,6 @@ require("lazy").setup({
     },
 
     {
-        'milanglacier/minuet-ai.nvim',
-        config = function()
-            require('minuet').setup({
-                provider = 'codestral',
-                virtualtext = {
-                    auto_trigger_ft = {
-                        "go",
-                        "python",
-                        "lua",
-                        "rust",
-                        "typescript",
-                        "typescriptreact",
-                        "javascript",
-                        "javascriptreact",
-                        "html",
-                    },
-                    keymap = {
-                        -- Cycle to prev completion item, or manually invoke completion
-                        prev = '<A-[>',
-                        -- Cycle to next completion item, or manually invoke completion
-                        next = '<A-]>',
-                        dismiss = '<A-e>',
-                    },
-                },
-                context_window = 16000,
-                debounce = 1000,
-                n_completions = 3,
-                provider_options = {
-                    codestral = {
-                        model = 'codestral-latest',
-                        end_point = 'https://codestral.mistral.ai/v1/fim/completions',
-                        api_key = 'CODESTRAL_API_KEY',
-                        stream = true,
-                        optional = {
-                            max_tokens = 1024,
-                            stop = { '\n\n' },
-                        },
-                    },
-                },
-            })
-
-            vim.keymap.set("i", "<Tab>", function()
-                if require('minuet.virtualtext').action.is_visible() then
-                    require('minuet.virtualtext').action.accept()
-                else
-                    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Tab>", true, false, true), "n", false)
-                end
-            end, { desc = "Super Tab" })
-        end,
-    },
-
-    {
         "vim-test/vim-test",
         config = function()
             vim.g["test#strategy"] = "dispatch"
@@ -278,6 +226,7 @@ require("lazy").setup({
 
     "editorconfig/editorconfig-vim",
 
+
     -- Language support
     { "alaviss/nim.nvim",          ft = { "nim" } },
     { "ziglang/zig.vim",           ft = { "zig" } },
@@ -286,6 +235,41 @@ require("lazy").setup({
     { "elixir-editors/vim-elixir", ft = { "elixir" } },
     { "kaarmu/typst.vim",          ft = { "typst" } },
     { "seblyng/roslyn.nvim",       ft = { "cs" } },
+    {
+        "Olical/conjure",
+        ft = { "clojure" },
+        lazy = true,
+        init = function()
+            vim.g["conjure#filetypes"] = { "clojure" }
+            vim.g["conjure#mapping#enable_defaults"] = false
+            vim.g["conjure#mapping#prefix"] = "<leader>"
+            vim.g["conjure#mapping#eval_buf"] = "eb"
+            vim.g["conjure#mapping#eval_current_form"] = "ee"
+
+            -- Add this alias to ~/.clojure/deps.edn:
+            -- {:aliases {:nREPL {:extra-deps {nrepl/nrepl {:mvn/version "1.3.1"}}}} }
+            vim.g["conjure#client#clojure#nrepl#connection#auto_repl#cmd"] = "clj -M:nREPL -m nrepl.cmdline"
+        end,
+        dependencies = {
+            {
+                "gpanders/nvim-parinfer",
+                lazy = true,
+                ft = { "clojure" }
+            },
+            {
+                "HiPhish/rainbow-delimiters.nvim",
+                lazy = true,
+                ft = { "clojure" },
+                submodules = false,
+                init = function()
+                    vim.g["rainbow_delimiters"] = {
+                        whitelist = {'clojure'}
+                    }
+                end,
+            },
+            { "clojure-vim/vim-jack-in" }
+        },
+    },
 
     "nvim-lua/plenary.nvim",
     {
@@ -456,6 +440,13 @@ lsp_capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true    -
 
 vim.lsp.config("*", {
     capabilities = lsp_capabilities,
+})
+vim.lsp.config("clangd", {
+    filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
+})
+
+vim.lsp.enable({
+    "clangd",
 })
 
 vim.api.nvim_create_autocmd("LspAttach", {
