@@ -4,7 +4,7 @@ window-theme = "dark"
 theme = "0x96f"
 
 font-family = BlexMono Nerd Font
-font-size = 15
+font-size = 13
 font-thicken = true
 
 cursor-style = block
