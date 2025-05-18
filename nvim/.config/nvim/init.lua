@@ -245,10 +245,22 @@ require("lazy").setup({
             vim.g["conjure#mapping#prefix"] = "<leader>"
             vim.g["conjure#mapping#eval_buf"] = "eb"
             vim.g["conjure#mapping#eval_current_form"] = "ee"
+            vim.g["conjure#mapping#log_vsplit"] = "lv"
+            vim.g["conjure#mapping#log_toggle"] = "lg"
+            vim.g["conjure#mapping#log_close_visible"] = "lq"
+            vim.g["conjure#client#clojure#nrepl#mapping#run_all_tests"] = "ta"
+            vim.g["conjure#client#clojure#nrepl#mapping#run_current_ns_tests"] = "tn"
+            vim.g["conjure#client#clojure#nrepl#mapping#run_alternate_ns_tests"] = "tN"
+            vim.g["conjure#client#clojure#nrepl#mapping#run_current_test"] = "tc"
+            vim.g["conjure#client#clojure#nrepl#mapping#refresh_all"] = "ra"
 
-            -- Add this alias to ~/.clojure/deps.edn:
-            -- {:aliases {:nREPL {:extra-deps {nrepl/nrepl {:mvn/version "1.3.1"}}}} }
-            vim.g["conjure#client#clojure#nrepl#connection#auto_repl#cmd"] = "clj -M:nREPL -m nrepl.cmdline"
+            vim.g["conjure#client#clojure#nrepl#connection#auto_repl#cmd"] = "clj -M:repl"
+
+            create_augroup("clojure", function()
+                vim.cmd("setlocal splitright")
+                vim.keymap.set("n", "<C-Return>", "<Space>ee", { buffer = true, remap = true })
+                vim.keymap.set("i", "<C-Return>", "<C-o><Space>ee", { buffer = true, remap = true })
+            end)
         end,
         dependencies = {
             {
@@ -305,15 +317,20 @@ require("lazy").setup({
         },
     },
 
+    -- {
+    --     "neanias/everforest-nvim",
+    --     opts = {
+    --         background = "hard",
+    --         disable_italic_comments = true,
+    --     },
+    --     config = function()
+    --         vim.cmd.colorscheme("everforest")
+    --     end,
+    -- },
     {
-        "neanias/everforest-nvim",
-        opts = {
-            background = "hard",
-            disable_italic_comments = true,
-        },
-        config = function()
-            vim.cmd.colorscheme("everforest")
-        end,
+        "felipeagc/fleet-theme-nvim",
+        dir = "~/Code/lua/fleet-theme-nvim",
+        config = function() vim.cmd("colorscheme fleet") end
     },
 })
 
@@ -361,7 +378,7 @@ vim.o.cinoptions = vim.o.cinoptions .. "l1"
 vim.o.pumheight = 8        -- Completion menu height
 vim.o.signcolumn = "yes:1" -- Configure minimum gutter width
 
-vim.wo.number = false
+vim.wo.number = true
 -- vim.wo.cursorline = true
 vim.wo.foldmethod = "marker"
 -- vim.wo.foldlevel = 0
@@ -452,13 +469,15 @@ vim.lsp.enable({
 vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("UserLspConfig", {}),
     callback = function(ev)
+        -- Disable semantic highlight for all LSP servers
+        local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
+        client.server_capabilities.semanticTokensProvider = nil
+
         local opts = { remap = false, silent = true, buffer = ev.bufnr }
 
         -- vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
         -- vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
         vim.keymap.set("n", "<C-y>", vim.diagnostic.open_float, opts)
-
-        -- local client = vim.lsp.get_client_by_id(ev.data.client_id)
 
         -- Toggle inlay hints
         local filter = { bufnr = ev.bufnr }
@@ -524,7 +543,7 @@ vim.cmd([[
 -- Indentation {{{
 vim.cmd([[
     autocmd FileType c setlocal shiftwidth=4 tabstop=4 expandtab
-    autocmd FileType cpp setlocal shiftwidth=4 tabstop=4 expandtab
+    " autocmd FileType cpp setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType dart setlocal shiftwidth=2 tabstop=2 expandtab
     autocmd FileType glsl setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType haskell setlocal shiftwidth=2 tabstop=2 expandtab
@@ -543,6 +562,7 @@ vim.cmd([[
     autocmd FileType zig setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType sql setlocal shiftwidth=4 tabstop=4 expandtab
     autocmd FileType terraform setlocal shiftwidth=2 tabstop=2 expandtab
+    autocmd FileType capnp setlocal shiftwidth=2 tabstop=2 expandtab
 ]])
 -- }}}
 
