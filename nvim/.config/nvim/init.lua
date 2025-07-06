@@ -329,7 +329,6 @@ require("lazy").setup({
     -- },
     {
         "felipeagc/fleet-theme-nvim",
-        dir = "~/Code/lua/fleet-theme-nvim",
         config = function() vim.cmd("colorscheme fleet") end
     },
 })

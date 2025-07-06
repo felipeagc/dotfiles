@@ -54,7 +54,7 @@ zstyle ':completion:*:*:docker:*' option-stacking yes
 zstyle ':completion:*:*:docker-*:*' option-stacking yes
 
 if type "keychain" > /dev/null; then
-    KEYCHAIN_CMD=(keychain -q --eval --agents ssh)
+    KEYCHAIN_CMD=(keychain -q --eval)
     [[ -e ~/.ssh/id_ed25519 ]] && KEYCHAIN_CMD+=id_ed25519
     [[ -e ~/.ssh/id_secondary ]] && KEYCHAIN_CMD+=id_secondary
     eval `$KEYCHAIN_CMD`
