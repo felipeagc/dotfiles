@@ -3,3 +3,5 @@ straight/*
 var
 server
 eln-cache
+saves
+undo
