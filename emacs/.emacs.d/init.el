@@ -14,7 +14,7 @@
   visible-bell 1)
 
 ;; Font
-(add-to-list 'default-frame-alist '(font . "Menlo-13"))
+(add-to-list 'default-frame-alist '(font . "BlexMono Nerd Font-11"))
 
 ;; Visuals
 (tool-bar-mode -1)
@@ -277,16 +277,3 @@
                         (switch-to-prev-buffer (get-buffer-window buf) 'kill))
                       buffer)))
 (add-hook 'compilation-finish-functions 'felipe/bury-compile-buffer-if-successful)
-
-;; Coq
-(use-package proof-general
-  :ensure t
-  :init
-  (setq proof-splash-enable nil)
-  :config
-  (add-hook 'coq-mode-hook (lambda () (undo-tree-mode 1))))
-
-
-;; Ocaml
-(use-package tuareg
-  :ensure t)
