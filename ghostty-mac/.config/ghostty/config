@@ -1,7 +1,7 @@
 window-theme = "dark"
 # theme = "catppuccin-mocha"
 # theme = "flexoki-dark"
-theme = "0x96f"
+theme = "GitHub-Dark-High-Contrast"
 
 font-family = BlexMono Nerd Font
 font-size = 13

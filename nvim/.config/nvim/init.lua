@@ -28,6 +28,14 @@ local function create_augroup(filetype, callback)
 end
 -- }}}
 
+-- vim.cmd.colorscheme("habamax")
+-- vim.api.nvim_set_hl(0, "Normal", { bg = "#151415" })
+-- vim.api.nvim_set_hl(0, "vertsplit", { bg = "#000000", fg = "#9e9e9e" })
+
+-- vim.cmd.colorscheme("lunaperche")
+-- vim.api.nvim_set_hl(0, "Normal", { bg = "#151415" })
+-- vim.api.nvim_set_hl(0, "VertSplit", { bg = "#000000", fg = "#767676" })
+
 require("lazy").setup({
     "equalsraf/neovim-gui-shim",
 
@@ -174,7 +182,6 @@ require("lazy").setup({
     "tpope/vim-unimpaired",
     "tpope/vim-dispatch",
     "tpope/vim-projectionist",
-    "tpope/vim-commentary",
     "ntpeters/vim-better-whitespace", -- highlight trailing whitespace
     {
         "windwp/nvim-autopairs",
@@ -255,6 +262,7 @@ require("lazy").setup({
             vim.g["conjure#client#clojure#nrepl#mapping#refresh_all"] = "ra"
 
             vim.g["conjure#client#clojure#nrepl#connection#auto_repl#cmd"] = "clj -M:repl"
+            vim.g["conjure#client#clojure#nrepl#connection#auto_repl#enabled"] = false
 
             create_augroup("clojure", function()
                 vim.cmd("setlocal splitright")
@@ -327,10 +335,20 @@ require("lazy").setup({
     --         vim.cmd.colorscheme("everforest")
     --     end,
     -- },
+    -- {
+    --     "felipeagc/fleet-theme-nvim",
+    --     dir = "~/Code/lua/fleet-theme-nvim",
+    --     config = function() vim.cmd("colorscheme fleet") end
+    -- },
     {
-        "felipeagc/fleet-theme-nvim",
-        config = function() vim.cmd("colorscheme fleet") end
-    },
+        "AlexvZyl/nordic.nvim",
+        config = function()
+            require('nordic').setup({
+                reduced_blue = true,
+            })
+            vim.cmd.colorscheme("nordic")
+        end
+    }
 })
 
 -- Vim options {{{
@@ -389,7 +407,7 @@ vim.g.mapleader = " "
 vim.keymap.set("n", "<C-p>", ":Telescope find_files<CR>", { silent = true })
 vim.keymap.set("n", "<C-b>", ":Telescope buffers<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>fg", ":Telescope live_grep<CR>", { silent = true })
-vim.keymap.set("n", "<Leader>fv", vim.cmd.Ex, { silent = true })
+vim.keymap.set("n", "<Leader>fr", ":Telescope resume<CR>", { silent = true })
 
 vim.keymap.set("n", "<C-j>", "<C-w>w", { remap = false })
 vim.keymap.set("n", "<C-k>", "<C-w>W", { remap = false })
@@ -486,10 +504,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
         end, opts)
     end,
 })
--- }}}
-
--- Color scheme {{{
-vim.cmd([[set background=dark]])
 -- }}}
 
 -- Small quality of life stuff {{{
