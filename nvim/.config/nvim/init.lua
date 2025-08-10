@@ -1,5 +1,6 @@
 -- Basics
 require("felipeagc.base")
+require("felipeagc.keybinds")
 
 -- Submodules
 require("felipeagc.colorscheme")
