@@ -1,7 +1,7 @@
 window-theme = "dark"
 # theme = "catppuccin-mocha"
 # theme = "flexoki-dark"
-theme = "GitHub-Dark-High-Contrast"
+theme = "tokyonight"
 
 font-family = BlexMono Nerd Font
 font-size = 13
@@ -26,6 +26,10 @@ keybind = cmd+w=close_surface
 keybind = cmd+o=new_split:auto
 
 keybind = super+enter=new_split:auto
+
+background-blur = true
+background-blur-radius = 100
+background-opacity = 0.9
 
 # keybind = super+physical:one=unbind
 # keybind = super+physical:two=unbind
