@@ -1,6 +1,8 @@
-local M = {}
+create_augroup("elixir", function()
+    vim.cmd([[ compiler exunit ]])
+end)
 
-local config = {
+local elixir_projectionist_config = {
   ["mix.exs"] = {
     ["lib/**/live/*_live.ex"] = {
       type = "live",
@@ -134,15 +136,11 @@ local config = {
 }
 
 
-function M.setup()
-    local new_projectionist_heuristics
-    if vim.g.projectionist_heuristics then
-        new_projectionist_heuristics = vim.tbl_extend("force", vim.g.projectionist_heuristics, config)
-    else
-        new_projectionist_heuristics = config
-    end
-
-    vim.g.projectionist_heuristics = new_projectionist_heuristics
+local new_projectionist_heuristics
+if vim.g.projectionist_heuristics then
+    new_projectionist_heuristics = vim.tbl_extend("force", vim.g.projectionist_heuristics, elixir_projectionist_config)
+else
+    new_projectionist_heuristics = elixir_projectionist_config
 end
 
-return M
+vim.g.projectionist_heuristics = new_projectionist_heuristics
