@@ -53,9 +53,5 @@ vim.keymap.set("n", "<f7>", ":Make<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>mb", ":Make<CR>", { silent = true })
 vim.keymap.set("n", "<A-r>", ":Make<CR>", { silent = true })
 
-vim.keymap.set("n", "<Leader>tt", ":TestSuite<CR>", { silent = true })
-vim.keymap.set("n", "<Leader>tf", ":TestFile<CR>", { silent = true })
-vim.keymap.set("n", "<Leader>tm", ":TestNearest<CR>", { silent = true })
-
 -- Disable ex mode binding
 vim.keymap.set("n", "Q", "<Nop>", {})
