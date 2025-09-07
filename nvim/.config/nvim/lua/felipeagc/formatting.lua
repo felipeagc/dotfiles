@@ -13,6 +13,9 @@ require("conform").setup({
         javascriptreact = { "prettierd", "prettier", stop_after_first = true },
         typescript = { "prettierd", "prettier", stop_after_first = true },
         typescriptreact = { "prettierd", "prettier", stop_after_first = true },
+        elixir = { "mix" },
+        eelixir = { "mix" },
+        heex = { "mix" },
     },
     formatters = {
         peanuts_fmt = {

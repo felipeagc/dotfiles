@@ -126,3 +126,6 @@ if type "xc" > /dev/null; then
 fi
 
 test -r /opt/homebrew/opt/dotnet/libexec && export DOTNET_ROOT="/opt/homebrew/opt/dotnet/libexec"
+
+eval "$(zoxide init zsh)"
+alias cd=z
