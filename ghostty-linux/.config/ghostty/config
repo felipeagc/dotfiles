@@ -1,9 +1,9 @@
 window-theme = "dark"
 # theme = "catppuccin-mocha"
 # theme = "flexoki-dark"
-theme = "0x96f"
+theme = "tokyonight"
 
-font-family = Jetbrains Mono Nerd Font
+font-family = BlexMono Nerd Font
 font-size = 10
 
 cursor-style = block
@@ -21,6 +21,10 @@ keybind = alt+t=new_tab
 
 keybind = alt+w=close_surface
 keybind = alt+enter=new_split:auto
+
+background-blur = true
+background-blur-radius = 100
+background-opacity = 0.9
 
 # keybind = super+physical:one=unbind
 # keybind = super+physical:two=unbind
