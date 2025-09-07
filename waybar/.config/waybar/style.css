@@ -1,5 +1,5 @@
 * {
-  font-family: BlexMono Nerd Font;
+  font-family: 'JetBrains Mono Nerd Font Propo';
   font-size: 14px;
   min-height: 0;
   padding-right: 2px;
@@ -45,11 +45,19 @@
 #cpu,
 #memory,
 #custom-lock,
-#custom-power {
+#custom-power,
+#idle_inhibitor {
   background-color: #101010;
   padding: 0.5rem 1rem;
-  margin: 3px 3px;
-  border-radius: 5px;
+  margin: 3px 0px;
+}
+
+#idle_inhibitor {
+  border-radius: 5px 0px 0px 5px;
+}
+
+#custom-lock {
+  border-radius: 0px 5px 5px 0px;
 }
 
 #clock {
@@ -76,7 +84,6 @@
 
 #pulseaudio {
   color: #ea999c;
-  margin-left: 1rem;
 }
 
 #custom-lock {

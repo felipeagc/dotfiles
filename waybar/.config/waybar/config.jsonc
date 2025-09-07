@@ -6,6 +6,7 @@
   ],
   "modules-center": ["clock"],
   "modules-right": [
+    "idle_inhibitor",
     "pulseaudio",
     "battery",
     "network",
@@ -27,12 +28,12 @@
   },
   "clock": {
     "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-    "format": "{:%d - %H:%M}"
+    "format": "{:%Y-%m-%d - %H:%M}"
   },
   "network": {
-    "format-wifi": "󰤢 ",
-    "format-ethernet": "󰈀 ",
-    "format-disconnected": "󰤠 ",
+    "format-wifi": "󰤢",
+    "format-ethernet": "󰈀",
+    "format-disconnected": "󰤠",
     "interval": 5,
     "tooltip": false
   },
@@ -60,5 +61,22 @@
   },
   "later": {
     "format": "<span class='icon'>{icon}</span> <span class='text'>{text}</span>"
+  },
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "format-icons": {
+      "activated": "",
+      "deactivated": ""
+    }
+  },
+  "battery": {
+    "interval": 60,
+    "states": {
+        "warning": 30,
+        "critical": 15
+    },
+    "format": "{capacity}% {icon}",
+    "format-icons": ["", "", "", "", ""],
+    "max-length": 25
   }
 }
