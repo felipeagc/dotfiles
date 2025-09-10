@@ -4,6 +4,7 @@ vim.pack.add({
     { src = "https://github.com/nvim-lua/plenary.nvim" },
     { src = "https://github.com/nvim-telescope/telescope.nvim" },
     { src = "https://github.com/stevearc/dressing.nvim" },
+    { src = "https://github.com/stevearc/oil.nvim" },
 })
 
 require('mini.icons').setup()
@@ -35,6 +36,9 @@ require("dressing").setup({
 })
 
 require("nvim-tree").setup {
+    view = {
+        width = 50,
+    },
     on_attach = function(bufnr)
         local api = require "nvim-tree.api"
 
@@ -52,8 +56,16 @@ require("nvim-tree").setup {
         api.config.mappings.default_on_attach(bufnr)
 
         -- custom mappings
-        vim.keymap.set('n', '-', "<CMD>NvimTreeClose<CR>", opts("Toggle tree"))
+        vim.keymap.set('n', 'gt', "<CMD>NvimTreeClose<CR>", opts("Toggle tree"))
         vim.keymap.del('n', '<C-k>', { buffer = bufnr })
     end
 }
-vim.keymap.set("n", "-", "<CMD>NvimTreeFindFile<CR>", { desc = "Toggle tree" })
+vim.keymap.set("n", "gt", "<CMD>NvimTreeFindFile<CR>", { desc = "Toggle tree" })
+
+require("oil").setup({
+    default_file_explorer = true,
+    keymaps = {
+        ["<C-p>"] = false,
+    },
+})
+vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Toggle file browser" })
