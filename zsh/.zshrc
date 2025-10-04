@@ -60,6 +60,14 @@ if type "keychain" > /dev/null; then
     eval `$KEYCHAIN_CMD`
 fi
 
+if [[ "$OSTYPE" == "linux"* ]]; then
+    export SSH_ASKPASS=/usr/lib/seahorse/ssh-askpass
+    if [ -z "$SSH_AUTH_SOCK" ]; then
+        eval $(gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
+        export SSH_AUTH_SOCK
+    fi
+fi
+
 if type "direnv" > /dev/null; then
     eval "$(direnv hook zsh)"
 fi
