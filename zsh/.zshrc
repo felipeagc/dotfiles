@@ -123,6 +123,7 @@ bindkey -s ^f "tmux-sessionizer\n"
 
 alias j=just
 alias s="kitten ssh"
+alias h="hledger"
 
 if type "mise" > /dev/null; then
     eval "$(mise activate zsh)"

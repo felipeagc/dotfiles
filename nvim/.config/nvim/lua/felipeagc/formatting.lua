@@ -8,6 +8,7 @@ require("conform").setup({
     },
     formatters_by_ft = {
         peanuts = { "peanuts_fmt" },
+        ledger = { "hledger-fmt" },
         go = { "goimports", lsp_format = "last" },
         javascript = { "prettierd", "prettier", stop_after_first = true },
         javascriptreact = { "prettierd", "prettier", stop_after_first = true },
@@ -21,6 +22,11 @@ require("conform").setup({
         peanuts_fmt = {
             command = "peanuts",
             args = { "fmt", "--stdin" },
+            stdin = true,
+        },
+        ["hledger-fmt"] = {
+            command = "hledger-fmt",
+            args = { "-", "--no-diff", "--exit-zero-on-changes" },
             stdin = true,
         },
     },
