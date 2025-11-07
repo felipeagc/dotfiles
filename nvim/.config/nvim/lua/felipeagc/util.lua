@@ -11,7 +11,7 @@ vim.g.strip_whitespace_confirm = 0
 require("nvim-ts-autotag").setup()
 
 require("nvim-autopairs").setup({
-    disable_filetype = { "TelescopePrompt", "vim", "clojure" },
+    disable_filetype = { "TelescopePrompt", "vim" },
 })
 
 require("colorizer").setup({

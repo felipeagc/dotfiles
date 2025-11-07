@@ -28,8 +28,12 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz", { remap = false })
 vim.keymap.set("n", "J", "mzJ`z", { remap = false })
 
 vim.keymap.set("n", "<Leader>fed", ":e " .. vim.fn.stdpath("config") .. "/init.lua<CR>", { silent = true })
-vim.keymap.set("n", "<Leader>fer", ":source " .. vim.fn.stdpath("config") .. "/init.lua<CR>:restart<CR>",
-    { silent = false })
+vim.keymap.set(
+    "n",
+    "<Leader>fer",
+    ":source " .. vim.fn.stdpath("config") .. "/init.lua<CR>:restart<CR>",
+    { silent = false }
+)
 
 vim.keymap.set("n", "<Leader>w/", ":vsp<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>w-", ":sp<CR>", { silent = true })
@@ -43,7 +47,9 @@ vim.keymap.set("n", "<Leader>tn", ":tabnext<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>tp", ":tabprev<CR>", { silent = true })
 vim.keymap.set("n", "<Leader>tc", ":tabnew<CR>", { silent = true })
 
-vim.keymap.set("n", "<Leader>gs", ":LazyGitCurrentFile<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>oc", ":CopilotCli<CR>", { silent = true })
+
+vim.keymap.set("n", "<Leader>gs", ":JjuiOrLazyGit<CR>", { silent = true })
 
 vim.keymap.set("n", "<C-a>", ":A<CR>", { silent = true })
 
@@ -55,3 +61,9 @@ vim.keymap.set("n", "<A-r>", ":Make<CR>", { silent = true })
 
 -- Disable ex mode binding
 vim.keymap.set("n", "Q", "<Nop>", {})
+
+-- Emacs bindings for command buffer
+vim.keymap.set("c", "<C-a>", "<Home>")
+vim.keymap.set("c", "<C-e>", "<End>")
+
+vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")

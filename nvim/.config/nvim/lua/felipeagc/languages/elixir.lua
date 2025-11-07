@@ -1,3 +1,7 @@
+vim.pack.add({
+    "https://github.com/elixir-editors/vim-elixir",
+})
+
 create_augroup("elixir", function()
     vim.cmd([[ compiler exunit ]])
 end)

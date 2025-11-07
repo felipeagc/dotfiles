@@ -1,9 +1,10 @@
 window-theme = "dark"
 # theme = "catppuccin-mocha"
-# theme = "flexoki-dark"
-theme = "Arthur"
+theme = "Flexoki Dark"
 
-font-family = BlexMono Nerd Font
+# font-family = BlexMono Nerd Font
+font-family = FiraMono Nerd Font
+# font-family = JetBrains Mono
 font-size = 13
 font-thicken = true
 
