@@ -13,8 +13,7 @@ cursor-style-blink = false
 
 shell-integration-features = no-cursor
 
-# macos-titlebar-style = native
-macos-titlebar-style = tabs
+macos-titlebar-style = native
 macos-option-as-alt = false
 window-vsync = true
 

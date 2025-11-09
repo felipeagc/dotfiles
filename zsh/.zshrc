@@ -1,5 +1,5 @@
 # Set up the prompt
-export PROMPT=$'%F{green}[%F{reset}%B%n@%M%b%F{green}] %F{cyan}%~ %F{red}$vcs_info_msg_0_%f\n%F{yellow}$%F{reset} '
+export PROMPT=$'%F{green}[%F{reset}%B%n@%M%b%F{green}] %F{cyan}%~\n%F{yellow}$%F{reset} '
 # Print new line before every prompt except the first one
 precmd() {
     precmd() {

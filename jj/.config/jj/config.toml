@@ -1,0 +1,9 @@
+#:schema https://jj-vcs.github.io/jj/latest/config-schema.json
+
+[user]
+email = "felipeagc2@gmail.com"
+name = "Felipe A. Costa"
+
+[ui]
+diff-editor = ":builtin"
+diff-formatter = "delta"

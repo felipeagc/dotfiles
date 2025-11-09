@@ -66,4 +66,4 @@ vim.keymap.set("n", "Q", "<Nop>", {})
 vim.keymap.set("c", "<C-a>", "<Home>")
 vim.keymap.set("c", "<C-e>", "<End>")
 
-vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
+vim.keymap.set("t", "<C-d>", "<C-\\><C-n>")

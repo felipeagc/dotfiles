@@ -1,0 +1,13 @@
+# [keys.preview]
+# scroll_up = ["K"]
+# scroll_down = ["J"]
+
+[keys.details]
+mode = ["enter"]
+
+[keys.inline_describe]
+mode = ["d"]
+accept = ["alt+enter", "ctrl+s"]
+
+[preview]
+show_at_start = true
