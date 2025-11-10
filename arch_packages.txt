@@ -5,9 +5,11 @@ chromium
 dhcpcd
 discord
 elephant
+elephant-bluetooth
 elephant-calc
 elephant-desktopapplications
 elephant-files
+elephant-menus
 eog
 fd
 ffmpeg
@@ -19,6 +21,7 @@ ghostty
 git
 gnome-themes-extra
 grim
+gum
 hledger
 hledger-web
 htop
@@ -33,6 +36,7 @@ jq
 jujutsu
 keychain
 lazygit
+libfido2
 linux
 linux-firmware
 loupe
