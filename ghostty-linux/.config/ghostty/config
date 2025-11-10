@@ -1,10 +1,12 @@
 window-theme = "dark"
-# theme = "catppuccin-mocha"
-# theme = "flexoki-dark"
-theme = "TokyoNight"
+theme = "Flexoki Dark"
 
-font-family = JetBrains Mono Nerd Font Mono
-font-size = 11
+font-family = BlexMono Nerd Font Mono
+# font-family = JetBrains Mono Nerd Font Mono
+# font-family = VictorMono Nerd Font Mono
+font-style = Medium
+font-size = 10
+font-feature = -dlig
 
 cursor-style = block
 cursor-style-blink = false
@@ -14,6 +16,8 @@ shell-integration-features = no-cursor
 window-vsync = true
 
 window-new-tab-position = end
+
+gtk-custom-css = tab-style.css
 
 keybind = alt+j=goto_split:next
 keybind = alt+k=goto_split:previous
