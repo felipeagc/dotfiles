@@ -6,7 +6,7 @@
   ],
   "modules-center": ["clock"],
   "modules-right": [
-    "idle_inhibitor",
+    // "idle_inhibitor",
     "pulseaudio",
     "battery",
     "network",
