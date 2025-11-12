@@ -1,6 +1,39 @@
 #!/usr/bin/env bash
 USER=felipe
 
+sudo tee /etc/pacman.conf > /dev/null <<'EOF'
+# See the pacman.conf(5) manpage for option and repository directives
+
+[options]
+Color
+ILoveCandy
+VerbosePkgLists
+HoldPkg = pacman glibc
+Architecture = auto
+CheckSpace
+ParallelDownloads = 5
+DownloadUser = alpm
+
+# By default, pacman accepts packages signed by keys that its local keyring
+# trusts (see pacman-key and its man page), as well as unsigned packages.
+SigLevel = Required DatabaseOptional
+LocalFileSigLevel = Optional
+
+# pacman searches repositories in the order defined here
+[core]
+Include = /etc/pacman.d/mirrorlist
+
+[extra]
+Include = /etc/pacman.d/mirrorlist
+
+[multilib]
+Include = /etc/pacman.d/mirrorlist
+
+[omarchy]
+SigLevel = Optional TrustAll
+Server = https://pkgs.omarchy.org/$arch
+EOF
+
 sudo pacman -S --needed - < arch_packages.txt
 
 pikaur -S --needed - < aur_packages.txt
@@ -39,3 +72,5 @@ fi
 if [ ! -f $HOME/.local/share/applications/WhatsApp.desktop ]; then
     omarchy-webapp-install WhatsApp "https://web.whatsapp.com" "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/whatsapp.png"
 fi
+
+sudo ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
