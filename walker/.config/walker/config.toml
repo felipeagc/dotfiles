@@ -7,3 +7,4 @@ default = [
   "files",
   "bluetooth"
 ]
+theme = "noctalia"

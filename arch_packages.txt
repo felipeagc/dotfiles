@@ -46,6 +46,7 @@ mpv
 nautilus
 neovim
 networkmanager
+niri
 noto-fonts
 noto-fonts-cjk
 noto-fonts-emoji
@@ -59,6 +60,7 @@ pipewire
 pipewire-jack
 pipewire-pulse
 playerctl
+polkit-kde-agent
 restic
 ripgrep
 rsync
@@ -66,6 +68,9 @@ sddm
 slurp
 spotify-launcher
 stow
+sushi
+swaybg
+swaylock
 the_silver_searcher
 tree
 ttf-cascadia-code
@@ -87,7 +92,3 @@ xdg-desktop-portal-wlr
 xdg-terminal-exec
 zathura
 zsh
-niri
-swaybg
-polkit-kde-agent
-swaylock

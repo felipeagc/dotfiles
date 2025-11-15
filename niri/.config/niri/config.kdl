@@ -209,7 +209,8 @@ layout {
         // - CSS-like notation: "rgb(255, 127, 0)", rgba(), hsl() and a few others.
 
         // Color of the ring on the active monitor.
-        active-color "#7fc8ff"
+        // active-color "#7fc8ff"
+        active-color "#C4B9E0"
 
         // Color of the ring on inactive monitors.
         //
@@ -257,7 +258,7 @@ layout {
     // You can enable drop shadows for windows.
     shadow {
         // Uncomment the next line to enable shadows.
-        on
+        // on
 
         // By default, the shadow draws only around its window, and not behind it.
         // Uncomment this setting to make the shadow draw behind its window.
@@ -310,9 +311,13 @@ layout {
 // See the binds section below for more spawn examples.
 
 spawn-sh-at-startup "uwsm-app -s b -- swaybg -i ~/.wallpaper.png"
-spawn-sh-at-startup "uwsm-app -s s -- waybar"
+spawn-sh-at-startup "uwsm-app -s s -- qs -c noctalia-shell"
 spawn-sh-at-startup "uwsm-app -s s -- /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
 spawn-sh-at-startup "uwsm-app -s s -- walker --gapplication-service"
+spawn-sh-at-startup "uwsm-app -s s -- firefox"
+spawn-sh-at-startup "uwsm-app -s s -- ghostty"
+spawn-sh-at-startup "uwsm-app -s s -- spotify-launcher"
+spawn-sh-at-startup "uwsm-app -s s -- discord"
 
 hotkey-overlay {
     // Uncomment this line to disable the "Important Hotkeys" pop-up at startup.
@@ -358,6 +363,7 @@ window-rule {
     // - host Firefox (app-id is "firefox")
     // - Flatpak Firefox (app-id is "org.mozilla.firefox")
     match app-id=r#"firefox$"# title="^Picture-in-Picture$"
+    match app-id=r#"^org.gnome.NautilusPreviewer$"#
     open-floating true
 }
 
@@ -643,4 +649,9 @@ binds {
 
 environment {
     ELECTRON_OZONE_PLATFORM_HINT "auto"
+}
+
+debug {
+  // Allows notification actions and window activation from Noctalia.
+  honor-xdg-activation-with-invalid-serial
 }
