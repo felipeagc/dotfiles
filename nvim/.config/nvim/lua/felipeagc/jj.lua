@@ -1,3 +1,10 @@
+vim.pack.add({
+    { src = "https://github.com/MunifTanjim/nui.nvim" },
+    { src = "https://github.com/julienvincent/hunk.nvim" }
+})
+
+require("hunk").setup()
+
 local function find_jj_dir(path)
     local uv = vim.loop
     path = path or uv.cwd()

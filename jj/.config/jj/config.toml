@@ -5,5 +5,5 @@ email = "felipeagc2@gmail.com"
 name = "Felipe A. Costa"
 
 [ui]
-diff-editor = ":builtin"
+diff-editor = ["nvim", "-c", "DiffEditor $left $right $output"]
 diff-formatter = "delta"
