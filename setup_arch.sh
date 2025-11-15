@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 USER=felipe
 
+sudo tee /usr/share/wayland-sessions/niri-uwsm.desktop > /dev/null <<'EOF'
+[Desktop Entry]
+Name=Niri (UWSM)
+Comment=Niri compositor managed by UWSM
+Exec=uwsm start -F -- niri-session
+DesktopNames=niri
+Type=Application
+EOF
+
 sudo tee /etc/pacman.conf > /dev/null <<'EOF'
 # See the pacman.conf(5) manpage for option and repository directives
 
@@ -63,7 +72,7 @@ sudo mkdir -p /etc/sddm.conf.d
 sudo tee /etc/sddm.conf.d/autologin.conf > /dev/null <<EOF
 [Autologin]
 User=$USER
-Session=hyprland-uwsm
+Session=niri-uwsm
 EOF
 
 if [ ! -f $HOME/.local/share/applications/ChatGPT.desktop ]; then

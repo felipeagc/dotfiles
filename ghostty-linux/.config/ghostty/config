@@ -28,7 +28,7 @@ keybind = alt+enter=new_split:auto
 
 background-blur = true
 background-blur-radius = 100
-background-opacity = 0.9
+# background-opacity = 0.9
 
 window-padding-x = 10
 window-padding-y = 10

@@ -87,3 +87,7 @@ xdg-desktop-portal-wlr
 xdg-terminal-exec
 zathura
 zsh
+niri
+swaybg
+polkit-kde-agent
+swaylock
