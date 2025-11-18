@@ -72,7 +72,8 @@ sudo mkdir -p /etc/sddm.conf.d
 sudo tee /etc/sddm.conf.d/autologin.conf > /dev/null <<EOF
 [Autologin]
 User=$USER
-Session=niri-uwsm
+# Session=niri-uwsm
+Session=hyprland-uwsm
 EOF
 
 if [ ! -f $HOME/.local/share/applications/ChatGPT.desktop ]; then

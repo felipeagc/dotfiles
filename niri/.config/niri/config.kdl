@@ -310,12 +310,10 @@ layout {
 // which may be more convenient to use.
 // See the binds section below for more spawn examples.
 
-spawn-sh-at-startup "uwsm-app -s b -- swaybg -i ~/.wallpaper.png"
+// spawn-sh-at-startup "uwsm-app -s b -- swaybg -i ~/.wallpaper.png"
 spawn-sh-at-startup "uwsm-app -s s -- qs -c noctalia-shell"
 spawn-sh-at-startup "uwsm-app -s s -- /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
 spawn-sh-at-startup "uwsm-app -s s -- walker --gapplication-service"
-spawn-sh-at-startup "uwsm-app -s s -- firefox"
-spawn-sh-at-startup "uwsm-app -s s -- ghostty"
 spawn-sh-at-startup "uwsm-app -s s -- spotify-launcher"
 spawn-sh-at-startup "uwsm-app -s s -- discord"
 

@@ -17,6 +17,7 @@ require("conform").setup({
         elixir = { "mix" },
         eelixir = { "mix" },
         heex = { "mix" },
+        sql = { "pg_format" },
     },
     formatters = {
         peanuts_fmt = {
