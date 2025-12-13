@@ -1,8 +1,8 @@
 window-theme = "dark"
-theme = "Flexoki Dark"
+# theme = "gruvbox"
 
-font-family = BlexMono Nerd Font Mono
-# font-family = JetBrains Mono Nerd Font Mono
+# font-family = BlexMono Nerd Font Mono
+font-family = JetBrains Mono Nerd Font Mono
 # font-family = VictorMono Nerd Font Mono
 font-style = Medium
 font-size = 10
