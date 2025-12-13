@@ -16,6 +16,7 @@ require("conform").setup({
         typescriptreact = { "prettierd", "prettier", stop_after_first = true },
         elixir = { "mix" },
         eelixir = { "mix" },
+        fsharp = { "fantomas" },
         heex = { "mix" },
         sql = { "pg_format" },
     },
@@ -25,11 +26,11 @@ require("conform").setup({
             args = { "fmt", "--stdin" },
             stdin = true,
         },
-        ["hledger-fmt"] = {
-            command = "hledger-fmt",
-            args = { "-", "--no-diff", "--exit-zero-on-changes" },
-            stdin = true,
-        },
+        -- ["hledger-fmt"] = {
+        --     command = "hledger-fmt",
+        --     args = { "-", "--no-diff", "--exit-zero-on-changes" },
+        --     stdin = true,
+        -- },
     },
 })
 

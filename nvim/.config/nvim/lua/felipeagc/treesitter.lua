@@ -6,6 +6,7 @@ vim.pack.add({
 require("nvim-treesitter.configs").setup({
     sync_install = false,
     auto_install = true,
+    ignore_install = { "fsharp" },
     ensure_installed = {
         "bash",
         "c",

@@ -1,19 +1,15 @@
-window-theme = "dark"
-# theme = "catppuccin-mocha"
-theme = "Flexoki Dark"
+theme = light:Alabaster,dark:Gruvbox Material Dark
 
-# font-family = BlexMono Nerd Font
-font-family = FiraMono Nerd Font
-# font-family = JetBrains Mono
+font-family = JetBrains Mono
 font-size = 13
-font-thicken = true
+font-feature = -calt, -liga, -dlig
 
 cursor-style = block
 cursor-style-blink = false
 
 shell-integration-features = no-cursor
 
-macos-titlebar-style = native
+macos-titlebar-style = tabs
 macos-option-as-alt = false
 window-vsync = true
 
@@ -27,9 +23,8 @@ keybind = cmd+o=new_split:auto
 
 keybind = super+enter=new_split:auto
 
-background-blur = true
-background-blur-radius = 100
-background-opacity = 0.95
+window-padding-x = 8
+window-padding-y = 8
 
 # keybind = super+physical:one=unbind
 # keybind = super+physical:two=unbind

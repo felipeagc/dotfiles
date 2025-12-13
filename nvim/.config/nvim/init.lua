@@ -24,6 +24,7 @@ require("felipeagc.languages.javascript")
 require("felipeagc.languages.ocaml")
 require("felipeagc.languages.odin")
 require("felipeagc.languages.rust")
+require("felipeagc.languages.scala")
 require("felipeagc.languages.zig")
 
 vim.pack.add({

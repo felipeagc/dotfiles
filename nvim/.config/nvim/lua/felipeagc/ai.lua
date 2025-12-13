@@ -13,6 +13,7 @@ require("copilot").setup({
         elixir = true,
         heex = true,
         clojure = true,
+        fsharp = true,
         ["*"] = false,
     },
     suggestion = {
