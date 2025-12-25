@@ -1,4 +1,4 @@
-theme = light:Alabaster,dark:Gruvbox Material Dark
+theme = Gruvbox Material Dark
 
 font-family = JetBrains Mono
 font-size = 13

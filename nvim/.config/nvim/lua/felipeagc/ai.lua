@@ -14,6 +14,8 @@ require("copilot").setup({
         heex = true,
         clojure = true,
         fsharp = true,
+        sql = true,
+        kotlin = true,
         ["*"] = false,
     },
     suggestion = {
