@@ -11,3 +11,4 @@ accept = ["alt+enter", "ctrl+s"]
 
 [preview]
 show_at_start = true
+width_percentage = 65.0

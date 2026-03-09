@@ -1,0 +1,102 @@
+keybinds clear-defaults=true {
+    normal {
+        bind "Alt 1" { GoToTab 1; }
+        bind "Alt 2" { GoToTab 2; }
+        bind "Alt 3" { GoToTab 3; }
+        bind "Alt 4" { GoToTab 4; }
+        bind "Alt 5" { GoToTab 5; }
+        bind "Alt 6" { GoToTab 6; }
+        bind "Alt 7" { GoToTab 7; }
+        bind "Alt 8" { GoToTab 8; }
+        bind "Alt 9" { GoToTab 9; }
+        bind "Alt t" { NewTab; }
+        bind "Alt j" { FocusNextPane; }
+        bind "Alt k" { FocusPreviousPane; }
+        bind "Alt s" { NextSwapLayout; }
+        bind "Alt Enter" { NewPane; }
+        bind "Alt f" { ToggleFocusFullscreen; }
+        bind "Ctrl t" { SwitchToMode "tmux"; }
+    }
+    scroll {
+        bind "d" { HalfPageScrollDown; }
+        bind "j" { ScrollDown; }
+        bind "k" { ScrollUp; }
+        bind "q" { SwitchToMode "normal"; }
+        bind "u" { HalfPageScrollUp; }
+    }
+    shared_except "normal" {
+        bind "esc" { SwitchToMode "normal"; }
+    }
+    tmux {
+        bind "H" { Resize "Increase left"; }
+        bind "J" { Resize "Increase down"; }
+        bind "K" { Resize "Increase up"; }
+        bind "L" { Resize "Increase right"; }
+        bind "[" { SwitchToMode "scroll"; }
+        bind "c" { NewTab; SwitchToMode "normal"; }
+        bind "d" { Detach; }
+        bind "r" { SwitchToMode "RenameTab"; TabNameInput 0; }
+        bind "h" { MoveFocus "left"; SwitchToMode "normal"; }
+        bind "j" { MoveFocus "down"; SwitchToMode "normal"; }
+        bind "k" { MoveFocus "up"; SwitchToMode "normal"; }
+        bind "l" { MoveFocus "right"; SwitchToMode "normal"; }
+        bind "j" { FocusNextPane; SwitchToMode "normal"; }
+        bind "k" { FocusPreviousPane; SwitchToMode "normal"; }
+        bind "n" { NewPane; SwitchToMode "normal"; }
+        bind "s" { NextSwapLayout; SwitchToMode "normal"; }
+        bind "Ctrl t" { SwitchToMode "normal"; }
+        bind "x" { CloseFocus; SwitchToMode "normal"; }
+        bind "z" { ToggleFocusFullscreen; SwitchToMode "normal"; }
+    }
+}
+
+// Plugin aliases - can be used to change the implementation of Zellij
+// changing these requires a restart to take effect
+plugins {
+    about location="zellij:about"
+    compact-bar location="zellij:compact-bar"
+    configuration location="zellij:configuration"
+    filepicker location="zellij:strider" {
+        cwd "/"
+    }
+    plugin-manager location="zellij:plugin-manager"
+    session-manager location="zellij:session-manager"
+    status-bar location="zellij:status-bar"
+    strider location="zellij:strider"
+    tab-bar location="zellij:tab-bar"
+    welcome-screen location="zellij:session-manager" {
+        welcome_screen true
+    }
+}
+
+// Plugins to load in the background when a new session starts
+// eg. "file:/path/to/my-plugin.wasm"
+// eg. "https://example.com/my-plugin.wasm"
+load_plugins {
+}
+
+pane_frames false
+ui {
+    pane_frames {
+        rounded_corners false
+        hide_session_name true
+    }
+}
+
+web_client {
+    font "monospace"
+}
+
+simplified_ui true
+theme "catppuccin-macchiato"
+default_mode "normal"
+default_layout "custom"
+mouse_mode true
+show_startup_tips false
+
+// A command to run (will be wrapped with sh -c and provided the RESURRECT_COMMAND env variable)
+// after Zellij attempts to discover a command inside a pane when resurrecting sessions, the STDOUT
+// of this command will be used instead of the discovered RESURRECT_COMMAND
+// can be useful for removing wrappers around commands
+// Note: be sure to escape backslashes and similar characters properly
+// post_command_discovery_hook "echo $RESURRECT_COMMAND | sed <your_regex_here>"

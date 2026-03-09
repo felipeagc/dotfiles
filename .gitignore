@@ -13,3 +13,4 @@ tags.lock
 tags.temp
 TAGS
 .DS_Store
+jj/.config/jj/repos

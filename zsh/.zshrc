@@ -75,6 +75,7 @@ fi
 alias ls='ls --color=auto'
 alias ll="ls -l"
 alias lg="lazygit"
+alias zl="zellij"
 
 alias ga="git add $1"
 alias gc="git commit -m $1"
@@ -123,7 +124,7 @@ bindkey -s ^f "tmux-sessionizer\n"
 
 alias j=just
 alias s="kitten ssh"
-alias h="hledger"
+alias h="hledger -s"
 
 if type "mise" > /dev/null; then
     eval "$(mise activate zsh)"
@@ -138,3 +139,11 @@ test -r /opt/homebrew/opt/dotnet/libexec && export DOTNET_ROOT="/opt/homebrew/op
 
 eval "$(zoxide init zsh)"
 alias cd=z
+
+if [[ -z "$TERM" ]]; then
+    eval "$(zellij setup --generate-auto-start zsh)"
+fi
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+test -r $HOME/.rd/bin && export PATH="$HOME/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
