@@ -16,6 +16,7 @@ require("copilot").setup({
         fsharp = true,
         sql = true,
         kotlin = true,
+        zig = true,
         ["*"] = false,
     },
     suggestion = {

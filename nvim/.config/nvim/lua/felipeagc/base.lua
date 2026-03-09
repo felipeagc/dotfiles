@@ -159,10 +159,9 @@ autocmd BufRead,BufNewFile *.ixx set filetype=cpp
 autocmd BufRead,BufNewFile *.mxx set filetype=cpp
 autocmd BufRead,BufNewFile *.mpp set filetype=cpp
 autocmd BufRead,BufNewFile *.cppm set filetype=cpp
-autocmd BufRead,BufNewFile *.slang set filetype=slang
 autocmd BufRead,BufNewFile *.tofu set filetype=terraform
+autocmd BufRead,BufNewFile *.jte,kte set filetype=html
 
 autocmd FileType hlsl setlocal commentstring=//\\ %s
-autocmd FileType slang setlocal commentstring=//\\ %s
 ]])
 -- }}}
