@@ -16,7 +16,9 @@ layout {
     ui split_direction="vertical" {
         pane
         pane {
-            pane command="codex"
+            pane command="direnv" {
+                args "exec" "." "opencode"
+            }
             pane
         }
     }

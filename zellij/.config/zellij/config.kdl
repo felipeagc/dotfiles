@@ -16,6 +16,7 @@ keybinds clear-defaults=true {
         bind "Alt Enter" { NewPane; }
         bind "Alt f" { ToggleFocusFullscreen; }
         bind "Ctrl t" { SwitchToMode "tmux"; }
+        bind "Ctrl g" { SwitchToMode "locked"; }
     }
     scroll {
         bind "d" { HalfPageScrollDown; }
@@ -27,7 +28,11 @@ keybinds clear-defaults=true {
     shared_except "normal" {
         bind "esc" { SwitchToMode "normal"; }
     }
+    locked {
+        bind "Ctrl g" { SwitchToMode "normal"; }
+    }
     tmux {
+        bind "Ctrl t" { SwitchToMode "normal"; }
         bind "H" { Resize "Increase left"; }
         bind "J" { Resize "Increase down"; }
         bind "K" { Resize "Increase up"; }
@@ -44,7 +49,6 @@ keybinds clear-defaults=true {
         bind "k" { FocusPreviousPane; SwitchToMode "normal"; }
         bind "n" { NewPane; SwitchToMode "normal"; }
         bind "s" { NextSwapLayout; SwitchToMode "normal"; }
-        bind "Ctrl t" { SwitchToMode "normal"; }
         bind "x" { CloseFocus; SwitchToMode "normal"; }
         bind "z" { ToggleFocusFullscreen; SwitchToMode "normal"; }
     }
@@ -150,6 +154,7 @@ default_mode "normal"
 default_layout "main"
 mouse_mode true
 show_startup_tips false
+session_serialization false
 
 // A command to run (will be wrapped with sh -c and provided the RESURRECT_COMMAND env variable)
 // after Zellij attempts to discover a command inside a pane when resurrecting sessions, the STDOUT
