@@ -18,8 +18,8 @@ window-vsync = true
 
 window-new-tab-position = end
 
-keybind = cmd+j=goto_split:next
-keybind = cmd+k=goto_split:previous
+# keybind = cmd+j=goto_split:next
+# keybind = cmd+k=goto_split:previous
 
 keybind = cmd+w=close_surface
 keybind = cmd+o=new_split:auto
@@ -44,4 +44,6 @@ keybind = super+physical:zero=text:\x1b0
 keybind = super+t=text:\x1bt
 keybind = super+f=text:\x1bf
 keybind = super+s=text:\x1bs
+keybind = super+j=text:\x1bj
+keybind = super+k=text:\x1bk
 keybind = super+enter=text:\x1b\r
