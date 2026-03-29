@@ -1,6 +1,6 @@
 theme = Gruvbox Material
 
-command = zsh -c zellij
+command = zsh -c tmux
 
 font-family = BlexMono Nerd Font
 font-style = Medium

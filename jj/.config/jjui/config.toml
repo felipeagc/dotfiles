@@ -1,14 +1,18 @@
-# [keys.preview]
-# scroll_up = ["K"]
-# scroll_down = ["J"]
-
-[keys.details]
-mode = ["enter"]
-
-[keys.inline_describe]
-mode = ["d"]
-accept = ["alt+enter", "ctrl+s"]
+[ui]
 
 [preview]
+position = "bottom"
 show_at_start = true
-width_percentage = 65.0
+width_percentage = 50
+
+[[bindings]]
+key = "enter"
+action = "revisions.open_details"
+scope = "revisions"
+desc = "details"
+
+[[bindings]]
+key = "d"
+action = "revisions.open_inline_describe"
+scope = "revisions"
+desc = "inline describe"

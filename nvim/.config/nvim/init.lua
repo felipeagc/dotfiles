@@ -13,7 +13,7 @@ require("felipeagc.completion")
 require("felipeagc.formatting")
 require("felipeagc.testing")
 require("felipeagc.lsp")
-require("felipeagc.ai")
+-- require("felipeagc.ai")
 
 -- Languages
 require("felipeagc.languages.clojure")
@@ -26,7 +26,7 @@ require("felipeagc.languages.kotlin")
 require("felipeagc.languages.ocaml")
 require("felipeagc.languages.odin")
 require("felipeagc.languages.rust")
--- require("felipeagc.languages.scala")
+require("felipeagc.languages.scala")
 require("felipeagc.languages.slang")
 require("felipeagc.languages.zig")
 

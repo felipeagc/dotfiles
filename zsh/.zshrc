@@ -140,10 +140,6 @@ test -r /opt/homebrew/opt/dotnet/libexec && export DOTNET_ROOT="/opt/homebrew/op
 eval "$(zoxide init zsh)"
 alias cd=z
 
-if [[ -z "$TERM" ]]; then
-    eval "$(zellij setup --generate-auto-start zsh)"
-fi
-
 ### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
 test -r $HOME/.rd/bin && export PATH="$HOME/.rd/bin:$PATH"
 ### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
