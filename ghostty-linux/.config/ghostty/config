@@ -1,9 +1,9 @@
 window-theme = "dark"
-# theme = "gruvbox"
+theme = Gruvbox Material
 
-# font-family = BlexMono Nerd Font Mono
-font-family = JetBrains Mono Nerd Font Mono
-# font-family = VictorMono Nerd Font Mono
+command = zsh -c tmux
+
+font-family = BlexMono Nerd Font
 font-style = Medium
 font-size = 10
 font-feature = -calt, -liga, -dlig
@@ -19,31 +19,27 @@ window-new-tab-position = end
 
 gtk-custom-css = tab-style.css
 
-keybind = alt+j=goto_split:next
-keybind = alt+k=goto_split:previous
-keybind = alt+t=new_tab
+# keybind = alt+j=goto_split:next
+# keybind = alt+k=goto_split:previous
+# keybind = alt+t=new_tab
 
-keybind = alt+w=close_surface
-keybind = alt+enter=new_split:auto
+# keybind = alt+w=close_surface
+# keybind = alt+enter=new_split:auto
 
-background-blur = true
-background-blur-radius = 100
-# background-opacity = 0.9
-
-window-padding-x = 10
-window-padding-y = 10
+window-padding-x = 8
+window-padding-y = 8
 
 app-notifications = no-clipboard-copy
 
 keybind = control+enter=unbind
 
-# keybind = super+physical:one=unbind
-# keybind = super+physical:two=unbind
-# keybind = super+physical:three=unbind
-# keybind = super+physical:four=unbind
-# keybind = super+physical:five=unbind
-# keybind = super+physical:six=unbind
-# keybind = super+physical:seven=unbind
-# keybind = super+physical:eight=unbind
-# keybind = super+physical:nine=unbind
-# keybind = super+physical:zero=unbind
+keybind = alt+physical:one=unbind
+keybind = alt+physical:two=unbind
+keybind = alt+physical:three=unbind
+keybind = alt+physical:four=unbind
+keybind = alt+physical:five=unbind
+keybind = alt+physical:six=unbind
+keybind = alt+physical:seven=unbind
+keybind = alt+physical:eight=unbind
+keybind = alt+physical:nine=unbind
+keybind = alt+physical:zero=unbind
