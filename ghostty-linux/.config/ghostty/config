@@ -6,7 +6,7 @@ font-family = JetBrains Mono Nerd Font Mono
 # font-family = VictorMono Nerd Font Mono
 font-style = Medium
 font-size = 10
-font-feature = -dlig
+font-feature = -calt, -liga, -dlig
 
 cursor-style = block
 cursor-style-blink = false

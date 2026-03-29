@@ -7,14 +7,14 @@ https://docs.gtk.org/gtk4/css-properties.html
 
 headerbar {
   min-height: 24px;
-  padding: 0;
-  margin: 0;
+  /* padding: 0; */
+  /* margin: 0; */
   /* background-color: #1a1a1a; */
 }
 
 tabbar tabbox {
-  margin: 0;
-  padding: 0;
+  /* margin: 0; */
+  /* padding: 0; */
   min-height: 10px;
   /* background-color: #1a1a1a; */
   /* font-family: monospace; */
