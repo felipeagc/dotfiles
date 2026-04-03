@@ -155,6 +155,7 @@ autocmd BufRead,BufNewFile *.wgsl set filetype=wgsl
 autocmd BufRead,BufNewFile *.hlsl set filetype=hlsl
 autocmd BufRead,BufNewFile Tiltfile set filetype=starlark
 autocmd BufRead,BufNewFile Dockerfile.* set filetype=dockerfile
+autocmd BufRead,BufNewFile Caddyfile set filetype=caddy
 autocmd BufRead,BufNewFile *.ixx set filetype=cpp
 autocmd BufRead,BufNewFile *.mxx set filetype=cpp
 autocmd BufRead,BufNewFile *.mpp set filetype=cpp

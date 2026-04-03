@@ -1,30 +1,10 @@
 vim.pack.add({
-    { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
-    { src = "https://github.com/nvim-treesitter/playground" },
+    { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
 })
 
-require("nvim-treesitter.configs").setup({
+require("nvim-treesitter").setup({
     sync_install = false,
     auto_install = true,
-    ignore_install = { "fsharp" },
-    ensure_installed = {
-        "bash",
-        "c",
-        "cpp",
-        "css",
-        "go",
-        "html",
-        "javascript",
-        "lua",
-        "make",
-        "markdown",
-        "python",
-        "rust",
-        "tsx",
-        "typescript",
-        "yaml",
-        "zig",
-    },
     highlight = {
         enable = true, -- false will disable the whole extension
         disable = {},
@@ -42,6 +22,32 @@ require("nvim-treesitter.configs").setup({
         },
     },
 })
+
+local ensure_installed = {
+    "bash",
+    "c",
+    "cpp",
+    "css",
+    "go",
+    "html",
+    "javascript",
+    "lua",
+    "make",
+    "markdown",
+    "python",
+    "rust",
+    "tsx",
+    "typescript",
+    "yaml",
+    "zig",
+}
+local already_installed = require("nvim-treesitter").get_installed("parsers")
+local parsers_to_install = vim.iter(ensure_installed)
+    :filter(function(parser)
+        return not vim.tbl_contains(already_installed, parser)
+    end)
+    :totable()
+require("nvim-treesitter").install(parsers_to_install)
 
 vim.api.nvim_create_autocmd('PackChanged', {
   desc = 'Handle nvim-treesitter updates',
