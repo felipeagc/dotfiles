@@ -140,6 +140,4 @@ test -r /opt/homebrew/opt/dotnet/libexec && export DOTNET_ROOT="/opt/homebrew/op
 eval "$(zoxide init zsh)"
 alias cd=z
 
-### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
-test -r $HOME/.rd/bin && export PATH="$HOME/.rd/bin:$PATH"
-### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+[ -f "/Users/felipe/.ghcup/env" ] && . "/Users/felipe/.ghcup/env" # ghcup-env
