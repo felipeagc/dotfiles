@@ -53,20 +53,20 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*:*:docker:*' option-stacking yes
 zstyle ':completion:*:*:docker-*:*' option-stacking yes
 
-if type "keychain" > /dev/null; then
-    KEYCHAIN_CMD=(keychain -q --eval)
-    [[ -e ~/.ssh/id_ed25519 ]] && KEYCHAIN_CMD+=id_ed25519
-    [[ -e ~/.ssh/id_secondary ]] && KEYCHAIN_CMD+=id_secondary
-    eval `$KEYCHAIN_CMD`
-fi
-
-if [[ "$OSTYPE" == "linux"* ]]; then
-    export SSH_ASKPASS=/usr/lib/seahorse/ssh-askpass
-    if [ -z "$SSH_AUTH_SOCK" ]; then
-        eval $(gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
-        export SSH_AUTH_SOCK
-    fi
-fi
+# if type "keychain" > /dev/null; then
+#     KEYCHAIN_CMD=(keychain -q --eval)
+#     [[ -e ~/.ssh/id_ed25519 ]] && KEYCHAIN_CMD+=id_ed25519
+#     [[ -e ~/.ssh/id_secondary ]] && KEYCHAIN_CMD+=id_secondary
+#     eval `$KEYCHAIN_CMD`
+# fi
+#
+# if [[ "$OSTYPE" == "linux"* ]]; then
+#     export SSH_ASKPASS=/usr/lib/seahorse/ssh-askpass
+#     if [ -z "$SSH_AUTH_SOCK" ]; then
+#         eval $(gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
+#         export SSH_AUTH_SOCK
+#     fi
+# fi
 
 if type "direnv" > /dev/null; then
     eval "$(direnv hook zsh)"

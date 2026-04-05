@@ -68,13 +68,13 @@ systemctl enable --user elephant
 systemctl start --user elephant
 
 # Tell SDDM to auto-login
-sudo mkdir -p /etc/sddm.conf.d
-sudo tee /etc/sddm.conf.d/autologin.conf > /dev/null <<EOF
-[Autologin]
-User=$USER
-# Session=niri-uwsm
-Session=hyprland-uwsm
-EOF
+# sudo mkdir -p /etc/sddm.conf.d
+# sudo tee /etc/sddm.conf.d/autologin.conf > /dev/null <<EOF
+# [Autologin]
+# User=$USER
+# # Session=niri-uwsm
+# Session=hyprland-uwsm
+# EOF
 
 if [ ! -f $HOME/.local/share/applications/ChatGPT.desktop ]; then
     omarchy-webapp-install ChatGPT "https://chatgpt.com" "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/chatgpt.png"
