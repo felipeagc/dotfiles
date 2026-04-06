@@ -18,7 +18,7 @@
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
-        overlays = [ 
+        overlays = [
           # neovim-nightly-overlay.overlays.default
         ];
       };
@@ -44,6 +44,7 @@
             tmux
             nodejs_24
             tree-sitter
+            pi-coding-agent
           ];
 
           systemd.user.services.etserver = {
