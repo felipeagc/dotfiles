@@ -14,7 +14,6 @@ eog
 fd
 ffmpeg
 file-roller
-firefox
 fzf
 gammastep
 ghostty
@@ -40,7 +39,6 @@ libfido2
 linux
 linux-firmware
 loupe
-mako
 mise
 mpv
 nautilus
