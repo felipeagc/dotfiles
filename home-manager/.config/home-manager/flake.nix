@@ -25,10 +25,13 @@
     in {
       homeConfigurations.felipe = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
+
         modules = [{
           home.username = "felipe";
           home.homeDirectory = "/home/felipe";
           home.stateVersion = "24.11";
+
+          news.display = "silent";
 
           home.packages = with pkgs; [
             neovim
@@ -40,6 +43,7 @@
             eternal-terminal
             tmux
             nodejs_24
+            tree-sitter
           ];
 
           systemd.user.services.etserver = {
