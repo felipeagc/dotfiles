@@ -45,6 +45,7 @@
             nodejs_24
             tree-sitter
             pi-coding-agent
+            filen-desktop
           ];
 
           systemd.user.services.etserver = {
