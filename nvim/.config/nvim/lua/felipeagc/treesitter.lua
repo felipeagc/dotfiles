@@ -2,35 +2,17 @@ vim.pack.add({
     { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
 })
 
-require("nvim-treesitter").setup({
-    sync_install = false,
-    auto_install = true,
-    highlight = {
-        enable = true, -- false will disable the whole extension
-        disable = {},
-        additional_vim_regex_highlighting = false,
-    },
-    indent = {
-        enable = true,
-        disable = {
-            "c",
-            "cpp",
-            "haskell",
-            "ocaml",
-            "python",
-            "sql",
-        },
-    },
-})
-
-local ensure_installed = {
+local parsers = {
     "bash",
     "c",
     "cpp",
     "css",
     "go",
     "html",
+    "java",
     "javascript",
+    "typescript",
+    "ledger",
     "lua",
     "make",
     "markdown",
@@ -41,13 +23,28 @@ local ensure_installed = {
     "yaml",
     "zig",
 }
-local already_installed = require("nvim-treesitter").get_installed("parsers")
-local parsers_to_install = vim.iter(ensure_installed)
-    :filter(function(parser)
-        return not vim.tbl_contains(already_installed, parser)
-    end)
-    :totable()
-require("nvim-treesitter").install(parsers_to_install)
+
+require("nvim-treesitter").setup {}
+require("nvim-treesitter").install(parsers)
+
+local parser_to_filetypes = {
+    ["typescript"] = {"typescript", "typescriptreact"},
+    ["javascript"] = {"javascript", "javascriptreact"},
+}
+
+for _, parser in ipairs(parsers) do
+    local fts = { parser }
+    if parser_to_filetypes[parser] ~= nil then
+        fts = parser_to_filetypes[parser]
+    end
+
+    for _, ft in ipairs(fts) do
+        vim.api.nvim_create_autocmd('FileType', {
+          pattern = { ft },
+          callback = function() vim.treesitter.start() end,
+        })
+    end
+end
 
 vim.api.nvim_create_autocmd('PackChanged', {
   desc = 'Handle nvim-treesitter updates',
