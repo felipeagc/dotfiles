@@ -46,4 +46,5 @@ keybind = super+f=text:\x1bf
 keybind = super+s=text:\x1bs
 keybind = super+j=text:\x1bj
 keybind = super+k=text:\x1bk
+keybind = super+g=text:\x1bg
 keybind = super+enter=text:\x1b\r

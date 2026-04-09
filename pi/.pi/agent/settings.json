@@ -1,0 +1,12 @@
+{
+  "lastChangelogVersion": "0.66.1",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.3-codex",
+  "theme": "dark",
+  "packages": [
+    "npm:@aliou/pi-processes",
+    "npm:@tintinweb/pi-tasks",
+    "npm:@tintinweb/pi-subagents"
+  ],
+  "hideThinkingBlock": false
+}
