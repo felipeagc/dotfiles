@@ -67,3 +67,7 @@ vim.keymap.set("c", "<C-a>", "<Home>")
 vim.keymap.set("c", "<C-e>", "<End>")
 
 vim.keymap.set("t", "<C-d>", "<C-\\><C-n>")
+
+vim.keymap.set('n', '<C-.>', function()
+    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+end, { desc = 'Toggle Inlay Hints' })

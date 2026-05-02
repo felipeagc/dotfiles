@@ -17,18 +17,24 @@ vnoremap > >gv
 vnoremap <s-lt> <gv
 vnoremap = =gv
 
-nmap <silent> <leader>vv :e ~/.ideavimrc<CR>
-nmap <silent> <leader>vr :source ~/.ideavimrc<CR>
+nmap <silent> <leader>fed :e ~/.ideavimrc<CR>
+nmap <silent> <leader>fer :source ~/.ideavimrc<CR>
+
+nmap <silent> <leader>gs <action>(TUILauncher.Jjui)
 
 nmap <silent> <leader>w/ :vsp<CR>
 nmap <silent> <leader>w- :sp<CR>
 nmap <silent> <leader>wd :q<CR>
 nmap <silent> <leader>wb <C-w>=
 
-nnoremap <silent> <C-p> :action GotoFile<CR>
+"nnoremap <silent> <C-p> :action GotoFile<CR>
+"nmap <leader>fg :action FindInPath<CR>
+
+nmap <C-p> <action>(com.mituuz.fuzzier.search.Fuzzier)
+nmap <leader>fg <action>(com.mituuz.fuzzier.grep.FuzzyGrepCI)
+
 nnoremap <silent> <C-j> <C-w>w
 nnoremap <silent> <C-k> <C-w>W
-nmap <leader>fg :action FindInPath<CR>
 
 nnoremap <silent> <C-=> :action EditorIncreaseFontSize<CR>
 nnoremap <silent> <C--> :action EditorDecreaseFontSize<CR>
@@ -36,7 +42,9 @@ nnoremap <silent> <C--> :action EditorDecreaseFontSize<CR>
 imap <C-h> <Action>(ParameterInfo)
 nmap <C-y> <Action>(ShowErrorDescription)
 
-nmap <leader>mr :action RenameElement<CR>
+nmap gra :action ShowIntentionActions<CR>
+nmap grn :action RenameElement<CR>
+nmap grr :action FindUsages<CR>
 nmap <leader>mf :action ReformatCode<CR>
 nmap <leader>mi :action OptimizeImports<CR>
 nmap <leader>pb :action Build<CR>
@@ -47,3 +55,7 @@ nnoremap <c-i> :action Forward<cr>
 
 nnoremap ]d :action GotoNextError<CR>
 nnoremap [d :action GotoPreviousError<CR>
+
+nnoremap <c-z> :action ToggleDistractionFreeMode<CR>
+
+nnoremap - :action SelectInProjectView<CR>

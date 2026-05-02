@@ -53,6 +53,10 @@
       "rev": "a73c34934e87af4f2e615fea3a57ee28b2dceec8",
       "src": "https://github.com/julienvincent/hunk.nvim"
     },
+    "kintsugi-nvim": {
+      "rev": "6c8b881e6aea8ee1e3361a00858b5b1a3488d885",
+      "src": "https://github.com/metalelf0/kintsugi-nvim"
+    },
     "kitty-themes.nvim": {
       "rev": "b118e3d10126abf184c9f4079f202631c6a8d9fe",
       "src": "https://github.com/odysseyalive/kitty-themes.nvim"

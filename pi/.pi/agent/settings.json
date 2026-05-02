@@ -1,12 +1,12 @@
 {
-  "lastChangelogVersion": "0.66.1",
-  "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.3-codex",
+  "lastChangelogVersion": "0.70.6",
+  "defaultProvider": "openrouter",
+  "defaultModel": "moonshotai/kimi-k2.6",
   "theme": "dark",
   "packages": [
     "npm:@aliou/pi-processes",
-    "npm:@tintinweb/pi-tasks",
     "npm:@tintinweb/pi-subagents"
   ],
-  "hideThinkingBlock": false
+  "hideThinkingBlock": false,
+  "defaultThinkingLevel": "medium"
 }

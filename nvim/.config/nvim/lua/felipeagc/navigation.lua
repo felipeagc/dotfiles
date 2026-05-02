@@ -19,7 +19,7 @@ require("telescope").setup({
                 ["<esc>"] = actions.close,
             },
         },
-        layout_strategy = "horizontal",
+        layout_strategy = "vertical",
         layout_config = {
             height = { padding = 4 },
             width = { padding = 4 },

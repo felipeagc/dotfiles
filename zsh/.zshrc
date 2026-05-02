@@ -75,15 +75,12 @@ fi
 alias ls='ls --color=auto'
 alias ll="ls -l"
 alias lg="lazygit"
-alias zl="zellij"
 
 alias ga="git add $1"
 alias gc="git commit -m $1"
 alias gp="git push $1 $2"
 alias gs="git status"
-alias runemacs="emacs & disown"
-
-alias pn="peanuts"
+alias stl="jj workspace update-stale"
 
 # Execute ls every time we cd
 # function chpwd() {
@@ -137,7 +134,7 @@ fi
 
 test -r /opt/homebrew/opt/dotnet/libexec && export DOTNET_ROOT="/opt/homebrew/opt/dotnet/libexec"
 
+[ -f "/Users/felipe/.ghcup/env" ] && . "/Users/felipe/.ghcup/env" # ghcup-env
+
 eval "$(zoxide init zsh)"
 alias cd=z
-
-[ -f "/Users/felipe/.ghcup/env" ] && . "/Users/felipe/.ghcup/env" # ghcup-env
