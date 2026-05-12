@@ -8,7 +8,8 @@ local workspace_dir = home.."/.jdtls-data/" .. project_name
 vim.lsp.config("jdtls", {
     cmd = {
         "jdtls",
-        "-data", workspace_dir
+        "-data", workspace_dir,
+        "--jvm-arg=-Djava.import.generatesMetadataFilesAtProjectRoot=false"
     },
     root_dir = vim.fs.root(0, {"gradlew", ".git", ".jj", "mvnw"}),
     settings = {

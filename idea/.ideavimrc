@@ -27,11 +27,14 @@ nmap <silent> <leader>w- :sp<CR>
 nmap <silent> <leader>wd :q<CR>
 nmap <silent> <leader>wb <C-w>=
 
+nmap <leader>bd <action>(CloseContent)
+
 "nnoremap <silent> <C-p> :action GotoFile<CR>
 "nmap <leader>fg :action FindInPath<CR>
 
-nmap <C-p> <action>(com.mituuz.fuzzier.search.Fuzzier)
+nmap <C-p> <action>(com.mituuz.fuzzier.search.FuzzierVCS)
 nmap <leader>fg <action>(com.mituuz.fuzzier.grep.FuzzyGrepCI)
+nmap <C-a> <action>(GotoTest)
 
 nnoremap <silent> <C-j> <C-w>w
 nnoremap <silent> <C-k> <C-w>W

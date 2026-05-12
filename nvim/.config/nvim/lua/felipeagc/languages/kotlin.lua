@@ -19,3 +19,10 @@ else
 end
 
 vim.g.projectionist_heuristics = new_projectionist_heuristics
+
+vim.lsp.config("kotlin_lsp", {
+    cmd = { "intellij-server", "--stdio" },
+    filetypes = { "kotlin" },
+    root_markers = { "settings.gradle", "settings.gradle.kts", "pom.xml", "build.gradle", "build.gradle.kts", "workspace.json" }
+})
+vim.lsp.enable("kotlin_lsp")

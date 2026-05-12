@@ -1,15 +1,12 @@
-vim.pack.add({
-    "https://github.com/scalameta/nvim-metals",
+vim.lsp.config("metals", {
+    cmd = { "metals" },
+    filetypes = { "scala", "sbt" },
+    root_markers = { "build.mill", "build.mill.yaml", "build.sbt", "build.sc", "build.gradle", "build.gradle.kts", ".scala-build", "pom.xml" },
+    init_options = {
+        globSyntax = "vscode",
+    },
+    settings = {
+        startMcpServer = false,
+    },
 })
-
-local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "scala", "sbt" },
-    callback = function()
-        local metals_config = require("metals").bare_config()
-        metals_config.init_options = { globSyntax = "vscode" }
-        metals_config.settings = { startMcpServer = false }
-        require("metals").initialize_or_attach(metals_config)
-    end,
-    group = nvim_metals_group,
-})
+vim.lsp.enable("metals")
