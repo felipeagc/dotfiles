@@ -136,5 +136,6 @@ test -r /opt/homebrew/opt/dotnet/libexec && export DOTNET_ROOT="/opt/homebrew/op
 
 [ -f "/Users/felipe/.ghcup/env" ] && . "/Users/felipe/.ghcup/env" # ghcup-env
 
+export _ZO_DOCTOR=0
 eval "$(zoxide init zsh)"
 alias cd=z

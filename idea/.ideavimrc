@@ -59,6 +59,7 @@ nnoremap <c-i> :action Forward<cr>
 nnoremap ]d :action GotoNextError<CR>
 nnoremap [d :action GotoPreviousError<CR>
 
-nnoremap <c-z> :action ToggleDistractionFreeMode<CR>
+nnoremap <C-z> :action ToggleDistractionFreeMode<CR>
+nnoremap <leader>il :action ToggleInlayHintsGlobally<CR>
 
 nnoremap - :action SelectInProjectView<CR>

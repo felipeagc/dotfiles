@@ -18,6 +18,7 @@ local parsers = {
     "markdown",
     "python",
     "rust",
+    "scala",
     "tsx",
     "typescript",
     "typescript",

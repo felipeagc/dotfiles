@@ -5,18 +5,23 @@ local home = vim.fn.expand("$HOME")
 local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
 local workspace_dir = home.."/.jdtls-data/" .. project_name
 
-vim.lsp.config("jdtls", {
-    cmd = {
-        "jdtls",
-        "-data", workspace_dir,
-        "--jvm-arg=-Djava.import.generatesMetadataFilesAtProjectRoot=false"
-    },
+local config = {
+    cmd = { "jdtls", "-data", workspace_dir },
     root_dir = vim.fs.root(0, {"gradlew", ".git", ".jj", "mvnw"}),
     settings = {
         java = {
-            -- Custom eclipse.jdt.ls options go here
+            import = {
+                generatesMetadataFilesAtProjectRoot = false,
+                gradle = {
+                    enabled = true,
+                    annotationProcessing = {
+                        enabled = true,
+                    },
+                },
+            },
         },
     },
-})
+}
 
+vim.lsp.config("jdtls", config)
 vim.lsp.enable("jdtls")

@@ -25,8 +25,8 @@ selection-foreground = #0a0c10
 
 # command = zsh -c tmux
 
-font-family = IoskeleyMonoTerm Nerd Font
-font-style = SemiBold
+font-family = BlexMono Nerd Font
+font-style = Semibold
 font-size = 14
 font-feature = -calt, -liga, -dlig
 

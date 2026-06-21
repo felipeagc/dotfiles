@@ -1,7 +1,7 @@
 [ui]
 
 [preview]
-position = "bottom"
+position = "right"
 show_at_start = true
 width_percentage = 50
 

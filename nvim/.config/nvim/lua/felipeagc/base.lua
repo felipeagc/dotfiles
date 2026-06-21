@@ -163,6 +163,7 @@ autocmd BufRead,BufNewFile *.cppm set filetype=cpp
 autocmd BufRead,BufNewFile *.tofu set filetype=terraform
 autocmd BufRead,BufNewFile *.jte,kte set filetype=html
 autocmd BufRead,BufNewFile *.journal set filetype=ledger
+autocmd BufRead,BufNewFile *.mustache set filetype=html
 
 autocmd FileType hlsl setlocal commentstring=//\\ %s
 ]])
