@@ -71,3 +71,6 @@ keybind = super+j=text:\x1bj
 keybind = super+k=text:\x1bk
 keybind = super+g=text:\x1bg
 keybind = super+enter=text:\x1b\r
+
+keybind = super+left=text:\x1b[1;3D
+keybind = super+right=text:\x1b[1;3C

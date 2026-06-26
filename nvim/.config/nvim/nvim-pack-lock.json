@@ -79,7 +79,18 @@
     },
     "mini.icons": {
       "rev": "7fdae2443a0e2910015ca39ad74b50524ee682d3",
-      "src": "https://github.com/echasnovski/mini.icons"
+      "src": "https://github.com/echasnovski/mini.icons",
+      "version": "'stable'"
+    },
+    "mini.pick": {
+      "rev": "8c1f75f8ddd8c9f75d07ed2ab5718d2c3cb65a66",
+      "src": "https://github.com/nvim-mini/mini.pick",
+      "version": "'stable'"
+    },
+    "mini.visits": {
+      "rev": "848858d4141f1cc6f98de79212a63270b09191a1",
+      "src": "https://github.com/nvim-mini/mini.visits",
+      "version": "'stable'"
     },
     "monokai-pro.nvim": {
       "rev": "5b06ae0736813b1c65d76a4be9edbe92be0b9c74",

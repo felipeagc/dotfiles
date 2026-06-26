@@ -1,10 +1,8 @@
 vim.g.mapleader = " "
 
-vim.keymap.set("n", "<C-p>", ":Telescope find_files<CR>", { silent = true })
-vim.keymap.set("n", "<C-t>", ":Telescope lsp_dynamic_workspace_symbols<CR>", { silent = true })
-vim.keymap.set("n", "<C-b>", ":Telescope buffers<CR>", { silent = true })
-vim.keymap.set("n", "<Leader>fg", ":Telescope live_grep<CR>", { silent = true })
-vim.keymap.set("n", "<Leader>fr", ":Telescope resume<CR>", { silent = true })
+vim.keymap.set("n", "<C-p>", ":Pick files<CR>", { silent = true })
+vim.keymap.set("n", "<C-b>", ":Pick buffers<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>fg", ":Pick grep_live<CR>", { silent = true })
 
 vim.keymap.set("n", "<C-j>", "<C-w>w", { remap = false })
 vim.keymap.set("n", "<C-k>", "<C-w>W", { remap = false })

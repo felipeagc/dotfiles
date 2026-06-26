@@ -7,6 +7,7 @@ local parsers = {
     "c",
     "cpp",
     "css",
+    "clojure",
     "go",
     "html",
     "java",

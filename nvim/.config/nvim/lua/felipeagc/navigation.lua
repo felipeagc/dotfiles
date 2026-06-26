@@ -1,38 +1,35 @@
 vim.pack.add({
-    { src = "https://github.com/echasnovski/mini.icons" },
+    { src = "https://github.com/nvim-mini/mini.icons", version = "stable" },
+    { src = "https://github.com/nvim-mini/mini.pick", version = "stable" },
+    { src = "https://github.com/nvim-mini/mini.visits", version = "stable" },
     { src = "https://github.com/nvim-tree/nvim-tree.lua" },
-    { src = "https://github.com/nvim-lua/plenary.nvim" },
-    { src = "https://github.com/nvim-telescope/telescope.nvim" },
-    { src = "https://github.com/stevearc/dressing.nvim" },
     { src = "https://github.com/stevearc/oil.nvim" },
+    { src = "https://github.com/nvim-lua/plenary.nvim" },
+    -- { src = "https://github.com/nvim-telescope/telescope.nvim" },
 })
 
 require('mini.icons').setup()
 MiniIcons.mock_nvim_web_devicons()
 
-local actions = require("telescope.actions")
-require("telescope").setup({
-    defaults = {
-        preview = true,
-        mappings = {
-            i = {
-                ["<esc>"] = actions.close,
-            },
-        },
-        layout_strategy = "vertical",
-        layout_config = {
-            height = { padding = 4 },
-            width = { padding = 4 },
-        },
-    },
-})
+require('mini.visits').setup()
 
-require("dressing").setup({
-    input = { enabled = false },
-    select = {
-        enabled = true,
-        backend = { "telescope" },
+local win_config = function()
+    local height = math.floor(0.8 * vim.o.lines)
+    local width = math.floor(0.8 * vim.o.columns)
+    return {
+        anchor = 'NW', height = height, width = width,
+        row = math.floor(0.5 * (vim.o.lines - height)),
+        col = math.floor(0.5 * (vim.o.columns - width)),
+    }
+end
+require('mini.pick').setup({
+    mappings = {
+        paste = "",
+        refine = '<C-r>',
+        mark = '<C-x>',
+        choose_marked = '<C-q>',
     },
+    window = { config = win_config },
 })
 
 require("nvim-tree").setup {

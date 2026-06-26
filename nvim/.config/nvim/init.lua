@@ -13,7 +13,6 @@ require("felipeagc.completion")
 require("felipeagc.formatting")
 require("felipeagc.testing")
 require("felipeagc.lsp")
--- require("felipeagc.ai")
 
 -- Languages
 require("felipeagc.languages.clojure")
@@ -29,6 +28,7 @@ require("felipeagc.languages.rust")
 require("felipeagc.languages.scala")
 require("felipeagc.languages.slang")
 require("felipeagc.languages.zig")
+require("felipeagc.languages.hledger")
 
 vim.pack.add({
     "https://github.com/NoahTheDuke/vim-just",
