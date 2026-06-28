@@ -103,6 +103,7 @@ hl.config({
         repeat_rate = 60,
         repeat_delay = 200,
         sensitivity = 0,
+        accel_profile = "flat",
     },
 
     cursor = {
@@ -124,13 +125,13 @@ hl.device({
 })
 
 hl.device({
-    name = "pixart-wireless-gaming-mouse-1",
+    name = "pixart-wireless-gaming-mouse",
     sensitivity = 0.0,
     accel_profile = "flat",
 })
 
 hl.device({
-    name = "pixart-wireless-gaming-mouse",
+    name = "pixart-wireless-gaming-mouse-1",
     sensitivity = 0.0,
     accel_profile = "flat",
 })
@@ -138,6 +139,7 @@ hl.device({
 hl.device({
     name = "ven_04f3:00-04f3:32b4-touchpad",
     natural_scroll = true,
+    accel_profile = "adaptive",
 })
 
 hl.gesture({
@@ -157,13 +159,17 @@ hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + J", hl.dsp.window.cycle_next())
 hl.bind(mainMod .. " + K", hl.dsp.window.cycle_next({ next = false }))
 
--- hl.bind("Print", hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'))
+hl.bind(
+    "Print",
+    hl.dsp.exec_cmd([[sh -c 'mkdir -p "$HOME/Documents/Screenshots"; file="$HOME/Documents/Screenshots/screenshot-$(date +%Y-%m-%d_%H-%M-%S).png"; grim -g "$(slurp)" "$file" && wl-copy < "$file"']])
+)
 hl.bind(mainMod .. " + SHIFT + C", hl.dsp.exec_cmd("hyprpicker -a"), { description = "Pick color" })
 
 hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd('brightnessctl s "+5%"'))
 hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd('brightnessctl s "5%-"'))
 hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("pactl set-source-mute @DEFAULT_SOURCE@ toggle"))
 hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl -p spotify play-pause"))
+hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl -p spotify play-pause"))
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ +5%"))
 hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("pactl set-sink-volume @DEFAULT_SINK@ -5%"))
 hl.bind("XF86AudioMute", hl.dsp.exec_cmd("pactl set-source-mute @DEFAULT_SOURCE@ toggle"))

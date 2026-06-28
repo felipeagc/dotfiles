@@ -8,6 +8,7 @@ local parsers = {
     "cpp",
     "css",
     "clojure",
+    "c_sharp",
     "go",
     "html",
     "java",
@@ -15,6 +16,7 @@ local parsers = {
     "kotlin",
     "ledger",
     "lua",
+    "luau",
     "make",
     "markdown",
     "python",
@@ -31,6 +33,7 @@ require("nvim-treesitter").setup {}
 require("nvim-treesitter").install(parsers)
 
 local parser_to_filetypes = {
+    ["c_sharp"] = {"cs"},
     ["typescript"] = {"typescript", "typescriptreact"},
     ["javascript"] = {"javascript", "javascriptreact"},
 }
