@@ -1,8 +1,13 @@
 vim.g.mapleader = " "
 
-vim.keymap.set("n", "<C-p>", ":Pick files<CR>", { silent = true })
-vim.keymap.set("n", "<C-b>", ":Pick buffers<CR>", { silent = true })
-vim.keymap.set("n", "<Leader>fg", ":Pick grep_live<CR>", { silent = true })
+vim.keymap.set("n", "<C-p>", ":FzfLua files<CR>", { silent = true })
+vim.keymap.set("n", "<C-b>", ":FzfLua buffers<CR>", { silent = true })
+vim.keymap.set("n", "<Leader>fg", ":FzfLua live_grep_native<CR>", { silent = true })
+vim.keymap.set("n", "gw", function()
+    local word = vim.fn.expand("<cword>")
+    vim.cmd.stopinsert()
+    require("fzf-lua").live_grep_native({ search = word })
+end, { silent = true, desc = "Grep word under cursor" })
 
 vim.keymap.set("n", "<C-j>", "<C-w>w", { remap = false })
 vim.keymap.set("n", "<C-k>", "<C-w>W", { remap = false })

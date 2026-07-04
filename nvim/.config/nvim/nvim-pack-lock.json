@@ -41,6 +41,10 @@
       "rev": "a0ec73332e537228981b6a4f465cef82bb3e1d36",
       "src": "https://github.com/bjarneo/ethereal.nvim"
     },
+    "fzf-lua": {
+      "rev": "237b7e7f2bd07becc83144933b6058cc15bef2dc",
+      "src": "https://github.com/ibhagwan/fzf-lua"
+    },
     "gitsigns.nvim": {
       "rev": "db486b42299b2e3f5831809617af21becf268a39",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
@@ -123,6 +127,10 @@
     "nvim-autopairs": {
       "rev": "59bce2eef357189c3305e25bc6dd2d138c1683f5",
       "src": "https://github.com/windwp/nvim-autopairs"
+    },
+    "nvim-bqf": {
+      "rev": "c282a62bec6c0621a1ef5132aa3f4c9fc4dcc2c7",
+      "src": "https://github.com/kevinhwang91/nvim-bqf"
     },
     "nvim-colorizer.lua": {
       "rev": "c8c2c19436d33165ec34fa90c975bc0a739fe3fb",

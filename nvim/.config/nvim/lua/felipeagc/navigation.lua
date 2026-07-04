@@ -1,43 +1,40 @@
 vim.pack.add({
     { src = "https://github.com/nvim-mini/mini.icons", version = "stable" },
-    { src = "https://github.com/nvim-mini/mini.pick", version = "stable" },
-    { src = "https://github.com/nvim-mini/mini.visits", version = "stable" },
+    -- { src = "https://github.com/nvim-mini/mini.pick", version = "stable" },
     { src = "https://github.com/nvim-tree/nvim-tree.lua" },
     { src = "https://github.com/stevearc/oil.nvim" },
     { src = "https://github.com/nvim-lua/plenary.nvim" },
+    { src = "https://github.com/ibhagwan/fzf-lua" },
+    { src = "https://github.com/kevinhwang91/nvim-bqf" },
     -- { src = "https://github.com/nvim-telescope/telescope.nvim" },
 })
 
-require('mini.icons').setup()
+require("mini.icons").setup()
 MiniIcons.mock_nvim_web_devicons()
 
-require('mini.visits').setup()
-
-local win_config = function()
-    local height = math.floor(0.8 * vim.o.lines)
-    local width = math.floor(0.8 * vim.o.columns)
-    return {
-        anchor = 'NW', height = height, width = width,
-        row = math.floor(0.5 * (vim.o.lines - height)),
-        col = math.floor(0.5 * (vim.o.columns - width)),
-    }
-end
-require('mini.pick').setup({
-    mappings = {
-        paste = "",
-        refine = '<C-r>',
-        mark = '<C-x>',
-        choose_marked = '<C-q>',
+require("fzf-lua").setup({
+    winopts = {
+        preview = {
+            hidden = true,
+        },
     },
-    window = { config = win_config },
+    actions = {
+        files = {
+            true,
+            ["ctrl-q"] = {
+                fn = FzfLua.actions.file_sel_to_qf,
+                prefix = "select-all",
+            },
+        }
+    }
 })
 
-require("nvim-tree").setup {
+require("nvim-tree").setup({
     view = {
         width = 50,
     },
     on_attach = function(bufnr)
-        local api = require "nvim-tree.api"
+        local api = require("nvim-tree.api")
 
         local function opts(desc)
             return {
@@ -53,10 +50,10 @@ require("nvim-tree").setup {
         api.config.mappings.default_on_attach(bufnr)
 
         -- custom mappings
-        vim.keymap.set('n', 'gt', "<CMD>NvimTreeClose<CR>", opts("Toggle tree"))
-        vim.keymap.del('n', '<C-k>', { buffer = bufnr })
-    end
-}
+        vim.keymap.set("n", "gt", "<CMD>NvimTreeClose<CR>", opts("Toggle tree"))
+        vim.keymap.del("n", "<C-k>", { buffer = bufnr })
+    end,
+})
 vim.keymap.set("n", "gt", "<CMD>NvimTreeFindFile<CR>", { desc = "Toggle tree" })
 
 require("oil").setup({
