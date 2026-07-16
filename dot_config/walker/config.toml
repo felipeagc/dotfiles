@@ -1,0 +1,10 @@
+app_launch_prefix = "uwsm app -- "
+
+[providers]
+default = [
+  "desktopapplications",
+  "calc",
+  "files",
+  "bluetooth"
+]
+theme = "noctalia"

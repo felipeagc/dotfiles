@@ -1,0 +1,45 @@
+window-theme = "dark"
+theme = Gruvbox Material
+
+command = zsh -c tmux
+
+font-family = BlexMono Nerd Font
+font-style = Medium
+font-size = 10
+font-feature = -calt, -liga, -dlig
+
+cursor-style = block
+cursor-style-blink = false
+
+shell-integration-features = no-cursor
+
+window-vsync = true
+
+window-new-tab-position = end
+
+gtk-custom-css = tab-style.css
+
+# keybind = alt+j=goto_split:next
+# keybind = alt+k=goto_split:previous
+# keybind = alt+t=new_tab
+
+# keybind = alt+w=close_surface
+# keybind = alt+enter=new_split:auto
+
+window-padding-x = 8
+window-padding-y = 8
+
+app-notifications = no-clipboard-copy
+
+keybind = control+enter=unbind
+
+keybind = alt+physical:one=unbind
+keybind = alt+physical:two=unbind
+keybind = alt+physical:three=unbind
+keybind = alt+physical:four=unbind
+keybind = alt+physical:five=unbind
+keybind = alt+physical:six=unbind
+keybind = alt+physical:seven=unbind
+keybind = alt+physical:eight=unbind
+keybind = alt+physical:nine=unbind
+keybind = alt+physical:zero=unbind

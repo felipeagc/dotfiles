@@ -1,0 +1,5 @@
+{{- if eq .chezmoi.os "darwin" -}}
+{{-   include ".chezmoitemplates/.ghostty_darwin" -}}
+{{- else if eq .chezmoi.os "linux" -}}
+{{-   include ".chezmoitemplates/.ghostty_linux" -}}
+{{- end -}}

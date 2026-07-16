@@ -1,0 +1,14 @@
+README.md
+Brewfile
+Brewfile.lock.json
+
+{{- if ne .chezmoi.os "linux" }}
+.config/ghostty/tab-style.css
+.config/home-manager
+.config/hypr
+.config/niri
+.config/uwsm
+.config/walker
+.local/bin/omarchy-*
+.local/share/applications
+{{- end }}

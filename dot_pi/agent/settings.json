@@ -1,0 +1,11 @@
+{
+  "lastChangelogVersion": "0.80.3",
+  "defaultProvider": "cursor",
+  "defaultModel": "grok-4.5:slow",
+  "theme": "dark",
+  "packages": [
+    "npm:pi-cursor-sdk"
+  ],
+  "hideThinkingBlock": false,
+  "defaultThinkingLevel": "medium"
+}

@@ -1,0 +1,76 @@
+# theme = Gruvbox Material
+
+palette = 0=#7a828e
+palette = 1=#ff9492
+palette = 2=#26cd4d
+palette = 3=#f0b72f
+palette = 4=#71b7ff
+palette = 5=#cb9eff
+palette = 6=#39c5cf
+palette = 7=#d9dee3
+palette = 8=#4d4d4d
+palette = 9=#ffb1af
+palette = 10=#4ae168
+palette = 11=#f7c843
+palette = 12=#91cbff
+palette = 13=#dbb7ff
+palette = 14=#56d4dd
+palette = 15=#ffffff
+background = #0a0c10
+foreground = #f0f3f6
+cursor-color = #71b7ff
+cursor-text = #b1f7ff
+selection-background = #f0f3f6
+selection-foreground = #0a0c10
+
+# command = zsh -c tmux
+
+font-family = BlexMono Nerd Font
+font-style = Semibold
+font-size = 14
+font-feature = -calt, -liga, -dlig
+
+cursor-style = block
+cursor-style-blink = false
+
+shell-integration-features = no-cursor
+
+macos-titlebar-style = tabs
+macos-option-as-alt = left
+window-vsync = true
+
+window-new-tab-position = end
+
+# keybind = cmd+j=goto_split:next
+# keybind = cmd+k=goto_split:previous
+
+keybind = cmd+w=close_surface
+keybind = cmd+o=new_split:auto
+# keybind = cmd+f=toggle_split_zoom
+
+keybind = super+enter=new_split:auto
+
+window-padding-x = 8
+window-padding-y = 8
+
+keybind = super+physical:one=text:\x1b1
+keybind = super+physical:two=text:\x1b2
+keybind = super+physical:three=text:\x1b3
+keybind = super+physical:four=text:\x1b4
+keybind = super+physical:five=text:\x1b5
+keybind = super+physical:six=text:\x1b6
+keybind = super+physical:seven=text:\x1b7
+keybind = super+physical:eight=text:\x1b8
+keybind = super+physical:nine=text:\x1b9
+keybind = super+physical:zero=text:\x1b0
+
+keybind = super+t=text:\x1bt
+keybind = super+f=text:\x1bf
+keybind = super+s=text:\x1bs
+keybind = super+j=text:\x1bj
+keybind = super+k=text:\x1bk
+keybind = super+g=text:\x1bg
+keybind = super+enter=text:\x1b\r
+
+keybind = super+left=text:\x1b[1;3D
+keybind = super+right=text:\x1b[1;3C
