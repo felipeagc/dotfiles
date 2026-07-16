@@ -1,6 +1,0 @@
-{
-    "diagnostics.globals": [
-        "vim",
-        "create_augroup"
-    ]
-}
