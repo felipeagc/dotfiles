@@ -1,10 +1,16 @@
 {
-  "lastChangelogVersion": "0.80.3",
-  "defaultProvider": "cursor",
-  "defaultModel": "grok-4.5:slow",
-  "theme": "dark",
+  "lastChangelogVersion": "0.80.6",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.6-sol",
+  "theme": "nightowl",
   "packages": [
-    "npm:pi-cursor-sdk"
+    "npm:pi-cursor-sdk",
+    "npm:@tintinweb/pi-subagents",
+    "npm:pi-codex-goal",
+    "npm:@juicesharp/rpiv-btw",
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:@juicesharp/rpiv-todo",
+    "npm:pi-observational-memory"
   ],
   "hideThinkingBlock": false,
   "defaultThinkingLevel": "medium"

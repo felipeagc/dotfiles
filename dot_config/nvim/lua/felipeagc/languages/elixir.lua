@@ -6,12 +6,12 @@ create_augroup("elixir", function()
     vim.cmd([[ compiler exunit ]])
 end)
 
-vim.lsp.config('expert', {
-    cmd = { 'expert' },
-    root_markers = { 'mix.exs' },
-    filetypes = { 'elixir', 'eelixir', 'heex' },
+vim.lsp.config("expert", {
+    cmd = { "expert", "--stdio" },
+    root_markers = { "mix.exs" },
+    filetypes = { "elixir", "eelixir", "heex" },
 })
-vim.lsp.enable('expert')
+vim.lsp.enable("expert")
 
 local elixir_projectionist_config = {
     ["mix.exs"] = {
@@ -23,8 +23,8 @@ local elixir_projectionist_config = {
                 "  use {dirname|camelcase|capitalize}, :live_view",
                 "",
                 "  def render(assigns) do",
-                "    ~H\"\"\"",
-                "    \"\"\"",
+                '    ~H"""',
+                '    """',
                 "  end",
                 "end",
             },
@@ -47,8 +47,8 @@ local elixir_projectionist_config = {
                 "  use {dirname|camelcase|capitalize}, :live_component",
                 "",
                 "  def render(assigns) do",
-                "    ~H\"\"\"",
-                "    \"\"\"",
+                '    ~H"""',
+                '    """',
                 "  end",
                 "end",
             },
@@ -145,7 +145,6 @@ local elixir_projectionist_config = {
         },
     },
 }
-
 
 local new_projectionist_heuristics
 if vim.g.projectionist_heuristics then

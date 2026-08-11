@@ -71,7 +71,7 @@ vim.o.signcolumn = "yes:1" -- Configure minimum gutter width
 -- Tells vim to write changes back to the same file handle
 vim.o.backupcopy = "yes"
 
-vim.wo.number = true
+vim.wo.number = false
 -- vim.wo.cursorline = true
 vim.wo.foldmethod = "marker"
 -- vim.wo.foldlevel = 0

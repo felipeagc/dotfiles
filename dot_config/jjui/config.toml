@@ -5,14 +5,26 @@ position = "right"
 show_at_start = true
 width_percentage = 50
 
-[[bindings]]
-key = "enter"
-action = "revisions.open_details"
-scope = "revisions"
-desc = "details"
+# file_command = ["diff", "--config", "ui.diff-formatter=[\"delta\",\"--width\",\"$preview_width\",\"--wrap-max-lines\",\"0\",\"$left\",\"$right\"]", "--color", "always", "-r", "$change_id", "$file"]
+# revision_command = ["show", "--config", "ui.diff-formatter=[\"delta\",\"--width\",\"$preview_width\",\"--wrap-max-lines\",\"0\",\"$left\",\"$right\"]", "--color", "always", "-r", "$change_id"]
 
-[[bindings]]
-key = "d"
-action = "revisions.open_inline_describe"
-scope = "revisions"
-desc = "inline describe"
+# revision_command = ["show", "--color", "always", "-r", "$change_id", "--config", "ui.diff-formatter=jj-delta-unified"]
+# file_command = ["diff", "--color", "always", "-r", "$change_id", "--config", "ui.diff-formatter=jj-delta-unified", "$file"]
+
+# revision_command = ["show", "--config", "ui.diff-formatter=['delta','--width=$preview_width','$left','$right']", "--color", "always", "-r", "$change_id"]
+# file_command = ["diff", "--config", "ui.diff-formatter=['delta','--width=$preview_width','$left','$right']", "--color", "always", "-r", "$change_id", "$file"]
+
+# revision_command = ["show", "--config", "ui.diff-formatter=['difft','--color=always','--width=$preview_width','--display=inline','$left','$right']", "--color", "always", "-r", "$change_id"]
+# file_command = ["diff", "--config", "ui.diff-formatter=['difft','--color=always','--width=$preview_width','--display=inline','$left','$right']", "--color", "always", "-r", "$change_id", "$file"]
+
+# [[bindings]]
+# key = "enter"
+# action = "revisions.open_details"
+# scope = "revisions"
+# desc = "details"
+#
+# [[bindings]]
+# key = "d"
+# action = "revisions.open_inline_describe"
+# scope = "revisions"
+# desc = "inline describe"
