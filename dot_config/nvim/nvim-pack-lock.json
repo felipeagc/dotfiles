@@ -108,6 +108,10 @@
       "rev": "5b06ae0736813b1c65d76a4be9edbe92be0b9c74",
       "src": "https://github.com/gthelding/monokai-pro.nvim"
     },
+    "national-parks-themes": {
+      "rev": "b1c86cb3697dab9c51fd6931569654bb7bf24769",
+      "src": "https://github.com/pjhamera/national-parks-themes"
+    },
     "neotest": {
       "rev": "1c529a1ef9c82e8131e872368415cecc2bb86ea2",
       "src": "https://github.com/nvim-neotest/neotest"

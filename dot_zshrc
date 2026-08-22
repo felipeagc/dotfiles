@@ -127,6 +127,10 @@ if type "mise" > /dev/null; then
     eval "$(mise activate zsh)"
 fi
 
+if type "fnox" > /dev/null; then
+    eval "$(fnox activate zsh)"
+fi
+
 if type "xc" > /dev/null; then
     autoload -U +X bashcompinit && bashcompinit
     complete -o nospace -C /opt/homebrew/bin/xc xc
