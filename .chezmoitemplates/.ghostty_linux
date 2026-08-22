@@ -1,8 +1,6 @@
 window-theme = "dark"
 theme = Gruvbox Material
 
-command = zsh -c tmux
-
 font-family = BlexMono Nerd Font
 font-style = Medium
 font-size = 10

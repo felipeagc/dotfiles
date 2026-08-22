@@ -1,7 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    # neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    llm-agents.url = "github:numtide/llm-agents.nix";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -10,7 +10,7 @@
 
   outputs = {
       nixpkgs,
-      # neovim-nightly-overlay,
+      llm-agents,
       home-manager,
       ...
     }:
@@ -18,9 +18,10 @@
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
-        overlays = [
-          # neovim-nightly-overlay.overlays.default
-        ];
+
+        config.allowUnfree = true;
+
+        overlays = [ llm-agents.overlays.shared-nixpkgs ];
       };
     in {
       homeConfigurations.felipe = home-manager.lib.homeManagerConfiguration {
@@ -29,7 +30,7 @@
         modules = [{
           home.username = "felipe";
           home.homeDirectory = "/home/felipe";
-          home.stateVersion = "24.11";
+          home.stateVersion = "26.05";
 
           news.display = "silent";
 
@@ -40,22 +41,25 @@
             lazygit
             fzf
             ripgrep
-            eternal-terminal
             tmux
             nodejs_24
             tree-sitter
-            pi-coding-agent
-            filen-desktop
-          ];
+            zenity
+            rustup
+            delta
+            ast-grep
+            _1password-gui
+            _1password-cli
+            just
+            tokei
+            chezmoi
+            sesh
 
-          systemd.user.services.etserver = {
-            Unit.Description = "Eternal Terminal Server";
-            Service = {
-              ExecStart = "${pkgs.eternal-terminal}/bin/etserver";
-              Restart = "on-failure";
-            };
-            Install.WantedBy = [ "default.target" ];
-          };
+            pkgs.llm-agents.claude-code
+            pkgs.llm-agents.grok
+            pkgs.llm-agents.pi
+            codex
+          ];
 
           programs.home-manager.enable = true;
         }];
