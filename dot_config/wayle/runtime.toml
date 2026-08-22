@@ -1,0 +1,127 @@
+[general]
+font-sans = "BlexMono Nerd Font Mono"
+font-mono = "BlexMono Nerd Font Mono"
+tearing-mode = true
+
+[bar]
+scale = 0.8500000238418579
+padding = 0.75
+padding-ends = 0.75
+border-location = "bottom"
+border-color = "bg-surface-elevated"
+button-variant = "basic"
+button-icon-padding = 0.699999988079071
+button-rounding = "md"
+
+[[bar.layout]]
+monitor = "*"
+show = true
+left = [
+    "dashboard",
+    "hyprland-workspaces",
+    "window-title",
+]
+center = []
+right = [
+    "systray",
+    "keyboard-input",
+    "ram",
+    "battery",
+    "idle-inhibit",
+    "microphone",
+    "volume",
+    "bluetooth",
+    "network",
+    "clock",
+    "notifications",
+]
+
+[styling]
+scale = 1.0
+
+[styling.palette]
+bg = "#202020"
+surface = "#282828"
+elevated = "#383838"
+fg = "#b3aea0"
+fg-muted = "#7f7b6f"
+primary = "#b3aea0"
+red = "#b3aea0"
+yellow = "#b3aea0"
+green = "#b3aea0"
+blue = "#b3aea0"
+
+[modules.battery]
+border-show = true
+border-color = "bg-overlay"
+
+[modules.bluetooth]
+border-show = true
+border-color = "bg-overlay"
+label-show = false
+
+[modules.clock]
+border-show = true
+border-color = "bg-overlay"
+
+[modules.dashboard]
+border-show = true
+border-color = "bg-overlay"
+
+[modules.hyprland-workspaces]
+min-workspace-count = 10
+urgent-show = false
+app-icons-show = true
+label-size = 0.8999999761581421
+border-show = true
+border-color = "bg-overlay"
+
+[modules.idle-inhibit]
+border-show = true
+border-color = "bg-overlay"
+
+[modules.keyboard-input]
+border-show = true
+border-color = "bg-overlay"
+
+[modules.keyboard-input.layout-alias-map]
+"English (US, intl., with dead keys)" = "EN (intl)"
+"English (US)" = "EN"
+
+[modules.microphone]
+border-show = true
+border-color = "bg-overlay"
+
+[modules.network]
+border-show = true
+border-color = "bg-overlay"
+label-show = false
+
+[modules.notifications]
+border-show = true
+border-color = "bg-overlay"
+
+[modules.ram]
+border-show = true
+border-color = "bg-overlay"
+
+[modules.systray]
+item-gap = 1.0
+internal-padding = 1.0
+border-show = true
+border-color = "bg-overlay"
+
+[modules.volume]
+border-show = true
+border-color = "bg-overlay"
+
+[modules.weather]
+location = "Sao Paulo"
+
+[modules.window-title]
+border-show = true
+border-color = "bg-overlay"
+
+[wallpaper]
+cycling-directory = "/home/felipe/Wallpapers"
+cycling-same-image = true
