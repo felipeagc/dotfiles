@@ -1,17 +1,16 @@
 {
-  "lastChangelogVersion": "0.84.2",
-  "defaultProvider": "openai",
-  "defaultModel": "gpt-5.6-sol",
-  "theme": "modern-dark",
+  "lastChangelogVersion": "0.84.4",
+  "defaultProvider": "cursor",
+  "defaultModel": "composer-2.5:slow",
   "packages": [
-    "npm:pi-cursor-sdk",
     "npm:@tintinweb/pi-subagents",
     "npm:pi-codex-goal",
     "npm:@juicesharp/rpiv-btw",
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:@juicesharp/rpiv-todo",
     "npm:pi-observational-memory",
-    "npm:@quintinshaw/pi-dynamic-workflows"
+    "npm:@quintinshaw/pi-dynamic-workflows",
+    "npm:pi-cursor-sdk"
   ],
   "hideThinkingBlock": false,
   "defaultThinkingLevel": "high",
