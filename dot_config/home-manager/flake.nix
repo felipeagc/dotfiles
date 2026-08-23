@@ -58,6 +58,7 @@
             pkgs.llm-agents.claude-code
             pkgs.llm-agents.grok
             pkgs.llm-agents.pi
+            pkgs.llm-agents.cursor-agent
             codex
           ];
 
