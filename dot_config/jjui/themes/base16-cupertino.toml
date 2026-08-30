@@ -1,0 +1,18 @@
+## tinted-jjui (https://github.com/vic/tinted-jjui)
+# Scheme name: Cupertino
+# Scheme author: Defman21
+# Template author: Victor Borja <vborja@apache.org> (https://github.com/vic)
+
+"text"      = { fg = "#404040" }
+"dimmed"    = { fg = "#808080" }
+"title"     = { fg = "#0000ff", bold = true }
+"shortcut"  = { fg = "#a90d91" }
+"matched"   = { fg = "#826b28" }
+"border"    = { fg = "#808080" }
+":selected"  = { bg = "#f0f0f0", fg = "#404040", bold = true }
+
+"source_marker" = { bg = "#318495", fg = "#ffffff", bold = true }
+"target_marker" = { bg = "#007400", fg = "#ffffff", bold = true }
+
+# "status" = { bg = "#f0f0f0" }
+# "status title" = { fg = "#ffffff", bg = "#0000ff", bold = true }
