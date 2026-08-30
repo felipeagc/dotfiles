@@ -1,15 +1,16 @@
 vim.pack.add({
     { src = "https://github.com/nvim-mini/mini.icons", version = "stable" },
-    -- { src = "https://github.com/nvim-mini/mini.pick", version = "stable" },
+    { src = "https://github.com/nvim-mini/mini.pick", version = "stable" },
     { src = "https://github.com/nvim-tree/nvim-tree.lua" },
     { src = "https://github.com/stevearc/oil.nvim" },
     { src = "https://github.com/nvim-lua/plenary.nvim" },
     { src = "https://github.com/ibhagwan/fzf-lua" },
-    -- { src = "https://github.com/nvim-telescope/telescope.nvim" },
 })
 
 require("mini.icons").setup()
 MiniIcons.mock_nvim_web_devicons()
+
+require("mini.pick").setup()
 
 require("fzf-lua").setup({
     winopts = {
@@ -24,8 +25,8 @@ require("fzf-lua").setup({
                 fn = FzfLua.actions.file_sel_to_qf,
                 prefix = "select-all",
             },
-        }
-    }
+        },
+    },
 })
 
 require("nvim-tree").setup({

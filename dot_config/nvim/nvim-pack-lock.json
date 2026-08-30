@@ -18,11 +18,11 @@
       "version": "'v1.6.0'"
     },
     "conform.nvim": {
-      "rev": "619363c30309d29ffa631e67c8183f2a72caa373",
+      "rev": "016802de402556da54c36bd7359b441266b01cdd",
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "conjure": {
-      "rev": "b7ff6c52b84a555cb57ea0d37b005473d4726a81",
+      "rev": "84c739c753bd07c006849d10ebce1863dd41af7f",
       "src": "https://github.com/Olical/conjure"
     },
     "copilot.lua": {
@@ -46,11 +46,11 @@
       "src": "https://github.com/bjarneo/ethereal.nvim"
     },
     "fzf-lua": {
-      "rev": "8671012a7b2a1648595952c655039d51fb301c14",
+      "rev": "05e44d38de0a79c11fba5f7bf8138791b1dbdd1e",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "gitsigns.nvim": {
-      "rev": "31d6fb2d618bca1482b9f274751ead5f03461408",
+      "rev": "5be654f2232c10ddcad19c1607a67b6b4b78fc29",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "gruvbox-material": {
@@ -60,6 +60,10 @@
     "hunk.nvim": {
       "rev": "c8a8e7b6973576f63e5bf39aa8338d7f37f4dc53",
       "src": "https://github.com/julienvincent/hunk.nvim"
+    },
+    "jb.nvim": {
+      "rev": "5cd71126f6a3ccea7bef8a22ba4b17eff23a5d6f",
+      "src": "https://github.com/nickkadutskyi/jb.nvim"
     },
     "kintsugi-nvim": {
       "rev": "6c8b881e6aea8ee1e3361a00858b5b1a3488d885",
@@ -74,7 +78,7 @@
       "src": "https://github.com/kdheepak/lazygit.nvim"
     },
     "mason-lspconfig.nvim": {
-      "rev": "67029ccdac1ef8941e13b826417bc0ffac24cc86",
+      "rev": "40276c4df7e6bdce6801d6c035c6227f9115a855",
       "src": "https://github.com/mason-org/mason-lspconfig.nvim"
     },
     "mason.nvim": {
@@ -101,7 +105,7 @@
       "version": "'stable'"
     },
     "modus-themes.nvim": {
-      "rev": "17a64464c27c1be605adca13dbe48f2f402fe107",
+      "rev": "56233f0986ef6c8d0eab97e924e87144e584d970",
       "src": "https://github.com/miikanissi/modus-themes.nvim"
     },
     "monokai-pro.nvim": {
@@ -113,7 +117,7 @@
       "src": "https://github.com/pjhamera/national-parks-themes"
     },
     "neotest": {
-      "rev": "1c529a1ef9c82e8131e872368415cecc2bb86ea2",
+      "rev": "27bf921498043f7ecd821d6db68d05de244bbd02",
       "src": "https://github.com/nvim-neotest/neotest"
     },
     "neotest-elixir": {
@@ -133,11 +137,11 @@
       "src": "https://github.com/AlexvZyl/nordic.nvim"
     },
     "nui.nvim": {
-      "rev": "de740991c12411b663994b2860f1a4fd0937c130",
+      "rev": "10fc361835c856ba4233ef5ea135b919bf3dce97",
       "src": "https://github.com/MunifTanjim/nui.nvim"
     },
     "nvim-autopairs": {
-      "rev": "7b9923abad60b903ece7c52940e1321d39eccc79",
+      "rev": "430522f95fe4fb7c511ec64f8c1a90cc6a66c05c",
       "src": "https://github.com/windwp/nvim-autopairs"
     },
     "nvim-bqf": {
@@ -153,7 +157,7 @@
       "src": "https://codeberg.org/mfussenegger/nvim-jdtls"
     },
     "nvim-lspconfig": {
-      "rev": "43ed3797b266e1ee8d222e491379ad471c9d3146",
+      "rev": "16286347bdba1333c7d124d9de9fe6630731b2b2",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-metals": {
@@ -173,7 +177,7 @@
       "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
     "nvim-treesitter": {
-      "rev": "c9f9ed6c1892f629ea399f4ee7905f2686fa13f2",
+      "rev": "857651fce37eba032ebe28f3a206283cdc65c45a",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter",
       "version": "'main'"
     },
@@ -186,7 +190,7 @@
       "src": "https://github.com/stevearc/oil.nvim"
     },
     "parinfer-rust": {
-      "rev": "86d52fbb560ece5cf272f90e64742bda62fd7d7b",
+      "rev": "0d334950099cd30a8e1ca520026f8da9ea1382fa",
       "src": "https://github.com/eraserhd/parinfer-rust"
     },
     "playground": {
@@ -210,7 +214,7 @@
       "src": "https://github.com/assistcontrol/readline.nvim"
     },
     "roslyn.nvim": {
-      "rev": "7d8c166a0c70473ffa558d4d2430769d581fa8dd",
+      "rev": "de9a98d61ed3fd01b5016eea5fe9e32f1a4c7cfb",
       "src": "https://github.com/seblyng/roslyn.nvim"
     },
     "rust.vim": {
@@ -218,7 +222,7 @@
       "src": "https://github.com/rust-lang/rust.vim"
     },
     "telescope.nvim": {
-      "rev": "427b576c16792edad01a92b89721d923c19ad60f",
+      "rev": "40aedd8a68c78a656a10a8d62d80c54af59420fb",
       "src": "https://github.com/nvim-telescope/telescope.nvim"
     },
     "tokyonight.nvim": {
@@ -270,7 +274,7 @@
       "src": "https://github.com/clojure-vim/vim-jack-in"
     },
     "vim-just": {
-      "rev": "42f39b20367eca6d256799b3e69f6c600b601e23",
+      "rev": "088662862a1cdb199fe8e57b5560d01c07de7f1a",
       "src": "https://github.com/NoahTheDuke/vim-just"
     },
     "vim-projectionist": {
