@@ -1,10 +1,10 @@
-window-theme = "dark"
-theme = Gruvbox Material
+theme = light:Raycast Light,dark:Raycast Dark
 
-font-family = BlexMono Nerd Font
-font-style = Medium
+font-family = Jetbrains Nerd Font
 font-size = 10
 font-feature = -calt, -liga, -dlig
+
+adjust-cell-height = 10%
 
 cursor-style = block
 cursor-style-blink = false
