@@ -1,7 +1,7 @@
 theme = light:Raycast Light,dark:Raycast Dark
 
-font-family = Jetbrains Nerd Font
-font-size = 10
+font-family = JetBrainsMono Nerd Font
+font-size = 12
 font-feature = -calt, -liga, -dlig
 
 adjust-cell-height = 10%
