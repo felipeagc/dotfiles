@@ -17,6 +17,8 @@ window-new-tab-position = end
 
 gtk-custom-css = tab-style.css
 
+mouse-scroll-multiplier = precision:0.1,discrete:1
+
 # keybind = alt+j=goto_split:next
 # keybind = alt+k=goto_split:previous
 # keybind = alt+t=new_tab

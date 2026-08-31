@@ -83,7 +83,7 @@ hl.config({
 
     scrolling = {
         fullscreen_on_one_column = true,
-        column_width = 0.6,
+        column_width = 0.85,
         direction = "right",
     },
 
@@ -126,13 +126,13 @@ hl.device({
 
 hl.device({
     name = "pixart-wireless-gaming-mouse",
-    sensitivity = 0.0,
+    sensitivity = -0.2,
     accel_profile = "flat",
 })
 
 hl.device({
     name = "pixart-wireless-gaming-mouse-1",
-    sensitivity = 0.0,
+    sensitivity = -0.2,
     accel_profile = "flat",
 })
 
