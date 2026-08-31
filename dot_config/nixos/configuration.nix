@@ -139,8 +139,11 @@
     wl-clipboard
     discord
     spotify
-    vesktop
-
+    ((vesktop.override { withSystemVencord = true; })
+        .overrideAttrs ( old: {
+            postFixup = let newPostFixup =
+                            (lib.trimWith {end = true;} old.postFixup) + " --add-flags \"--user-agent-os 'windows'\"\n";
+                        in builtins.appendContext newPostFixup (builtins.getContext old.postFixup); }))
     qemu
   ];
 

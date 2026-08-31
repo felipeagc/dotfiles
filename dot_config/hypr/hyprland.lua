@@ -232,7 +232,7 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("uwsm app -s s -- chromium")
     hl.exec_cmd("uwsm app -s s -- spotify")
     hl.exec_cmd("uwsm app -s s -- 1password --silent")
-    -- hl.exec_cmd("uwsm app -s s -- vesktop --user-agent-os windows")
+    hl.exec_cmd("uwsm app -s s -- vesktop")
 
     hl.exec_cmd([[dconf write /org/gnome/desktop/interface/gtk-theme "'Adwaita'"]])
     hl.exec_cmd([[dconf write /org/gnome/desktop/interface/color-scheme "'prefer-dark'"]])
