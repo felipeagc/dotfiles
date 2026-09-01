@@ -96,7 +96,6 @@
     jjui
     wget
     curl
-    noctalia-shell
     wayle
     awww
     slurp
@@ -122,8 +121,6 @@
 
     mise
 
-    lua
-    luau
     blender
 
     _1password-gui
@@ -144,7 +141,6 @@
             postFixup = let newPostFixup =
                             (lib.trimWith {end = true;} old.postFixup) + " --add-flags \"--user-agent-os 'windows'\"\n";
                         in builtins.appendContext newPostFixup (builtins.getContext old.postFixup); }))
-    qemu
   ];
 
   programs.steam.enable = true;
