@@ -1,0 +1,12 @@
+## Monokai Pro Ristretto
+
+"text"          = { fg = "#fff1f3" }
+"dimmed"        = { fg = "#72696a" }
+"title"         = { fg = "#f9cc6c", bold = true }
+"shortcut"      = { fg = "#a8a9eb" }
+"matched"       = { fg = "#fd6883" }
+"border"        = { fg = "#72696a" }
+":selected"     = { bg = "#5b5353", fg = "#fff1f3", bold = true }
+
+"source_marker" = { bg = "#adda78", fg = "#2c2525", bold = true }
+"target_marker" = { bg = "#f38d70", fg = "#2c2525", bold = true }

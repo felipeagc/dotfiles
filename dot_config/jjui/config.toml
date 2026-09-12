@@ -1,6 +1,6 @@
 [ui.theme]
 light = "base16-cupertino"
-dark = "base16-da-one-gray"
+dark = "monokai-pro-ristretto"
 
 [preview]
 position = "right"
