@@ -1,0 +1,196 @@
+[bar.main]
+background_opacity = 0.53999998793005943
+border = "outline"
+border_width = 0.0
+capsule = false
+capsule_border = "outline"
+capsule_border_width = 2.0
+capsule_fill = "surface_variant"
+capsule_radius = 10
+center = []
+color = "on_surface"
+concave_edge_corners = false
+contact_shadow = true
+end = [
+    "tray",
+    "keyboard_layout",
+    "ram",
+    "battery",
+    "caffeine",
+    "mic",
+    "volume",
+    "bluetooth",
+    "network",
+    "clock",
+    "notifications"
+]
+font_family = "Geist"
+font_weight = 700
+margin_edge = 0
+margin_ends = 0
+padding = 16
+position = "top"
+radius = 0
+scale = 1.1000000089406967
+shadow = false
+start = [ "control-center", "workspaces", "active-window" ]
+thickness = 40
+widget_spacing = 16
+
+[dock]
+auto_hide = true
+border_width = 1.0
+cross_axis_padding = 0
+enabled = true
+item_spacing = 0
+launcher_position = "start"
+main_axis_padding = 8
+pinned = [ "chromium-browser", "com.mitchellh.ghostty", "vesktop", "spotify" ]
+position = "bottom"
+radius_bottom_left = 0
+radius_bottom_right = 0
+reserve_space = false
+show_dots = true
+
+[hot_corners]
+enabled = true
+
+    [hot_corners.top_left]
+    action = "window_switcher"
+
+[lockscreen_widgets]
+enabled = false
+schema_version = 2
+widget_order = [ "lockscreen-login-box@HDMI-A-1", "lockscreen-login-box@eDP-1" ]
+
+    [lockscreen_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@HDMI-A-1"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 1280.0
+    cy = 1258.0
+    output = "HDMI-A-1"
+    placement_height = 1440.0
+    placement_width = 2560.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@HDMI-A-1".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_password_reveal = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@eDP-1"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 960.0
+    cy = 898.0
+    output = "eDP-1"
+    placement_height = 1080.0
+    placement_width = 1920.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@eDP-1".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_password_reveal = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+[shell]
+font_family = "Adwaita Sans"
+launch_apps_as_systemd_services = true
+
+    [shell.keyboard_layout.custom_labels]
+    "English (US)" = "EN"
+    "English (US, intl., with dead keys)" = "EN (intl)"
+
+    [shell.panel]
+    open_near_click_control_center = true
+    transparency_mode = "glass"
+
+    [shell.screen_corners]
+    enabled = true
+
+[theme]
+builtin = "Gruvbox"
+community_palette = "Creamy Forest"
+custom_palette = "Dark"
+mode = "dark"
+shell_mode = "dark"
+source = "wallpaper"
+wallpaper_scheme = "m3-monochrome"
+
+    [theme.templates]
+    builtin_ids = [ "gtk3", "gtk4" ]
+
+[wallpaper]
+directory = "/home/felipe/Wallpapers"
+
+    [wallpaper.default]
+    path = "/home/felipe/Wallpapers/johan-mouchet-Z95viY3WaZs-unsplash.jpg"
+
+    [wallpaper.last]
+    path = "/home/felipe/Wallpapers/johan-mouchet-Z95viY3WaZs-unsplash.jpg"
+
+    [wallpaper.monitors.HDMI-A-1]
+    path = "/home/felipe/Wallpapers/johan-mouchet-Z95viY3WaZs-unsplash.jpg"
+
+    [wallpaper.monitors.eDP-1]
+    path = "/home/felipe/Wallpapers/johan-mouchet-Z95viY3WaZs-unsplash.jpg"
+
+[widget.active-window]
+display = "icon_and_text"
+max_length = 400
+type = "active_window"
+
+[widget.bluetooth]
+show_label = false
+
+[widget.mic]
+device = "input"
+type = "volume"
+
+[widget.network]
+show_label = false
+
+[widget.ram]
+stat = "ram_used"
+type = "sysmon"
+
+[widget.volume]
+device = "output"
+show_label = true
+
+[widget.workspaces]
+label_source = "id"
+scale = 1.25
+show_labels = true
+style = "regular"

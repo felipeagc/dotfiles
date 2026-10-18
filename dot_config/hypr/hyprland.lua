@@ -44,14 +44,14 @@ hl.config({
     general = {
         gaps_in = 5,
         gaps_out = 5,
-        border_size = 1,
+        border_size = 2,
         col = {
-            active_border = "rgba(27a1b9ff)",
-            inactive_border = "rgba(595959aa)",
+            active_border = "rgba(9e86c8ff)",
+            inactive_border = "rgba(797979aa)",
         },
         resize_on_border = true,
         allow_tearing = true,
-        layout = "scrolling",
+        layout = "master",
     },
 
     decoration = {
@@ -78,12 +78,12 @@ hl.config({
     },
 
     master = {
-        new_status = "master",
+        new_status = "slave",
     },
 
     scrolling = {
         fullscreen_on_one_column = true,
-        column_width = 0.85,
+        column_width = 0.95,
         direction = "right",
     },
 
@@ -108,6 +108,7 @@ hl.config({
 
     cursor = {
         no_hardware_cursors = true,
+        no_warps = true,
     },
 
     ecosystem = {
@@ -149,7 +150,7 @@ hl.gesture({
 })
 
 hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd(terminal))
-hl.bind("ALT + Space", hl.dsp.exec_cmd("walker"))
+hl.bind("ALT + Space", hl.dsp.exec_cmd("noctalia msg panel-toggle launcher"))
 hl.bind(mainMod .. " + W", hl.dsp.window.close())
 hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exit())
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
@@ -164,6 +165,34 @@ hl.bind(
     hl.dsp.exec_cmd([[sh -c 'mkdir -p "$HOME/Documents/Screenshots"; file="$HOME/Documents/Screenshots/screenshot-$(date +%Y-%m-%d_%H-%M-%S).png"; grim -g "$(slurp)" "$file" && wl-copy < "$file"']])
 )
 hl.bind(mainMod .. " + SHIFT + C", hl.dsp.exec_cmd("hyprpicker -a"), { description = "Pick color" })
+
+hl.bind("SUPER + tab", function ()
+    local layouts   = { "scrolling", "master" }
+    local workspace = hl.get_active_workspace()
+    if hl.get_active_special_workspace() then
+        workspace = hl.get_active_special_workspace()
+    end
+
+    local next_layout = "dwindle"
+
+    if not workspace then
+        return
+    end
+
+    for i = 1, #layouts do
+        if layouts[i] == workspace.tiled_layout then
+            local next_layout_idx = (i % #layouts) + 1
+            next_layout = layouts[next_layout_idx]
+            break
+        end
+    end
+
+    if workspace.special then
+        hl.workspace_rule({ workspace = tostring(workspace.name), layout = next_layout })
+    else
+        hl.workspace_rule({ workspace = "name:" .. tostring(workspace.name), layout = next_layout })
+    end
+end)
 
 hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd('brightnessctl s "+5%"'))
 hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd('brightnessctl s "5%-"'))
@@ -193,6 +222,8 @@ hl.bind("ALT + C", hl.dsp.send_shortcut({ mods = "CTRL", key = "Insert" }), { de
 hl.bind("ALT + V", hl.dsp.send_shortcut({ mods = "SHIFT", key = "Insert" }), { description = "Universal paste" })
 hl.bind("ALT + X", hl.dsp.send_shortcut({ mods = "CTRL", key = "X" }), { description = "Universal cut" })
 
+hl.bind("ALT + TAB", hl.dsp.exec_cmd("noctalia msg window-switcher hold"))
+
 hl.window_rule({
     match = { class = ".*" },
     suppress_event = "maximize",
@@ -203,21 +234,12 @@ hl.window_rule({ match = { class = "discord" }, workspace = "9 silent", no_initi
 hl.window_rule({ match = { class = "vesktop" }, workspace = "9 silent", no_initial_focus = true })
 hl.window_rule({ match = { class = "steam" }, workspace = "10 silent", no_initial_focus = true })
 hl.window_rule({ match = { class = "^(cs2)$" }, immediate = true })
-
-hl.workspace_rule({
-  workspace = "4",
-  layout = "master",
-})
-hl.window_rule({ match = { class = "GnomeGame" }, workspace = "4 silent", immediate = true })
-
 hl.workspace_rule({ workspace = "w[tv1]", gaps_out = 0, gaps_in = 0 })
 hl.workspace_rule({ workspace = "f[1]", gaps_out = 0, gaps_in = 0 })
 hl.window_rule({ match = { workspace = "w[tv1]", float = false }, border_size = 0 })
 hl.window_rule({ match = { workspace = "w[tv1]", float = false }, rounding = 0 })
 hl.window_rule({ match = { workspace = "f[1]", float = false }, border_size = 0 })
 hl.window_rule({ match = { workspace = "f[1]", float = false }, rounding = 0 })
-
-hl.exec_cmd("pkill walker; uwsm app -- walker --gapplication-service")
 
 hl.on("hyprland.shutdown", function()
     hl.exec_cmd("systemctl --user stop xdg-desktop-portal.service xdg-desktop-portal-hyprland.service xdg-desktop-portal-gtk.service")
@@ -228,8 +250,6 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("systemctl --user reset-failed xdg-desktop-portal.service xdg-desktop-portal-hyprland.service xdg-desktop-portal-gtk.service")
     hl.exec_cmd("systemctl --user import-environment XCOMPOSEFILE LC_ALL LC_CTYPE")
     hl.exec_cmd("dbus-update-activation-environment --systemd XCOMPOSEFILE LC_ALL LC_CTYPE")
-    -- hl.exec_cmd("uwsm app -s s -- noctalia-shell")
-    hl.exec_cmd("uwsm app -s s -- wayle panel start")
     hl.exec_cmd("uwsm app -s s -- chromium")
     hl.exec_cmd("uwsm app -s s -- spotify")
     hl.exec_cmd("uwsm app -s s -- 1password --silent")
@@ -239,4 +259,5 @@ hl.on("hyprland.start", function()
     hl.exec_cmd([[dconf write /org/gnome/desktop/interface/color-scheme "'prefer-dark'"]])
     hl.exec_cmd([[dconf write /org/gnome/desktop/interface/icon-theme "'Adwaita'"]])
     hl.exec_cmd([[dconf write /org/gnome/desktop/interface/cursor-theme "'Adwaita'"]])
+    hl.exec_cmd([[dconf write /org/gnome/desktop/interface/font-name "'Geist 10'"]])
 end)

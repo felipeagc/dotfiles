@@ -104,14 +104,12 @@
     jjui
     wget
     curl
-    wayle
     awww
     slurp
     grim
     pulseaudio # For pactl
     playerctl
     nautilus
-    walker
     hyprpicker
     delta
     difftastic
@@ -193,18 +191,17 @@
     withUWSM = true;
     xwayland.enable = true;
   };
-  services.elephant.enable = true;
-  systemd.user.services.elephant.path = [
-    pkgs.bashInteractive
-    "/run/current-system/sw"
-  ];
 
   hardware.bluetooth.enable = true;
 
   hardware.graphics.enable = true;
   services.xserver.videoDrivers = ["nvidia"];
-  hardware.nvidia.open = true;
-  hardware.nvidia.modesetting.enable = true;
+  hardware.nvidia = {
+      open = true;
+      modesetting.enable = true;
+      powerManagement.enable = true;
+      powerManagement.finegrained = false;
+  };
 
   services.power-profiles-daemon.enable = true;
   services.upower.enable = true;
@@ -234,6 +231,8 @@
     nerd-fonts.jetbrains-mono
     inter
     roboto
+    geist-font
+    lato
   ];
 
   # Greeter
