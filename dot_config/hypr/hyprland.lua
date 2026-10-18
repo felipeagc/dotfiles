@@ -200,6 +200,7 @@ hl.window_rule({
 hl.window_rule({ match = { class = "chromium" }, workspace = "1" })
 hl.window_rule({ match = { class = "[Ss]potify" }, workspace = "8 silent", no_initial_focus = true })
 hl.window_rule({ match = { class = "discord" }, workspace = "9 silent", no_initial_focus = true })
+hl.window_rule({ match = { class = "vesktop" }, workspace = "9 silent", no_initial_focus = true })
 hl.window_rule({ match = { class = "steam" }, workspace = "10 silent", no_initial_focus = true })
 hl.window_rule({ match = { class = "^(cs2)$" }, immediate = true })
 
