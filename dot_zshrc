@@ -96,9 +96,6 @@ mkcd () {
 
 export PATH=$PATH:$HOME/.local/bin
 
-export GOPATH=$HOME/.gopath
-export PATH=$PATH:$GOPATH/bin
-
 export _JAVA_AWT_WM_NONREPARENTING=1
 export COMPOSE_DOCKER_CLI_BUILD=1
 export DOCKER_BUILDKIT=1
